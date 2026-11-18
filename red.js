@@ -7,8 +7,21 @@ var RED = {
    "datos/zonas.json",
    "datos/red_fisica.json",
    "datos/servicios.json",
-   "datos/integracion.json"
-  ]
+   "datos/integracion.json",
+   "datos/entrega2.json"
+  ],
+  "cabecera_transporte": {
+   "general": 1.1,
+   "por_tipo": {
+    "voz-ims": 1.44
+   },
+   "fuente_e2": "v7 §2.7.2, §3.4.1, §4.3: F = 1,10·R_resto + 1,44·Q_VoNR (144 B/100 B), una sola vez",
+   "nota": "Las cargas de enlaces y nodos son Gbit/s físicos (con cabecera); la demanda y lo servido se muestran en Gbit/s IP."
+  },
+  "referencia": {
+   "doc": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "nombre": "Entrega 2 · memoria conjunta v7"
+  }
  },
  "perfiles": {
   "residencial": [
@@ -173,10 +186,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.66 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-1": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.66 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-MADRID/empresa",
@@ -189,10 +199,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.34 del fijo; 297693 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-1": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.34 del fijo; 297693 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-MADRID/movil-ebb",
@@ -269,10 +276,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.621 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-2": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.621 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCOBENDAS/empresa",
@@ -285,10 +289,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.379 del fijo; 10393 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-2": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.379 del fijo; 10393 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCOBENDAS/movil-ebb",
@@ -365,10 +366,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.685 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-2": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.685 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-TRESCANTOS/empresa",
@@ -381,10 +379,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.315 del fijo; 3586 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-2": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.315 del fijo; 3586 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-TRESCANTOS/movil-ebb",
@@ -461,11 +456,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.768 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-2": 0.5,
-      "CORE-3": 0.5
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.768 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-TORREJON/empresa",
@@ -478,11 +469,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.232 del fijo; 6457 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-2": 0.5,
-      "CORE-3": 0.5
-     }
+     "nota": "Parte empresa del Internet fijo (0.232 del fijo; 6457 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-TORREJON/movil-ebb",
@@ -559,11 +546,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.761 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-2": 0.5,
-      "CORE-3": 0.5
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.761 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCALA/empresa",
@@ -576,11 +559,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.239 del fijo; 9786 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-2": 0.5,
-      "CORE-3": 0.5
-     }
+     "nota": "Parte empresa del Internet fijo (0.239 del fijo; 9786 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCALA/movil-ebb",
@@ -657,10 +636,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.764 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.764 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-GETAFE/empresa",
@@ -673,10 +649,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.236 del fijo; 9655 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.236 del fijo; 9655 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-GETAFE/movil-ebb",
@@ -753,10 +726,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-LEGANES/empresa",
@@ -769,10 +739,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 9301 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 9301 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-LEGANES/movil-ebb",
@@ -849,10 +816,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.736 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.736 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-FUENLABRADA/empresa",
@@ -865,10 +829,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.264 del fijo; 10090 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.264 del fijo; 10090 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-FUENLABRADA/movil-ebb",
@@ -945,10 +906,7 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.76 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte residencial del Internet fijo del municipio (0.76 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCORCON/empresa",
@@ -961,10 +919,7 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.24 del fijo; 8883 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
-     "reparto_cores": {
-      "CORE-3": 1
-     }
+     "nota": "Parte empresa del Internet fijo (0.24 del fijo; 8883 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCORCON/movil-ebb",
@@ -1022,11 +977,14 @@ var RED = {
     40.4344,
     -3.6252
    ],
-   "capacidad_gbps": 3821.2,
+   "capacidad_gbps": null,
    "capacidad_detalle": {
-    "bng_gbps": 3600,
-    "upf_central_gbps": 221.2,
-    "nota": "BNG: 3 chasis 7750 SR-2se activos x 3x400G lado red (+3 en reserva 1:1 en el mismo DC). UPF: 199,10/0,90."
+    "bng_chasis_activos": 3,
+    "bng_chasis_respaldo": 2,
+    "bng_chasis_total": 5,
+    "bng_respaldo_de": "Norte + ½ Este y Sur + ½ Este (1 chasis cada una)",
+    "upf_central": "3 servidores R760 por DC; UPF central total 398,20 / 111,89 Gbit/s IP",
+    "nota": "3 DC activo-activo, cada uno dimensionado para el 50 % de la carga (N−1). BNG total: 10 chasis Nokia 7750 SR-2se, 774.515 sesiones, 2.885 Gbit/s DL. Respaldo georredundante: si cae DC-Centro, el BNG de Centro pasa a DC-Sur por la acometida C–DC-Sur."
    },
    "latencia_ms": 0.2,
    "funciones": [
@@ -1046,9 +1004,12 @@ var RED = {
    },
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 y §7 (DC en Centro, Norte y Sur; BNG por DC); Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.3-4.4 (BNG); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 y Tabla 6.6b (UPF central, reparto 1/3 y 1/2); Semana 7/Teams (descargado 2026-11-08)/3.1_Diego_semana2_core_edge_transporte_resiliencia_v1.1.pdf §5.1 (activo-activo, OSS en DC-Centro/Norte)",
    "supuesto": true,
-   "nota": "Emplazamiento: los documentos solo dicen 'junto a su nodo metro' (3.2 H-E2, 2.1-S5d §4.1). Se elige la zona Julián Camarillo-Albasanz (San Blas-Canillejas), polígono con varios CPD y centrales reales, cerca del Metropolitano y de Valdebebas. Respaldo: KPIs v5 = 1/2 a cada DC superviviente; 'respaldo' indica el DC vivo más cercano, que 2.1-S5d usa como hipótesis para el fijo. El BNG de reserva está en el mismo DC (2.2 §4.7): si cae el DC se pierde también la reserva y Norte/Sur no tienen BNG para absorber los 2.115 Gbit/s del fijo de Centro.",
+   "nota": "Capacidad de proceso del DC no limitada en el simulador: la v7 lo dimensiona para el 50 % de la carga total y lo que se comprueba son las acometidas.",
    "transito": false,
-   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio."
+   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.2, §6.10.1, §6.7.4; contradicción resuelta 1 y 3",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "CORE-2",
@@ -1059,11 +1020,13 @@ var RED = {
     40.5388,
     -3.6383
    ],
-   "capacidad_gbps": 621.2,
+   "capacidad_gbps": null,
    "capacidad_detalle": {
-    "bng_gbps": 400,
-    "upf_central_gbps": 221.2,
-    "nota": "BNG: 1 chasis activo x 1x400G lado red (+1 reserva). Atiende Norte + 50 % de Este."
+    "bng_chasis_activos": 1,
+    "bng_chasis_respaldo": 0,
+    "bng_chasis_total": 1,
+    "bng_respaldo_en": "DC-Centro (acometida directa Metro-Norte → DC-Centro)",
+    "nota": "Atiende el BNG de Norte + ½ Este."
    },
    "latencia_ms": 0.2,
    "funciones": [
@@ -1083,9 +1046,12 @@ var RED = {
    },
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 y §7; Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1-4.4; Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 y Tabla 6.6b; Semana 1/2.1 Arquitectura/explicacion_topologia_madrid_subgrupo_2_1.pdf §4 (Norte, actividad de CPD, candidato a core)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible: polígono industrial de Alcobendas (entorno C/ Valgrande, zona con CPD comerciales). Documentos: solo 'Norte, junto a su nodo metro'.",
+   "nota": "Capacidad de proceso del DC no limitada en el simulador (50 % de la carga total por DC, v7).",
    "transito": false,
-   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio."
+   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.2, §6.10.1",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "CORE-3",
@@ -1096,11 +1062,14 @@ var RED = {
     40.3233,
     -3.7078
    ],
-   "capacidad_gbps": 1021.2,
+   "capacidad_gbps": null,
    "capacidad_detalle": {
-    "bng_gbps": 800,
-    "upf_central_gbps": 221.2,
-    "nota": "BNG: 1 chasis activo x 2x400G lado red (+1 reserva), 69 % en normal. Atiende Sur + 50 % de Este."
+    "bng_chasis_activos": 1,
+    "bng_chasis_respaldo": 3,
+    "bng_chasis_total": 4,
+    "bng_respaldo_de": "Centro (3 chasis)",
+    "bng_respaldo_en": "DC-Centro (vano S–C + acometida C–DC-Centro)",
+    "nota": "Atiende el BNG de Sur + ½ Este y guarda el respaldo de Centro."
    },
    "latencia_ms": 0.2,
    "funciones": [
@@ -1119,14 +1088,17 @@ var RED = {
    },
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 y §7; Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1-4.4; Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 y Tabla 6.6b; Semana 1/2.1 Arquitectura/explicacion_topologia_madrid_subgrupo_2_1.pdf §6 (justificación del tercer DC)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible: polígono industrial Los Ángeles (Getafe norte, junto a la A-4). Documentos: solo 'Sur, junto a su nodo metro'. El tercer DC está cerrado (3.1 v1.1 §9 #4: '3 DC').",
+   "nota": "Capacidad de proceso del DC no limitada en el simulador (50 % de la carga total por DC, v7).",
    "transito": false,
-   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio."
+   "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.2, §6.10.1",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "MET-CENTRO",
    "tipo": "metro",
-   "nombre": "Metro-Centro (PE-A)",
+   "nombre": "Metro-Centro",
    "area": "CENTRO",
    "coord": [
     40.435,
@@ -1139,31 +1111,13 @@ var RED = {
     "WDM/OTN (7λ x 400G por enlace)",
     "agregación"
    ],
-   "respaldo": "MET-CENTRO-B",
+   "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §3, §5, §6.1 (anillo C-N-E-S, Nokia 7750 SR + 1830 PSS candidatos); 20 µs por salto (3.1 respuesta 27/10, citada en S5d §2)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible (San Blas, mismo edificio que DC-Centro y Edge-Centro, según 'DC y Edge junto a su nodo metro'). Concentra el 74,6 % de la demanda (S5d §3.3). Capacidad de conmutación sin dato (null)."
-  },
-  {
-   "id": "MET-CENTRO-B",
-   "tipo": "metro",
-   "nombre": "Metro-Centro (PE-B, duplicado)",
-   "area": "CENTRO",
-   "coord": [
-    40.4353,
-    -3.626
-   ],
-   "capacidad_gbps": null,
-   "latencia_ms": 0.02,
-   "funciones": [
-    "PE IP/MPLS (RSVP-TE, FRR)",
-    "WDM/OTN (7λ x 400G por enlace)",
-    "agregación"
-   ],
-   "respaldo": "MET-CENTRO",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3.3 y §6.1 (router de agregación duplicado en Metro-Centro); Semana 7/Teams (descargado 2026-11-08)/3.1_Diego_semana2_core_edge_transporte_resiliencia_v1.1.pdf §6 F2 (acceso y DC conectados a los dos)",
-   "supuesto": true,
-   "nota": "Segundo PE de Metro-Centro. Se supone en el mismo edificio: 3.1 (R1) pide edificios distintos, pero 2.1 no lo fija. Qué enlaces llegan a cada PE (A del anillo a PE-A, B del anillo a PE-B; C-DC a PE-A; C-DS a PE-B) es un supuesto de este modelo."
+   "nota": "Un router de agregación por nodo [HYP]. Nodo crítico: 74,6 % de la demanda (2.571,81 de 3.448,22 Gbit/s DL). Duplicarlo (MET-CENTRO-B) es una propuesta sin resolver en la v7 (contradicción 5), por eso no está en la red de referencia.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.4.1, §6.4.2, §6.4.3",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "MET-NORTE",
@@ -1184,7 +1138,10 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §3, §5, §6.1 (anillo C-N-E-S, Nokia 7750 SR + 1830 PSS candidatos)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible: polígono industrial de Alcobendas, junto a DC-Norte. Un solo PE (sin doble PE)."
+   "nota": "Emplazamiento plausible: polígono industrial de Alcobendas, junto a DC-Norte. Un solo PE (sin doble PE).",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.4.1",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "MET-ESTE",
@@ -1205,7 +1162,10 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §3, §5, §6.1 (anillo C-N-E-S, Nokia 7750 SR + 1830 PSS candidatos)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible: polígono Las Monjas (Torrejón de Ardoz), junto a la A-2 y cerca de Barajas, junto a Edge-Este. Un solo PE. Este no tiene DC."
+   "nota": "Emplazamiento plausible: polígono Las Monjas (Torrejón de Ardoz), junto a la A-2 y cerca de Barajas, junto a Edge-Este. Un solo PE. Este no tiene DC.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.4.1",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "MET-SUR",
@@ -1226,7 +1186,10 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §3, §5, §6.1 (anillo C-N-E-S, Nokia 7750 SR + 1830 PSS candidatos)",
    "supuesto": true,
-   "nota": "Emplazamiento plausible: polígono Los Ángeles (Getafe), junto a DC-Sur y Edge-Sur. Un solo PE."
+   "nota": "Emplazamiento plausible: polígono Los Ángeles (Getafe), junto a DC-Sur y Edge-Sur. Un solo PE.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.4.1",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "EDGE-CENTRO",
@@ -1237,7 +1200,7 @@ var RED = {
     40.4357,
     -3.6278
    ],
-   "capacidad_gbps": 258.8,
+   "capacidad_gbps": 400,
    "latencia_ms": 0.2,
    "funciones": [
     "UPF local pública",
@@ -1261,7 +1224,10 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §3, §4.1 y §6 (placement y respaldo definitivos); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.1-6.4 (NIC mínima 258,795 Gbit/s en normal; 24 servidores)",
    "supuesto": true,
-   "nota": "Ubicación: 'junto a su nodo metro' (S5d §1); coordenada = Metro-Centro. capacidad_gbps = capacidad NIC mínima de 3.2 (caso normal, ya con 70 %). Nunca recibe Este y Sur a la vez (DATO 2.1, 3.1 S5 §5.1)."
+   "nota": "24 Dell R760xa (4 L40S). Capacidad = NIC de 2 UPF públicas × 200G = 400 Gbit/s instalados frente a 406,12 requeridos (cota conservadora; carga normal 71,07 % de esas NIC). Respaldo: Edge-Este (60 % del estadio, 100 % grabación y 30 % analítica de cámaras).",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.7.2, §6.7.5",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "EDGE-ESTE",
@@ -1272,7 +1238,7 @@ var RED = {
     40.4485,
     -3.479
    ],
-   "capacidad_gbps": 120.8,
+   "capacidad_gbps": null,
    "latencia_ms": 0.2,
    "funciones": [
     "UPF local pública",
@@ -1288,7 +1254,10 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §3, §4.2 y §6; Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.1-6.4 (NIC 120,83 Gbit/s al recibir Centro; 9 servidores)",
    "supuesto": true,
-   "nota": "Ubicación: 'junto a su nodo metro' (S5d §1), Torrejón junto a la A-2. capacidad_gbps = NIC mínima en el caso que manda (recibe Edge-Centro, al 90 %)."
+   "nota": "7 Dell R760xa, dimensionado como receptor de Edge-Centro (NIC requerida 192,08 Gbit/s al recibirlo). La v7 no da la NIC instalada: el simulador no la limita.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.7.2, §6.7.5",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "EDGE-SUR",
@@ -1299,7 +1268,7 @@ var RED = {
     40.3245,
     -3.71
    ],
-   "capacidad_gbps": 1.3,
+   "capacidad_gbps": null,
    "latencia_ms": 0.2,
    "funciones": [
     "UPF local pública (hospital)",
@@ -1314,7 +1283,10 @@ var RED = {
    "respaldo_de": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §3, §4.3 y §6; Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.2-6.5 (NIC 1,261 Gbit/s; 3 servidores con 24 h de vídeo)",
    "supuesto": true,
-   "nota": "Ubicación: 'junto a su nodo metro' (S5d §1), Getafe. capacidad_gbps = NIC mínima de 3.2 (1,261 redondeado). No hay Edge-Norte (2.1 semana 1 §7; 3.2 §5: 'Norte no tiene Edge')."
+   "nota": "3 Dell R760 (hospital + red privada industria-sur). NIC requerida 2,18 Gbit/s. La v7 no da la NIC instalada: el simulador no la limita. Respaldo: Edge-Centro.",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §6.7.2, §6.7.5",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "AGG-MADRID",
@@ -1334,7 +1306,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-ALCOBENDAS",
@@ -1354,7 +1327,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-TRESCANTOS",
@@ -1374,7 +1348,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-TORREJON",
@@ -1394,7 +1369,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-ALCALA",
@@ -1414,7 +1390,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-GETAFE",
@@ -1434,7 +1411,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-LEGANES",
@@ -1454,7 +1432,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-FUENLABRADA",
@@ -1474,7 +1453,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
+   "origen": "anterior"
   },
   {
    "id": "AGG-ALCORCON",
@@ -1494,7 +1474,8 @@ var RED = {
    "respaldo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
-   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Alcorcón tiene dos centrales FTTH (A y B, 50/50) sin ubicación fijada (Semana 6/Teams (descargado 2026-11-02)/Diseno_FTTH_Alcorcon_Grupo_2_1_cerrado.docx §5); aquí se agregan en un nodo. Dos centrales no equivalen a protección 1+1."
+   "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Alcorcón tiene dos centrales FTTH (A y B, 50/50) sin ubicación fijada (Semana 6/Teams (descargado 2026-11-02)/Diseno_FTTH_Alcorcon_Grupo_2_1_cerrado.docx §5); aquí se agregan en un nodo. Dos centrales no equivalen a protección 1+1.",
+   "origen": "anterior"
   },
   {
    "id": "IX-INTERNET",
@@ -1516,7 +1497,8 @@ var RED = {
    "supuesto": true,
    "nota": "Ningún documento fija el punto de peering. Se usa el carrier hotel de C/ Albasanz (San Blas), donde están presentes Espanix y DE-CIX Madrid. Un solo nodo lógico: la diversidad de puntos de peering no está diseñada.",
    "transito": false,
-   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios."
+   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
+   "origen": "anterior"
   },
   {
    "id": "IX-IMS",
@@ -1537,7 +1519,8 @@ var RED = {
    "supuesto": true,
    "nota": "Punto físico de interconexión no definido (3.1 R7 'por confirmar con 2.1'; 3.1 v1.1 §9 #6 'abierto'). Se supone en el mismo carrier hotel que IX-INTERNET. No hay interconexión CS: decisión docente del 13/10 (el enunciado ARCO04 pedía un operador CS).",
    "transito": false,
-   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios."
+   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
+   "origen": "anterior"
   },
   {
    "id": "IX-ONEWEB",
@@ -1558,7 +1541,8 @@ var RED = {
    "supuesto": true,
    "nota": "Coordenada aproximada de Arganda del Rey (polígono industrial); el catálogo solo dice 'hub en Arganda'. Solo servicios prioritarios; no sustituye al anillo.",
    "transito": false,
-   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios."
+   "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
+   "origen": "anterior"
   },
   {
    "id": "SITE-L2VPN-SUR",
@@ -1708,134 +1692,6 @@ var RED = {
  ],
  "enlaces": [
   {
-   "id": "L-METC-METN-A",
-   "a": "MET-CENTRO",
-   "b": "MET-NORTE",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 20,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "C-N",
-   "srlg": "SRLG-1",
-   "enlace_del_tramo": "A",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace A del tramo C-N. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METCB-METN-B",
-   "a": "MET-CENTRO-B",
-   "b": "MET-NORTE",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 20,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "C-N",
-   "srlg": "SRLG-1",
-   "enlace_del_tramo": "B",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": true,
-   "nota": "Enlace B del tramo C-N. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3). Supuesto: el enlace B termina en el PE-B de Metro-Centro."
-  },
-  {
-   "id": "L-METN-METE-A",
-   "a": "MET-NORTE",
-   "b": "MET-ESTE",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 28,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "N-E",
-   "srlg": "SRLG-2",
-   "enlace_del_tramo": "A",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace A del tramo N-E. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METN-METE-B",
-   "a": "MET-NORTE",
-   "b": "MET-ESTE",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 28,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "N-E",
-   "srlg": "SRLG-2",
-   "enlace_del_tramo": "B",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace B del tramo N-E. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METE-METS-A",
-   "a": "MET-ESTE",
-   "b": "MET-SUR",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 38,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "E-S",
-   "srlg": "SRLG-3",
-   "enlace_del_tramo": "A",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace A del tramo E-S. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METE-METS-B",
-   "a": "MET-ESTE",
-   "b": "MET-SUR",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 38,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "E-S",
-   "srlg": "SRLG-3",
-   "enlace_del_tramo": "B",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace B del tramo E-S. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METS-METC-A",
-   "a": "MET-SUR",
-   "b": "MET-CENTRO",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 16,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "S-C",
-   "srlg": "SRLG-4",
-   "enlace_del_tramo": "A",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": false,
-   "nota": "Enlace A del tramo S-C. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3)."
-  },
-  {
-   "id": "L-METS-METCB-B",
-   "a": "MET-SUR",
-   "b": "MET-CENTRO-B",
-   "tipo": "wdm",
-   "capacidad_gbps": 2800,
-   "km": 16,
-   "proteccion": "anillo",
-   "anillo": "ANILLO-METRO",
-   "tramo": "S-C",
-   "srlg": "SRLG-4",
-   "enlace_del_tramo": "B",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1, §2 (km: 3.1 respuesta 27/10, estimación sobre mapa x1,4), §3.3 (SRLG), §5.1 (2 enlaces de 7λ x 400G por tramo, conductos distintos donde la planta lo permita), §6.1 (LSP secundario + FRR ≤50 ms)",
-   "supuesto": true,
-   "nota": "Enlace B del tramo S-C. 3.2 (UPF2 §5.4) da como mínimo 6/2/4/3 x 400G por tramo (C-N/N-E/E-S/S-C) y 2.1 cota superior 7/4/4/6; los 7λ por enlace los cubren. Si A y B comparten conducto forman un solo SRLG y el tramo no queda protegido frente a un corte (S5d §3.3). Supuesto: el enlace B termina en el PE-B de Metro-Centro."
-  },
-  {
    "id": "L-CORE1-METC",
    "a": "CORE-1",
    "b": "MET-CENTRO",
@@ -1843,27 +1699,29 @@ var RED = {
    "capacidad_gbps": 2400,
    "km": 0.3,
    "proteccion": "frr",
-   "anillo": null,
-   "acometida": "C-DC",
-   "capacidad_alt_gbps": 6000,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida C-DC de 3.2: 6 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). DC en el mismo emplazamiento que su nodo metro (3.2 H-E2; S5d §4.1): puertos 400GE dentro del edificio; km supuesto 0,3. Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
+   "acometida": "C-DCC",
+   "canales_400g": 6,
+   "srlg": "SRLG-C-DCC",
+   "fuente_e2": "v7 §6.4.1, §6.4.3, §6.4.4; A11.5",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Centro – DC-Centro, LAG 6×400G. Peor caso v7: 2.139 Gbit/s en pico P2 = 89,13 % (0,87 puntos hasta el 90 %). Bypass C–N–DCC. km sin medir (v7: la acometida cuenta como salto sin longitud).",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-CORE1-METN",
    "a": "CORE-1",
    "b": "MET-NORTE",
-   "tipo": "wdm",
+   "tipo": "mpls",
    "capacidad_gbps": 1600,
-   "km": 20,
+   "km": 0.3,
    "proteccion": "frr",
-   "anillo": null,
-   "acometida": "N-DC",
-   "capacidad_alt_gbps": null,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida N-DC de 3.2: 4 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). Segunda acometida: km supuesto = longitud del tramo de anillo paralelo (20 km); si va por el mismo conducto que el tramo comparte SRLG con él (diversidad física pendiente, UPF2 Tabla R2). Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
+   "acometida": "N-DCC",
+   "canales_400g": 4,
+   "srlg": "SRLG-N-DCC",
+   "fuente_e2": "v7 §6.4.3, §6.4.4; A11.5",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Norte – DC-Centro, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de C–DC-Centro. Bypass N–C–DCC.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-CORE2-METN",
@@ -1873,27 +1731,29 @@ var RED = {
    "capacidad_gbps": 2400,
    "km": 0.3,
    "proteccion": "frr",
-   "anillo": null,
-   "acometida": "N-DN",
-   "capacidad_alt_gbps": 2000,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida N-DN de 3.2: 6 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). DC en el mismo emplazamiento que su nodo metro (3.2 H-E2; S5d §4.1): puertos 400GE dentro del edificio; km supuesto 0,3. Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
+   "acometida": "N-DCN",
+   "canales_400g": 6,
+   "srlg": "SRLG-N-DCN",
+   "fuente_e2": "v7 §6.4.3, §6.4.4; A11.5",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Norte – DC-Norte, LAG 6×400G. Peor caso v7: 1.859,38 Gbit/s en P2 (77,47 %). Bypass N–E–DCN.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-CORE2-METE",
    "a": "CORE-2",
    "b": "MET-ESTE",
-   "tipo": "wdm",
+   "tipo": "mpls",
    "capacidad_gbps": 1600,
-   "km": 28,
+   "km": 0.3,
    "proteccion": "frr",
-   "anillo": null,
-   "acometida": "E-DN",
-   "capacidad_alt_gbps": null,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida E-DN de 3.2: 4 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). Segunda acometida: km supuesto = longitud del tramo de anillo paralelo (28 km); si va por el mismo conducto que el tramo comparte SRLG con él (diversidad física pendiente, UPF2 Tabla R2). Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
+   "acometida": "E-DCN",
+   "canales_400g": 4,
+   "srlg": "SRLG-E-DCN",
+   "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Este – DC-Norte, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de N–DC-Norte. Bypass E–N–DCN.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-CORE3-METS",
@@ -1903,66 +1763,52 @@ var RED = {
    "capacidad_gbps": 1600,
    "km": 0.3,
    "proteccion": "frr",
-   "anillo": null,
-   "acometida": "S-DS",
-   "capacidad_alt_gbps": 2400,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida S-DS de 3.2: 4 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). DC en el mismo emplazamiento que su nodo metro (3.2 H-E2; S5d §4.1): puertos 400GE dentro del edificio; km supuesto 0,3. Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
-  },
-  {
-   "id": "L-CORE3-METCB",
-   "a": "CORE-3",
-   "b": "MET-CENTRO-B",
-   "tipo": "wdm",
-   "capacidad_gbps": 2400,
-   "km": 16,
-   "proteccion": "frr",
-   "anillo": null,
-   "acometida": "C-DS",
-   "capacidad_alt_gbps": null,
-   "fuente": "Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §5.4 (conexiones propuestas y tabla de canales 400G) y A11; Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.4",
-   "supuesto": true,
-   "nota": "Acometida C-DS de 3.2: 6 x 400G (máximo con pico P2 entre normal, fallos y pico; reparto 1/3 por DC). Segunda acometida: km supuesto = longitud del tramo de anillo paralelo (16 km); si va por el mismo conducto que el tramo comparte SRLG con él (diversidad física pendiente, UPF2 Tabla R2). Discrepancia: 2.1-S5d §3.3 proponía DC-Centro a Centro y Sur, DC-Norte a Norte y Centro, DC-Sur a Sur y Centro; manda UPF2 (06/11). Con el reparto 'cada zona a su DC' (BNG de 2.2; caso base 3.2 15/5/6 x 400G por DC; S5d caso esperado 14/3/5) el enlace propio de DC-Centro necesitaría ~6.000 Gbit/s."
+   "acometida": "S-DCS",
+   "canales_400g": 4,
+   "srlg": "SRLG-S-DCS",
+   "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Sur – DC-Sur, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de C–DC-Sur. Bypass S–C–DCS.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-EDGECENTRO-METC",
    "a": "EDGE-CENTRO",
    "b": "MET-CENTRO",
    "tipo": "mpls",
-   "capacidad_gbps": 300,
+   "capacidad_gbps": null,
    "km": 0.3,
    "proteccion": null,
-   "anillo": null,
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 (Edge junto a su nodo metro); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.1-6.4 (NIC); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 (doble conexión de Edge, R3, no recogida en 2.1-S5d)",
-   "supuesto": true,
-   "nota": "Capacidad supuesta: NIC mínima 258,8 Gbit/s -> 3 x 100GE (puertos 100GE como en 3.2 S1c). km supuesto (mismo emplazamiento). Sin doble conexión: un corte aquí equivale a la caída del Edge (F5-F7)."
+   "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
+   "origen": "entrega2",
+   "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita. Un corte deja el Edge activo pero inalcanzable (escenario D, activación del respaldo sin validar).",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-EDGEESTE-METE",
    "a": "EDGE-ESTE",
    "b": "MET-ESTE",
    "tipo": "mpls",
-   "capacidad_gbps": 200,
+   "capacidad_gbps": null,
    "km": 0.3,
    "proteccion": null,
-   "anillo": null,
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 (Edge junto a su nodo metro); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.1-6.4 (NIC); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 (doble conexión de Edge, R3, no recogida en 2.1-S5d)",
-   "supuesto": true,
-   "nota": "Capacidad supuesta: NIC mínima 120,8 Gbit/s al recibir Centro -> 2 x 100GE (puertos 100GE como en 3.2 S1c). km supuesto (mismo emplazamiento). Sin doble conexión: un corte aquí equivale a la caída del Edge (F5-F7)."
+   "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
+   "origen": "entrega2",
+   "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-EDGESUR-METS",
    "a": "EDGE-SUR",
    "b": "MET-SUR",
    "tipo": "mpls",
-   "capacidad_gbps": 100,
+   "capacidad_gbps": null,
    "km": 0.3,
    "proteccion": null,
-   "anillo": null,
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §1 (Edge junto a su nodo metro); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §6.1-6.4 (NIC); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 (doble conexión de Edge, R3, no recogida en 2.1-S5d)",
-   "supuesto": true,
-   "nota": "Capacidad supuesta: NIC mínima 1,26 Gbit/s -> 1 x 100GE (puertos 100GE como en 3.2 S1c). km supuesto (mismo emplazamiento). Sin doble conexión: un corte aquí equivale a la caída del Edge (F5-F7)."
+   "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
+   "origen": "entrega2",
+   "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-AGGMADRID-METC",
@@ -1975,20 +1821,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 2433.5 Gbit/s. km = 1,3 x línea recta (estimado). Doble pertenencia a los dos PE de Metro-Centro (3.1 S5 F2: 'acceso y DC conectados a los dos'); cada enlace dimensionado para el total."
-  },
-  {
-   "id": "L-AGGMADRID-METCB",
-   "a": "AGG-MADRID",
-   "b": "MET-CENTRO-B",
-   "tipo": "backhaul",
-   "capacidad_gbps": 6000,
-   "km": 9.0,
-   "proteccion": "frr",
-   "anillo": null,
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
-   "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 2433.5 Gbit/s. km = 1,3 x línea recta (estimado). Doble pertenencia a los dos PE de Metro-Centro (3.1 S5 F2: 'acceso y DC conectados a los dos'); cada enlace dimensionado para el total."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 2433.5 Gbit/s. km = 1,3 x línea recta (estimado). Doble pertenencia a los dos PE de Metro-Centro (3.1 S5 F2: 'acceso y DC conectados a los dos'); cada enlace dimensionado para el total.",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGALCOBENDAS-METN",
@@ -2001,7 +1835,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 89.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 89.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGTRESCANTOS-METN",
@@ -2014,7 +1849,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 39.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 39.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGTORREJON-METE",
@@ -2027,7 +1863,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 100.3 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 100.3 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGALCALA-METE",
@@ -2040,7 +1877,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 140.9 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 140.9 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGGETAFE-METS",
@@ -2053,7 +1891,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 132.8 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 132.8 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGLEGANES-METS",
@@ -2066,7 +1905,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 133.0 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 133.0 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGFUENLABRADA-METS",
@@ -2079,7 +1919,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 128.9 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 128.9 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-AGGALCORCON-METS",
@@ -2092,7 +1933,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
-   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 120.0 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada')."
+   "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 120.0 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE1-IXINTERNET",
@@ -2105,7 +1947,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
-   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta."
+   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE1-IXIMS",
@@ -2118,7 +1961,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
-   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta."
+   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE2-IXINTERNET",
@@ -2131,7 +1975,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
-   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta."
+   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE2-IXIMS",
@@ -2144,7 +1989,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
-   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta."
+   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE3-IXINTERNET",
@@ -2157,7 +2003,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
-   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta."
+   "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-CORE3-IXIMS",
@@ -2170,7 +2017,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
-   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta."
+   "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
+   "origen": "anterior"
   },
   {
    "id": "L-IXONEWEB-CORE1",
@@ -2183,7 +2031,8 @@ var RED = {
    "anillo": null,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (VRF del operador hasta el DC más cercano [HYP])",
    "supuesto": true,
-   "nota": "DC más cercano al hub de Arganda en este modelo: DC-Centro (≈22 km en línea recta frente a ≈23 km de DC-Sur). Capacidad supuesta 1 Gbit/s (5 terminales x ≥100 Mbit/s)."
+   "nota": "DC más cercano al hub de Arganda en este modelo: DC-Centro (≈22 km en línea recta frente a ≈23 km de DC-Sur). Capacidad supuesta 1 Gbit/s (5 terminales x ≥100 Mbit/s).",
+   "origen": "anterior"
   },
   {
    "id": "L-SAT-AGGGETAFE",
@@ -2198,7 +2047,8 @@ var RED = {
    "emergencia": true,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
-   "nota": "Terminal OneWeb del hospital de Getafe. Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge."
+   "nota": "Terminal OneWeb del hospital de Getafe. Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
+   "origen": "anterior"
   },
   {
    "id": "L-SAT-AGGMADRID",
@@ -2213,7 +2063,8 @@ var RED = {
    "emergencia": true,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
-   "nota": "Terminal OneWeb del estadio (centro de control). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge."
+   "nota": "Terminal OneWeb del estadio (centro de control). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
+   "origen": "anterior"
   },
   {
    "id": "L-SAT-EDGEESTE",
@@ -2228,7 +2079,92 @@ var RED = {
    "emergencia": true,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
-   "nota": "Terminal OneWeb del Edge-Este (centro de control de la A-2). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge."
+   "nota": "Terminal OneWeb del Edge-Este (centro de control de la A-2). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
+   "origen": "anterior"
+  },
+  {
+   "id": "L-ANILLO-CN",
+   "a": "MET-CENTRO",
+   "b": "MET-NORTE",
+   "tipo": "wdm",
+   "capacidad_gbps": 2400,
+   "km": 20,
+   "proteccion": "anillo",
+   "anillo": "ANILLO-METRO",
+   "tramo": "C-N",
+   "srlg": "SRLG-CN",
+   "canales_400g": 6,
+   "fuente_e2": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km",
+   "origen": "entrega2",
+   "nota": "LAG 400GE de 6 λ (referencia provisional 6/4/4/6). Mínimo calculado 6. Peor caso v7: 1.894,72 Gbit/s (78,95 %) con caída de la acometida C–DC-Centro. Plan óptico: 2 enlaces × 7 λ por vano.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+  },
+  {
+   "id": "L-ANILLO-NE",
+   "a": "MET-NORTE",
+   "b": "MET-ESTE",
+   "tipo": "wdm",
+   "capacidad_gbps": 1600,
+   "km": 28,
+   "proteccion": "anillo",
+   "anillo": "ANILLO-METRO",
+   "tramo": "N-E",
+   "srlg": "SRLG-NE",
+   "canales_400g": 4,
+   "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km",
+   "origen": "entrega2",
+   "nota": "LAG 4×400G. Mínimo calculado 3. Peor caso v7: 992,27 Gbit/s (62,02 %) con corte C–N.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+  },
+  {
+   "id": "L-ANILLO-ES",
+   "a": "MET-ESTE",
+   "b": "MET-SUR",
+   "tipo": "wdm",
+   "capacidad_gbps": 1600,
+   "km": 38,
+   "proteccion": "anillo",
+   "anillo": "ANILLO-METRO",
+   "tramo": "E-S",
+   "srlg": "SRLG-ES",
+   "canales_400g": 4,
+   "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km",
+   "origen": "entrega2",
+   "nota": "LAG 4×400G. Mínimo calculado 4. Peor caso v7: 1.111,93 Gbit/s (69,50 %) con Metro-Norte caído. P2 + corte C–N daría 2.174,45 (135,90 %), fuera de garantía (7.1.2).",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+  },
+  {
+   "id": "L-ANILLO-SC",
+   "a": "MET-SUR",
+   "b": "MET-CENTRO",
+   "tipo": "wdm",
+   "capacidad_gbps": 2400,
+   "km": 16,
+   "proteccion": "anillo",
+   "anillo": "ANILLO-METRO",
+   "tramo": "S-C",
+   "srlg": "SRLG-SC",
+   "canales_400g": 6,
+   "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km",
+   "origen": "entrega2",
+   "nota": "LAG 6×400G. Mínimo calculado 3 (alternativa 6/3/4/3 en evaluación). Peor caso v7: 947,93 Gbit/s (39,50 %) con caída de la acometida C–DC-Sur.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+  },
+  {
+   "id": "L-CORE3-METC",
+   "a": "CORE-3",
+   "b": "MET-CENTRO",
+   "tipo": "mpls",
+   "capacidad_gbps": 2400,
+   "km": 0.3,
+   "proteccion": "frr",
+   "acometida": "C-DCS",
+   "canales_400g": 6,
+   "srlg": "SRLG-C-DCS",
+   "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
+   "origen": "entrega2",
+   "nota": "Acometida Metro-Centro – DC-Sur, LAG 6×400G. Peor caso v7: 1.859,38 Gbit/s en P2 (77,47 %). Bypass C–S–DCS. Es el camino del BNG de Centro si cae DC-Centro.",
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
   },
   {
    "id": "L-SITEMETROPOLITANO-METCENTRO",
@@ -3157,8 +3093,7 @@ var RED = {
    "nombre": "Corte de fibra en el tramo Metro-Centro – Metro-Norte",
    "hora": 21,
    "fallos": [
-    "L-METC-METN-A",
-    "L-METCB-METN-B"
+    "L-ANILLO-CN"
    ],
    "fallo_descripcion": "tramo WDM del anillo metro Metro-Centro–Metro-Norte (C–N, 20 km, ambos enlaces del tramo si comparten SRLG)",
    "descripcion": "Corte del tramo C–N (20 km). FRR por el otro arco en ≤50 ms. En la matriz de 3.2 es el corte que más tráfico desvía (E–S 1 000 / S–C 835 Gbit/s, 4 y 3 canales de 400G).",
@@ -3179,8 +3114,7 @@ var RED = {
    "nombre": "Corte de fibra en el tramo Metro-Norte – Metro-Este",
    "hora": 21,
    "fallos": [
-    "L-METN-METE-A",
-    "L-METN-METE-B"
+    "L-ANILLO-NE"
    ],
    "fallo_descripcion": "tramo WDM del anillo metro Metro-Norte–Metro-Este (N–E, 28 km, ambos enlaces del tramo si comparten SRLG)",
    "descripcion": "Corte del tramo N–E (28 km). FRR por el otro arco en ≤50 ms.",
@@ -3200,8 +3134,7 @@ var RED = {
    "nombre": "Corte de fibra en el tramo Metro-Este – Metro-Sur",
    "hora": 21,
    "fallos": [
-    "L-METE-METS-A",
-    "L-METE-METS-B"
+    "L-ANILLO-ES"
    ],
    "fallo_descripcion": "tramo WDM del anillo metro Metro-Este–Metro-Sur (E–S, 38 km, ambos enlaces del tramo si comparten SRLG)",
    "descripcion": "Corte del tramo E–S (38 km). FRR por el otro arco en ≤50 ms.",
@@ -3221,8 +3154,7 @@ var RED = {
    "nombre": "Corte de fibra en el tramo Metro-Sur – Metro-Centro (tramo más crítico)",
    "hora": 21,
    "fallos": [
-    "L-METS-METC-A",
-    "L-METS-METCB-B"
+    "L-ANILLO-SC"
    ],
    "fallo_descripcion": "tramo WDM del anillo metro Metro-Sur–Metro-Centro (S–C, 16 km, ambos enlaces del tramo si comparten SRLG)",
    "descripcion": "Corte del tramo S–C (16 km). FRR por el otro arco en ≤50 ms. Es el corte más crítico del diseño: el camino de protección Sur↔Centro es el más largo (86 km, +0,49 ms) y por él va el respaldo del hospital y de la red privada (ARCO02): hospital 7,9 ms, 9,9 ms con app de 5 ms (PASS sin margen). En 2.1-S5d es además el tramo que llega al 90 % si cae DC-Centro.",
@@ -3370,7 +3302,7 @@ var RED = {
    "nombre": "Pérdida de la acometida Metro-Centro – DC-Sur",
    "hora": 21,
    "fallos": [
-    "L-CORE3-METCB"
+    "L-CORE3-METC"
    ],
    "fallo_descripcion": "enlace de acometida Metro-Centro ↔ DC-Sur (C–DS)",
    "descripcion": "Se pierde la acometida C–DS; el DC sigue accesible por su otra acometida.",

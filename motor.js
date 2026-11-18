@@ -255,6 +255,20 @@ var Motor = (function () {
     return f;
   }
 
+  // Cabecera de transporte (v7 §2.7.2): F = 1,10·R_resto + 1,44·Q_VoNR, una sola vez.
+  // RED.meta.cabecera_transporte = {general: 1.10, por_tipo: {"voz-ims": 1.44}}; sin dato, 1 (IP puro).
+  function cabeceraDe(RED, b) {
+    var c = RED.meta && RED.meta.cabecera_transporte;
+    if (!c) return 1;
+    return num(c.por_tipo && c.por_tipo[b.tipo], num(c.general, 1));
+  }
+
+  // Sentido del DL en el k-ésimo enlace de la ruta (la ruta va del origen al destino; el DL vuelve).
+  function sentidoDL(G, d, k) {
+    var l = G.enlacePorId[d.enlaces[k]];
+    return d.ruta[k + 1] === l.a ? "ab" : "ba";
+  }
+
   function perfilDe(RED, perfil, hora) {
     if (hora === null || hora === undefined) return 1;
     var p = RED.perfiles && RED.perfiles[perfil];
@@ -319,11 +333,12 @@ var Motor = (function () {
     var enlacesOut = {}, nodosOut = {}, residualL = {}, residualN = {}, ofertaL = {}, ofertaN = {};
     G.enlaces.forEach(function (l) {
       var cap = esCap(l.capacidad_gbps) ? l.capacidad_gbps : null;
-      enlacesOut[l.id] = { carga_gbps: 0, capacidad_gbps: cap, ocupacion: 0,
+      // Enlaces full duplex: carga por sentido (ab = a→b, ba = b→a); carga_gbps = sentido más cargado (v7 A11.4)
+      enlacesOut[l.id] = { carga_gbps: 0, carga_ab: 0, carga_ba: 0, capacidad_gbps: cap, ocupacion: 0,
         caido: !!(caidosL[l.id] || caidosN[l.a] || caidosN[l.b]), demandas: [], demanda_gbps: 0,
         virtual: !!l.virtual };
-      residualL[l.id] = cap === null ? Infinity : cap;
-      ofertaL[l.id] = 0;
+      residualL[l.id] = { ab: cap === null ? Infinity : cap, ba: cap === null ? Infinity : cap };
+      ofertaL[l.id] = { ab: 0, ba: 0 };
     });
     G.ordenNodos.forEach(function (id) {
       var n = G.nodos[id], cap = esCap(n.capacidad_gbps) ? n.capacidad_gbps : null;
@@ -338,13 +353,13 @@ var Motor = (function () {
       var r = rutas[i], rb = rutasBase[i];
       var pp = op.perfiles && op.perfiles[b.padre || b.id];
       var ph = op.cargada ? 1 : (pp ? num(pp[((op.hora % 24) + 24) % 24], 1) : perfilDe(RED, b.perfil, op.hora));
-      var dl = b.dl_gbps * ph * factorDe(b, op.factores) *
-        (b.reparto || 1);
+      var f = ph * factorDe(b, op.factores) * (b.reparto || 1);
+      var dl = b.dl_gbps * f;
       var via = "principal";
       if (r && (!rb || rb.destino !== r.destino || rb.enlaces.join(",") !== r.enlaces.join(","))) via = "respaldo";
       return { id: b.id, padre: b.padre || null, zona: b.zona, origen: b.origen, destino_nodo: r ? r.destino : null,
         destino: b.destino, tipo: b.tipo, clase: b.clase, prioridad: b.prioridad, slice: b.slice,
-        dl_gbps: dl, servida_gbps: 0, ruta: r ? r.ruta : [], enlaces: r ? r.enlaces : [],
+        dl_gbps: dl, ul_gbps: b.ul_gbps * f, h: cabeceraDe(RED, b), servida_gbps: 0, ruta: r ? r.ruta : [], enlaces: r ? r.enlaces : [],
         latencia_ms: r ? r.latencia : null, latencia_max_ms: b.latencia_max_ms,
         via: r ? via : "respaldo", estado: "ok" };
     });
@@ -352,8 +367,11 @@ var Motor = (function () {
     // Oferta por elemento (para % de demanda sobre capacidad)
     dem.forEach(function (d) {
       if (!d.ruta.length) return;
-      d.enlaces.forEach(function (id) { ofertaL[id] += d.dl_gbps; });
-      d.ruta.forEach(function (id) { ofertaN[id] += d.dl_gbps; });
+      d.enlaces.forEach(function (id, k) {
+        var sd = sentidoDL(G, d, k);
+        ofertaL[id][sd] += d.dl_gbps * d.h; ofertaL[id][sd === "ab" ? "ba" : "ab"] += d.ul_gbps * d.h;
+      });
+      d.ruta.forEach(function (id) { ofertaN[id] += d.dl_gbps * d.h; });
     });
 
     // Asignación voraz por prioridad (1 primero; empate por menor demanda)
@@ -366,17 +384,26 @@ var Motor = (function () {
     var cuello = {}; // "L:id" | "N:id" -> { tipo, id, recortado, prios:{} }
     orden.forEach(function (i) {
       var d = dem[i], minR = Infinity, cue = null;
-      d.enlaces.forEach(function (id) { if (residualL[id] < minR) { minR = residualL[id]; cue = "L:" + id; } });
+      var sds = d.enlaces.map(function (id, k) { return sentidoDL(G, d, k); });
+      d.enlaces.forEach(function (id, k) { var x = residualL[id][sds[k]]; if (x < minR) { minR = x; cue = "L:" + id; } });
       d.ruta.forEach(function (id) { if (residualN[id] < minR) { minR = residualN[id]; cue = "N:" + id; } });
-      var s = Math.max(0, Math.min(d.dl_gbps, minR));
-      d.servida_gbps = s;
-      var cut = d.dl_gbps - s;
+      // Carga física en la red = IP × cabecera (v7 §2.7.2); lo servido se cuenta en Gbit/s IP
+      var s = Math.max(0, Math.min(d.dl_gbps * d.h, minR));
+      d.servida_gbps = s / d.h;
+      var cut = d.dl_gbps * d.h - s;
       if (cut > EPS && cue) {
         var c = cuello[cue] || (cuello[cue] = { tipo: cue.charAt(0), id: cue.slice(2), recortado: 0, prios: {}, n: 0 });
         c.recortado += cut; c.prios[d.prioridad] = true; c.n++;
       }
-      d.enlaces.forEach(function (id) {
-        residualL[id] -= s; var e = enlacesOut[id]; e.carga_gbps += s; e.demandas.push(d.id);
+      // UL por el sentido contrario, limitado por lo que quede en ese sentido (no recorta el DL)
+      var minU = Infinity;
+      d.enlaces.forEach(function (id, k) { minU = Math.min(minU, residualL[id][sds[k] === "ab" ? "ba" : "ab"]); });
+      var su = Math.max(0, Math.min(d.ul_gbps * d.h, minU));
+      d.servida_ul_gbps = su / d.h;
+      d.enlaces.forEach(function (id, k) {
+        var e = enlacesOut[id], sd = sds[k], su_ = sd === "ab" ? "ba" : "ab";
+        residualL[id][sd] -= s; residualL[id][su_] -= su;
+        e["carga_" + sd] += s; e["carga_" + su_] += su; e.demandas.push(d.id);
       });
       d.ruta.forEach(function (id) {
         residualN[id] -= s; var n = nodosOut[id]; n.carga_gbps += s; n.demandas.push(d.id);
@@ -395,9 +422,11 @@ var Motor = (function () {
     var saturados = [], maxOc = 0, enlaceMax = null;
     G.enlaces.forEach(function (l) {
       var e = enlacesOut[l.id];
-      e.demanda_gbps = ofertaL[l.id];
+      e.carga_gbps = Math.max(e.carga_ab, e.carga_ba);
+      e.sentido_max = e.carga_ab >= e.carga_ba ? "ab" : "ba";
+      e.demanda_gbps = Math.max(ofertaL[l.id].ab, ofertaL[l.id].ba);
       e.ocupacion = e.capacidad_gbps ? e.carga_gbps / e.capacidad_gbps : 0;
-      if (e.capacidad_gbps !== null && ofertaL[l.id] > e.capacidad_gbps * (1 + 1e-9) + EPS) saturados.push(l.id);
+      if (e.capacidad_gbps !== null && e.demanda_gbps > e.capacidad_gbps * (1 + 1e-9) + EPS) saturados.push(l.id);
       if (e.ocupacion > maxOc) { maxOc = e.ocupacion; enlaceMax = l.id; }
     });
     G.ordenNodos.forEach(function (id) {
@@ -453,7 +482,7 @@ var Motor = (function () {
     Object.keys(cuello).forEach(function (k) {
       var c = cuello[k];
       var cap = c.tipo === "L" ? enlacesOut[c.id].capacidad_gbps : nodosOut[c.id].capacidad_gbps;
-      var of = c.tipo === "L" ? ofertaL[c.id] : ofertaN[c.id];
+      var of = c.tipo === "L" ? enlacesOut[c.id].demanda_gbps : ofertaN[c.id];
       var prios = Object.keys(c.prios).map(Number).sort(function (a, b) { return a - b; });
       var quien = prios[0] >= 4 ? "best-effort" : (prios.length === 1 ? "prioridad " + prios[0] : "prioridades " + prios.join(", "));
       var nom = c.tipo === "L" ? "Enlace " + c.id : "Nodo " + nombreNodo(G, c.id);
