@@ -1,6 +1,6 @@
 // Generado por fusionar.py — no editar a mano.
 var DEMANDA = {
- "generado": "2026-11-18",
+ "generado": "2026-11-19",
  "magnitudes": {
   "P25_madrid": {
    "id": "P25_madrid",

@@ -5,18 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RED-MAD 2031 · Demanda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="noc.css">
 <link rel="stylesheet" href="demanda.css">
 </head>
-<body>
-<header class="barra">
-  <h1><span data-t="titulo">Demanda</span><small>RED-MAD 2031 · F1</small></h1>
-  <div class="ctl"><span data-t="anio">Año</span><input type="range" id="anio" min="2025" max="2031" step="1" value="2031"><span id="anio-v" class="mono">2031</span></div>
-  <div class="esp"></div>
-  <button class="btn" id="reset" data-t="reset">Restablecer parámetros</button>
-  <div class="seg" role="group" aria-label="Idioma / Language"><button data-lang="es">ES</button><button data-lang="en">EN</button></div>
-  <a href="index.html" data-t="volver">← Simulador</a>
+<body class="m-ref">
+<header class="tb barra">
+  <div class="tb-f">
+    <span class="marca-red">RED-MAD 2031<small>NOC · 5G + FTTH</small></span><span class="sep"></span>
+    <div class="modo" role="group" aria-label="Modo">
+      <button type="button" data-modo="ref" aria-pressed="true"><span data-t="m_ref">Referencia · Entrega 2 (v7)</span></button>
+      <button type="button" data-modo="lab" aria-pressed="false"><span data-t="m_lab">Laboratorio</span></button>
+    </div>
+    <span class="rotulo-modo" id="rotulo-modo"></span>
+    <nav class="tabs dem-nav"><a class="tab" href="index.html" data-t="volver">Mapa</a><span class="tab" aria-selected="true" data-t="titulo">Demanda</span></nav>
+    <div class="esp"></div>
+    <div class="ctl"><span class="rot" data-t="anio">Año</span><input type="range" id="anio" min="2025" max="2031" step="1" value="2031"><span id="anio-v" class="mono">2031</span></div>
+    <button class="btn" id="reset" data-t="reset">Restablecer parámetros</button>
+    <div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es">ES</button><button type="button" data-lang="en">EN</button></div>
+  </div>
 </header>
 <main>
   <p class="intro" data-t="intro"></p>

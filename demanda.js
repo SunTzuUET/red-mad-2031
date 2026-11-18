@@ -10,7 +10,8 @@
   // ---------- textos ES/EN ----------
   var T = {
     es: {
-      titulo: "Demanda", anio: "Año", idioma: "Idioma", volver: "← Simulador", reset: "Restablecer parámetros",
+      titulo: "Demanda", anio: "Año", idioma: "Idioma", volver: "Mapa", reset: "Restablecer parámetros",
+      m_ref: "Referencia · Entrega 2 (v7)", m_lab: "Laboratorio", m_ref_rot: "parámetros de la Entrega 2 · 2031 · solo lectura", m_lab_rot: "parámetros editables; el NOC los usa en modo LAB",
       intro: "Toda la demanda de la red, paso a paso: del dato del INE o la CNMC a los Gbit/s que llegan a cada equipo. Pulsa cualquier cifra para ver su fórmula, de qué depende y de dónde sale.",
       resumen: "Resumen", explorador: "¿De dónde sale cada cifra?", parametros: "Parámetros editables",
       pasos: "Cadena de cálculo", municipios: "Reparto por municipio", modelos: "Modelos de tráfico",
@@ -32,7 +33,8 @@
       zonas: { C: "Centro", N: "Norte", E: "Este", S: "Sur" }
     },
     en: {
-      titulo: "Demand", anio: "Year", idioma: "Language", volver: "← Simulator", reset: "Reset parameters",
+      titulo: "Demand", anio: "Year", idioma: "Language", volver: "Map", reset: "Reset parameters",
+      m_ref: "Reference · Deliverable 2 (v7)", m_lab: "Laboratory", m_ref_rot: "Deliverable 2 parameters · 2031 · read-only", m_lab_rot: "editable parameters; the NOC uses them in LAB mode",
       intro: "All network demand, step by step: from the INE or CNMC figure to the Gbit/s reaching each element. Click any number to see its formula, what it depends on and where it comes from.",
       resumen: "Summary", explorador: "Where does each figure come from?", parametros: "Editable parameters",
       pasos: "Calculation chain", municipios: "Split by municipality", modelos: "Traffic models",
@@ -66,11 +68,12 @@
   };
 
   // ---------- estado ----------
-  var lang = leer("dem.lang") || "es";
+  var lang = leer("noc.lang") || leer("dem.lang") || "es";
+  var REF = leer("noc.modo") !== "lab";   // REF: parámetros bloqueados y año 2031 (CONTRATO_UI)
   var anio = 2031;
   var P = MD.copia(MD.PARAMETROS_DEFECTO);
   var editados = {};
-  try { var g = JSON.parse(leer("dem.params") || "{}"); Object.keys(g).forEach(function (k) { if (k in P) { P[k] = g[k]; editados[k] = true; } }); } catch (e) { /* sin estado */ }
+  if (!REF) try { var g = JSON.parse(leer("dem.params") || "{}"); Object.keys(g).forEach(function (k) { if (k in P) { P[k] = g[k]; editados[k] = true; } }); } catch (e) { /* sin estado */ }
   var R = null;                       // resultado de ModeloDemanda.calcular
   var R31 = MD.calcular(MD.PARAMETROS_DEFECTO, { anio: 2031 });
   var actual = "IP_tot", migas = [];
@@ -252,6 +255,7 @@
     $("#detalle").innerHTML = h;
     if (paso) { tex($("#f-tex"), paso.tex); tex($("#f-sust"), paso.sust); }
     var rg = $("#p-rango");
+    if (rg && REF) rg.disabled = true;
     if (rg) rg.addEventListener("input", function () { cambiarParam(id, parseFloat(rg.value)); });
   }
   function ir(id, sinMiga) {
@@ -267,13 +271,13 @@
     $("#params").innerHTML = MD.EDITABLES.map(function (x) {
       var ed = editados[x.k];
       return '<div class="param' + (ed ? " editado" : "") + '"><div class="fila"><span class="nom" data-ir="' + x.k + '">' + esc(nombre(x.k)) + '</span>' +
-        '<input type="number" data-p="' + x.k + '" min="' + x.min + '" max="' + x.max + '" step="' + x.paso + '" value="' + P[x.k] + '"></div>' +
+        '<input type="number"' + (REF ? " disabled" : "") + ' data-p="' + x.k + '" min="' + x.min + '" max="' + x.max + '" step="' + x.paso + '" value="' + P[x.k] + '"></div>' +
         '<div class="def">' + esc(x.k) + ' · ' + t("defecto") + ' ' + fmt(MD.PARAMETROS_DEFECTO[x.k], 4) + '</div></div>';
     }).join("");
   }
   var tParam = null;
   function cambiarParam(k, v) {
-    if (!isFinite(v)) return;
+    if (REF || !isFinite(v)) return;
     P[k] = v;
     if (v === MD.PARAMETROS_DEFECTO[k]) delete editados[k]; else editados[k] = true;
     var g = {}; Object.keys(editados).forEach(function (x) { g[x] = P[x]; });
@@ -417,6 +421,10 @@
     document.documentElement.lang = lang;
     Array.prototype.forEach.call(document.querySelectorAll("[data-t]"), function (el) { el.textContent = t(el.dataset.t); });
     Array.prototype.forEach.call(document.querySelectorAll(".seg [data-lang]"), function (b) { b.setAttribute("aria-pressed", b.dataset.lang === lang); });
+    document.body.classList.toggle("m-ref", REF); document.body.classList.toggle("m-lab", !REF);
+    Array.prototype.forEach.call(document.querySelectorAll("[data-modo]"), function (b) { b.setAttribute("aria-pressed", (b.dataset.modo === "ref") === REF); });
+    $("#anio").disabled = REF; $("#reset").disabled = REF;
+    $("#rotulo-modo").innerHTML = '<b>' + (REF ? "REF" : "LAB") + '</b> ' + esc(t(REF ? "m_ref_rot" : "m_lab_rot"));
     var ds = (RED && RED.modelos_trafico && RED.modelos_trafico.tipos_dia) || {};
     $("#sel-dia").innerHTML = Object.keys(ds).filter(function (k) { return k[0] !== "_"; }).map(function (k) {
       return '<option value="' + k + '"' + (k === dia ? " selected" : "") + '>' + esc(lang === "es" ? ds[k].nombre_es : ds[k].nombre_en) + '</option>';
@@ -433,7 +441,9 @@
     var sl = ev.target.closest("[data-serie]");
     if (sl) { var k = sl.dataset.serie; if (ocultos[k]) delete ocultos[k]; else ocultos[k] = true; pintarGrafica(); return; }
     var lb = ev.target.closest("[data-lang]");
-    if (lb) { lang = lb.dataset.lang; guardar("dem.lang", lang); pintarTextos(); recalcular(); }
+    if (lb) { lang = lb.dataset.lang; guardar("noc.lang", lang); guardar("dem.lang", lang); pintarTextos(); recalcular(); return; }
+    var mb = ev.target.closest("[data-modo]");
+    if (mb && (mb.dataset.modo === "lab") === REF) { guardar("noc.modo", mb.dataset.modo); location.reload(); }
   });
   document.addEventListener("keydown", function (ev) {
     if ((ev.key === "Enter" || ev.key === " ") && ev.target.dataset && ev.target.dataset.ir) { ev.preventDefault(); ir(ev.target.dataset.ir); }
@@ -441,8 +451,8 @@
   document.addEventListener("change", function (ev) {
     if (ev.target.dataset && ev.target.dataset.p) cambiarParam(ev.target.dataset.p, parseFloat(ev.target.value));
   });
-  $("#anio").addEventListener("input", function () { anio = parseInt(this.value, 10); $("#anio-v").textContent = anio; recalcular(); });
-  $("#reset").addEventListener("click", function () { P = MD.copia(MD.PARAMETROS_DEFECTO); editados = {}; guardar("dem.params", "{}"); recalcular(); });
+  $("#anio").addEventListener("input", function () { if (REF) return; anio = parseInt(this.value, 10); $("#anio-v").textContent = anio; recalcular(); });
+  $("#reset").addEventListener("click", function () { if (REF) return; P = MD.copia(MD.PARAMETROS_DEFECTO); editados = {}; guardar("dem.params", "{}"); recalcular(); });
   $("#sel-dia").addEventListener("change", function () { dia = this.value; programarModelos(); });
   $("#sel-ambito").addEventListener("change", function () { ambito = this.value; programarModelos(); });
 

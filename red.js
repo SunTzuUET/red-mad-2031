@@ -1,8 +1,8 @@
 // Generado por fusionar.py — no editar a mano. Editar datos/*.json y volver a fusionar.
 var RED = {
  "meta": {
-  "version": "2026-11-18",
-  "fecha": "2026-11-18",
+  "version": "2026-11-19",
+  "fecha": "2026-11-19",
   "fuentes": [
    "datos/zonas.json",
    "datos/red_fisica.json",

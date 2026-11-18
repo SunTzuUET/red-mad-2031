@@ -1,0 +1,71 @@
+/* vista_capas.css — vista CAPAS (prefijo .vc-) y piezas comunes de las fichas de arquitectura (prefijo .arq-). Solo tokens de noc.css. */
+.vc { background: var(--bg0); }
+.vc-cab { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 28px;
+  padding: 4px 10px; background: var(--bg1); border-bottom: 1px solid var(--line); }
+.vc-ley { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; font-size: 10px; color: var(--tx2); }
+.vc-ley i { display: inline-block; width: 10px; height: 10px; margin-left: 8px; background: var(--bg1); border: 1px solid var(--line); }
+.vc-ley i.dato-doc, .vc-ley i.dato-calc { border-left-width: 2px; padding: 0; }
+.vc-sep { width: 1px; height: 12px; background: var(--line); margin: 0 8px; }
+.vc-error { padding: 16px; color: var(--crit); font-family: var(--mono); }
+
+.vc-lienzo { position: relative; padding: 4px 10px 16px; min-width: 760px; }
+.vc-svg { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; overflow: visible; }
+.vc-l line { stroke: var(--tx3); stroke-width: 1; opacity: .55; }
+.vc-l.inf line { stroke-dasharray: 3 3; }
+.vc-l text { font: 400 9px var(--mono); fill: var(--tx3); paint-order: stroke; stroke: var(--bg0); stroke-width: 3px; }
+.vc-svg.foco .vc-l { opacity: .15; }
+.vc-svg.foco .vc-l.on { opacity: 1; }
+.vc-l.on line { stroke: var(--acc); opacity: 1; }
+.vc-l.on text { fill: var(--acc); }
+
+.vc-fila { position: relative; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.vc-capa { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1px; padding-right: 6px; border-right: 1px solid var(--line); }
+.vc-letra { font: 600 14px var(--mono); color: var(--acc); }
+.vc-cnom { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--tx2); }
+.vc-inf { font-size: 10px; color: var(--sup); }
+.vc-tec { font-size: 10px; color: var(--tx3); line-height: 1.3; }
+.vc-cajas { display: flex; flex-wrap: wrap; gap: 14px 10px; align-content: flex-start; }
+
+.vc-caja { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; width: 132px; min-height: 46px;
+  padding: 3px 6px; background: var(--bg1); border: 1px solid var(--line); border-radius: 0; text-align: left; cursor: pointer; color: var(--tx1); }
+.vc-caja.dato-doc, .vc-caja.dato-calc { border-left-width: 2px; padding-left: 6px; }
+.vc-caja:hover { border-color: var(--acc); }
+.vc-caja:focus-visible { outline: 1px solid var(--acc); outline-offset: 1px; }
+.vc-caja.sel { box-shadow: inset 0 0 0 1px var(--acc); background: var(--bg2); }
+.vc-caja.vc-hueco { border: 1px dashed var(--unk); background: var(--bg0); }
+.vc-caja.vc-hueco .vc-id, .vc-caja.vc-hueco .vc-nom { color: var(--unk); }
+.vc-caja.vc-ext { border-style: solid; border-color: var(--tx3); background: var(--bg0); }
+.vc-id { font: 600 11px var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.vc-nom { font-size: 10px; color: var(--tx2); line-height: 1.25; max-width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.vc-mod { font: 400 9px var(--mono); color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.vc-carga { display: flex; align-items: center; gap: 4px; font-size: 9px; min-height: 16px; }
+.vc-carga:empty { display: none; }
+.vc-carga .sev { min-width: 0; }
+.arq-id { font-size: 9px; color: var(--tx3); }
+.vc-ley i.vc-hueco { border: 1px dashed var(--unk); background: var(--bg0); }
+.vc-ley i.vc-ext { border-color: var(--tx3); background: var(--bg0); }
+
+/* ---------- piezas comunes de las fichas de arquitectura ---------- */
+.arq-kv { grid-template-columns: 110px minmax(0, 1fr); }
+.arq-kv dd .marca { margin-right: 2px; }
+.arq-sec { color: var(--tx3); font-family: var(--mono); font-size: 10px; }
+.arq-antes { margin-top: 2px; color: var(--tx3); text-decoration: line-through; text-decoration-color: var(--tx3); }
+.arq-antes .marca { text-decoration: none; }
+.arq-ne { color: var(--unk); font-size: 11px; }
+.arq-eq { border-top: 1px solid var(--line); padding-top: 4px; margin-top: 4px; }
+.arq-eq:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.arq-eq-cab { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px; }
+.arq-tabla { margin-top: 4px; }
+.arq-tabla td.txt { line-height: 1.35; padding-top: 3px; padding-bottom: 3px; }
+.arq-tabla tr.arq-inf td:first-child { box-shadow: inset 2px 0 0 var(--sup); }
+.arq-regla { margin-bottom: 6px; }
+.arq-regla-cab { font-size: 11px; margin-bottom: 3px; }
+.arq-regla .formula { margin: 2px 0 3px; }
+.arq-dim { margin-top: 6px; }
+.arq-fuentes { margin: 0; padding: 0; list-style: none; font-size: 11px; }
+.arq-fuentes li { padding: 2px 0 2px 6px; border-left: 2px solid var(--line); margin-bottom: 2px; }
+.arq-fuentes li.dato-doc { border-left-color: var(--doc); }
+.arq-preg { margin: 0; padding-left: 18px; font-size: 11px; line-height: 1.45; color: var(--tx1); }
+.arq-preg li + li { margin-top: 3px; }
+.arq-enl { font-family: var(--mono); }
+.ficha .nota + .nota, .ficha .nota + .kv, .ficha .kv + .nota { margin-top: 4px; }

@@ -3,87 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simulador de red Madrid</title>
+<title>RED-MAD 2031 · NOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="visor.css">
+<link rel="stylesheet" href="noc.css">
+<link rel="stylesheet" href="vista_mapa.css">
+<link rel="stylesheet" href="vista_capas.css" onerror="this.remove()">
+<link rel="stylesheet" href="vista_paquete.css" onerror="this.remove()">
+<link rel="stylesheet" href="vista_interconexion.css" onerror="this.remove()">
 </head>
-<body>
-<header class="barra">
-  <h1>Simulador de red · Madrid metropolitano</h1>
-  <span id="aviso-datos" class="etiqueta-aviso" hidden></span>
-  <div class="barra-acciones">
-    <a href="demanda.html" title="De dónde sale cada Gbit/s y modelos de tráfico">Demanda →</a>
-    <button id="btn-puf" type="button" title="Resaltar puntos únicos de fallo">Puntos únicos de fallo</button>
-    <label class="interruptor" title="Contorno violeta en todo lo marcado como supuesto"><input type="checkbox" id="chk-supuestos"> Marcar supuestos</label>
-    <button id="btn-restaurar" type="button" title="Quitar todos los fallos manuales">Restaurar todo</button>
-    <button id="btn-tema" type="button" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">◐</button>
-  </div>
-</header>
+<body class="m-ref">
+<!-- El shell lo construye app.js (window.NOC). Las vistas se registran solas. -->
+<div id="noc" class="noc"></div>
 
-<main class="cuerpo">
-  <aside class="panel" id="panel">
-    <section class="bloque">
-      <label class="rotulo" for="sel-escenario">Escenario</label>
-      <select id="sel-escenario"></select>
-      <p id="desc-escenario" class="desc"></p>
-    </section>
-
-    <section class="bloque">
-      <div class="fila-hora">
-        <span class="rotulo">Hora</span>
-        <output id="out-hora" class="hora-grande">21:00</output>
-        <button id="btn-play" type="button" aria-label="Reproducir">▶</button>
-      </div>
-      <input type="range" id="rng-hora" min="0" max="23" step="1" value="21">
-    </section>
-
-    <section class="bloque resumen" id="resumen"></section>
-
-    <section class="bloque">
-      <div class="rotulo">Serie diaria <span class="desc">(clic para ir a una hora)</span></div>
-      <div id="grafica" class="grafica"></div>
-    </section>
-
-    <section class="bloque" id="bloque-puf" hidden>
-      <div class="rotulo">Puntos únicos de fallo</div>
-      <div id="lista-puf" class="chips"></div>
-    </section>
-
-    <section class="bloque">
-      <div class="rotulo">Fallos activos</div>
-      <div id="chips-fallos" class="chips"></div>
-    </section>
-
-    <section class="bloque">
-      <div class="rotulo">Alertas</div>
-      <ul id="alertas" class="alertas"></ul>
-    </section>
-
-    <section class="bloque">
-      <div class="rotulo">Capas</div>
-      <div id="capas" class="capas"></div>
-    </section>
-  </aside>
-
-  <div class="mapa-wrap">
-    <div id="mapa"></div>
-    <div id="leyenda" class="leyenda"></div>
-    <aside id="ficha" class="ficha" hidden>
-      <button id="ficha-cerrar" class="cerrar" type="button" aria-label="Cerrar">×</button>
-      <div id="ficha-cuerpo"></div>
-    </aside>
-  </div>
-</main>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<!-- Datos: red.js (generado por fusionar.py); si no existe, datos de prueba -->
 <script src="red.js"></script>
-<script>if (!window.RED) { window.__RED_MOCK = true; document.write('<script src="datos/mock.js"><\/script>'); }</script>
-<!-- Motor: motor.js; si no existe, motor de prueba -->
+<script src="arquitectura_datos.js" onerror="void 0"></script>
+<script src="demanda_datos.js"></script>
 <script src="modelo_demanda.js"></script>
 <script src="modelos.js"></script>
 <script src="motor.js"></script>
-<script>if (!window.Motor) { window.__MOTOR_STUB = true; document.write('<script src="motor_stub.js"><\/script>'); }</script>
-<script src="visor.js"></script>
+<script src="app.js"></script>
+<script src="vista_mapa.js"></script>
+<script src="vista_capas.js" onerror="void 0"></script>
+<script src="vista_paquete.js" onerror="void 0"></script>
+<script src="vista_interconexion.js" onerror="void 0"></script>
+<script>window.NOC && NOC._listo && NOC._listo();</script>
 </body>
 </html>

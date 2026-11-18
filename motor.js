@@ -1,6 +1,11 @@
 // Motor de cálculo del simulador de red (Proyecto 2 Madrid, SCOM + ARCO).
 // Sin dependencias ni build. Funciona en navegador (window.Motor) y en node (module.exports).
 // Contrato y reglas del modelo: ver PLAN.md.
+// API: calcular(RED, opciones) · barridoN1(RED, opciones) · casos(RED) · serieDiaria · puntosUnicosFallo · demandasBase.
+// opciones: escenario, hora, fallos[], factores, modelo{id,anio,dia}, reparto_core, hora_cargada,
+//   rutas ("v7" por defecto si RED.meta.referencia; si no "dijkstra"), caso {trafico, evento, fallo[]}.
+// Cada demanda trae caminos[{peso, destino, ruta, enlaces, latencia_ms}] (reparto en empates/respaldos) y
+// fraccion_con_ruta; ruta/enlaces/destino_nodo son los del camino de más peso.
 var Motor = (function () {
   "use strict";
 
@@ -81,11 +86,21 @@ var Motor = (function () {
       adj[id].forEach(function (e) { adjTo[p] = e.to; adjLink[p] = e.li; p++; });
     });
     adjStart[V] = p;
-    var cores = ordenNodos.filter(function (id) { return nodos[id].tipo === "core"; });
+    // Modo v7: no hay tránsito por DC ni Edge (v7 §6.4.3) además de site/ix; tramos de anillo = metro–metro
+    var transV7 = new Uint8Array(V), anilloL = new Uint8Array(enlaces.length);
+    ordenNodos.forEach(function (id, i) {
+      var t = nodos[id].tipo;
+      transV7[i] = (t === "site" || t === "ix" || t === "core" || t === "edge" || nodos[id].transito === false) ? 0 : 1;
+    });
+    enlaces.forEach(function (l, i) {
+      anilloL[i] = (nodos[l.a].tipo === "metro" && nodos[l.b].tipo === "metro") ? 1 : 0;
+    });
+    var cores =ordenNodos.filter(function (id) { return nodos[id].tipo === "core"; });
     var coresIms = cores.filter(function (id) { return (nodos[id].funciones || []).indexOf("IMS") >= 0; });
     return { nodos: nodos, ordenNodos: ordenNodos, enlaces: enlaces, enlacePorId: enlacePorId,
       cores: cores, coresIms: coresIms.length ? coresIms : cores,
       idx: idx, idxL: idxL, latArr: latArr, latL: latL, transito: transito,
+      transV7: transV7, anilloL: anilloL,
       adjStart: adjStart, adjTo: adjTo, adjLink: adjLink };
   }
 
@@ -160,11 +175,21 @@ var Motor = (function () {
     return mejor;
   }
 
-  // Enruta cada demanda; devuelve array paralelo con {destino, ruta, enlaces, latencia} o null.
-  function enrutar(G, demandas, caidosN, caidosL) {
+  function mascaras(G, caidosN, caidosL) {
     var cN = new Uint8Array(G.ordenNodos.length), cL = new Uint8Array(G.enlaces.length), k;
     for (k in caidosN) if (caidosN[k] && G.idx[k] !== undefined) cN[G.idx[k]] = 1;
     for (k in caidosL) if (caidosL[k] && G.idxL[k] !== undefined) cL[G.idxL[k]] = 1;
+    return { cN: cN, cL: cL };
+  }
+
+  // Enruta cada demanda; devuelve array paralelo con
+  // {destino, ruta, enlaces, latencia, caminos:[{peso, destino, ruta, enlaces, latencia}]} o null.
+  // `ruta`/`enlaces`/`destino` son los del camino de más peso; `caminos` reparte la demanda (Σpeso ≤ 1:
+  // lo que falta hasta 1 no tiene ruta, p. ej. el 40 % del estadio en el respaldo MEC).
+  // modo "dijkstra": un camino por latencia mínima. modo "v7": reglas de la memoria v7 (enrutarV7).
+  function enrutar(G, demandas, caidosN, caidosL, modo) {
+    if (modo === "v7") return enrutarV7(G, demandas, caidosN, caidosL);
+    var m = mascaras(G, caidosN, caidosL), cN = m.cN, cL = m.cL;
     var cache = {};
     return demandas.map(function (d) {
       if (!(d.origen in cache)) cache[d.origen] = dijkstra(G, d.origen, cN, cL);
@@ -172,8 +197,168 @@ var Motor = (function () {
       if (!dj) return null;
       var dest = elegirDestino(G, d, dj, caidosN);
       if (!dest) return null;
-      var c = camino(G, dj, dest);
-      return { destino: dest, ruta: c.ruta, enlaces: c.enlaces, latencia: distDe(G, dj, dest) };
+      var c = camino(G, dj, dest), lat = distDe(G, dj, dest);
+      return { destino: dest, ruta: c.ruta, enlaces: c.enlaces, latencia: lat,
+        caminos: [{ peso: 1, destino: dest, ruta: c.ruta, enlaces: c.enlaces, latencia: lat }] };
+    });
+  }
+
+  // ---------- rutas de la memoria v7 (Entrega 2) ----------
+  // Reglas (v7 §2.7.2, §6.4.3, §6.7.3, A11.1–A11.7):
+  //  1. Mínimo de saltos; empate → reparto a partes iguales entre todos los caminos mínimos ("+" de A11.1–A11.3).
+  //     Sin tránsito por DC, Edge, sitios ni IX (§6.4.3).
+  //  2. Corte de un tramo de anillo (metro–metro): RSVP-TE FRR facility backup. Se calculan las rutas como si el
+  //     tramo estuviera vivo y cada aparición del salto caído se sustituye por el arco opuesto del anillo, sin
+  //     reoptimizar (no se cancelan idas y vueltas, A11.7). Se mantiene la acometida normal.
+  //     [Supuesto] si el arco opuesto tampoco existe (dos cortes, N−2, fuera de la v7) se reoptimiza.
+  //  3. Caída de acometida: el DC se alcanza por su otra acometida con rutas de mínimos saltos (empate a partes
+  //     iguales) — sale solo de la regla 1 sobre la red sin esa acometida.
+  //  4. Caída de un DC: la parte de cada zona que iba a ese DC se reparte a partes iguales entre los DC
+  //     supervivientes (1/3 + 1/6 + 1/6 → 1/2 por DC, §2.7.2).
+  //  5. Caída de un nodo Metro: solo se quita la zona inalcanzable y sus enlaces; el resto sigue la regla 1.
+  //  6. Caída de un Edge: respaldo MEC en el Edge indicado en `respaldo` del nodo (§6.7.3), por rutas de mínimos
+  //     saltos (C→E por C–N–E y C–S–E al 50 %; S→C directo). Fracción transportada según §6.7.3 / A6:
+  //     estadio 60 % (prensa, ligero y vídeo); el resto 100 % (cámaras: 100 % de flujos y grabación —el 30 % de
+  //     analítica es cómputo en el Edge, no transporte—; V2X, hospital y red privada: continuidad).
+  //     [Supuesto] si cae también el Edge de respaldo, el servicio va al DC más cercano al 100 % (la v7 no lo
+  //     trata: la hipótesis es N−1). Lo que no se transporta queda como demanda no servida (estado degradado).
+  var RESPALDO_MEC_V7 = { "S-ESTADIO-PRENSA": 0.6, "S-ESTADIO-LIGERO": 0.6, "S-ESTADIO-VIDEO": 0.6 };
+  var MAX_CAMINOS = 64;
+
+  // BFS por saltos con todos los predecesores de mínimo coste. soloAnillo: solo tramos metro–metro.
+  function bfsSaltos(G, origen, cN, cL, soloAnillo) {
+    var o = typeof origen === "number" ? origen : G.idx[origen];
+    if (o === undefined || cN[o]) return null;
+    var V = G.ordenNodos.length, dist = new Int32Array(V), preds = new Array(V), cola = [o];
+    for (var i = 0; i < V; i++) dist[i] = -1;
+    dist[o] = 0; preds[o] = [];
+    for (var q = 0; q < cola.length; q++) {
+      var u = cola[q];
+      if (u !== o && !G.transV7[u]) continue;
+      for (var k = G.adjStart[u], fin = G.adjStart[u + 1]; k < fin; k++) {
+        var v = G.adjTo[k], li = G.adjLink[k];
+        if (cL[li] || cN[v] || (soloAnillo && !G.anilloL[li])) continue;
+        if (dist[v] < 0) { dist[v] = dist[u] + 1; preds[v] = [[u, li]]; cola.push(v); }
+        else if (dist[v] === dist[u] + 1) preds[v].push([u, li]);
+      }
+    }
+    return { o: o, dist: dist, preds: preds };
+  }
+
+  // Todos los caminos de mínimo número de saltos de b.o a destino (índices de nodo y enlace).
+  function caminosMin(G, b, destino) {
+    var t = typeof destino === "number" ? destino : G.idx[destino];
+    if (t === undefined || b.dist[t] < 0) return [];
+    var out = [], ns = [t], ls = [];
+    (function rec(v) {
+      if (out.length >= MAX_CAMINOS) return;
+      if (v === b.o) { out.push({ n: ns.slice().reverse(), l: ls.slice().reverse() }); return; }
+      var ps = b.preds[v];
+      for (var i = 0; i < ps.length; i++) {
+        ns.push(ps[i][0]); ls.push(ps[i][1]); rec(ps[i][0]); ns.pop(); ls.pop();
+      }
+    })(t);
+    return out;
+  }
+
+  function latCamino(G, c) {
+    var s = 0, i;
+    for (i = 0; i < c.n.length; i++) s += G.latArr[c.n[i]];
+    for (i = 0; i < c.l.length; i++) s += G.latL[c.l[i]];
+    return s;
+  }
+
+  function enrutarV7(G, demandas, caidosN, caidosL) {
+    var m = mascaras(G, caidosN, caidosL), cN = m.cN, cL = m.cL;
+    // Cortes de tramo protegidos por FRR (los dos extremos vivos) y su arco opuesto por sentido
+    var cLpre = new Uint8Array(cL), arcos = {}, hayCortes = false;
+    G.enlaces.forEach(function (l, li) {
+      if (!cL[li] || !G.anilloL[li]) return;
+      var a = G.idx[l.a], b = G.idx[l.b];
+      if (cN[a] || cN[b]) return;
+      hayCortes = true; cLpre[li] = 0;
+      var arco = function (x, y) {
+        var bb = bfsSaltos(G, x, cN, cL, true), ps = bb ? caminosMin(G, bb, y) : [];
+        return ps.length ? ps[0] : null;
+      };
+      arcos[li] = { ab: arco(a, b), ba: arco(b, a) };
+    });
+    function frr(c) {
+      var n = [c.n[0]], l = [];
+      for (var k = 0; k < c.l.length; k++) {
+        var li = c.l[k];
+        if (arcos[li]) {
+          var arc = arcos[li][c.n[k] === G.idx[G.enlaces[li].a] ? "ab" : "ba"];
+          if (!arc) return null;
+          for (var j = 0; j < arc.l.length; j++) { l.push(arc.l[j]); n.push(arc.n[j + 1]); }
+        } else { l.push(li); n.push(c.n[k + 1]); }
+      }
+      return { n: n, l: l };
+    }
+    var cachePre = {}, cacheFull = {};
+    function bfsDe(cache, origen, mascL) {
+      if (!(origen in cache)) cache[origen] = bfsSaltos(G, origen, cN, mascL, false);
+      return cache[origen];
+    }
+    function ok(b, id) { var i = G.idx[id]; return i !== undefined && !cN[i] && b.dist[i] >= 0; }
+    function masCercanos(b, lista) {
+      var md = Infinity, out = [];
+      lista.forEach(function (id) {
+        if (!ok(b, id)) return;
+        var x = b.dist[G.idx[id]];
+        if (x < md) { md = x; out = [id]; } else if (x === md) out.push(id);
+      });
+      return out;
+    }
+    function reparto(lista, w) { return lista.map(function (id) { return [id, w / lista.length]; }); }
+    // Destinos de la demanda con su peso
+    function destinos(d, b) {
+      var cores = d.destino === "ims" ? G.coresIms : G.cores;
+      if (d.destino === "nodo") return ok(b, d.destino_fijo) ? [[d.destino_fijo, 1]] : [];
+      if (d.core_fijo) {
+        if (ok(b, d.core_fijo)) return [[d.core_fijo, 1]];
+        // Regla 4: la parte del DC caído se reparte a partes iguales entre los supervivientes
+        var sup = (d.cores_reparto || cores).filter(function (c) { return ok(b, c); });
+        if (!sup.length) sup = cores.filter(function (c) { return ok(b, c); });
+        return reparto(sup, 1);
+      }
+      if (d.destino === "edge") {
+        if (ok(b, d.edge)) return [[d.edge, 1]];
+        var e = G.nodos[d.edge];
+        if (e && ok(b, e.respaldo)) return [[e.respaldo, num(d.respaldo_mec, 1)]];
+        return reparto(masCercanos(b, G.cores), 1);
+      }
+      return reparto(masCercanos(b, cores), 1);   // modo "cercano": DC(s) a menos saltos, empate a partes iguales
+    }
+    function construir(d, b, conFrr) {
+      var out = [], fallo = false;
+      destinos(d, b).forEach(function (dw) {
+        var ps = caminosMin(G, b, dw[0]);
+        ps.forEach(function (c) {
+          if (conFrr) { c = frr(c); if (!c) { fallo = true; return; } }
+          out.push({ peso: dw[1] / ps.length, destino: dw[0], c: c });
+        });
+      });
+      return fallo ? null : out;
+    }
+    return demandas.map(function (d) {
+      var b = bfsDe(hayCortes ? cachePre : cacheFull, d.origen, hayCortes ? cLpre : cL);
+      if (!b) return null;
+      var cams = construir(d, b, hayCortes);
+      if (cams === null) {   // [Supuesto] FRR imposible (N−2): se reoptimiza sobre la red con todos los fallos
+        b = bfsDe(cacheFull, d.origen, cL);
+        cams = b ? construir(d, b, false) : [];
+      }
+      if (!cams.length) return null;
+      var caminos = cams.map(function (x) {
+        return { peso: x.peso, destino: x.destino,
+          ruta: x.c.n.map(function (i) { return G.ordenNodos[i]; }),
+          enlaces: x.c.l.map(function (i) { return G.enlaces[i].id; }),
+          latencia: latCamino(G, x.c) };
+      });
+      var main = caminos[0], lat = 0;
+      caminos.forEach(function (c) { if (c.peso > main.peso + EPS) main = c; lat = Math.max(lat, c.latencia); });
+      return { destino: main.destino, ruta: main.ruta, enlaces: main.enlaces, latencia: lat, caminos: caminos };
     });
   }
 
@@ -208,6 +393,7 @@ var Motor = (function () {
         destino: s.destino || "internet", edge: s.edge || (z && z.edge) || null,
         destino_fijo: s.destino_nodo || null, inactivo: !!s.inactivo_por_defecto,
         reparto_cores: s.reparto_cores || null,
+        respaldo_mec: num(s.respaldo_mec, num(RESPALDO_MEC_V7[s.id], 1)),
         latencia_max_ms: latMax(s) });
     });
     return out;
@@ -236,6 +422,7 @@ var Motor = (function () {
         var x = {}, k;
         for (k in b) x[k] = b[k];
         x.id = b.id + "@" + p[0]; x.padre = b.id; x.core_fijo = p[0]; x.reparto = p[1] / tot;
+        x.cores_reparto = pesos.map(function (q) { return q[0]; });
         out.push(x);
       });
     });
@@ -263,6 +450,18 @@ var Motor = (function () {
     return num(c.por_tipo && c.por_tipo[b.tipo], num(c.general, 1));
   }
 
+  // ¿Pasa alguna de las rutas de r (salida de enrutar) por el nodo/enlace id?
+  function usaElemento(r, id, esNodo) {
+    var cs = r.caminos || [r];
+    for (var i = 0; i < cs.length; i++) if ((esNodo ? cs[i].ruta : cs[i].enlaces).indexOf(id) >= 0) return true;
+    return false;
+  }
+  function firmaRuta(r) {
+    return (r.caminos || [r]).map(function (c) {
+      return c.destino + ":" + c.enlaces.join(",") + ":" + (c.peso === undefined ? 1 : c.peso).toFixed(6);
+    }).join("|");
+  }
+
   // Sentido del DL en el k-ésimo enlace de la ruta (la ruta va del origen al destino; el DL vuelve).
   function sentidoDL(G, d, k) {
     var l = G.enlacePorId[d.enlaces[k]];
@@ -276,8 +475,42 @@ var Motor = (function () {
     return num(p[((hora % 24) + 24) % 24], 1);
   }
 
+  // Modo de rutas: "v7" por defecto con red de referencia (RED.meta.referencia), si no "dijkstra".
+  function modoRutas(RED, opciones) {
+    var m = opciones && opciones.rutas;
+    if (m === "v7" || m === "dijkstra") return m;
+    return (RED.meta && RED.meta.referencia) ? "v7" : "dijkstra";
+  }
+
+  // opciones.caso = {trafico, evento, fallo:[ids]} (constructor de casos, ver casos()) → opciones internas.
+  //   trafico: id de modelo ("BH", "P2", …) u objeto {id, anio, dia, hora}; evento: id de escenario sin fallos
+  //   (o "ninguno" = E-NORMAL si existe); fallo: id o lista de ids de nodos/enlaces. Lo explícito en
+  //   `opciones` (escenario, modelo, hora, fallos) se respeta y se suma.
+  function traducirCaso(RED, opciones) {
+    var c = opciones.caso, o = {}, k;
+    for (k in opciones) if (k !== "caso") o[k] = opciones[k];
+    if (!c) return o;
+    if (!o.escenario) {
+      if (c.evento && c.evento !== "ninguno") o.escenario = c.evento;
+      else if ((RED.escenarios || []).some(function (e) { return e.id === EVENTO_NINGUNO; })) o.escenario = EVENTO_NINGUNO;
+    }
+    var t = c.trafico;
+    if (t && !o.modelo) {
+      if (typeof t === "string") o.modelo = { id: t };
+      else {
+        o.modelo = { id: t.id || "BH" };
+        if (t.anio) o.modelo.anio = t.anio;
+        if (t.dia) o.modelo.dia = t.dia;
+        if (typeof t.hora === "number" && typeof o.hora !== "number") o.hora = t.hora;
+      }
+    }
+    if (c.fallo) o.fallos = [].concat(o.fallos || [], c.fallo);
+    return o;
+  }
+  var EVENTO_NINGUNO = "E-NORMAL";
+
   function resolverOpciones(RED, opciones) {
-    opciones = opciones || {};
+    opciones = traducirCaso(RED, opciones || {});
     var esc = null;
     if (opciones.escenario) {
       (RED.escenarios || []).forEach(function (e) { if (e.id === opciones.escenario) esc = e; });
@@ -302,7 +535,7 @@ var Motor = (function () {
         avisoModelo = aj.aviso || null;
       } else avisoModelo = "modelos.js no cargado: se ignora el modelo de tráfico";
     }
-    return { esc: esc, escId: opciones.escenario || null, hora: hora, fallos: fallos,
+    return { esc: esc, escId: opciones.escenario || null, hora: hora, fallos: fallos, rutas: modoRutas(RED, opciones),
       factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo };
   }
 
@@ -326,8 +559,8 @@ var Motor = (function () {
     });
 
     // Rutas sin fallos y con fallos
-    var rutasBase = enrutar(G, base, {}, {});
-    var rutas = hayFallos ? enrutar(G, base, caidosN, caidosL) : rutasBase;
+    var rutasBase = enrutar(G, base, {}, {}, op.rutas);
+    var rutas = hayFallos ? enrutar(G, base, caidosN, caidosL, op.rutas) : rutasBase;
 
     // Estructuras de salida
     var enlacesOut = {}, nodosOut = {}, residualL = {}, residualN = {}, ofertaL = {}, ofertaN = {};
@@ -356,64 +589,80 @@ var Motor = (function () {
       var f = ph * factorDe(b, op.factores) * (b.reparto || 1);
       var dl = b.dl_gbps * f;
       var via = "principal";
-      if (r && (!rb || rb.destino !== r.destino || rb.enlaces.join(",") !== r.enlaces.join(","))) via = "respaldo";
+      if (r && (!rb || firmaRuta(rb) !== firmaRuta(r))) via = "respaldo";
+      var caminos = r ? r.caminos.map(function (c) {
+        return { peso: c.peso, destino: c.destino, ruta: c.ruta, enlaces: c.enlaces, latencia_ms: c.latencia,
+          sds: c.enlaces.map(function (id, k) { return sentidoDL(G, c, k); }) };
+      }) : [];
+      var pesoRuta = 0;
+      caminos.forEach(function (c) { pesoRuta += c.peso; });
       return { id: b.id, padre: b.padre || null, zona: b.zona, origen: b.origen, destino_nodo: r ? r.destino : null,
         destino: b.destino, tipo: b.tipo, clase: b.clase, prioridad: b.prioridad, slice: b.slice,
         dl_gbps: dl, ul_gbps: b.ul_gbps * f, h: cabeceraDe(RED, b), servida_gbps: 0, ruta: r ? r.ruta : [], enlaces: r ? r.enlaces : [],
+        caminos: caminos, fraccion_con_ruta: pesoRuta,
         latencia_ms: r ? r.latencia : null, latencia_max_ms: b.latencia_max_ms,
         via: r ? via : "respaldo", estado: "ok" };
     });
 
     // Oferta por elemento (para % de demanda sobre capacidad)
     dem.forEach(function (d) {
-      if (!d.ruta.length) return;
-      d.enlaces.forEach(function (id, k) {
-        var sd = sentidoDL(G, d, k);
-        ofertaL[id][sd] += d.dl_gbps * d.h; ofertaL[id][sd === "ab" ? "ba" : "ab"] += d.ul_gbps * d.h;
+      d.caminos.forEach(function (c) {
+        c.enlaces.forEach(function (id, k) {
+          var sd = c.sds[k];
+          ofertaL[id][sd] += d.dl_gbps * d.h * c.peso; ofertaL[id][sd === "ab" ? "ba" : "ab"] += d.ul_gbps * d.h * c.peso;
+        });
+        c.ruta.forEach(function (id) { ofertaN[id] += d.dl_gbps * d.h * c.peso; });
       });
-      d.ruta.forEach(function (id) { ofertaN[id] += d.dl_gbps * d.h; });
     });
 
-    // Asignación voraz por prioridad (1 primero; empate por menor demanda)
+    // Asignación voraz por prioridad (1 primero; empate por menor demanda). Cada camino lleva su peso de la demanda.
     var orden = [];
-    dem.forEach(function (d, i) { if (d.ruta.length) orden.push(i); });
+    dem.forEach(function (d, i) { if (d.caminos.length) orden.push(i); });
     orden.sort(function (a, b) {
       var A = dem[a], B = dem[b];
       return (A.prioridad - B.prioridad) || (A.dl_gbps - B.dl_gbps) || (A.id < B.id ? -1 : A.id > B.id ? 1 : 0);
     });
     var cuello = {}; // "L:id" | "N:id" -> { tipo, id, recortado, prios:{} }
     orden.forEach(function (i) {
-      var d = dem[i], minR = Infinity, cue = null;
-      var sds = d.enlaces.map(function (id, k) { return sentidoDL(G, d, k); });
-      d.enlaces.forEach(function (id, k) { var x = residualL[id][sds[k]]; if (x < minR) { minR = x; cue = "L:" + id; } });
-      d.ruta.forEach(function (id) { if (residualN[id] < minR) { minR = residualN[id]; cue = "N:" + id; } });
-      // Carga física en la red = IP × cabecera (v7 §2.7.2); lo servido se cuenta en Gbit/s IP
-      var s = Math.max(0, Math.min(d.dl_gbps * d.h, minR));
-      d.servida_gbps = s / d.h;
-      var cut = d.dl_gbps * d.h - s;
-      if (cut > EPS && cue) {
-        var c = cuello[cue] || (cuello[cue] = { tipo: cue.charAt(0), id: cue.slice(2), recortado: 0, prios: {}, n: 0 });
-        c.recortado += cut; c.prios[d.prioridad] = true; c.n++;
-      }
-      // UL por el sentido contrario, limitado por lo que quede en ese sentido (no recorta el DL)
-      var minU = Infinity;
-      d.enlaces.forEach(function (id, k) { minU = Math.min(minU, residualL[id][sds[k] === "ab" ? "ba" : "ab"]); });
-      var su = Math.max(0, Math.min(d.ul_gbps * d.h, minU));
-      d.servida_ul_gbps = su / d.h;
-      d.enlaces.forEach(function (id, k) {
-        var e = enlacesOut[id], sd = sds[k], su_ = sd === "ab" ? "ba" : "ab";
-        residualL[id][sd] -= s; residualL[id][su_] -= su;
-        e["carga_" + sd] += s; e["carga_" + su_] += su; e.demandas.push(d.id);
+      var d = dem[i], sTot = 0, suTot = 0, vL = {}, vN = {};
+      d.caminos.forEach(function (c) {
+        var minR = Infinity, cue = null, sds = c.sds;
+        c.enlaces.forEach(function (id, k) { var x = residualL[id][sds[k]]; if (x < minR) { minR = x; cue = "L:" + id; } });
+        c.ruta.forEach(function (id) { if (residualN[id] < minR) { minR = residualN[id]; cue = "N:" + id; } });
+        // Carga física en la red = IP × cabecera (v7 §2.7.2); lo servido se cuenta en Gbit/s IP
+        var pedido = d.dl_gbps * d.h * c.peso;
+        var s = Math.max(0, Math.min(pedido, minR));
+        var cut = pedido - s;
+        if (cut > EPS && cue) {
+          var cu = cuello[cue] || (cuello[cue] = { tipo: cue.charAt(0), id: cue.slice(2), recortado: 0, prios: {}, n: 0 });
+          cu.recortado += cut; cu.prios[d.prioridad] = true; cu.n++;
+        }
+        // UL por el sentido contrario, limitado por lo que quede en ese sentido (no recorta el DL)
+        var minU = Infinity;
+        c.enlaces.forEach(function (id, k) { minU = Math.min(minU, residualL[id][sds[k] === "ab" ? "ba" : "ab"]); });
+        var su = Math.max(0, Math.min(d.ul_gbps * d.h * c.peso, minU));
+        sTot += s; suTot += su;
+        c.enlaces.forEach(function (id, k) {
+          var e = enlacesOut[id], sd = sds[k], su_ = sd === "ab" ? "ba" : "ab";
+          residualL[id][sd] -= s; residualL[id][su_] -= su;
+          e["carga_" + sd] += s; e["carga_" + su_] += su;
+          if (!vL[id]) { vL[id] = 1; e.demandas.push(d.id); }
+        });
+        c.ruta.forEach(function (id) {
+          residualN[id] -= s; var n = nodosOut[id]; n.carga_gbps += s;
+          if (!vN[id]) { vN[id] = 1; n.demandas.push(d.id); }
+        });
       });
-      d.ruta.forEach(function (id) {
-        residualN[id] -= s; var n = nodosOut[id]; n.carga_gbps += s; n.demandas.push(d.id);
-      });
+      d.servida_gbps = sTot / d.h;
+      d.servida_ul_gbps = suTot / d.h;
     });
+    dem.forEach(function (d) { d.caminos.forEach(function (c) { delete c.sds; }); });
 
     // Estados
     dem.forEach(function (d) {
       if (!d.ruta.length) d.estado = "caido";
       else if (d.dl_gbps > EPS && d.servida_gbps < 0.99 * d.dl_gbps) d.estado = "degradado";
+      else if ((d.dl_gbps > EPS || d.ul_gbps > EPS) && d.fraccion_con_ruta < 0.99) d.estado = "degradado";
       else if (d.latencia_max_ms !== null && d.latencia_max_ms !== undefined && d.latencia_ms > d.latencia_max_ms) d.estado = "latencia";
       else d.estado = "ok";
     });
@@ -451,10 +700,13 @@ var Motor = (function () {
         var rb = rutasBase[i];
         if (!rb || d.estado === "caido") return;
         if (caidosN[id] && rb.destino === id && d.destino_nodo !== id) {
-          if (!migr[d.destino_nodo]) { migr[d.destino_nodo] = []; ordenMigr.push(d.destino_nodo); }
-          migr[d.destino_nodo].push({ d: d, lb: rb.latencia });
-        } else if (d.via === "respaldo" &&
-          (caidosN[id] ? rb.ruta.indexOf(id) >= 0 : rb.enlaces.indexOf(id) >= 0)) {
+          var dests = [];
+          d.caminos.forEach(function (c) { if (c.destino !== id && dests.indexOf(c.destino) < 0) dests.push(c.destino); });
+          dests.forEach(function (dn) {
+            if (!migr[dn]) { migr[dn] = []; ordenMigr.push(dn); }
+            migr[dn].push({ d: d, lb: rb.latencia });
+          });
+        } else if (d.via === "respaldo" && usaElemento(rb, id, !!caidosN[id])) {
           reenc.push({ d: d, lb: rb.latencia });
         }
       });
@@ -472,7 +724,7 @@ var Motor = (function () {
       if (!ordenMigr.length && !reenc.length) {
         var sinRuta = dem.filter(function (d, i) {
           var rb = rutasBase[i];
-          return d.estado === "caido" && rb && (caidosN[id] ? rb.ruta.indexOf(id) >= 0 : rb.enlaces.indexOf(id) >= 0);
+          return d.estado === "caido" && rb && usaElemento(rb, id, !!caidosN[id]);
         }).length;
         if (!sinRuta) alertas.push({ nivel: "info", texto: nombre + " caído: no afecta a ninguna demanda" });
       }
@@ -570,13 +822,16 @@ var Motor = (function () {
   // dejar demandas sin ruta, así que se descarta sin recalcular.
   function puntosUnicosFallo(RED, opciones) {
     var G = construirGrafo(RED);
-    var base = expandirCores(G, demandasBase(RED), resolverOpciones(RED, opciones).reparto);
-    var rb = enrutar(G, base, {}, {});
+    var op = resolverOpciones(RED, opciones);
+    var base = expandirCores(G, demandasBase(RED), op.reparto);
+    var rb = enrutar(G, base, {}, {}, op.rutas);
     var usaN = {}, usaL = {};
     rb.forEach(function (r) {
       if (!r) return;
-      r.ruta.forEach(function (id) { usaN[id] = true; });
-      r.enlaces.forEach(function (id) { usaL[id] = true; });
+      r.caminos.forEach(function (c) {
+        c.ruta.forEach(function (id) { usaN[id] = true; });
+        c.enlaces.forEach(function (id) { usaL[id] = true; });
+      });
     });
     var cands = [];
     G.ordenNodos.forEach(function (id) {
@@ -591,9 +846,9 @@ var Motor = (function () {
       if (c.clase === "nodo") cN[c.id] = true; else cL[c.id] = true;
       // solo se reenrutan las demandas cuya ruta sin fallos pasa por el elemento
       var sub = base.filter(function (b, i) {
-        return rb[i] && (c.clase === "nodo" ? rb[i].ruta.indexOf(c.id) >= 0 : rb[i].enlaces.indexOf(c.id) >= 0);
+        return rb[i] && usaElemento(rb[i], c.id, c.clase === "nodo");
       });
-      var r = enrutar(G, sub, cN, cL), afect = [];
+      var r = enrutar(G, sub, cN, cL, op.rutas), afect = [];
       r.forEach(function (x, i) { if (!x) afect.push(sub[i].id); });
       if (afect.length) {
         var n = c.clase === "nodo" ? G.nodos[c.id] : G.enlacePorId[c.id];
@@ -605,8 +860,107 @@ var Motor = (function () {
     return out;
   }
 
+  // ---------- barrido N-1 (PLAN_v2 §5.2) ----------
+  // Tumba uno a uno cada elemento de transporte (nodos metro, core, edge, ix; enlaces wdm, mpls —acometidas
+  // de DC y de Edge—, ix) con las opciones dadas (tráfico, evento y fallos ya presentes) y ordena de peor a mejor:
+  // menor % servido, más demandas sin ruta, más alertas graves, mayor ocupación máxima.
+  var TIPOS_N1_NODO = { metro: 1, core: 1, edge: 1, ix: 1 }, TIPOS_N1_ENLACE = { wdm: 1, mpls: 1, ix: 1 };
+  function barridoN1(RED, opciones) {
+    opciones = opciones || {};
+    var ya = {};
+    resolverOpciones(RED, opciones).fallos.forEach(function (id) { ya[id] = true; });
+    var cands = [];
+    (RED.nodos || []).forEach(function (n) {
+      if (n && TIPOS_N1_NODO[n.tipo] && !ya[n.id]) cands.push({ id: n.id, tipo: n.tipo, clase: "nodo", nombre: n.nombre || n.id });
+    });
+    (RED.enlaces || []).forEach(function (l) {
+      if (l && TIPOS_N1_ENLACE[l.tipo] && !ya[l.id]) cands.push({ id: l.id, tipo: l.tipo, clase: "enlace", nombre: l.nombre || (l.a + " – " + l.b) });
+    });
+    var out = cands.map(function (c) {
+      var o = {}, k;
+      for (k in opciones) o[k] = opciones[k];
+      o.fallos = [].concat(opciones.fallos || [], [c.id]);
+      var r = calcular(RED, o), caidas = 0, graves = 0;
+      r.demandas.forEach(function (d) { if (d.estado === "caido") caidas++; });
+      r.resumen.alertas.forEach(function (a) { if (a.nivel === "grave") graves++; });
+      return { id: c.id, tipo: c.tipo, clase: c.clase, nombre: c.nombre, pct_servida: r.resumen.pct_servida,
+        max_ocupacion: r.resumen.max_ocupacion, enlace_max: r.resumen.enlace_max,
+        demandas_caidas: caidas, alertas_graves: graves };
+    });
+    out.sort(function (a, b) {
+      return (a.pct_servida - b.pct_servida) || (b.demandas_caidas - a.demandas_caidas) ||
+        (b.alertas_graves - a.alertas_graves) || (b.max_ocupacion - a.max_ocupacion) || (a.id < b.id ? -1 : 1);
+    });
+    return out;
+  }
+
+  // ---------- constructor de casos (PLAN_v2 §5.1): ejes tráfico · evento · fallo ----------
+  // Devuelve los valores posibles de cada eje; Motor.calcular(RED, {caso: {trafico, evento, fallo: [ids]}}).
+  var TIPOS_FALLO = [
+    { id: "corte_tramo", es: "Corte de tramo del anillo", en: "Ring span cut", clase: "enlace",
+      filtro: function (l, N) { return l.tipo === "wdm" || (N[l.a] && N[l.b] && N[l.a].tipo === "metro" && N[l.b].tipo === "metro"); } },
+    { id: "caida_metro", es: "Caída de nodo Metro", en: "Metro node failure", clase: "nodo", filtro: function (n) { return n.tipo === "metro"; } },
+    { id: "caida_acometida", es: "Caída de acometida de DC", en: "DC feed failure", clase: "enlace",
+      filtro: function (l, N) { return tipoPar(l, N, "core", "metro"); } },
+    { id: "caida_dc", es: "Caída de DC", en: "DC failure", clase: "nodo", filtro: function (n) { return n.tipo === "core"; } },
+    { id: "caida_edge", es: "Caída de Edge", en: "Edge failure", clase: "nodo", filtro: function (n) { return n.tipo === "edge"; } },
+    { id: "corte_acometida_edge", es: "Corte de acometida Metro–Edge", en: "Metro–Edge feed cut", clase: "enlace",
+      filtro: function (l, N) { return tipoPar(l, N, "edge", "metro"); } },
+    { id: "interconexion", es: "Interconexión (IX)", en: "Interconnection (IX)", clase: "mixto",
+      filtro: function (x, N) { return x.tipo === "ix"; } },
+    { id: "acceso", es: "Corte de acceso de un servicio", en: "Service access cut", clase: "enlace",
+      filtro: function (l) { return l.tipo === "acceso"; } }
+  ];
+  function tipoPar(l, N, t1, t2) {
+    var a = N[l.a], b = N[l.b];
+    return !!(a && b && ((a.tipo === t1 && b.tipo === t2) || (a.tipo === t2 && b.tipo === t1)));
+  }
+  function casos(RED) {
+    var MT = RED.modelos_trafico || {}, N = {};
+    (RED.nodos || []).forEach(function (n) { N[n.id] = n; });
+    var trafico = ((MT.modelos) || []).slice().sort(function (a, b) { return num(a.orden, 99) - num(b.orden, 99); })
+      .map(function (m) {
+        return { id: m.id, es: m.nombre_es || m.id, en: m.nombre_en || m.nombre_es || m.id, origen: m.origen || null,
+          hora_cargada: !!m.hora_cargada, usa_hora: !m.hora_cargada, fuente: m.fuente || null };
+      });
+    if (!trafico.length) trafico.push({ id: "BH", es: "Hora cargada coincidente", en: "Coincident busy hour",
+      origen: "documento", hora_cargada: true, usa_hora: false, fuente: null });
+    var dias = Object.keys(MT.tipos_dia || {});
+    // Eventos: escenarios sin fallos que no son un modelo de tráfico (sin factores "tipo:…") ni de dimensionado
+    var evento = [], nEsc = {};
+    (RED.escenarios || []).forEach(function (e) {
+      nEsc[e.id] = e;
+      if ((e.fallos || []).length || e.hora_cargada || e.reparto_core) return;
+      if (Object.keys(e.factores || {}).some(function (k) { return k.indexOf("tipo:") === 0; })) return;
+      if (e.id === EVENTO_NINGUNO) return;
+      evento.push({ id: e.id, es: e.nombre || e.id, en: e.nombre_en || e.nombre || e.id,
+        hora: typeof e.hora === "number" ? e.hora : null });
+    });
+    evento.unshift({ id: "ninguno", es: "Ninguno", en: "None", escenario: nEsc[EVENTO_NINGUNO] ? EVENTO_NINGUNO : null,
+      hora: nEsc[EVENTO_NINGUNO] && typeof nEsc[EVENTO_NINGUNO].hora === "number" ? nEsc[EVENTO_NINGUNO].hora : null });
+    var fallo = [{ id: "ninguno", es: "Ninguno", en: "None", elementos: [] }];
+    TIPOS_FALLO.forEach(function (t) {
+      var els = [];
+      if (t.clase !== "enlace") (RED.nodos || []).forEach(function (n) {
+        if (n && t.filtro(n, N)) els.push({ id: n.id, clase: "nodo", nombre: n.nombre || n.id });
+      });
+      if (t.clase !== "nodo") (RED.enlaces || []).forEach(function (l) {
+        if (l && t.filtro(l, N)) els.push({ id: l.id, clase: "enlace",
+          nombre: (N[l.a] ? N[l.a].nombre : l.a) + " – " + (N[l.b] ? N[l.b].nombre : l.b) });
+      });
+      if (els.length) fallo.push({ id: t.id, es: t.es, en: t.en, elementos: els });
+    });
+    // Escenarios guardados con fallo (equivalen a evento + fallo); útiles como accesos directos
+    var predefinidos = (RED.escenarios || []).filter(function (e) { return (e.fallos || []).length; })
+      .map(function (e) { return { id: e.id, es: e.nombre || e.id, fallos: e.fallos.slice() }; });
+    return { trafico: trafico, dias: dias, evento: evento, fallo: fallo, predefinidos: predefinidos,
+      rutas: (RED.meta && RED.meta.referencia) ? "v7" : "dijkstra" };
+  }
+
   return {
     calcular: calcular,
+    barridoN1: barridoN1,
+    casos: casos,
     demandasBase: demandasBase,
     serieDiaria: serieDiaria,
     puntosUnicosFallo: puntosUnicosFallo,

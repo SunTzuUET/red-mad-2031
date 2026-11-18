@@ -1,0 +1,20 @@
+/* vista_interconexion.css — INTERCONEXIÓN (prefijo .vi-). Solo tokens de noc.css. */
+.vi { background: var(--bg0); }
+.vi-error { padding: 16px; color: var(--crit); font-family: var(--mono); }
+.vi-cab { display: flex; align-items: center; gap: 10px; min-height: 28px; padding: 4px 10px; background: var(--bg1); border-bottom: 1px solid var(--line); }
+.vi-n { color: var(--tx3); font-size: 11px; }
+.vi-tabla { table-layout: fixed; min-width: 980px; }
+.vi-tabla th:nth-child(1) { width: 15%; } .vi-tabla th:nth-child(2) { width: 15%; } .vi-tabla th:nth-child(3) { width: 12%; }
+.vi-tabla th:nth-child(4) { width: 20%; } .vi-tabla th:nth-child(5) { width: 20%; } .vi-tabla th:nth-child(6) { width: 8%; } .vi-tabla th:nth-child(7) { width: 10%; }
+.vi-tabla td { vertical-align: top; height: auto; padding-top: 4px; padding-bottom: 4px; }
+.vi-tabla td.txt { line-height: 1.35; }
+.vi-tabla td.dato-doc, .vi-tabla td.dato-sup { padding-left: 6px; }
+.vi-tabla tr.vi-excl td { color: var(--tx3); }
+.vi-tabla tr.vi-excl td .mono { color: var(--tx2); }
+.vi-nom .mono { font-weight: 600; }
+.vi-oc { white-space: normal; }
+.vi-oc .sev { min-width: 0; }
+.vi-fte { font-size: 10px; color: var(--tx2); word-break: break-word; }
+.vi .arq-ne { color: var(--unk); }
+.vi .arq-sec { color: var(--tx3); font-family: var(--mono); font-size: 10px; }
+.vi-pie { padding: 6px 10px; }
