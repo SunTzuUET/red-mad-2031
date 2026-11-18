@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RED-MAD 2031 · Demanda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="demanda.css">
+</head>
+<body>
+<header class="barra">
+  <h1><span data-t="titulo">Demanda</span><small>RED-MAD 2031 · F1</small></h1>
+  <div class="ctl"><span data-t="anio">Año</span><input type="range" id="anio" min="2025" max="2031" step="1" value="2031"><span id="anio-v" class="mono">2031</span></div>
+  <div class="esp"></div>
+  <button class="btn" id="reset" data-t="reset">Restablecer parámetros</button>
+  <div class="seg" role="group" aria-label="Idioma / Language"><button data-lang="es">ES</button><button data-lang="en">EN</button></div>
+  <a href="index.html" data-t="volver">← Simulador</a>
+</header>
+<main>
+  <p class="intro" data-t="intro"></p>
+
+  <section class="bloque">
+    <h2 data-t="resumen">Resumen</h2>
+    <div class="fichas" id="fichas"></div>
+    <div class="control" id="control"></div>
+  </section>
+
+  <section class="bloque">
+    <h2 data-t="explorador">¿De dónde sale cada cifra?</h2>
+    <div class="explorador">
+      <div class="panel"><h3 data-t="pasos">Cadena de cálculo</h3><div class="arbol" id="arbol"></div></div>
+      <div class="panel detalle" id="detalle"></div>
+      <div class="panel"><h3 data-t="parametros">Parámetros editables</h3><div class="params" id="params"></div></div>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <h2 data-t="modelos">Modelos de tráfico</h2>
+    <p class="intro" data-t="modelos_intro"></p>
+    <div class="ctl" style="margin:10px 0;flex-wrap:wrap;gap:8px 16px">
+      <label><span data-t="dia">Tipo de día</span> <select id="sel-dia" class="btn"></select></label>
+      <label><span data-t="ambito">Ámbito</span> <select id="sel-ambito" class="btn"></select></label>
+    </div>
+    <div class="modelos">
+      <div>
+        <div class="panel grafica" id="modelos-graf"></div>
+        <div class="panel" style="margin-top:12px"><h3 data-t="tabla_modelos">Resumen por modelo</h3><div class="tabla-wrap"><table class="t" id="tabla-modelos"></table></div></div>
+      </div>
+      <div class="panel desc-modelo" id="desc-modelos"></div>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <h2 data-t="municipios">Reparto por municipio</h2>
+    <p class="intro" data-t="municipios_intro"></p>
+    <div class="panel tabla-wrap" style="margin-top:10px"><table class="t" id="municipios"></table></div>
+    <p class="nota" data-t="nota_mun"></p>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="red.js"></script>
+<script src="demanda_datos.js"></script>
+<script src="modelo_demanda.js"></script>
+<script src="modelos.js"></script>
+<script src="motor.js"></script>
+<script src="demanda.js"></script>
+</body>
+</html>
