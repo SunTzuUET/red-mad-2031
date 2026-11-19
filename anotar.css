@@ -1,0 +1,23 @@
+/* anotar.css — globos con flecha (Revisión 12, PREGUNTAS). Solo tokens de noc.css. */
+.an-capa { position: fixed; inset: 0; z-index: 940; pointer-events: none; }
+.an-capa[hidden] { display: none; }
+.an-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.an-flecha { fill: none; stroke: var(--steel); stroke-width: 1.5; stroke-linecap: square; }
+.an-anillo { fill: none; stroke: var(--steel); stroke-width: 2; stroke-dasharray: 4 3; animation: an-giro 6s linear infinite; transform-box: fill-box; transform-origin: center; }
+.an-f-ok { stroke: var(--ok); } .an-f-min { stroke: var(--min); } .an-f-maj { stroke: var(--maj); }
+.an-f-crit, .an-f-down { stroke: var(--crit); }
+.an-globo { position: absolute; left: 0; top: 0; max-width: 260px; display: flex; align-items: baseline; gap: 7px;
+  padding: 7px 10px; background: var(--bg0); color: var(--tx1); border: 1px solid var(--steel);
+  font: 500 13px/1.35 var(--sans); box-shadow: 0 0 0 3px #000; will-change: transform; }
+.an-globo.an-ok { border-color: var(--ok); } .an-globo.an-min { border-color: var(--min); }
+.an-globo.an-maj { border-color: var(--maj); } .an-globo.an-crit, .an-globo.an-down { border-color: var(--crit); }
+.an-globo.an-defensa { border-style: dashed; }
+.an-globo.an-suelto { border-style: dotted; }
+.an-forma { font-size: 12px; line-height: 1; }
+.an-ok .an-forma { color: var(--ok); } .an-min .an-forma { color: var(--min); } .an-maj .an-forma { color: var(--maj); }
+.an-crit .an-forma, .an-down .an-forma { color: var(--crit); }
+.an-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@keyframes an-giro { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .an-anillo { animation: none; } }
+body.menos-movimiento .an-anillo, body.reducir-movimiento .an-anillo, body.a11y-quieto .an-anillo { animation: none; }
+@media (forced-colors: active) { .an-globo { border: 2px solid CanvasText; } .an-flecha, .an-anillo { stroke: CanvasText; } }

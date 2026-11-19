@@ -126,7 +126,7 @@
     var iw = Math.max(120, w - ml - mr), ih = h - mt - mb;
     function X(i) { return ml + (n <= 1 ? iw / 2 : i * iw / (n - 1)); }
     function Y(v) { return mt + ih - Math.max(0, Math.min(ymax, v)) / ymax * ih; }
-    var o = '<svg class="pl-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + esc(t(TX.ocup)) + '">';
+    var o = '<svg class="pl-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + esc(t(TX.ocup) + ": " + (function () { var l = A.filter(function (a) { return SERIES.some(function (s) { return esNum(a[s.campo]) && a[s.campo] > 100; }); })[0]; return l ? t({ es: "se supera el 100 % en " + l.anio, en: "exceeds 100 % in " + l.anio }) : t({ es: "no se llena en el horizonte", en: "does not fill up within the horizon" }); })()) + '">';   // Rev. 12: la etiqueta dice la conclusión
     for (var v = 0; v <= ymax; v += 25) {
       o += '<line x1="' + ml + '" x2="' + (ml + iw) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" class="pl-grid"/>' +
         '<text x="' + (ml - 6) + '" y="' + (Y(v) + 3).toFixed(1) + '" class="pl-eje" text-anchor="end">' + v + '</text>';
@@ -203,23 +203,24 @@
       '<button type="button" class="btn" data-pl="aplicar-anio"' + (enRango && V.anio !== ac ? "" : " disabled") + ' title="' +
         esc(enRango ? t({ es: "Pone este año en el caso LAB y recalcula", en: "Sets this year in the LAB case and recomputes" }) : t(TX.fueraRango) + " (" + ANIO_MIN + "–" + ANIO_MAX + ")") + '">' + esc(t(TX.aplicarAnio)) + '</button>' +
       (enRango ? "" : '<span class="tx3">' + esc(t(TX.fueraRango)) + ' (' + ANIO_MIN + '–' + ANIO_MAX + ')</span>') +
-      '<span class="pl-esp"></span><span class="tx3 mono">' + fmt(p.ms || 0, 0) + ' ms</span></div>';
+      '<span class="pl-esp"></span><span class="tx3 mono solo-experto">' + fmt(p.ms || 0, 0) + ' ms</span></div>';
     // avisos arriba (son parte de leer la gráfica)
     var avisos = [];
     if (p.aviso) avisos.push(p.aviso);
+    var pieTx = t({ es: "años > " + ANIO_MAX + " extrapolados (la v7 llega a 2031). Máximo por familia: enlaces de transporte, sitios de acceso y núcleo (BNG/UPF/IMS).", en: "years > " + ANIO_MAX + " extrapolated (v7 goes up to 2031). Maximum per family: transport links, access sites and core (BNG/UPF/IMS)." });
     h += '<div class="pl-cuerpo"><section class="pl-sec pl-graf"><div class="pl-cab"><h3 class="lbl">' + esc(t(TX.ocup)) + '</h3><div class="pl-ley">' +
       SERIES.map(function (s) { return '<span class="pl-ley-i"><svg width="22" height="10"><line x1="0" x2="22" y1="5" y2="5" style="stroke:' + s.color + ';stroke-width:2"/>' + marcador(s.forma, 11, 5, s.color) + '</svg>' + esc(t(s.n)) + '</span>'; }).join("") +
-      '<span class="pl-ley-i"><i class="pl-u maj"></i>85 % MAJ</span><span class="pl-ley-i"><i class="pl-u crit"></i>100 % CRIT</span></div></div>' +
+      '<span class="pl-ley-i"><i class="pl-u maj"></i>85 % MAJ</span><span class="pl-ley-i"><i class="pl-u crit"></i>100 % CRIT</span></div><span class="solo-simple">' + infoB("* " + pieTx) + '</span></div>' +
       '<div class="pl-lienzo"></div><div class="pl-tt" hidden></div>' +
-      '<p class="pl-pie tx3">* ' + esc(t({ es: "años > " + ANIO_MAX + " extrapolados (la v7 llega a 2031). Máximo por familia: enlaces de transporte, sitios de acceso y núcleo (BNG/UPF/IMS).", en: "years > " + ANIO_MAX + " extrapolated (v7 goes up to 2031). Maximum per family: transport links, access sites and core (BNG/UPF/IMS)." })) + '</p>' +
-      '<details class="pl-det"><summary>' + esc(t(TX.tabla)) + '</summary>' + tablaAnios(p) + '</details></section>';
+      '<p class="pl-pie tx3 solo-experto">* ' + esc(pieTx) + '</p>' +
+      '<details class="pl-det solo-experto"><summary>' + esc(t(TX.tabla)) + '</summary>' + tablaAnios(p) + '</details></section>';
     h += '<section class="pl-sec pl-ancha pl-calor-sec"><div class="pl-cab"><h3 class="lbl">' + esc(t(TX.calor)) + '</h3>' + leyendaCalor() + infoB(t(TX.calorInfo)) + '</div>' +
       '<div class="pl-calor"></div><div class="pl-tt pl-tt-calor" role="tooltip" hidden></div></section>';
     h += '<section class="pl-sec solo-experto"><h3 class="lbl">' + esc(t(TX.satura)) + '</h3>' + resumenSat(p) + tablaSatura(p) + '</section>';
-    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t(TX.avisos)) + '</h3>' +
+    h += '<section class="pl-sec' + (avisos.length ? '' : ' solo-experto') + '"><h3 class="lbl">' + esc(t(TX.avisos)) + '</h3>' +
       avisos.map(function (a) { return '<p class="pl-aviso dato-sup">' + esc(a) + '</p>'; }).join("") +
-      '<div class="pl-sups">' + chipsSup(p.supuestos) + '</div>' +
-      '<p class="nota tx3">' + esc(t({ es: "Clic en un supuesto: su linaje (¿De dónde sale?) o su registro.", en: "Click an assumption: its lineage (Where does it come from?) or its record." })) + '</p></section>' +
+      '<div class="pl-sups solo-experto">' + chipsSup(p.supuestos) + '</div>' +
+      '<p class="nota tx3 solo-experto">' + esc(t({ es: "Clic en un supuesto: su linaje (¿De dónde sale?) o su registro.", en: "Click an assumption: its lineage (Where does it come from?) or its record." })) + '</p></section>' +
       '<section class="pl-sec pl-ancha"><h3 class="lbl">' + esc(t(TX.hoja)) + '</h3>' + tablaHoja(p) + '</section></div>';
     el.innerHTML = h;
     dibujarGrafica();
@@ -318,8 +319,8 @@
       '<dt>' + p.desde + ' → ' + p.hasta + '</dt><dd>' + f1(e.pct_inicio) + ' → ' + f1(e.pct_fin) + ' %</dd></dl></div>' });
   }
   function tablaAnios(p) {
-    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Año", en: "Year" })) + '</th><th class="n">DL Gbit/s</th>' +
-      SERIES.map(function (s) { return '<th class="n">' + esc(t(s.n)) + ' %</th><th>id</th>'; }).join("") + '<th class="n">≥85</th><th class="n">≥100</th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Año", en: "Year" })) + '</th><th scope="col" class="n">DL Gbit/s</th>' +
+      SERIES.map(function (s) { return '<th scope="col" class="n">' + esc(t(s.n)) + ' %</th><th scope="col">id</th>'; }).join("") + '<th scope="col" class="n">≥85</th><th scope="col" class="n">≥100</th></tr></thead><tbody>' +
       p.anios.map(function (a) {
         return '<tr' + (a.anio === V.anio ? ' class="sel"' : '') + '><td class="mono">' + a.anio + '</td><td class="n">' + f1(a.dl_total_gbps) + '</td>' +
           SERIES.map(function (s) { return '<td class="n">' + f1(a[s.campo]) + '</td><td class="id tx3">' + esc(a[s.idc] || "") + '</td>'; }).join("") +
@@ -341,8 +342,8 @@
     });
     if (!els.length) return '<div class="vacio">' + esc(t({ es: "Ningún elemento pasa del 85 % en el horizonte.", en: "No element exceeds 85 % within the horizon." })) + '</div>';
     var iy = V.anio - p.desde;
-    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Elemento", en: "Element" })) + '</th><th>' + esc(t({ es: "Familia", en: "Family" })) + '</th><th class="n">' + esc(t({ es: "Año 85 %", en: "Year 85 %" })) +
-      '</th><th class="n">' + esc(t({ es: "Año 100 %", en: "Year 100 %" })) + '</th><th class="n">' + p.desde + '</th><th class="n">' + V.anio + '</th><th class="n">' + p.hasta + '</th><th>' + esc(t({ es: "Nota", en: "Note" })) + '</th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Elemento", en: "Element" })) + '</th><th scope="col">' + esc(t({ es: "Familia", en: "Family" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Año 85 %", en: "Year 85 %" })) +
+      '</th><th scope="col" class="n">' + esc(t({ es: "Año 100 %", en: "Year 100 %" })) + '</th><th scope="col" class="n">' + p.desde + '</th><th scope="col" class="n">' + V.anio + '</th><th scope="col" class="n">' + p.hasta + '</th><th scope="col">' + esc(t({ es: "Nota", en: "Note" })) + '</th></tr></thead><tbody>' +
       els.map(function (e) {
         var py = e.pct ? e.pct[iy] : null;
         return '<tr' + selAttr(e.id, e.familia) + '><td class="id">' + esc(e.id) + '</td><td>' + esc(nomFam(e.familia)) + (e.tipo ? ' <span class="tx3">' + esc(e.tipo) + '</span>' : '') + '</td>' +
@@ -354,8 +355,8 @@
   function tablaHoja(p) {
     var hr = p.hoja_ruta || [];
     if (!hr.length) return '<div class="vacio">' + esc(t({ es: "Sin ampliaciones en el horizonte.", en: "No upgrades within the horizon." })) + '</div>';
-    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Año", en: "Year" })) + '</th><th>' + esc(t({ es: "Acción", en: "Action" })) + '</th><th>' + esc(t({ es: "Elemento", en: "Element" })) +
-      '</th><th class="n">+Gbit/s</th><th class="n">' + esc(t({ es: "Capacidad", en: "Capacity" })) + '</th><th class="n">' + esc(t({ es: "Ocup. antes → después", en: "Occ. before → after" })) + '</th><th>' + esc(t({ es: "Aviso / nota", en: "Warning / note" })) + '</th><th></th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Año", en: "Year" })) + '</th><th scope="col">' + esc(t({ es: "Acción", en: "Action" })) + '</th><th scope="col">' + esc(t({ es: "Elemento", en: "Element" })) +
+      '</th><th scope="col" class="n solo-experto">+Gbit/s</th><th scope="col" class="n solo-experto">' + esc(t({ es: "Capacidad", en: "Capacity" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Ocup. antes → después", en: "Occ. before → after" })) + '</th><th scope="col">' + esc(t({ es: "Aviso / nota", en: "Warning / note" })) + '</th><th scope="col"></th></tr></thead><tbody>' +
       hr.map(function (r, i) {
         var acc = { anadir_lambda: { es: "añadir λ", en: "add λ" }, ampliar: { es: "ampliar", en: "upgrade" }, ampliar_sitios: { es: "ampliar sitios", en: "upgrade sites" } }[r.accion] || { es: r.accion, en: r.accion };
         var elTxt = r.id ? esc(r.id) : (r.sitios ? esc(r.sitios.slice(0, 3).join(", ") + (r.sitios.length > 3 ? " +" + (r.sitios.length - 3) : "")) : "—");
@@ -363,8 +364,8 @@
         var btn = r.evento ? '<button type="button" class="btn' + (aplicada ? "" : " prim") + '" data-pl-aplicar="' + i + '"' + (aplicada ? " disabled" : "") + ' title="' +
           esc(t({ es: "Inserta el evento " + r.evento.tipo + " (00:00) en el caso LAB", en: "Inserts the " + r.evento.tipo + " event (00:00) in the LAB case" })) + '">' + esc(aplicada ? t(TX.aplicada) : t(TX.aplicar)) + '</button>' : '';
         return '<tr' + (r.anio === V.anio ? ' class="sel"' : '') + '><td class="mono">' + r.anio + '</td><td>' + esc(t(acc)) + (r.n ? ' ×' + r.n : '') + (r.n_sitios ? ' ×' + r.n_sitios : '') + '</td>' +
-          '<td class="id"' + selAttr(r.id, r.familia) + '>' + elTxt + '</td><td class="n">' + (esNum(r.gbps) ? f1(r.gbps) : "—") + '</td>' +
-          '<td class="n">' + (esNum(r.capacidad_antes_gbps) ? f1(r.capacidad_antes_gbps) + " → " + f1(r.capacidad_gbps) : "—") + '</td>' +
+          '<td class="id"' + selAttr(r.id, r.familia) + '>' + elTxt + '</td><td class="n solo-experto">' + (esNum(r.gbps) ? f1(r.gbps) : "—") + '</td>' +
+          '<td class="n solo-experto">' + (esNum(r.capacidad_antes_gbps) ? f1(r.capacidad_antes_gbps) + " → " + f1(r.capacidad_gbps) : "—") + '</td>' +
           '<td class="n"><span class="sev-' + sevPct(r.ocup_antes_pct) + '">' + f1(r.ocup_antes_pct) + '</span>' + (esNum(r.ocup_despues_pct) ? ' → <span class="sev-' + sevPct(r.ocup_despues_pct) + '">' + f1(r.ocup_despues_pct) + '</span>' : '') + ' %</td>' +
           '<td class="txt' + (r.aviso ? " pl-aviso-c" : " tx3") + '">' + esc(r.aviso || r.nota || (r.desde_inicio ? t(TX.desdeInicio) : "")) + '</td><td>' + btn + '</td></tr>';
       }).join("") + '</tbody></table>';
@@ -458,15 +459,15 @@
     var S = NOC.resultado && NOC.resultado.sla;
     if (!S) return '<div class="vacio">' + esc(t({ es: "El resultado no trae SLA (motor sin latencia).", en: "The result has no SLA (engine without latency)." })) + '</div>';
     var ks = Object.keys(S);
-    return '<table class="tabla pl-tab sd-sla"><thead><tr><th></th><th>Slice</th><th class="n" title="' + esc(t({ es: "Presupuesto de transporte (el KPI extremo a extremo va en la ayuda de cada celda)", en: "Transport budget (the end-to-end KPI is in each cell tooltip)" })) + '">' + esc(t({ es: "Obj. transp.", en: "Transp. target" })) +
-      '</th><th class="n">P95 ' + esc(t({ es: "peor", en: "worst" })) + '</th><th class="n">' + esc(t({ es: "Margen", en: "Margin" })) + '</th><th class="n">' + esc(t({ es: "Cumple", en: "Meets" })) + '</th><th>' + esc(t({ es: "Peor demanda", en: "Worst demand" })) + '</th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab sd-sla"><thead><tr><th scope="col"></th><th scope="col">Slice</th><th scope="col" class="n" title="' + esc(t({ es: "Presupuesto de transporte (el KPI extremo a extremo va en la ayuda de cada celda)", en: "Transport budget (the end-to-end KPI is in each cell tooltip)" })) + '">' + esc(t({ es: "Obj. transp.", en: "Transp. target" })) +
+      '</th><th scope="col" class="n">P95 ' + esc(t({ es: "peor", en: "worst" })) + '</th><th scope="col" class="n solo-experto">' + esc(t({ es: "Margen", en: "Margin" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Cumple", en: "Meets" })) + '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Peor demanda", en: "Worst demand" })) + '</th></tr></thead><tbody>' +
       ks.map(function (k) {
         var s = S[k], pe = s.peor || {};
         return '<tr data-sd-slice="' + esc(k) + '"' + (W.slice === k ? ' class="sel"' : '') + '><td>' + semaforo(s) + '</td><td>' + esc(nomSlice(k, s)) + '</td>' +
           '<td class="n" title="KPI ' + esc(ms(s.objetivo_lat_ms)) + '">' + ms(s.objetivo_transporte_ms) + '</td><td class="n">' + ms(pe.lat_p95_ms) + '</td>' +
-          '<td class="n' + (esNum(pe.margen_ms) && pe.margen_ms < 0 ? " sev-crit" : "") + '">' + ms(pe.margen_ms) + '</td>' +
+          '<td class="n solo-experto' + (esNum(pe.margen_ms) && pe.margen_ms < 0 ? " sev-crit" : "") + '">' + ms(pe.margen_ms) + '</td>' +
           '<td class="n" title="' + esc(fmt(s.cumple_pct, 1) + ' % · ' + fmt(s.cumple_gbps_pct, 1)) + ' % Gbit/s">' + s.n_cumple + '/' + s.n + '</td>' +
-          '<td class="id"><a href="#" data-sd-dem="' + esc(pe.id || "") + '">' + esc(pe.id || "—") + '</a></td></tr>';
+          '<td class="id solo-experto"><a href="#" data-sd-dem="' + esc(pe.id || "") + '">' + esc(pe.id || "—") + '</a></td></tr>';
       }).join("") + '</tbody></table>';
   }
   function demandasSlice(k) {
@@ -478,8 +479,8 @@
       return ma - mb || (b.lat_p95_ms || 0) - (a.lat_p95_ms || 0);
     });
     return '<div class="sd-sub"><span class="lbl">' + esc(nomSlice(k, (r.sla || {})[k])) + ' · ' + ds.length + ' ' + esc(t({ es: "demandas (menor margen primero)", en: "demands (smallest margin first)" })) + '</span></div>' +
-      '<div class="sd-dems"><table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Demanda", en: "Demand" })) + '</th><th class="n">' + esc(t({ es: "Media", en: "Mean" })) + '</th><th class="n">P95</th><th class="n">' + esc(t({ es: "Obj.", en: "Target" })) +
-      '</th><th class="n">' + esc(t({ es: "Margen", en: "Margin" })) + '</th><th class="n">' + esc(t({ es: "Servida", en: "Served" })) + '</th><th>' + esc(t({ es: "Estado", en: "Status" })) + '</th></tr></thead><tbody>' +
+      '<div class="sd-dems"><table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Demanda", en: "Demand" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Media", en: "Mean" })) + '</th><th scope="col" class="n">P95</th><th scope="col" class="n">' + esc(t({ es: "Obj.", en: "Target" })) +
+      '</th><th scope="col" class="n">' + esc(t({ es: "Margen", en: "Margin" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Servida", en: "Served" })) + '</th><th scope="col">' + esc(t({ es: "Estado", en: "Status" })) + '</th></tr></thead><tbody>' +
       ds.slice(0, 200).map(function (d) {
         var m = esNum(d.latencia_max_ms) && esNum(d.lat_p95_ms) ? d.latencia_max_ms - d.lat_p95_ms : null, sv = d.dl_gbps > 0 ? d.servida_gbps / d.dl_gbps * 100 : 100;
         return '<tr data-sd-dem="' + esc(d.id) + '"><td class="id">' + esc(d.id) + '</td><td class="n">' + ms(d.lat_ms) + '</td><td class="n">' + ms(d.lat_p95_ms) + '</td><td class="n">' + ms(d.latencia_max_ms) + '</td>' +
@@ -532,7 +533,7 @@
         [t({ es: "Margen (P95)", en: "Margin (P95)" }), '<span class="' + (esNum(m) && m < 0 ? "sev-crit" : "") + '">' + ms(m) + '</span>'],
         [t({ es: "Cola prioritaria", en: "Priority queue" }), d.lat_prioridad ? t({ es: "sí", en: "yes" }) : t({ es: "no", en: "no" })]]
         .map(function (x) { return '<dt>' + esc(x[0]) + '</dt><dd>' + x[1] + '</dd>'; }).join("") + '</dl>' +
-      ((d.enlaces || []).length ? '<table class="tabla" style="margin-top:6px"><thead><tr><th>' + esc(t({ es: "Enlace del camino", en: "Path link" })) + '</th><th class="n">prop.</th><th class="n">' + esc(t(TX.cola)) + '</th><th class="n">' + esc(t({ es: "media", en: "mean" })) + '</th></tr></thead><tbody>' +
+      ((d.enlaces || []).length ? '<table class="tabla" style="margin-top:6px"><thead><tr><th scope="col">' + esc(t({ es: "Enlace del camino", en: "Path link" })) + '</th><th scope="col" class="n">prop.</th><th scope="col" class="n">' + esc(t(TX.cola)) + '</th><th scope="col" class="n">' + esc(t({ es: "media", en: "mean" })) + '</th></tr></thead><tbody>' +
         d.enlaces.map(function (lid) {
           var e = r.enlaces[lid] || {}, pr = d.lat_prioridad;
           return '<tr data-id="' + esc(lid) + '" data-tipo="enlace"><td class="id">' + esc(lid) + '</td><td class="n">' + ms(e.lat_prop_ms) + '</td><td class="n">' + ms(pr ? (e.lat_prio_ms - e.lat_prop_ms - e.lat_ser_ms) : e.cola_ms) + '</td><td class="n">' + ms(pr ? e.lat_prio_ms : e.lat_ms) + '</td></tr>';
@@ -606,7 +607,7 @@
     var tabs = [["zonas", { es: "Zonas", en: "Zones" }], ["servicios", { es: "Servicios", en: "Services" }], ["slices", { es: "Slices", en: "Slices" }], ["especiales", { es: "Especiales", en: "Special" }]];
     var g = D[W.tabD] || {}, ks = Object.keys(g).sort(function (a, b) { return g[b].indisp_min_anio - g[a].indisp_min_anio; });
     var obj = D.objetivos || {};
-    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">DL Gbit/s</th><th class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th><th class="n">%</th><th>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th scope="col" class="n">DL Gbit/s</th><th scope="col" class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th><th scope="col" class="n">%</th><th scope="col">' +
       esc(t({ es: "Peor suceso", en: "Worst event" })) + '</th></tr></thead><tbody>' +
       ks.map(function (k) {
         var x = g[k], p = x.peor || {}, objPct = k === "S-HOSPITAL-CRITICO" ? obj.hospital_pct : obj.nucleo_pct;
@@ -618,8 +619,8 @@
   }
   function tablaSucesos(D) {
     var s = (D.sucesos || []).slice().sort(function (a, b) { return (b.contribucion_min_anio || 0) - (a.contribucion_min_anio || 0); }).slice(0, 12);
-    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Suceso", en: "Event" })) + '</th><th>' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th class="n">U</th><th class="n">min/' + esc(t({ es: "año", en: "yr" })) +
-      '</th><th class="n">DL ' + esc(t({ es: "perdida", en: "lost" })) + '</th><th class="n">' + esc(t({ es: "Contrib. red", en: "Network contrib." })) + '</th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">' + esc(t({ es: "Suceso", en: "Event" })) + '</th><th scope="col">' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th scope="col" class="n">U</th><th scope="col" class="n">min/' + esc(t({ es: "año", en: "yr" })) +
+      '</th><th scope="col" class="n">DL ' + esc(t({ es: "perdida", en: "lost" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Contrib. red", en: "Network contrib." })) + '</th></tr></thead><tbody>' +
       s.map(function (x) {
         var sel = x.elementos && x.elementos.length === 1 ? (IDX.enlaces[x.elementos[0]] ? ' data-id="' + esc(x.elementos[0]) + '" data-tipo="enlace"' : IDX.nodos[x.elementos[0]] ? ' data-id="' + esc(x.elementos[0]) + '" data-tipo="nodo"' : '') : '';
         return '<tr' + sel + '><td class="id" title="' + esc((x.elementos || []).join(", ")) + '">' + esc(x.id) + '</td><td>' + esc(tipoSu(x.tipo)) + '</td><td class="n">' + (esNum(x.u) ? x.u.toExponential(1) : "—") + '</td>' +
@@ -639,7 +640,7 @@
     var sec = document.createElement("div");
     sec.className = "ficha-sec dato-calc sd-ficha";
     sec.innerHTML = '<h3>' + esc(t(TX.disp)) + '</h3><dl class="kv"><dt>min/' + esc(t({ es: "año", en: "yr" })) + '</dt><dd>' + fmt(x.indisp_min_anio, 2) + '</dd><dt>%</dt><dd>' + fmt(x.disponibilidad_pct, 5) + '</dd></dl>' +
-      '<table class="tabla" style="margin-top:6px"><thead><tr><th>' + esc(t({ es: "Suceso", en: "Event" })) + '</th><th>' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th class="n">' + esc(t({ es: "fracción", en: "fraction" })) + '</th><th class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th></tr></thead><tbody>' +
+      '<table class="tabla" style="margin-top:6px"><thead><tr><th scope="col">' + esc(t({ es: "Suceso", en: "Event" })) + '</th><th scope="col">' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th scope="col" class="n">' + esc(t({ es: "fracción", en: "fraction" })) + '</th><th scope="col" class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th></tr></thead><tbody>' +
       (x.sucesos || []).map(function (s) { return '<tr><td class="id">' + esc(s.id) + '</td><td>' + esc(tipoSu(s.tipo)) + '</td><td class="n">' + fmt((s.fraccion || 0) * 100, 1) + ' %</td><td class="n">' + fmt(s.min_anio, 2) + '</td></tr>'; }).join("") + '</tbody></table>';
     var primera = c.querySelector(".ficha-sec");
     if (primera && primera.nextSibling) c.insertBefore(sec, primera.nextSibling); else c.appendChild(sec);
@@ -687,7 +688,7 @@
     W.sucio = false;
     var r = NOC.resultado, paso = r && r.paso_reloj ? " · " + r.paso_reloj.etiqueta : "";
     var h = '<div class="pl-barra"><span class="lbl">' + esc(t(TX.slaTit)) + '</span><span class="pl-modo">' + (NOC.modo === "ref" ? "REF" : "LAB") + esc(paso) + '</span><span class="pl-esp"></span>' +
-      '<span class="tx3">' + esc(t({ es: "OK = cumple con margen ≥ 20 % · MIN = cumple ajustado · CRIT = incumple (P95 > presupuesto o no servida)", en: "OK = meets with margin ≥ 20 % · MIN = tight · CRIT = fails (P95 > budget or not served)" })) + '</span></div>' +
+      '<span class="tx3 solo-experto">' + esc(t({ es: "OK = cumple con margen ≥ 20 % · MIN = cumple ajustado · CRIT = incumple (P95 > presupuesto o no servida)", en: "OK = meets with margin ≥ 20 % · MIN = tight · CRIT = fails (P95 > budget or not served)" })) + '</span><span class="solo-simple">' + infoB(t({ es: "OK = cumple con margen ≥ 20 % · MIN = cumple ajustado · CRIT = incumple (P95 > presupuesto o no servida)", en: "OK = meets with margin ≥ 20 % · MIN = tight · CRIT = fails (P95 > budget or not served)" })) + '</span></div>' +
       '<div class="sd-cuerpo"><section class="pl-sec"><h3 class="lbl">' + esc(t(TX.sla)) + '</h3>' + tablaSLA() + demandasSlice(W.slice) + '</section>' +
       '<section class="pl-sec sd-disp"><h3 class="lbl">' + esc(t(TX.disp)) + '</h3><div class="sd-disp-c"><div class="vacio">' + esc(t(TX.calculando)) + '</div></div></section></div>';
     el.innerHTML = h;
@@ -710,14 +711,14 @@
     var minObj = esNum(obj.nucleo_pct) ? (100 - obj.nucleo_pct) / 100 * (P.minutos_anio || 525960) : null;
     c.innerHTML = '<div class="sd-red"><span><span class="tx3">' + esc(t({ es: "Red", en: "Network" })) + '</span> <b class="mono">' + fmt(red.indisp_min_anio, 1) + ' min/' + esc(t({ es: "año", en: "yr" })) + '</b> · <b class="mono">' + fmt(red.disponibilidad_pct, 4) + ' %</b></span>' +
       (esNum(obj.nucleo_pct) ? '<span>' + (red.disponibilidad_pct >= obj.nucleo_pct ? NOC.insignia("ok", "OK") : NOC.insignia("maj", "MAJ")) + ' <span class="tx3">' + esc(t({ es: "objetivo núcleo", en: "core target" })) + '</span> ' + fmt(obj.nucleo_pct, 2) + ' % (' + fmt(minObj, 1) + ' min)</span>' : '') +
-      (esNum(obj.hospital_pct) ? '<span class="tx3">' + esc(t({ es: "hospital", en: "hospital" })) + ' ' + fmt(obj.hospital_pct, 3) + ' %</span>' : '') + '</div>' +
+      (esNum(obj.hospital_pct) ? '<span class="tx3 solo-experto">' + esc(t({ es: "hospital", en: "hospital" })) + ' ' + fmt(obj.hospital_pct, 3) + ' %</span>' : '') + '</div>' +
       '<div class="sd-bcab">' + tabsDisp() + infoB(t(TX.dispInfo)) + '</div><div class="sd-barras-w"></div>' +
       '<div class="sd-mapa-w"><div class="sd-mapa"></div><div class="sd-ley"><span class="lbl">min/' + esc(t({ es: "año", en: "yr" })) + '</span>' +
       RAMPA.map(function (c2, i) { return '<span><i style="background:' + c2 + '"></i>' + binTxt(i) + '</span>'; }).join("") +
-      '<span class="tx3">' + esc(t({ es: "área ∝ DL", en: "area ∝ DL" })) + '</span></div></div>' +
+      '<span class="tx3 solo-experto">' + esc(t({ es: "área ∝ DL", en: "area ∝ DL" })) + '</span></div></div>' +
       '<div class="solo-experto">' + tablaDisp(D) + '<h3 class="lbl sd-h">' + esc(t(TX.peores)) + '</h3>' + tablaSucesos(D) + '</div>' +
       '<p class="nota tx3 sd-par solo-experto">' + esc(t({ es: "Parámetros", en: "Parameters" })) + ': ' + esc(Object.keys(P).filter(function (k) { return esNum(P[k]); }).map(function (k) { return k + "=" + (Math.abs(P[k]) < 0.01 ? P[k].toExponential(2) : fmt(P[k], 2)); }).join(" · ")) +
-      ' · ' + esc(obj.fuente || "") + '</p><div class="pl-sups">' + chipsSup(D.supuestos) + '</div>';
+      ' · ' + esc(obj.fuente || "") + '</p><div class="pl-sups solo-experto">' + chipsSup(D.supuestos) + '</div>';
     var bw = c.querySelector(".sd-barras-w");
     if (bw) bw.innerHTML = barrasDisp(D);
     pintarMapaDisp(D);

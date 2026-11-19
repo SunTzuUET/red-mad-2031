@@ -520,10 +520,10 @@
   raiz.innerHTML =
     '<header class="tb" id="tb"></header>' +
     '<nav class="rail" id="rail" aria-label="Carril"><button type="button" class="rail-cab" id="rail-cab" data-plegar="carril"></button><div class="rail-secs" id="rail-secs"></div></nav>' +
-    '<main class="centro"><div class="tabs" id="tabs" role="tablist"></div><div class="vistas" id="vistas"></div></main>' +
-    '<aside class="ficha" id="ficha"><button type="button" class="ficha-tira" id="ficha-tira" data-plegar="ficha"></button><div class="ficha-cab" id="ficha-cab"></div><div class="ficha-cuerpo" id="ficha-cuerpo"></div></aside>' +
-    '<section class="dock" id="dock"><div class="dock-cab" id="dock-cab"></div><div class="dock-cuerpo" id="dock-cuerpo"></div></section>' +
-    '<footer class="sb" id="sb"></footer>' +
+    '<main class="centro" id="principal" tabindex="-1" aria-label="Vista"><div class="tabs" id="tabs" role="tablist" aria-label="Vistas"></div><div class="vistas" id="vistas"></div></main>' +
+    '<aside class="ficha" id="ficha" aria-label="Ficha"><button type="button" class="ficha-tira" id="ficha-tira" data-plegar="ficha"></button><div class="ficha-cab" id="ficha-cab"></div><div class="ficha-cuerpo" id="ficha-cuerpo"></div></aside>' +
+    '<section class="dock" id="dock" aria-label="Panel inferior"><div class="dock-cab" id="dock-cab"></div><div class="dock-cuerpo" id="dock-cuerpo"></div></section>' +
+    '<footer class="sb" id="sb" aria-label="Estado"></footer>' +
     '<datalist id="noc-lista"></datalist>';
 
   // ---------- barra superior ----------
@@ -584,6 +584,7 @@
         '<span class="buscar">' + ICO.lupa + '<input type="search" id="buscar" list="noc-lista" placeholder="' + esc(t(T.buscar)) + '" aria-label="' + esc(t(T.buscar)) + '"></span>' +
         '<button type="button" class="btn" data-accion="exportar" aria-pressed="false" title="' + esc(t({ es: "Exportar tablas CSV (.zip) o informe PDF", en: "Export CSV tables (.zip) or PDF report" })) + '">' + esc(t({ es: "Exportar", en: "Export" })) + '</button>' +
         (NOC.interruptorNivel ? NOC.interruptorNivel() : '') +
+        (NOC.accesibilidad && NOC.accesibilidad.boton ? NOC.accesibilidad.boton() : '') +   // Revisión 12: panel de accesibilidad
         '<div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="' + (NOC.lang === "es") + '">ES</button><button type="button" data-lang="en" aria-pressed="' + (NOC.lang === "en") + '">EN</button></div>' +
       '</div>' +
       '<div class="tb-f tb-kpi">' +
@@ -813,7 +814,7 @@
   });
 
   // ---------- pestañas y vistas ----------
-  var VISTAS = [], ORDEN = ["inicio", "mapa", "demanda_mapa", "unifilar", "capas", "paquete", "n1", "planificacion", "sla", "comparar", "casos", "trazabilidad", "interconexion"];
+  var VISTAS = [], ORDEN = ["inicio", "viva", "mapa", "demanda_mapa", "unifilar", "capas", "paquete", "n1", "planificacion", "sla", "comparar", "casos", "trazabilidad", "interconexion"];
   var activa = null, listo = false;
   NOC.registrarVista = function (v) {
     if (!v || !v.id) return;
@@ -1033,6 +1034,8 @@
   }
   function pintarInicio() {
     if (!elInicio) return;
+    // Revisión 12 (PREGUNTAS, inicio.js): en SIMPLE, INICIO = "¿Qué quieres saber?"; esta portada queda para EXPERTO
+    if (typeof NOC.pintarInicio === "function" && NOC.nivel !== "experto") { try { if (NOC.pintarInicio(elInicio) !== false) return; } catch (e) { console.error("NOC.pintarInicio", e); } }
     var r = NOC.resultado, ref = NOC.modo === "ref", c = cuentaSev(), m = ocMax(r);
     pedirDisp();
     // 1 · estado de la red (gráfico)
@@ -1506,7 +1509,7 @@
     ]) + '<tbody>' + filas.map(function (f) {
       var tipo = IDX.enlaces[f.elem] ? "enlace" : IDX.nodos[f.elem] ? "nodo" : "";
       return '<tr' + (tipo ? ' data-id="' + esc(f.elem) + '" data-tipo="' + tipo + '"' : '') + '><td>' + (NOC.textoEstado ? NOC.textoEstado(f.s) : NOC.insignia(f.s)) + '</td><td class="id"><span class="solo-experto">' + esc(f.elem || "—") + '</span><span class="solo-simple">' + esc(f.elem ? corto(f.elem) : "—") + '</span>' +
-        '</td><td class="mono tx2 solo-experto">' + hh + '</td><td class="txt">' + esc(f.texto) + '</td><td class="tx3 solo-experto">' +
+        '</td><td class="mono tx2 solo-experto">' + hh + '</td><td class="txt"><span class="solo-experto">' + esc(f.texto) + '</span><span class="solo-simple" data-tip="' + esc(f.texto) + '">' + esc(f.fuente === "umbral" ? ((f.texto.match(/[d.,]+ %/) || [f.texto])[0]) : f.texto) + '</span></td><td class="tx3 solo-experto">' +   // Rev. 12: en SIMPLE solo el % (texto entero en la burbuja)
         esc(f.fuente === "umbral" ? t({ es: "umbral 85 %", en: "85 % threshold" }) : t({ es: "motor", en: "engine" })) + '</td></tr>';
     }).join("") + '</tbody></table>';
   }

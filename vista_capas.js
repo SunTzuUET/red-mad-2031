@@ -74,7 +74,7 @@
   function celdaCarga(nodos, enlaces) {
     var p = peor(nodos, enlaces);
     if (!p) return "";
-    var s = p.max ? insignia(p.max) + ' <span class="mono arq-id">' + esc(p.max.id) + '</span>' : "";
+    var s = p.max ? insignia(p.max) + ' <span class="mono arq-id solo-experto">' + esc(p.max.id) + '</span>' : "";
     if (p.caidos) s += ' ' + (NOC.insignia ? NOC.insignia("unk", p.caidos + " " + t({ es: "CAÍDO", en: "DOWN" })) : "");
     return s;
   }
@@ -221,10 +221,10 @@
     var fs = (e.fuente || []).slice();
     eqs.forEach(function (q) { fs = fs.concat(q.fuente || []); });
     if (e.v7 && e.v7.length) fs.unshift({ doc: ARQ.referencia.doc, seccion: e.v7.map(function (x) { return x.seccion; }).filter(function (s, i, a) { return a.indexOf(s) === i; }).join("; "), v7: true });
-    h += sec(t({ es: "6 · Fuente", en: "6 · Source" }), fuentes(fs));
+    h += '<div class="solo-experto">' + sec(t({ es: "6 · Fuente", en: "6 · Source" }), fuentes(fs)) + '</div>';
 
     // 7 · preguntas
-    h += sec(t({ es: "7 · Para pensar", en: "7 · To think about" }), preguntas(e.preguntas));
+    h += '<div class="solo-experto">' + sec(t({ es: "7 · Para pensar", en: "7 · To think about" }), preguntas(e.preguntas)) + '</div>';
     return { titulo: e.id, subtitulo: (e.nombre || "") + " · " + t({ es: "capa", en: "layer" }) + " " + e.capa, html: h + '</div>' };
   }
 
@@ -278,23 +278,24 @@
     var tieneRed = e.red && (e.red.nodos.length || e.red.enlaces.length);
     return '<button type="button" class="vc-caja ' + cls + '" data-arq-el="' + esc(e.id) + '" data-capa="' + esc(e.capa) + '" title="' + esc(e.nombre || e.id) + '">' +
       '<span class="vc-id">' + esc(e.id) + '</span>' +
-      '<span class="vc-nom">' + esc(e.tipo === "hueco" ? t(NE) : (e.nombre || "")) + '</span>' +
-      (mod.length ? '<span class="vc-mod">' + esc(mod.slice(0, 2).join(" · ")) + '</span>' : "") +
+      '<span class="vc-nom' + (e.nombre && String(e.nombre).toUpperCase() === String(e.id).toUpperCase() ? " solo-experto" : "") + '">' + esc(e.tipo === "hueco" ? t(NE) : (e.nombre || "")) + '</span>' +
+      (mod.length ? '<span class="vc-mod solo-experto">' + esc(mod.slice(0, 2).join(" · ")) + '</span>' : "") +
       (tieneRed ? '<span class="vc-carga" data-arq-carga="' + esc(e.id) + '"></span>' : "") + '</button>';
   }
   function pintar() {
     if (!raiz) return;
     if (!ARQ) { raiz.innerHTML = '<div class="vc-error">arquitectura_datos.js ' + esc(t({ es: "no se pudo cargar", en: "could not be loaded" })) + '</div>'; return; }
-    var h = '<div class="vc-cab"><span class="rot">' + esc(t({ es: "Arquitectura por capas · Entrega 2 (v7)", en: "Layered architecture · Deliverable 2 (v7)" })) + '</span>' +
+    var h = '<div class="vc-cab"><span class="rot">' + esc(t({ es: "Capas", en: "Layers" })) + '<span class="solo-experto">' + esc(t({ es: " · arquitectura · Entrega 2 (v7)", en: " · architecture · Deliverable 2 (v7)" })) + '</span>' +
+      (NOC.info ? NOC.info({ es: "Una fila por capa (A–H), una caja por elemento; las líneas son las interfaces entre capas. Pulsa una caja para ver su ficha.", en: "One row per layer (A–H), one box per element; lines are the inter-layer interfaces. Click a box for its sheet." }) : "") + '</span>' +
       '<span class="vc-ley"><i class="dato-doc"></i>' + esc(t({ es: "con datos v7", en: "with v7 data" })) + '<i class="dato-calc"></i>' +
-      esc(t({ es: "solo docs. anteriores", en: "earlier docs only" })) + '<i class="vc-hueco"></i>' + esc(t({ es: "hueco v7", en: "v7 gap" })) +
-      '<i class="vc-ext"></i>' + esc(t({ es: "red externa", en: "external" })) + '<span class="vc-sep"></span>' +
-      esc(t({ es: "líneas: interfaces entre capas", en: "lines: inter-layer interfaces" })) + '</span></div><div class="vc-lienzo"><svg class="vc-svg" aria-hidden="true"></svg>';
+      esc(t({ es: "docs. anteriores", en: "earlier docs" })) + '<i class="vc-hueco"></i>' + esc(t({ es: "hueco v7", en: "v7 gap" })) +
+      '<i class="vc-ext"></i>' + esc(t({ es: "red externa", en: "external" })) + '<span class="vc-sep solo-experto"></span><span class="solo-experto">' +
+      esc(t({ es: "líneas: interfaces entre capas", en: "lines: inter-layer interfaces" })) + '</span></span></div><div class="vc-lienzo"><svg class="vc-svg" aria-hidden="true"></svg>';
     ARQ.capas.forEach(function (c) {
       var els = ARQ.elementos.filter(function (e) { return e.capa === c.id; });
       h += '<div class="vc-fila" data-fila="' + c.id + '"><div class="vc-capa"><span class="vc-letra">' + c.id + '</span><span class="vc-cnom">' + esc(t(c.nombre)) + '</span>' +
-        (c.inferido ? '<span class="vc-inf">' + esc(t({ es: "no es capa en los docs.", en: "not a layer in docs" })) + '</span>' : "") +
-        '<span class="vc-tec">' + esc((c.tecnologias || []).slice(0, 4).join(" · ")) + '</span></div><div class="vc-cajas">' + els.map(cajaHtml).join("") + '</div></div>';
+        (c.inferido ? '<span class="vc-inf solo-experto">' + esc(t({ es: "no es capa en los docs.", en: "not a layer in docs" })) + '</span>' : "") +
+        '<span class="vc-tec solo-experto">' + esc((c.tecnologias || []).slice(0, 4).join(" · ")) + '</span></div><div class="vc-cajas">' + els.map(cajaHtml).join("") + '</div></div>';
     });
     raiz.innerHTML = h + '</div>';
     svg = raiz.querySelector(".vc-svg");
@@ -333,7 +334,7 @@
       var y1 = a.b, y2 = b.t, mx = (a.x + b.x) / 2, my = (y1 + y2) / 2;
       var lab = p.ifz.join("/");
       s += '<g class="vc-l' + (p.inferido ? " inf" : "") + '" data-a="' + esc(p.a) + '" data-b="' + esc(p.b) + '"><line x1="' + a.x.toFixed(1) + '" y1="' + y1.toFixed(1) +
-        '" x2="' + b.x.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/><text x="' + mx.toFixed(1) + '" y="' + (my + 3).toFixed(1) + '" text-anchor="middle">' + esc(lab) + '</text></g>';
+        '" x2="' + b.x.toFixed(1) + '" y2="' + y2.toFixed(1) + '"/><text class="solo-experto" x="' + mx.toFixed(1) + '" y="' + (my + 3).toFixed(1) + '" text-anchor="middle">' + esc(lab) + '</text></g>';
     });
     svg.innerHTML = s;
   }

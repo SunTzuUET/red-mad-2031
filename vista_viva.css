@@ -1,0 +1,122 @@
+/* vista_viva.css — VIVA (CONTRATO_UI Revisión 12). Cromo monocromo; color solo en los datos (lienzo). */
+.vista-viva { overflow: hidden; background: var(--bg0); }
+.vista-viva .vv-lienzo { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+.vista-viva .vv-lienzo.sobre { cursor: pointer; }
+.vista-viva .vv-lienzo.moviendo { cursor: grabbing; }
+.vista-viva.armada .vv-lienzo, .vista-viva.arrastrando .vv-lienzo { cursor: crosshair; }
+.vista-viva .vv-cv { position: absolute; left: 0; top: 0; display: block; }
+.vista-viva .vv-ov { position: absolute; left: 0; top: 0; overflow: visible; }
+.vista-viva .vv-o { outline: none; cursor: pointer; }
+.vista-viva .vv-golpe { fill: transparent; stroke: transparent; stroke-width: 18; pointer-events: all; }
+.vista-viva circle.vv-golpe { stroke-width: 0; }
+.vista-viva .vv-anillo { fill: none; stroke: none; pointer-events: none; }
+.vista-viva .vv-o:focus-visible .vv-anillo { stroke: var(--tx1); stroke-width: 2; stroke-dasharray: 4 3; }
+.vista-viva path.vv-anillo { stroke-width: 0; }
+.vista-viva .vv-o:focus-visible path.vv-anillo { stroke-width: 12; stroke: var(--tx1); stroke-opacity: .25; stroke-dasharray: none; }
+.vista-viva .vv-capa { position: absolute; inset: 0; pointer-events: none; }
+.vista-viva .vv-capa > * { pointer-events: auto; }
+.vista-viva .vv-oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* caja de herramientas (izquierda) */
+.vista-viva .vv-herr { position: absolute; left: 12px; top: 50%; transform: translateY(-60%); display: flex; flex-direction: column; gap: 6px;
+  background: var(--bg1); border: 1px solid var(--line2); padding: 6px; z-index: 3; }
+.vista-viva .vv-herr button { width: 46px; height: 46px; display: grid; place-items: center; background: var(--bg0); color: var(--tx1);
+  border: 1px solid var(--line2); cursor: grab; padding: 0; touch-action: none; }
+.vista-viva .vv-herr button:hover { border-color: var(--line3); background: var(--bg2); }
+.vista-viva .vv-herr button:focus-visible { outline: 2px solid var(--tx1); outline-offset: 1px; }
+.vista-viva .vv-herr button[aria-pressed="true"] { background: var(--tx1); color: var(--bg0); border-color: var(--tx1); }
+.vista-viva .vv-ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: square; stroke-linejoin: miter; display: block; }
+.vista-viva .vv-rplay .vv-ico path[d^="M7 4.5v15l"] { fill: currentColor; }
+
+/* fantasma al arrastrar (va en body) */
+.vv-fantasma { position: fixed; z-index: 9999; pointer-events: none; transform: translate(-50%, -50%); width: 40px; height: 40px; display: grid; place-items: center;
+  background: var(--bg1); color: var(--tx1); border: 2px dashed var(--tx2); }
+.vv-fantasma.ok { border: 2px solid var(--tx1); background: var(--tx1); color: var(--bg0); }
+.vv-fantasma.mal { border-color: var(--tx4); color: var(--tx4); }
+.vv-fantasma .vv-ico { fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* migas de nivel + zoom (arriba) */
+.vista-viva .vv-migas { position: absolute; left: 76px; top: 10px; display: flex; align-items: center; gap: 2px; z-index: 3; }
+.vista-viva .vv-migas > button { background: transparent; border: 1px solid transparent; color: var(--tx2); font: 600 13px var(--sans); letter-spacing: .06em;
+  text-transform: uppercase; padding: 6px 10px; cursor: pointer; }
+.vista-viva .vv-migas > button:hover { color: var(--tx1); border-color: var(--line2); }
+.vista-viva .vv-migas > button[aria-current="true"] { color: var(--bg0); background: var(--tx1); }
+.vista-viva .vv-sep { color: var(--tx4); padding: 0 2px; }
+.vista-viva .vv-zoom { display: inline-flex; gap: 2px; margin-left: 14px; }
+.vista-viva .vv-zoom button { width: 30px; height: 30px; display: grid; place-items: center; background: var(--bg1); color: var(--tx2); border: 1px solid var(--line2); padding: 0; cursor: pointer; }
+.vista-viva .vv-zoom button:hover { color: var(--tx1); border-color: var(--line3); }
+.vista-viva .vv-migas > :last-child:not(.vv-zoom) { margin-left: 8px; }
+
+/* leyenda (arriba a la derecha) */
+.vista-viva .vv-ley { position: absolute; right: 12px; top: 10px; z-index: 3; max-width: 360px; text-align: right; }
+.vista-viva .vv-ley-b { background: var(--bg1); color: var(--tx2); border: 1px solid var(--line2); font: 600 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; padding: 5px 9px; cursor: pointer; }
+.vista-viva .vv-ley-b:hover { color: var(--tx1); }
+.vista-viva .vv-ley-c { margin-top: 4px; background: var(--bg1); border: 1px solid var(--line2); padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.vista-viva .vv-ley-f { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.vista-viva .vv-li { display: inline-flex; align-items: center; gap: 5px; font: 11px var(--sans); color: var(--tx2); }
+.vista-viva .vv-li i { width: 8px; height: 8px; background: var(--c); display: inline-block; }
+.vista-viva .vv-li i.tri { width: 0; height: 0; background: none; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 9px solid var(--c); }
+.vista-viva .vv-g { font-size: 12px; width: 12px; text-align: center; }
+
+/* tarjeta flotante mínima */
+.vista-viva .vv-tarjeta { position: absolute; z-index: 5; width: 224px; background: var(--bg1); border: 1px solid var(--line3); padding: 9px 11px 8px; pointer-events: none; }
+.vista-viva .vv-card-tit { font: 600 13px var(--sans); color: var(--tx1); margin-bottom: 6px; display: flex; justify-content: space-between; gap: 6px; }
+.vista-viva .vv-card-id { font-size: 10px; color: var(--tx3); font-weight: 400; }
+.vista-viva .vv-cifra { font: 12px var(--sans); color: var(--tx2); margin: 2px 0 4px; }
+.vista-viva .vv-cifra b { font: 600 20px var(--mono, monospace); color: var(--tx1); }
+.vista-viva .vv-curva { display: block; width: 100%; height: auto; margin-top: 6px; overflow: visible; }
+.vista-viva .vv-curva .u85 { stroke: var(--line2); stroke-dasharray: 3 3; }
+.vista-viva .vv-curva .u100 { stroke: var(--line3); }
+.vista-viva .vv-curva .cur { stroke: var(--tx1); }
+.vista-viva .vv-curva text { fill: var(--tx3); font: 9px var(--sans); }
+
+/* menú radial */
+.vista-viva .vv-radial { position: absolute; width: 0; height: 0; z-index: 6; }
+.vista-viva .vv-radial-nom { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; font: 600 11px var(--sans); color: var(--tx1);
+  background: var(--bg0); border: 1px solid var(--line2); padding: 2px 6px; pointer-events: none; }
+.vista-viva .vv-rb { position: absolute; width: 42px; height: 42px; margin: -21px 0 0 -21px; display: grid; place-items: center; background: var(--bg1); color: var(--tx1);
+  border: 1px solid var(--line3); cursor: pointer; padding: 0; animation: vv-abre .16s ease-out both; }
+.vista-viva .vv-rb:hover, .vista-viva .vv-rb:focus-visible { background: var(--tx1); color: var(--bg0); outline: none; }
+@keyframes vv-abre { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+
+/* aviso REF → LAB y rechazo */
+.vista-viva .vv-aviso-lab { position: absolute; left: 50%; top: 52px; transform: translateX(-50%); z-index: 7; display: flex; gap: 8px; align-items: center;
+  background: var(--bg1); border: 1px solid var(--tx1); padding: 6px 12px; font: 600 12px var(--sans); color: var(--tx1); transition: opacity .4s; }
+.vista-viva .vv-aviso-lab.fuera { opacity: 0; }
+.vista-viva .vv-lab-ins { background: var(--tx1); color: var(--bg0); padding: 1px 6px; letter-spacing: .08em; }
+.vista-viva .vv-no { position: absolute; transform: translate(-50%, -50%); font: 700 24px var(--sans); color: var(--tx1); pointer-events: none; animation: vv-no .7s ease-out forwards; }
+@keyframes vv-no { 0%, 60% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -80%); } }
+
+/* reloj grande (abajo) */
+.vista-viva .vv-reloj { position: absolute; left: 76px; right: 18px; bottom: 12px; height: 74px; z-index: 3; display: grid; grid-template-columns: 50px 150px 1fr; align-items: center; gap: 12px;
+  background: var(--bg1); border: 1px solid var(--line2); padding: 8px 12px; }
+.vista-viva .vv-rplay { width: 46px; height: 46px; display: grid; place-items: center; background: var(--bg0); color: var(--tx1); border: 1px solid var(--line3); cursor: pointer; padding: 0; }
+.vista-viva .vv-rplay:hover { background: var(--bg2); }
+.vista-viva .vv-rplay[aria-pressed="true"] { background: var(--tx1); color: var(--bg0); }
+.vista-viva .vv-rhora { display: flex; align-items: center; gap: 8px; color: var(--tx2); }
+.vista-viva .vv-rh { font: 600 30px var(--mono, monospace); color: var(--tx1); letter-spacing: .02em; }
+.vista-viva .vv-rhc { font: 600 10px var(--sans); color: var(--tx3); border: 1px solid var(--line2); padding: 1px 4px; }
+.vista-viva .vv-rbanda { position: relative; height: 54px; cursor: ew-resize; touch-action: none; }
+.vista-viva .vv-rbanda:focus-visible { outline: 2px solid var(--tx1); outline-offset: 2px; }
+.vista-viva .vv-rbanda svg { position: absolute; left: 0; top: 0; width: 100%; height: 40px; display: block; }
+.vista-viva .vv-noche { fill: #050510; fill: color-mix(in srgb, var(--bg0) 70%, var(--wrn) 6%); }
+.vista-viva .vv-alba { fill: var(--bg2); }
+.vista-viva .vv-dia { fill: var(--line); }
+.vista-viva .vv-rtick { stroke: var(--line3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.vista-viva .vv-rcurva { fill: none; stroke: var(--tx2); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.vista-viva .vv-r85 { stroke: var(--maj); stroke-width: 1; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; opacity: .7; }
+.vista-viva .vv-rev { stroke: var(--bg0); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.vista-viva .vv-rcursor { position: absolute; top: -3px; height: 46px; width: 3px; margin-left: -1px; background: var(--tx1); pointer-events: none; }
+.vista-viva .vv-rhoras { position: absolute; left: 0; right: 0; top: 41px; display: flex; justify-content: space-between; font: 10px var(--mono, monospace); color: var(--tx3); pointer-events: none; }
+.vista-viva .vv-rcalc { display: none; position: absolute; right: 14px; top: 4px; font: 10px var(--sans); color: var(--tx3); }
+.vista-viva .vv-reloj.sin-serie .vv-rcalc { display: block; }
+
+@media (max-width: 900px) {
+  .vista-viva .vv-reloj { grid-template-columns: 46px 104px 1fr; }
+  .vista-viva .vv-rh { font-size: 22px; }
+  .vista-viva .vv-ley { max-width: 240px; }
+}
+@media (prefers-reduced-motion: reduce) { .vista-viva .vv-rb { animation: none; } }
+body.menos-mov .vista-viva .vv-rb { animation: none; }
+/* la capa accesible dibuja su propio anillo de foco (el contorno rectangular del <g> tapaba la red) */
+.vista-viva .vv-ov .vv-o:focus, .vista-viva .vv-ov .vv-o:focus-visible { outline: none !important; }

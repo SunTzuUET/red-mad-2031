@@ -649,29 +649,29 @@
     var cab = '<div class="lj-cab"><span class="lbl">' + esc(t(TX.vista)) + '</span>' +
       '<span class="lj-kpi"><b>' + num(pct(T0.trazado, T0.total), 1) + ' %</b> ' + marcaEstado("trazado") + ' <span class="mono">' + T0.trazado + '/' + T0.total + '</span></span>' +
       '<span class="lj-kpi"><b>' + num(pct(T0.hueco, T0.total), 1) + ' %</b> ' + marcaEstado("hueco") + ' <span class="mono">' + T0.hueco + '</span></span>' +
-      '<span class="lj-kpi"><b>' + T0.discrepa + '</b> ' + marcaEstado("discrepa") + '</span>' +
+      '<span class="lj-kpi"><b>' + T0.discrepa + '</b> ' + marcaEstado("discrepa") + '</span>' + (NOC.info ? NOC.info(TX.leyenda) : "") +
       '<span class="lj-esp"></span><span class="rot">' + esc(t(TX.alcance)) + '</span><span class="seg" role="group">' + alc.map(function (a) {
         return '<button type="button" data-lj-alc="' + a[0] + '" aria-pressed="' + (EST.alcance === a[0]) + '">' + esc(t(a[1])) + '</button>';
       }).join("") + '</span></div>' +
-      '<div class="lj-banda nota">' + esc(t(TX.leyenda)) + ' <span class="tx3">' + esc(L.generado_por || "") + ' · ' + esc(L.generado || "") + '</span></div>';
+      '<div class="lj-banda nota solo-experto">' + esc(t(TX.leyenda)) + ' <span class="tx3">' + esc(L.generado_por || "") + ' · ' + esc(L.generado || "") + '</span></div>';
     // cobertura por ámbito
-    var hAmb = barraGrande(T0) + barrasAmbito(C.ambitos) + '<table class="tabla lj-tab solo-experto"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">' + esc(t({ es: "Total", en: "Total" })) +
-      '</th><th class="lj-bcol">' + esc(t(TX.cobertura)) + '</th><th class="n">' + esc(t(TX.trazado)) + '</th><th class="n">' + esc(t(TX.hueco)) + '</th><th class="n">' + esc(t(TX.discrepa)) + '</th></tr></thead><tbody>' +
+    var hAmb = barraGrande(T0) + barrasAmbito(C.ambitos) + '<table class="tabla lj-tab solo-experto"><thead><tr><th scope="col">' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Total", en: "Total" })) +
+      '</th><th scope="col" class="lj-bcol">' + esc(t(TX.cobertura)) + '</th><th scope="col" class="n">' + esc(t(TX.trazado)) + '</th><th scope="col" class="n">' + esc(t(TX.hueco)) + '</th><th scope="col" class="n">' + esc(t(TX.discrepa)) + '</th></tr></thead><tbody>' +
       C.ambitos.map(function (a) {
         return '<tr><td>' + esc(a.id) + '</td><td class="n">' + a.total + '</td><td class="lj-bcol">' + barra(a) + '</td><td class="n">' + num(pct(a.trazado, a.total), 1) + ' %</td><td class="n">' + a.hueco + '</td><td class="n">' + (a.discrepa || 0) + '</td></tr>';
       }).join("") + '</tbody></table>';
     // huecos
-    var hHu = barrasHuecos(C.huecos) + '<table class="tabla lj-tab lj-click solo-experto"><thead><tr><th>' + esc(t({ es: "Raíz", en: "Root" })) + '</th><th class="n">' + esc(t(TX.bloquea)) + '</th><th>' + esc(t(TX.supuesto)) + '</th><th>' + esc(t(TX.propuesta)) + '</th></tr></thead><tbody>' +
+    var hHu = barrasHuecos(C.huecos) + '<table class="tabla lj-tab lj-click solo-experto"><thead><tr><th scope="col">' + esc(t({ es: "Raíz", en: "Root" })) + '</th><th scope="col" class="n">' + esc(t(TX.bloquea)) + '</th><th scope="col">' + esc(t(TX.supuesto)) + '</th><th scope="col">' + esc(t(TX.propuesta)) + '</th></tr></thead><tbody>' +
       C.huecos.map(function (x) {
         var s = SUP[x.supuesto] || {}, v = V[x.id] || {};
         return '<tr data-lj-abrir="' + esc(x.id) + '" title="' + esc(t(TX.abrir)) + '"><td class="mono">' + esc(x.id) + '<div class="tx3 lj-sub">' + esc(nombreValor(v)) + ' = ' + esc(valorTxt(v) + unidad(v.unidad)) + '</div></td><td class="n"><b>' + x.bloquea + '</b></td>' +
           '<td class="txt"><span class="mono">' + esc(x.supuesto || "") + '</span> ' + esc(s.texto || "") + '</td><td class="txt tx2">' + esc(s.fuente_propuesta || "") + '</td></tr>';
       }).join("") + '</tbody></table>';
     // discrepancias
-    var hDi = C.discrepa.length ? '<table class="tabla lj-tab lj-click"><thead><tr><th>' + esc(t({ es: "Valor", en: "Value" })) + '</th><th class="n">' + esc(t(TX.memoria)) + '</th><th class="n">' + esc(t(TX.recalc)) + '</th><th class="n">Δ %</th></tr></thead><tbody>' +
+    var hDi = C.discrepa.length ? '<table class="tabla lj-tab lj-click"><thead><tr><th scope="col">' + esc(t({ es: "Valor", en: "Value" })) + '</th><th scope="col" class="n">' + esc(t(TX.memoria)) + '</th><th scope="col" class="n">' + esc(t(TX.recalc)) + '</th><th scope="col" class="n">Δ %</th></tr></thead><tbody>' +
       C.discrepa.map(function (v) {
         var d = difPct(v);
-        return '<tr data-lj-abrir="' + esc(v.id) + '"><td class="mono">' + esc(v.id) + '<div class="tx3 lj-sub">' + esc(nombreValor(v)) + ' · ' + esc((v.ref || {}).localizador || v.memoria || "") + '</div></td><td class="n">' + esc(num((v.ref || {}).valor)) +
+        return '<tr data-lj-abrir="' + esc(v.id) + '"><td class="mono">' + esc(v.id) + '<div class="tx3 lj-sub solo-experto">' + esc(nombreValor(v)) + ' · ' + esc((v.ref || {}).localizador || v.memoria || "") + '</div></td><td class="n">' + esc(num((v.ref || {}).valor)) +
           '</td><td class="n">' + esc(num(v.valor)) + '</td><td class="n sev-crit">' + esc(d == null ? "—" : num(d, 2)) + '</td></tr>';
       }).join("") + '</tbody></table>' : '<p class="nota lj-pad">' + esc(t(TX.ninguna)) + ' <span class="mono">' + C.conRef + '</span> ' + esc(t(TX.conRef)) + '.</p>';
     var izq = sec("cob", TX.porAmbito, T0.total + "", hAmb) + sec("huecos", TX.huecos, C.huecos.length + "", hHu) + sec("dis", TX.discrepancias, C.discrepa.length + "", hDi);
@@ -697,8 +697,8 @@
       h = fs.map(function (f) {
         var u = USOS_F[f.id] || { valores: [], formulas: [] }, ab = EST.abierto === f.id;
         return '<div class="lj-item' + (ab ? " abierto" : "") + '"><button type="button" class="lj-item-cab" data-lj-item="' + esc(f.id) + '"><span class="lj-ftipo">' + esc(tipoFuente(f.tipo)) + '</span>' +
-          '<span class="mono">' + esc(f.id) + '</span><span class="lj-item-tit">' + esc(f.editor || "") + ' · ' + esc(f.titulo || "") + '</span>' + marcaVerif(f) +
-          '<span class="lj-cnt">' + u.valores.length + 'v · ' + u.formulas.length + 'fx</span></button>' +
+          '<span class="mono solo-experto">' + esc(f.id) + '</span><span class="lj-item-tit" title="' + esc(f.titulo || "") + '">' + esc(f.editor || "") + '<span class="solo-experto"> · ' + esc(f.titulo || "") + '</span></span>' + marcaVerif(f) +
+          '<span class="lj-cnt solo-experto">' + u.valores.length + 'v · ' + u.formulas.length + 'fx</span></button>' +
           (ab ? '<div class="lj-item-c">' + fuenteHTML(f.id, null, true) + usosHTML(u.valores, u.formulas) + '</div>' : '') + '</div>';
       }).join("");
     } else if (EST.cat === "formulas") {
@@ -707,7 +707,7 @@
       h = fx.map(function (f) {
         var u = USOS_FX[f.id] || [], ab = EST.abierto === f.id, vars = Object.keys(f.variables || {});
         return '<div class="lj-item' + (ab ? " abierto" : "") + '"><button type="button" class="lj-item-cab" data-lj-item="' + esc(f.id) + '"><span class="mono">' + esc(f.id) + '</span>' +
-          '<span class="lj-item-tit">' + esc(f.nombre || "") + '</span><span class="lj-expr-c">' + esc(f.expr || "") + '</span><span class="lj-cnt">' + u.length + 'v</span></button>' +
+          '<span class="lj-item-tit">' + esc(f.nombre || "") + '</span><span class="lj-expr-c solo-experto">' + esc(f.expr || "") + '</span><span class="lj-cnt solo-experto">' + u.length + 'v</span></button>' +
           (ab ? '<div class="lj-item-c"><div class="lj-expr">' + esc(f.expr || "") + '</div>' +
             (vars.length ? '<dl class="lj-vars">' + vars.map(function (k) { var x = f.variables[k] || {}; return '<dt>' + esc(k) + '</dt><dd>' + esc(x.desc || "") + (x.unidad ? ' <span class="lj-u">[' + esc(x.unidad) + ']</span>' : '') + '</dd>'; }).join("") + '</dl>' : '') +
             '<p class="nota"><span class="rot">' + esc(t(TX.justif)) + '</span> ' + esc(f.justificacion || "") + '</p>' +
@@ -716,10 +716,10 @@
     } else {
       var vs = L.valores.filter(function (v) { return coincide(q, [v.id, v.elemento || "", v.campo || "", v.ambito || "", v.estado, v.tipo, v.formula || "", v.supuesto || "", v.memoria || "", (v.fuente || {}).id || "", v.nota || ""]); });
       n = vs.length;
-      h = '<table class="tabla lj-tab lj-click"><thead><tr><th>' + esc(t({ es: "Estado", en: "Status" })) + '</th><th>Id</th><th>' + esc(t({ es: "Elemento · campo", en: "Element · field" })) + '</th><th class="n">' + esc(t({ es: "Valor", en: "Value" })) + '</th><th>' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th>' + esc(t(TX.memoria)) + '</th></tr></thead><tbody>' +
+      h = '<table class="tabla lj-tab lj-click"><thead><tr><th scope="col">' + esc(t({ es: "Estado", en: "Status" })) + '</th><th scope="col">Id</th><th scope="col">' + esc(t({ es: "Elemento · campo", en: "Element · field" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Valor", en: "Value" })) + '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Tipo", en: "Type" })) + '</th><th scope="col" class="solo-experto">' + esc(t(TX.memoria)) + '</th></tr></thead><tbody>' +
         vs.slice(0, MAX).map(function (v) {
           return '<tr data-lj-abrir="' + esc(v.id) + '"><td>' + marcaEstado(v.estado) + '</td><td class="mono">' + esc(v.id) + '</td><td class="txt">' + esc(v.elemento ? nombreValor(v) : "—") + '</td><td class="n">' + esc(valorTxt(v) + unidad(v.unidad)) +
-            '</td><td>' + esc(t(TX[v.tipo] || { es: v.tipo, en: v.tipo })) + (v.formula ? ' <span class="tx3">' + esc(v.formula) + '</span>' : '') + '</td><td class="tx3">' + esc(v.memoria || "") + '</td></tr>';
+            '</td><td class="solo-experto">' + esc(t(TX[v.tipo] || { es: v.tipo, en: v.tipo })) + (v.formula ? ' <span class="tx3">' + esc(v.formula) + '</span>' : '') + '</td><td class="tx3 solo-experto">' + esc(v.memoria || "") + '</td></tr>';
         }).join("") + '</tbody></table>' + (vs.length > MAX ? '<p class="nota lj-pad">+' + (vs.length - MAX) + ' ' + esc(t(TX.mas)) + '</p>' : '');
     }
     el.innerHTML = '<div class="lj-catn tx3">' + n + ' ' + esc(t(TX.nRes)) + '</div>' + (h || '<p class="vacio">—</p>');

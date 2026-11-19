@@ -361,8 +361,8 @@
       return '<tr><td><i class="pd-sw" style="background:' + COL[tec] + '"></i>' + esc(t(TEC[tec].n)) + '</td><td class="num">' + fmt(n, 0) + '</td><td class="num">' + mb(dl) +
         '</td><td class="num">' + (esNum(umax) ? '<span class="sev-' + sevUtil(umax) + '">' + fmt(umax, 0) + ' %</span>' : "—") + (sat ? ' <span class="sev sev-crit">' + sat + '</span>' : '') + '</td></tr>';
     });
-    b.innerHTML = filas.length ? '<table class="pd-tab"><thead><tr><th>' + esc(t({ es: "Tecnología", en: "Technology" })) + '</th><th class="num">' +
-      esc(hayEMPL() ? t({ es: "sitios", en: "sites" }) : t({ es: "puntos", en: "points" })) + '</th><th class="num">DL</th><th class="num">' +
+    b.innerHTML = filas.length ? '<table class="pd-tab"><thead><tr><th scope="col">' + esc(t({ es: "Tecnología", en: "Technology" })) + '</th><th scope="col" class="num">' +
+      esc(hayEMPL() ? t({ es: "sitios", en: "sites" }) : t({ es: "puntos", en: "points" })) + '</th><th scope="col" class="num">DL</th><th scope="col" class="num">' +
       esc(t({ es: "util máx", en: "max util" })) + '</th></tr></thead><tbody>' + filas.join("") + '</tbody></table>' : "";
   }
   function pintarBarra() {
@@ -398,8 +398,8 @@
         }).join("") :
         '<div class="rot">' + esc(t({ es: "Tecnología", en: "Technology" })) + '</div>' +
         act.map(function (x) { return '<div class="fila"><i class="pt" style="background:' + COL[x] + '"></i><span>' + esc(t(TEC[x].n)) + '</span></div>'; }).join("")) +
-      '<div class="rot" style="margin-top:6px">' + esc(t({ es: "Tamaño", en: "Size" })) + '</div>' +
-      '<div class="tx3">' + esc(empl ?
+      '<div class="rot solo-experto" style="margin-top:6px">' + esc(t({ es: "Tamaño", en: "Size" })) + '</div>' +
+      '<div class="tx3 solo-experto">' + esc(empl ?
         t({ es: "Área ∝ DL / capacidad del sitio (v7 §6.2.1)", en: "Area ∝ DL / site capacity (v7 §6.2.1)" }) :
         t({ es: "Área ∝ DL de la zona; 100 % = pico de esa tecnología en la hora cargada de referencia", en: "Area ∝ zone DL; 100 % = that technology's peak in the reference busy hour" })) + '</div>' +
       '<div class="fila" style="margin-top:4px"><i class="pt disc"></i><span>' + esc(empl ? t({ es: "borde discontinuo = posición supuesta", en: "dashed edge = assumed position" }) :

@@ -168,3 +168,105 @@ svg.camino { width: 100%; height: auto; display: block; overflow: visible; }
 .fi-ady td { vertical-align: middle; }
 .fi-ady svg { color: var(--tx2); }
 @media (max-width: 1540px) { body.n-experto .esp-b kbd { display: none; } }
+
+/* =====================================================================================================
+   Revisión 12 (dueño ACCESIBLE): panel de accesibilidad, tamaño de texto, formas de estado, menos movimiento,
+   lector de pantalla y atajos. Solo tokens (los temas se redefinen en noc.css, :root.<clase>).
+   ===================================================================================================== */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.saltar { position: fixed; left: 8px; top: -60px; z-index: 5000; padding: 8px 12px; background: var(--steel); color: var(--tinta); font: 600 13px var(--sans); text-decoration: none; }
+.saltar:focus { top: 8px; }
+
+/* tamaño de texto: se amplía el shell entero (zoom), con su alto corregido; paneles propios y burbuja también */
+body.txt-125 .noc, body.txt-150 .noc { zoom: var(--zoom); height: calc(100vh / var(--zoom)); }
+body.txt-125 .acc-panel, body.txt-150 .acc-panel, body.txt-125 .acc-capa > div, body.txt-150 .acc-capa > div { zoom: var(--zoom); }
+body.txt-125 .noc-burbuja { font-size: 16px; max-width: 400px !important; }
+body.txt-150 .noc-burbuja { font-size: 19px; max-width: 460px !important; }
+
+/* botón fijo de la barra */
+.acc-btn { height: 28px; padding: 0 8px; gap: 6px; }
+.acc-btn[aria-expanded=true] { background: var(--steel); color: var(--tinta); border-color: var(--steel); }
+.acc-btn svg { flex: none; }
+@media (max-width: 1640px) { .acc-btn .acc-btn-tx { display: none; } }
+.acc-fijo { position: fixed; top: 6px; right: 8px; z-index: 1500; }
+
+/* panel */
+.acc-panel { position: fixed; top: 46px; right: 8px; z-index: 2600; width: 340px; max-width: calc(100vw - 16px); max-height: calc(100vh - 60px); overflow: auto;
+  background: var(--bg1); color: var(--tx1); border: 1px solid var(--line3); border-top: 2px solid var(--steel); padding: 0 14px 12px;
+  display: flex; flex-direction: column; gap: 2px; font: 400 13px/1.4 var(--sans); box-shadow: 0 8px 0 var(--velo2); }
+.acc-panel[hidden] { display: none; }
+.acc-cab { display: flex; align-items: center; gap: 10px; padding: 10px 0 8px; border-bottom: 1px solid var(--line2); margin-bottom: 6px; }
+.acc-cab h2 { margin: 0; display: flex; align-items: center; gap: 8px; font: 600 13px var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.acc-x { margin-left: auto; height: 28px; width: 28px; justify-content: center; padding: 0; }
+.acc-fila { display: flex; align-items: center; gap: 6px; min-height: 40px; border-bottom: 1px solid var(--line); }
+.acc-et { flex: 1; font-size: 13px; color: var(--tx1); }
+.acc-seg button { height: 30px; padding: 0 10px; font-size: 12px; letter-spacing: .02em; }
+.acc-sw { display: inline-flex; align-items: center; gap: 8px; height: 30px; min-width: 76px; padding: 0 8px; background: var(--bg0); border: 1px solid var(--line3);
+  color: var(--tx2); cursor: pointer; font: 600 12px var(--sans); }
+.acc-sw-p { width: 26px; height: 14px; border: 1px solid currentColor; position: relative; flex: none; }
+.acc-sw-p::after { content: ""; position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; background: currentColor; transition: left .15s; }
+.acc-sw[aria-checked=true] { color: var(--tinta); background: var(--steel); border-color: var(--steel); }
+.acc-sw[aria-checked=true] .acc-sw-p::after { left: 14px; }
+.acc-muestra { display: flex; gap: 6px; padding: 6px 0 8px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.acc-leer { gap: 10px; }
+.acc-leer > .btn { height: 30px; gap: 6px; }
+.acc-leer .acc-et { flex: 0 0 auto; margin-left: auto; }
+.acc-dicho { margin: 6px 0 0; min-height: 0; color: var(--tx2); font-size: 13px; }
+.acc-dicho:empty { display: none; }
+.acc-pie { display: flex; gap: 8px; padding-top: 10px; }
+.acc-pie .btn { height: 28px; gap: 6px; }
+kbd { font: 600 11px var(--code); border: 1px solid var(--line3); padding: 0 4px; color: var(--tx2); }
+
+/* capa de atajos ("?") */
+.acc-capa { position: fixed; inset: 0; z-index: 4000; background: var(--velo2); display: flex; align-items: flex-start; justify-content: center; padding: 60px 16px 16px; overflow: auto; }
+.acc-capa[hidden] { display: none; }
+.acc-atajos { width: min(980px, 100%); background: var(--bg1); border: 1px solid var(--line3); border-top: 2px solid var(--steel); padding: 0 18px 16px; color: var(--tx1); }
+.acc-atajos:focus { outline: none; }
+.acc-at-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 24px; }
+.acc-at-t { border-collapse: collapse; width: 100%; font-size: 13px; align-self: start; }
+.acc-at-t th, .acc-at-t td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.acc-at-t thead th { font: 600 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); }
+.acc-at-t tbody th { white-space: nowrap; font-weight: 400; }
+.acc-at-t kbd { font-size: 12px; padding: 1px 6px; color: var(--tx1); }
+.acc-glos h3 { margin: 6px 0 8px; font: 600 11px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--tx3); }
+.acc-glos dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 12.5px; max-height: 60vh; overflow: auto; }
+.acc-glos dt { font-weight: 600; white-space: nowrap; }
+.acc-glos dd { margin: 0; color: var(--tx2); }
+@media (max-width: 760px) { .acc-at-cols { grid-template-columns: 1fr; } }
+
+/* siglas con definición */
+abbr.sigla { text-decoration: underline dotted var(--line3); text-underline-offset: 2px; cursor: help; }
+
+/* formas de estado (● ▲ ◆ ■ ✕) en las insignias X.733 con la paleta de daltonismo o el alto contraste */
+:is(.daltonismo, .alto-contraste) .sev::before { display: inline-block; width: 1em; margin-right: 2px; font-size: 10px; line-height: 1; vertical-align: 0; }
+:is(.daltonismo, .alto-contraste) .sev-ok::before { content: "●"; }
+:is(.daltonismo, .alto-contraste) .sev-min::before { content: "▲"; }
+:is(.daltonismo, .alto-contraste) .sev-maj::before { content: "◆"; }
+:is(.daltonismo, .alto-contraste) .sev-crit::before { content: "■"; }
+:is(.daltonismo, .alto-contraste) .sev-wrn::before { content: "◇"; }
+:is(.daltonismo, .alto-contraste) .sev-unk::before { content: "✕"; }
+:is(.daltonismo, .alto-contraste) .sm-ok .sm-luz::after, :is(.daltonismo, .alto-contraste) .sm-maj .sm-luz::after, :is(.daltonismo, .alto-contraste) .sm-crit .sm-luz::after { content: none; }
+
+/* alto contraste: bordes de controles visibles, sin rayados tenues */
+.alto-contraste .btn, .alto-contraste .sel, .alto-contraste input[type=text], .alto-contraste input[type=search], .alto-contraste input[type=number], .alto-contraste .seg { border-color: var(--line3); }
+.alto-contraste .tab, .alto-contraste .esp-b { color: var(--tx2); }
+.alto-contraste .info-b { color: var(--tx1); }
+.alto-contraste .noc-burbuja { border-color: var(--tx1); }
+
+/* menos movimiento: sin animaciones ni transiciones (VIVA lee body.menos-mov o NOC.accesibilidad.menosMov para parar partículas) */
+.menos-mov *, .menos-mov *::before, .menos-mov *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) { html:not(.acc-mov-forzado) * { scroll-behavior: auto !important; } }
+
+/* tema claro: piezas de otros módulos con colores en duro (solo fondos de paneles flotantes y sombras) */
+.tema-claro .noc-burbuja { box-shadow: 0 0 0 1px var(--line3); }
+.tema-claro .mr-et { stroke: var(--bg0); }
+/* tema claro: los mapas usan teselas oscuras (Esri/Carto dark); su leyenda, etiquetas y controles conservan los tokens oscuros */
+.tema-claro :is(.mapa-noc, .mapa-leyenda, .mapa-modo, .mapa-panel, .pd-mapa, .pd-barra, .pd-resumen) {
+  --bg0: #000; --bg1: #0b0b0b; --bg2: #141414; --line: #222; --line2: #333; --line3: #5f5f5f;
+  --tx1: #ececec; --tx2: #a6a6a6; --tx3: #858585; --tx4: #4a4a4a; --steel: #f2f2f2; --tinta: #000;
+  --crit: #e5484d; --maj: #f76b15; --min: #f5c518; --wrn: #3e9bff; --ok: #30a46c; --unk: #6e6e6e;
+  --velo: rgba(0,0,0,.4); --velo2: rgba(0,0,0,.6); --sombra-t: 0 0 3px #000, 0 0 1px #000; color-scheme: dark;
+}
+/* barra superior con el botón de accesibilidad: cabe a 1280 px; con texto ampliado se desplaza en horizontal en vez de cortarse */
+@media (max-width: 1366px) { .tb-top .buscar input { width: 72px; } .tb-top .acc-btn { padding: 0 6px; } .tb-top .esp-b { padding: 0 9px; } }
+body.txt-125 .tb-f.tb-top, body.txt-150 .tb-f.tb-top, body.txt-125 .tb-f.tb-kpi, body.txt-150 .tb-f.tb-kpi { overflow-x: auto; scrollbar-width: thin; }

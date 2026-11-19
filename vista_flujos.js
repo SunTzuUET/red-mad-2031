@@ -283,7 +283,7 @@
   }
   function tablaDems(ds) {
     ds = ds.slice().sort(function (a, b) { return b.dl_gbps - a.dl_gbps; });
-    return '<table class="tabla fx-ft"><thead><tr><th>' + esc(t({ es: "Demanda", en: "Demand" })) + '</th><th class="n">Gbit/s</th><th class="n">' + esc(t(TX.servida)) + '</th></tr></thead><tbody>' +
+    return '<table class="tabla fx-ft"><thead><tr><th scope="col">' + esc(t({ es: "Demanda", en: "Demand" })) + '</th><th scope="col" class="n">Gbit/s</th><th scope="col" class="n">' + esc(t(TX.servida)) + '</th></tr></thead><tbody>' +
       ds.slice(0, 12).map(filaDem).join("") + '</tbody></table>' + (ds.length > 12 ? '<p class="nota tx3">+' + (ds.length - 12) + '</p>' : '');
   }
   function medidor(v) {
@@ -416,7 +416,7 @@
     var cl = CLASES.filter(function (c) { return cs[c]; }), zs = Object.keys(Z).sort(function (a, b) {
       var sa = 0, sb = 0; cl.forEach(function (c) { sa += Z[a][c] || 0; sb += Z[b][c] || 0; }); return sb - sa;
     });
-    return '<table class="tabla fx-mat"><caption class="lbl">' + esc(t(TX.tabla)) + '</caption><thead><tr><th>' + esc(t(TX.cols[0])) + '</th>' + cl.map(function (c) { return '<th class="n">' + esc(nomSv(c)) + '</th>'; }).join("") + '<th class="n">Σ</th></tr></thead><tbody>' +
+    return '<table class="tabla fx-mat"><caption class="lbl">' + esc(t(TX.tabla)) + '</caption><thead><tr><th scope="col">' + esc(t(TX.cols[0])) + '</th>' + cl.map(function (c) { return '<th scope="col" class="n">' + esc(nomSv(c)) + '</th>'; }).join("") + '<th scope="col" class="n">Σ</th></tr></thead><tbody>' +
       zs.map(function (z) {
         var s = 0;
         return '<tr data-sel="zona" data-id="' + esc(z) + '"><td>' + esc(nomZona(z)) + '</td>' + cl.map(function (c) { var v = Z[z][c] || 0; s += v; return '<td class="n">' + (v ? gb(v) : "") + '</td>'; }).join("") + '<td class="n"><b>' + gb(s) + '</b></td></tr>';

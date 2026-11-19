@@ -19,7 +19,7 @@
   var TX = {
     guiados: { es: "Casos guiados", en: "Guided cases" },
     diario: { es: "Día a día", en: "Day to day" },
-    predecir: { es: "Predecir antes de simular", en: "Predict before simulating" },
+    predecir: { es: "Predecir primero", en: "Predict first" },
     si: { es: "Sí", en: "On" }, no: { es: "No", en: "Off" },
     simular: { es: "Simular en LAB", en: "Simulate in LAB" },
     resimular: { es: "Volver a simular", en: "Simulate again" },
@@ -44,7 +44,7 @@
     rango: { es: "Rango de demanda servida", en: "Served demand range" },
     enlacePred: { es: "Enlace de transporte más cargado", en: "Most loaded transport link" },
     elige: { es: "Elige al menos una respuesta.", en: "Pick at least one answer." },
-    noActivo: { es: "Pulsa «Simular» para poner este caso en LAB y ver el resultado del motor.", en: "Press «Simulate» to put this case in LAB and see the engine result." },
+    noActivo: { es: "Pulsa «Simular» para ver el resultado.", en: "Press «Simulate» to see the result." },
     cambiado: { es: "El caso de LAB ya no es este (se ha cambiado en la barra). Vuelve a simular para verlo.", en: "The LAB case is no longer this one (changed in the bar). Simulate again to see it." },
     params: { es: "LAB usa parámetros de demanda editados: las cifras pueden no coincidir con la v7.", en: "LAB uses edited demand parameters: figures may differ from v7." },
     sinApi: { es: "Esta versión de la consola no tiene NOC.aplicarCaso.", en: "This console version has no NOC.aplicarCaso." },
@@ -111,17 +111,17 @@
       nom = '<span class="mono">' + esc(fo.id) + '</span>' + (fo.tipo === "nodo" ? ' <span class="vc-tenue">' + esc(NOC.nombre ? NOC.nombre(fo.id) : "") + '</span>' : "");
       if (!x) val = "—";
       else if (x.caido) val = '<span class="sev-crit">' + esc(t({ es: "CAÍDO", en: "DOWN" })) + '</span>';
-      else val = celdaOc(x.oc) + ' <span class="vc-tenue">' + f(x.carga, 1) + ' / ' + f(x.cap, 0) + ' Gbit/s</span>';
+      else val = celdaOc(x.oc) + ' <span class="vc-tenue solo-experto">' + f(x.carga, 1) + ' / ' + f(x.cap, 0) + ' Gbit/s</span>';
       if (xr && !xr.caido) refv = celdaOc(xr.oc);
     } else if (fo.tipo === "servicio") {
       var s = C.servicio(r, fo.patron), sr = ref ? C.servicio(ref, fo.patron) : null;
       nom = esc(t(fo.nombre));
-      val = s.pct == null ? "—" : '<span class="sev-' + (s.pct >= 99.99 ? "ok" : s.pct >= 50 ? "maj" : "crit") + '">' + f(s.pct, 1) + ' %</span> <span class="vc-tenue">' + f(s.servida, 2) + ' / ' + f(s.dl, 2) + ' Gbit/s</span>';
+      val = s.pct == null ? "—" : '<span class="sev-' + (s.pct >= 99.99 ? "ok" : s.pct >= 50 ? "maj" : "crit") + '">' + f(s.pct, 1) + ' %</span> <span class="vc-tenue solo-experto">' + f(s.servida, 2) + ' / ' + f(s.dl, 2) + ' Gbit/s</span>';
       if (sr && sr.pct != null) refv = f(sr.pct, 1) + ' %';
     } else if (fo.tipo === "zona") {
       var z = C.zona(r, fo.id), zr = ref ? C.zona(ref, fo.id) : null;
       nom = esc(NOC.nombre ? NOC.nombre(fo.id) : fo.id);
-      val = !z ? "—" : '<span class="sev-' + (z.pct >= 99.99 ? "ok" : z.pct >= 50 ? "maj" : "crit") + '">' + f(z.pct, 1) + ' %</span> <span class="vc-tenue">' + f(z.servida, 1) + ' / ' + f(z.dl, 1) + ' Gbit/s</span>';
+      val = !z ? "—" : '<span class="sev-' + (z.pct >= 99.99 ? "ok" : z.pct >= 50 ? "maj" : "crit") + '">' + f(z.pct, 1) + ' %</span> <span class="vc-tenue solo-experto">' + f(z.servida, 1) + ' / ' + f(z.dl, 1) + ' Gbit/s</span>';
       if (zr) refv = f(zr.pct, 1) + ' %';
     } else if (fo.tipo === "n1") {
       nom = esc(t(TX.puestoN1)) + ' <span class="mono">' + esc(fo.id) + '</span>';
@@ -139,18 +139,18 @@
     if (!coincide(c)) return '<p class="nota vc-hueco vc-aviso">' + esc(t(TX.cambiado)) + '</p>';
     var a = C.analizar(NOC.RED, r), ar = ref ? C.analizar(NOC.RED, ref) : null;
     if (!a) return "";
-    var top = a.top[0], h = '<table class="tabla vc-res"><thead><tr><th></th><th>' + esc(t(TX.real)) + '</th><th>' + esc(t(TX.ref)) + '</th></tr></thead><tbody>';
-    h += '<tr><td>' + esc(t(TX.pct)) + '</td><td><span class="vc-big sev-' + (a.pct >= 99.995 ? "ok" : a.pct >= 95 ? "min" : a.pct >= 80 ? "maj" : "crit") + '">' + f(a.pct, 2) + ' %</span> <span class="vc-tenue">' + f(a.servida, 0) + ' / ' + f(a.dl, 0) + ' Gbit/s</span></td><td class="vc-ref">' + (ar ? f(ar.pct, 2) + ' %' : "") + '</td></tr>';
-    h += '<tr><td>' + esc(t(TX.top)) + '</td><td>' + (top ? '<span class="mono">' + esc(top.id) + '</span> ' + celdaOc(top.oc) + ' <span class="vc-tenue">' + f(top.carga, 1) + ' / ' + f(top.cap, 0) + ' Gbit/s</span>' : "—") +
+    var top = a.top[0], h = '<table class="tabla vc-res"><thead><tr><th scope="col"></th><th scope="col">' + esc(t(TX.real)) + '</th><th scope="col">' + esc(t(TX.ref)) + '</th></tr></thead><tbody>';
+    h += '<tr><td>' + esc(t(TX.pct)) + '</td><td><span class="vc-big sev-' + (a.pct >= 99.995 ? "ok" : a.pct >= 95 ? "min" : a.pct >= 80 ? "maj" : "crit") + '">' + f(a.pct, 2) + ' %</span> <span class="vc-tenue solo-experto">' + f(a.servida, 0) + ' / ' + f(a.dl, 0) + ' Gbit/s</span></td><td class="vc-ref">' + (ar ? f(ar.pct, 2) + ' %' : "") + '</td></tr>';
+    h += '<tr><td>' + esc(t(TX.top)) + '</td><td>' + (top ? '<span class="mono">' + esc(top.id) + '</span> ' + celdaOc(top.oc) + ' <span class="vc-tenue solo-experto">' + f(top.carga, 1) + ' / ' + f(top.cap, 0) + ' Gbit/s</span>' : "—") +
       '</td><td class="vc-ref">' + (ar && ar.top[0] ? '<span class="mono">' + esc(ar.top[0].id) + '</span> ' + celdaOc(ar.top[0].oc) : "") + '</td></tr>';
-    h += '<tr><td>' + esc(t(TX.sinRuta)) + '</td><td>' + (a.sin_ruta ? '<span class="sev-crit">' + a.sin_ruta + '</span> <span class="vc-tenue">' + f(a.perdido_gbps, 1) + ' ' + esc(t(TX.perdidos)) + '</span>' : '<span class="sev-ok">0</span>') + '</td><td class="vc-ref">' + (ar ? ar.sin_ruta : "") + '</td></tr>';
+    h += '<tr><td>' + esc(t(TX.sinRuta)) + '</td><td>' + (a.sin_ruta ? '<span class="sev-crit">' + a.sin_ruta + '</span> <span class="vc-tenue solo-experto">' + f(a.perdido_gbps, 1) + ' ' + esc(t(TX.perdidos)) + '</span>' : '<span class="sev-ok">0</span>') + '</td><td class="vc-ref">' + (ar ? ar.sin_ruta : "") + '</td></tr>';
     var al = NOC.alarmas ? NOC.alarmas() : [], cnt = { crit: 0, maj: 0, min: 0 };
     al.forEach(function (x) { if (x.sev in cnt) cnt[x.sev]++; });
     h += '<tr><td>' + esc(t(TX.alarmas)) + '</td><td>' + NOC.insignia("crit", "CRIT " + cnt.crit) + ' ' + NOC.insignia("maj", "MAJ " + cnt.maj) + ' ' + NOC.insignia("min", "MIN " + cnt.min) + '</td><td></td></tr>';
     (c.foco || []).forEach(function (fo) { h += filaFoco(c, fo, r, ref); });
     h += '</tbody></table>';
     if (al.length) {
-      h += '<ul class="vc-alarmas">';
+      h += '<ul class="vc-alarmas solo-experto">';
       al.slice(0, 4).forEach(function (x) { h += '<li>' + NOC.insignia(x.sev) + ' ' + esc(x.texto) + '</li>'; });
       if (al.length > 4) h += '<li class="vc-tenue">+' + (al.length - 4) + '</li>';
       h += '</ul>';
@@ -202,7 +202,7 @@
   }
 
   function lista(items, titulo) {
-    var h = '<tr class="vc-grupo"><th colspan="3">' + esc(t(titulo)) + '</th></tr>';
+    var h = '<tr class="vc-grupo"><th scope="colgroup" colspan="3">' + esc(t(titulo)) + '</th></tr>';
     items.forEach(function (c) {
       h += '<tr data-vc-id="' + esc(c.id) + '"' + (c.id === sel ? ' class="sel"' : "") + '><td class="id">' + esc(c.n ? c.n : c.id) + '</td><td class="txt">' + esc(t(c.titulo)) + '</td><td>' + etiquetaSim(c) + '</td></tr>';
     });
@@ -211,7 +211,7 @@
 
   function seccionRefs(titulo, arr) {
     if (!arr || !arr.length) return "";
-    var h = '<div class="vc-sec"><div class="rot">' + esc(t(titulo)) + '</div><ul class="vc-refs">';
+    var h = '<div class="vc-sec solo-experto"><div class="rot">' + esc(t(titulo)) + '</div><ul class="vc-refs">';
     arr.forEach(function (x) { h += '<li>' + (x.ref ? marcaRef(x.ref) + ' ' : "") + esc(t(x)) + '</li>'; });
     return h + '</ul></div>';
   }
@@ -219,24 +219,24 @@
   function detalle(c) {
     if (!c) return "";
     var h = '<div class="vc-det-cab"><span class="mono vc-id">' + esc(c.n ? "§6·" + c.n : c.id) + '</span> <span class="vc-tit">' + esc(t(c.titulo)) + '</span> ' + etiquetaSim(c) +
-      (c.origen === "anterior" ? ' <span class="marca ant">' + esc(t({ es: "ANT.", en: "EARLIER" })) + '</span>' : "") + '</div>';
+      (c.origen === "anterior" ? ' <span class="marca ant">' + esc(t({ es: "ANT.", en: "EARLIER" })) + '</span>' : "") + (c.nota && NOC.info ? '<span class="solo-simple"> ' + NOC.info(c.nota) + '</span>' : "") + '</div>';
     if (c.planteamiento) h += '<div class="vc-sec"><div class="rot">' + esc(t(TX.planteamiento)) + '</div><p class="nota vc-p">' + esc(t(c.planteamiento)) + '</p></div>';
     if (c.sintomas) {
-      h += '<div class="vc-sec"><div class="rot">' + esc(t(TX.sintomas)) + '</div><div class="kv vc-kv"><span class="rot">' + esc(t(TX.cliente)) + '</span><span>' + esc(t(c.sintomas.cliente)) +
-        '</span><span class="rot">' + esc(t(TX.noc)) + '</span><span>' + esc(t(c.sintomas.noc)) + '</span><span class="rot">' + esc(t(TX.causa)) + '</span><span>' + esc(t(c.causa)) + '</span></div></div>';
+      h += '<div class="vc-sec"><div class="rot solo-experto">' + esc(t(TX.sintomas)) + '</div><div class="kv vc-kv"><span class="rot solo-experto">' + esc(t(TX.cliente)) + '</span><span class="solo-experto">' + esc(t(c.sintomas.cliente)) +
+        '</span><span class="rot solo-experto">' + esc(t(TX.noc)) + '</span><span class="solo-experto">' + esc(t(c.sintomas.noc)) + '</span><span class="rot">' + esc(t(TX.causa)) + '</span><span>' + esc(t(c.causa)) + '</span></div></div>';
     }
     if (c.srlg && NOC.RED) {
-      h += '<div class="vc-sec"><div class="rot">SRLG</div><table class="tabla"><tbody>';
+      h += '<div class="vc-sec solo-experto"><div class="rot">SRLG</div><table class="tabla"><tbody>';
       c.srlg.forEach(function (id) {
         var l = (NOC.RED.enlaces || []).filter(function (x) { return x.id === id; })[0];
         h += '<tr><td class="id">' + esc(id) + '</td><td class="mono">' + esc(l && l.srlg != null ? (Array.isArray(l.srlg) ? l.srlg.join(", ") : l.srlg) : "—") + '</td></tr>';
       });
       h += '</tbody></table></div>';
     }
-    if (c.nota) h += '<p class="nota vc-nota vc-nota-' + tipoSim(c) + '">' + esc(t(c.nota)) + '</p>';
-    if (c.pregunta) h += '<div class="vc-sec"><div class="rot">' + esc(t(TX.pregunta)) + '</div><p class="vc-preg">' + esc(t(c.pregunta)) + '</p></div>';
+    if (c.nota) h += '<p class="nota vc-nota vc-nota-' + tipoSim(c) + ' solo-experto">' + esc(t(c.nota)) + '</p>';
+    if (c.pregunta) h += '<div class="vc-sec solo-experto"><div class="rot">' + esc(t(TX.pregunta)) + '</div><p class="vc-preg">' + esc(t(c.pregunta)) + '</p></div>';
     if (c.caso) {
-      h += '<div class="vc-sec"><div class="rot">' + esc(t(TX.configuracion)) + '</div>' + descCaso(c) + '</div>';
+      h += '<div class="vc-sec solo-experto"><div class="rot">' + esc(t(TX.configuracion)) + '</div>' + descCaso(c) + '</div>';
       if (prediciendo === c.id) h += formPrediccion(c);
       else {
         var lbl = c.boton ? t(c.boton) : t(activo === c.id ? TX.resimular : TX.simular);
@@ -249,7 +249,7 @@
     h += seccionRefs(TX.proteccion, c.proteccion);
     h += seccionRefs(TX.operacion, c.operacion);
     if (c.preguntas && c.preguntas.length) {
-      h += '<div class="vc-sec"><div class="rot">' + esc(t(TX.preguntas)) + '</div><ol class="vc-ol">';
+      h += '<div class="vc-sec solo-experto"><div class="rot">' + esc(t(TX.preguntas)) + '</div><ol class="vc-ol">';
       c.preguntas.forEach(function (q) { h += '<li>' + esc(t(q)) + '</li>'; });
       h += '</ol></div>';
     }
@@ -261,12 +261,12 @@
     if (!C || !C.guiados) { raiz.innerHTML = '<div class="vc-error">' + esc(t(TX.sinDatos)) + '</div>'; return; }
     if (!caso(sel)) sel = C.guiados[0].id;
     var p = predice();
-    var h = '<div class="vc-cab"><span class="rot">' + esc(t({ es: "Casos", en: "Cases" })) + '</span><span class="vc-n">' + C.guiados.length + ' + ' + C.diario.length + '</span>' +
+    var h = '<div class="vc-cab"><span class="rot">' + esc(t({ es: "Casos", en: "Cases" })) + '</span><span class="vc-n">' + C.guiados.length + ' + ' + C.diario.length + '</span>' + (NOC.info ? NOC.info(TX.nota) : "") +
       '<span class="vc-esp"></span><span class="rot">' + esc(t(TX.predecir)) + '</span><span class="seg" role="group">' +
       '<button data-vc-pred-on="1" aria-pressed="' + p + '">' + esc(t(TX.si)) + '</button><button data-vc-pred-on="0" aria-pressed="' + !p + '">' + esc(t(TX.no)) + '</button></span></div>';
     if (NOC.paramsEditados > 0) h += '<p class="nota vc-aviso vc-banda">' + esc(t(TX.params)) + '</p>';
     h += '<div class="vc-cuerpo"><div class="vc-lista"><table class="tabla"><tbody>' + lista(C.guiados, TX.guiados) + lista(C.diario, TX.diario) + '</tbody></table>' +
-      '<p class="nota vc-pie">' + esc(t(TX.nota)) + '</p></div><div class="vc-det">' + detalle(caso(sel)) + '</div></div>';
+      '<p class="nota vc-pie solo-experto">' + esc(t(TX.nota)) + '</p></div><div class="vc-det">' + detalle(caso(sel)) + '</div></div>';
     raiz.innerHTML = h;
   }
 

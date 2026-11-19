@@ -121,7 +121,7 @@
   // ---------- color: una sola semántica ----------
   var RESERVA = { ok: "#30a46c", min: "#f5c518", maj: "#f76b15", crit: "#e5484d", wrn: "#3e9bff", unk: "#6e6e6e",
     movil: "#3987e5", ftth: "#d95926", voz: "#199e70", urllc: "#c98500", iot: "#d55181", empresa: "#0ca30c", evento: "#9085e9", ntn: "#e66767",
-    doc: "#d9d9d9", sup: "#9085e9", calc: "#707070", usr: "#f2f2f2", tx1: "#ececec", tx2: "#a6a6a6", tx3: "#707070", line: "#222", line2: "#333", bg0: "#000", bg1: "#0b0b0b" };
+    doc: "#d9d9d9", sup: "#9085e9", calc: "#858585", usr: "#f2f2f2", tx1: "#ececec", tx2: "#a6a6a6", tx3: "#858585", line: "#222", line2: "#333", bg0: "#000", bg1: "#0b0b0b" };
   var cacheTok = {};
   function tok(nombre) {
     if (cacheTok[nombre]) return cacheTok[nombre];
@@ -162,11 +162,85 @@
     return '<span class="est est-' + s + '">' + API.icono(s === "unk" ? "down" : s, 14) + '<b>' + esc(txt || SEV_TXT[s]) + '</b></span>';
   };
 
+  // ---------- glosario de siglas (Revisión 12, dueño ACCESIBLE): una línea por sigla ----------
+  // NOC.info("BNG") devuelve la definición; un ⓘ con texto libre añade al final las siglas que mencione (máx. 3).
+  // Cualquier elemento cuyo texto sea solo una sigla del glosario muestra su definición al pasar o enfocar.
+  API.glosario = {
+    "BNG": { es: "Broadband Network Gateway: puerta de los clientes de fibra (FTTH) hacia la red.", en: "Broadband Network Gateway: entry point of fibre (FTTH) customers to the network." },
+    "UPF": { es: "User Plane Function (5G): nodo por el que pasa el tráfico de datos móviles.", en: "User Plane Function (5G): node that carries mobile data traffic." },
+    "IMS": { es: "IP Multimedia Subsystem: núcleo que da la voz (VoNR, VoLTE, fija).", en: "IP Multimedia Subsystem: core that provides voice (VoNR, VoLTE, fixed)." },
+    "PON": { es: "Passive Optical Network: fibra compartida con divisores pasivos hasta las casas.", en: "Passive Optical Network: shared fibre with passive splitters to homes." },
+    "XGS-PON": { es: "PON de 10 Gbit/s simétricos (ITU-T G.9807.1).", en: "Symmetric 10 Gbit/s PON (ITU-T G.9807.1)." },
+    "OLT": { es: "Optical Line Terminal: cabecera de la PON en la central.", en: "Optical Line Terminal: PON head-end in the central office." },
+    "ONT": { es: "Optical Network Terminal: equipo de fibra en casa del cliente.", en: "Optical Network Terminal: fibre box at the customer's home." },
+    "λ": { es: "Lambda: una longitud de onda (un canal) en la fibra DWDM.", en: "Lambda: one wavelength (one channel) on the DWDM fibre." },
+    "DWDM": { es: "Multiplexación densa por longitud de onda: muchas λ por una fibra.", en: "Dense wavelength-division multiplexing: many λ on one fibre." },
+    "WDM": { es: "Multiplexación por longitud de onda: varias λ por una fibra.", en: "Wavelength-division multiplexing: several λ on one fibre." },
+    "LAG": { es: "Link Aggregation Group: varios enlaces físicos que funcionan como uno.", en: "Link Aggregation Group: several physical links working as one." },
+    "FRR": { es: "Fast ReRoute: desvío del tráfico en < 50 ms si cae un enlace.", en: "Fast ReRoute: traffic is diverted in < 50 ms if a link fails." },
+    "N-1": { es: "Prueba N-1: se quita un elemento cada vez y se mira si la red aguanta.", en: "N-1 test: remove one element at a time and check the network copes." },
+    "SLA": { es: "Service Level Agreement: lo comprometido (disponibilidad, retardo).", en: "Service Level Agreement: what is promised (availability, delay)." },
+    "URLLC": { es: "Comunicaciones ultra fiables y de muy bajo retardo (V2X, industria).", en: "Ultra-reliable low-latency communications (V2X, industry)." },
+    "eMBB": { es: "Banda ancha móvil mejorada: datos del móvil.", en: "Enhanced mobile broadband: mobile data." },
+    "mMTC": { es: "Comunicaciones masivas de máquinas: sensores IoT.", en: "Massive machine-type communications: IoT sensors." },
+    "NTN": { es: "Non-Terrestrial Network: acceso por satélite.", en: "Non-Terrestrial Network: satellite access." },
+    "L2VPN": { es: "Red privada virtual de nivel 2 para empresas.", en: "Layer-2 virtual private network for businesses." },
+    "IX": { es: "Internet Exchange: punto de intercambio con otras redes e Internet.", en: "Internet Exchange: peering point with other networks and the Internet." },
+    "DC": { es: "Data Centre: centro de datos del núcleo de la red.", en: "Data centre of the network core." },
+    "MEC": { es: "Multi-access Edge Computing: servidores cerca del usuario (borde).", en: "Multi-access Edge Computing: servers close to the user (edge)." },
+    "HC": { es: "Hora cargada: la hora del día con más tráfico.", en: "Busy hour: the hour of the day with most traffic." },
+    "BH": { es: "Busy hour (hora cargada): la hora del día con más tráfico.", en: "Busy hour: the hour of the day with most traffic." },
+    "V2X": { es: "Comunicación vehículo con todo (coches, semáforos).", en: "Vehicle-to-everything communication." },
+    "VoNR": { es: "Voz sobre 5G (New Radio).", en: "Voice over 5G New Radio." },
+    "AMF": { es: "Access and Mobility Function (5G): registro y movilidad de los móviles.", en: "Access and Mobility Function (5G): device registration and mobility." },
+    "SMF": { es: "Session Management Function (5G): abre y gestiona las sesiones de datos.", en: "Session Management Function (5G): sets up data sessions." },
+    "PCF": { es: "Policy Control Function (5G): reglas de calidad y tarificación.", en: "Policy Control Function (5G): QoS and charging rules." },
+    "UDM": { es: "Unified Data Management (5G): datos de los abonados.", en: "Unified Data Management (5G): subscriber data." },
+    "NRF": { es: "Network Repository Function (5G): directorio de funciones del núcleo.", en: "Network Repository Function (5G): core function directory." },
+    "NSSF": { es: "Network Slice Selection Function (5G): elige la slice.", en: "Network Slice Selection Function (5G): picks the slice." },
+    "OTN": { es: "Optical Transport Network: transporte óptico con contenedores (ITU-T G.709).", en: "Optical Transport Network: optical transport with containers (ITU-T G.709)." },
+    "MPLS": { es: "Conmutación por etiquetas: encamina el tráfico por túneles.", en: "Label switching: routes traffic through tunnels." },
+    "SR": { es: "Segment Routing: el camino va escrito en la cabecera del paquete.", en: "Segment Routing: the path is written in the packet header." },
+    "BFD": { es: "Detección rápida de fallo de enlace (milisegundos).", en: "Bidirectional Forwarding Detection: fast link-failure detection." },
+    "SRLG": { es: "Grupo de enlaces con riesgo compartido (misma zanja o conducto).", en: "Shared Risk Link Group (same trench or duct)." },
+    "KPI": { es: "Indicador clave: una cifra que resume el estado.", en: "Key performance indicator." },
+    "DL": { es: "Downlink: tráfico de bajada (red → usuario).", en: "Downlink: network → user traffic." },
+    "UL": { es: "Uplink: tráfico de subida (usuario → red).", en: "Uplink: user → network traffic." },
+    "PE": { es: "Provider Edge: router de borde del operador.", en: "Provider Edge router." },
+    "IMS-EJ": { es: "Ejercicio IMS de la asignatura ARCO.", en: "IMS exercise from the ARCO course." },
+    "REF": { es: "Referencia: la red exactamente como la Entrega 2 (v7), solo lectura.", en: "Reference: the network exactly as Deliverable 2 (v7), read-only." },
+    "LAB": { es: "Laboratorio: puedes cambiar caso, hora, fallos y modelo.", en: "Laboratory: you can change case, hour, faults and model." }
+  };
+  function definicion(k) {
+    var g = API.glosario, d = g[k] || g[String(k).toUpperCase()];
+    return d ? t(d) : "";
+  }
+  API.definicion = definicion;
+  // siglas mencionadas en un texto (palabras completas), en orden de aparición
+  function siglasEn(tx) {
+    var out = [];
+    String(tx || "").split(/[^\wλ\-]+/u).forEach(function (w) {
+      if (w && w !== "DC" && API.glosario[w] && out.indexOf(w) < 0) out.push(w);
+    });
+    return out;
+  }
+  API.siglasEn = siglasEn;
+  // <abbr> con definición en la burbuja (para rótulos de siglas)
+  API.sigla = function (k) {
+    var d = definicion(k);
+    return d ? '<abbr class="sigla" tabindex="0" data-tip="' + esc(k + ": " + d) + '">' + esc(k) + '</abbr>' : esc(k);
+  };
+
   // ---------- ⓘ: explicaciones fuera de la pantalla ----------
   API.info = function (texto, opc) {
     var tx = t(texto);
     if (!tx) return "";
     opc = opc || {};
+    if (typeof texto === "string" && API.glosario[texto]) tx = texto + ": " + definicion(texto);
+    else if (opc.glosario !== false) {
+      var ss = siglasEn(tx).slice(0, 3);
+      if (ss.length) tx += "\n" + ss.map(function (s) { return s + ": " + definicion(s); }).join("\n");
+    }
     return '<button type="button" class="info-b' + (opc.clase ? " " + opc.clase : "") + '" data-tip="' + esc(tx) + '" aria-label="' + esc(t({ es: "Información: ", en: "Information: " }) + tx) + '">' +
       API.icono("info", 14) + (opc.etiqueta ? '<span>' + esc(t(opc.etiqueta)) + '</span>' : '') + '</button>';
   };
@@ -178,8 +252,16 @@
     document.body.appendChild(burbuja);
     return burbuja;
   }
-  function mostrar(el, fijar) {
-    var tx = el.getAttribute("data-tip");
+  // texto de una sigla del glosario si el elemento solo contiene esa sigla (p. ej. <th>BNG</th>, <text>UPF</text>)
+  function siglaDe(el) {
+    if (!el || el.nodeType !== 1 || el.children.length || el.closest("[data-tip], input, select, textarea, .noc-burbuja")) return "";
+    var s = (el.textContent || "").trim();
+    if (!s || s.length > 8) return "";
+    var d = definicion(s);
+    return d ? s + ": " + d : "";
+  }
+  function mostrar(el, fijar, txFijo) {
+    var tx = txFijo || el.getAttribute("data-tip");
     if (!tx) return;
     var b = crearBurbuja();
     if (ancla && ancla !== el) ancla.removeAttribute("aria-describedby");
@@ -205,7 +287,11 @@
   document.addEventListener("mouseover", function (ev) {
     var el = ev.target.closest && ev.target.closest("[data-tip]");
     if (el && el !== ancla) mostrar(el, false);
-    else if (!el && ancla && !fijada) ocultar();
+    else if (!el) {
+      var sg = siglaDe(ev.target);
+      if (sg && ev.target !== ancla) { mostrar(ev.target, false, sg); return; }
+      if (!sg && ancla && !fijada) ocultar();
+    }
   });
   document.addEventListener("focusin", function (ev) { var el = ev.target.closest && ev.target.closest("[data-tip]"); if (el) mostrar(el, false); });
   document.addEventListener("focusout", function (ev) { if (ancla && ev.target === ancla && !fijada) ocultar(); });
@@ -367,4 +453,349 @@
     });
     return '<svg class="camino" viewBox="0 0 ' + Wd + ' ' + H + '" style="max-width:' + Wd + 'px" role="img" aria-label="' + esc(t({ es: "Camino: ", en: "Path: " }) + nodos.map(API.nombreCorto).join(" → ")) + '">' + h + '</svg>';
   };
+
+  // =====================================================================================================
+  // Accesibilidad (Revisión 12, dueño ACCESIBLE)
+  //   NOC.accesibilidad = { texto: 100|125|150, contraste, daltonismo, menosMov, tema: "oscuro"|"claro"|"sistema", voz,
+  //     set(clave, valor), alCambiar(fn(estado)), resumen() → frase, leerResumen(), abrir(), cerrar(), atajos(), boton() }
+  //   Clases en <html> y <body>: txt-125 / txt-150, alto-contraste, daltonismo, menos-mov, tema-claro (los tokens se
+  //   redefinen en :root.<clase> en noc.css). Evento DOM "noc-accesibilidad" en document (detail = estado).
+  //   localStorage["noc.acc"] (JSON, try/catch). menosMov = null → sigue prefers-reduced-motion.
+  // =====================================================================================================
+  var ACC_K = "noc.acc";
+  var mqMov = W.matchMedia ? W.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  var mqClaro = W.matchMedia ? W.matchMedia("(prefers-color-scheme: light)") : null;
+  var ACC_DEF = { texto: 100, contraste: false, daltonismo: false, menosMov: null, tema: "oscuro", voz: false };
+  var accEst = (function () {
+    var o = {}, g = null;
+    try { g = JSON.parse(leer(ACC_K) || "null"); } catch (e) { g = null; }
+    Object.keys(ACC_DEF).forEach(function (k) { o[k] = g && g[k] !== undefined ? g[k] : ACC_DEF[k]; });
+    if ([100, 125, 150].indexOf(Number(o.texto)) < 0) o.texto = 100;
+    o.texto = Number(o.texto);
+    if (["oscuro", "claro", "sistema"].indexOf(o.tema) < 0) o.tema = "oscuro";
+    return o;
+  })();
+  var oyAcc = [];
+  function menosMovEf() { return accEst.menosMov == null ? !!(mqMov && mqMov.matches) : !!accEst.menosMov; }
+  function claroEf() { return accEst.tema === "claro" || (accEst.tema === "sistema" && !!(mqClaro && mqClaro.matches)); }
+  function clasesAcc() {
+    var z = accEst.texto / 100;
+    [document.documentElement, document.body].forEach(function (el) {
+      if (!el) return;
+      el.classList.toggle("txt-125", accEst.texto === 125);
+      el.classList.toggle("txt-150", accEst.texto === 150);
+      el.classList.toggle("alto-contraste", !!accEst.contraste);
+      el.classList.toggle("daltonismo", !!accEst.daltonismo);
+      el.classList.toggle("menos-mov", menosMovEf());
+      el.classList.toggle("tema-claro", claroEf());
+    });
+    document.documentElement.style.setProperty("--zoom", String(z));
+    document.documentElement.setAttribute("data-tema", claroEf() ? "claro" : "oscuro");
+  }
+  function estadoPublico() {
+    return { texto: accEst.texto, contraste: !!accEst.contraste, daltonismo: !!accEst.daltonismo, menosMov: menosMovEf(),
+      menosMovSistema: accEst.menosMov == null, tema: claroEf() ? "claro" : "oscuro", temaElegido: accEst.tema, voz: !!accEst.voz };
+  }
+  var ACC = API.accesibilidad = {
+    get texto() { return accEst.texto; },
+    get contraste() { return !!accEst.contraste; },
+    get daltonismo() { return !!accEst.daltonismo; },
+    get menosMov() { return menosMovEf(); },
+    get tema() { return claroEf() ? "claro" : "oscuro"; },
+    get voz() { return !!accEst.voz; },
+    estado: estadoPublico,
+    alCambiar: function (fn) { if (typeof fn === "function") oyAcc.push(fn); },
+    set: function (k, v) {
+      if (!(k in ACC_DEF)) return;
+      var antesColor = colorFirma();
+      if (k === "texto") v = [100, 125, 150].indexOf(Number(v)) >= 0 ? Number(v) : 100;
+      accEst[k] = v;
+      guardar(ACC_K, JSON.stringify(accEst));
+      clasesAcc();
+      var e = estadoPublico();
+      if (colorFirma() !== antesColor) repintarColores();
+      if (k === "texto") setTimeout(function () { try { W.dispatchEvent(new Event("resize")); } catch (x) { /* nada */ } }, 30);
+      oyAcc.forEach(function (fn) { try { fn(e); } catch (x) { console.error("NOC.accesibilidad", x); } });
+      try { document.dispatchEvent(new CustomEvent("noc-accesibilidad", { detail: e })); } catch (x) { /* nada */ }
+      pintarPanel();
+    },
+    restablecer: function () {
+      Object.keys(ACC_DEF).forEach(function (k) { accEst[k] = ACC_DEF[k]; });
+      ACC.set("texto", 100);
+      repintarColores();
+    }
+  };
+  function colorFirma() { return [accEst.contraste, accEst.daltonismo, claroEf()].join("|"); }
+  // Los tokens cambian: vaciar la caché de NOC.color y repintar lo que pinta colores desde JS
+  var recargaPend = false;
+  function repintarColores() {
+    cacheTok = {};
+    var n = N();
+    try { if (n.sv && n.sv._f) n.sv._f.forEach(function (fn) { fn(); }); } catch (e) { /* mapa */ }
+    try { if (n.mostrarResultado && n.resultado) n.mostrarResultado(n.resultado, n.opciones, { reloj: true, accesibilidad: true }); } catch (e) { console.error(e); }
+    // Vistas que leen los tokens una sola vez al montarse (plano unifilar, plano de demanda): se recarga la página
+    // conservando el panel abierto, para que el color cambie de verdad "en todo".
+    var fijas = document.querySelector("#vista-unifilar .uf-lienzo, #vista-demanda_mapa .leaflet-container");
+    if (fijas && !recargaPend) {
+      recargaPend = true;
+      guardar("noc.acc.reabrir", "1");
+      setTimeout(function () { try { location.reload(); } catch (e) { /* nada */ } }, 350);
+    }
+  }
+  if (mqMov && mqMov.addEventListener) mqMov.addEventListener("change", function () { if (accEst.menosMov == null) { clasesAcc(); pintarPanel(); } });
+  if (mqClaro && mqClaro.addEventListener) mqClaro.addEventListener("change", function () { if (accEst.tema === "sistema") { clasesAcc(); repintarColores(); } });
+  clasesAcc();
+  if (!document.body) document.addEventListener("DOMContentLoaded", clasesAcc);
+
+  // ---------- resumen hablado (aria-live) ----------
+  function vivo() {
+    var v = document.getElementById("noc-vivo");
+    if (!v && document.body) {
+      v = document.createElement("div");
+      v.id = "noc-vivo"; v.className = "sr-only"; v.setAttribute("role", "status"); v.setAttribute("aria-live", "polite"); v.setAttribute("aria-atomic", "true");
+      document.body.appendChild(v);
+    }
+    return v;
+  }
+  function horaTxt(n) {
+    var r = n.resultado || {}, op = n.opciones || {};
+    if (r.paso_reloj && r.paso_reloj.etiqueta) return r.paso_reloj.etiqueta;
+    if (esNum(op.hora)) return (op.hora < 10 ? "0" : "") + op.hora + ":00";
+    return t({ es: "hora cargada", en: "busy hour" });
+  }
+  ACC.resumen = function () {
+    var n = N(), r = n.resultado;
+    if (!r) return t({ es: "Sin resultado del motor.", en: "No engine result." });
+    var m = n.ocupacionMaxima ? n.ocupacionMaxima(r) : { o: null, id: null, sat: 0 };
+    var s = r.resumen || {};
+    var modo = n.modo === "lab" ? t({ es: "Laboratorio", en: "Laboratory" }) : t({ es: "Referencia", en: "Reference" });
+    var p = [modo + ", " + horaTxt(n) + "."];
+    if (m.o != null) p.push(t({ es: "Red al ", en: "Network at " }) + fmt(m.o * 100, 1) + " % " + t({ es: "en ", en: "on " }) + API.nombreCorto(m.id) + ".");
+    var ps = s.pct_servida;
+    if (esNum(ps)) p.push(ps >= 99.995 ? t({ es: "Todo servido.", en: "All traffic served." }) : t({ es: "Servido ", en: "Served " }) + fmt(ps, 2) + " %.");
+    if (m.sat) p.push(m.sat + t({ es: " enlaces saturados.", en: " links saturated." }));
+    var al = n.alarmas ? n.alarmas() : [], cr = al.filter(function (a) { return a.sev === "crit"; }).length, mj = al.filter(function (a) { return a.sev === "maj"; }).length;
+    p.push(cr || mj ? t({ es: "Alarmas: ", en: "Alarms: " }) + [cr ? cr + " " + t({ es: "críticas", en: "critical" }) : "", mj ? mj + " " + t({ es: "mayores", en: "major" }) : ""].filter(Boolean).join(", ") + "." : t({ es: "Sin alarmas graves.", en: "No serious alarms." }));
+    var fa = (n.opciones && n.opciones.fallos) || [];
+    if (fa.length) p.push(fa.length + t({ es: fa.length === 1 ? " fallo activo." : " fallos activos.", en: fa.length === 1 ? " active fault." : " active faults." }));
+    return p.join(" ");
+  };
+  var ultimoDicho = "";
+  function anunciar(tx, forzar) {
+    var v = vivo();
+    if (!v || (!forzar && tx === ultimoDicho)) return;
+    ultimoDicho = tx;
+    v.textContent = "";
+    setTimeout(function () { v.textContent = tx; }, 60);
+    var pv = document.getElementById("acc-dicho");
+    if (pv) pv.textContent = tx;
+    if (accEst.voz && W.speechSynthesis && W.SpeechSynthesisUtterance) {
+      try { W.speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(tx); u.lang = lang() === "en" ? "en-GB" : "es-ES"; W.speechSynthesis.speak(u); } catch (e) { /* sin voz */ }
+    }
+  }
+  API.anunciar = function (tx) { anunciar(t(tx), true); };
+  ACC.leerResumen = function () { anunciar(ACC.resumen(), true); };
+  // Al cambiar de caso u hora (no en cada repintado): firma del caso + hora, con espera para no hablar a cada paso del reloj
+  var firmaCaso = null, tAnuncio = null;
+  function firmaActual() {
+    var n = N(), op = n.opciones || {}, r = n.resultado || {};
+    return JSON.stringify([n.modo, op.modelo && op.modelo.id, op.modelo && op.modelo.anio, op.modelo && op.modelo.dia, op.hora, op.escenario, op.fallos, op.factores ? Object.keys(op.factores).length : 0, r.paso_reloj && r.paso_reloj.etiqueta]);
+  }
+  function alResultado(r, meta) {
+    if (N().resultadoMeta && N().resultadoMeta.accesibilidad) return;
+    var f = firmaActual();
+    if (firmaCaso === null) { firmaCaso = f; return; }   // el primer cálculo no se anuncia
+    if (f === firmaCaso) return;
+    firmaCaso = f;
+    clearTimeout(tAnuncio);
+    tAnuncio = setTimeout(function () { anunciar(ACC.resumen(), false); }, 1200);
+  }
+
+  // ---------- botón y panel ----------
+  var ICO_ACC = '<svg class="ico-n" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="6.6" r="1.4"/><path d="M6.8 9.6 12 10.6l5.2-1M12 10.6v3.6M12 14.2l-2.6 4.6M12 14.2l2.6 4.6"/></svg>';
+  ACC.boton = function () {
+    var ab = !!(panel && !panel.hidden);
+    return '<button type="button" class="btn acc-btn" data-acc="panel" aria-haspopup="dialog" aria-expanded="' + ab + '" aria-controls="acc-panel" title="' +
+      esc(t({ es: "Accesibilidad: texto, contraste, colores, movimiento", en: "Accessibility: text, contrast, colours, motion" })) + '">' + ICO_ACC +
+      '<span class="acc-btn-tx">' + esc(t({ es: "Accesibilidad", en: "Accessibility" })) + '</span></button>';
+  };
+  var panel = null, focoPrevio = null;
+  function interruptor(clave, txt, val, tip) {
+    return '<div class="acc-fila"><span class="acc-et" id="acc-et-' + clave + '">' + esc(t(txt)) + '</span>' + (tip ? API.info(tip, { glosario: false }) : '') +
+      '<button type="button" role="switch" class="acc-sw" data-acc-sw="' + clave + '" aria-checked="' + !!val + '" aria-labelledby="acc-et-' + clave + '">' +
+      '<span class="acc-sw-p" aria-hidden="true"></span><span class="acc-sw-t">' + esc(val ? t({ es: "Sí", en: "On" }) : t({ es: "No", en: "Off" })) + '</span></button></div>';
+  }
+  function segmento(clave, txt, opciones, val) {
+    return '<div class="acc-fila"><span class="acc-et" id="acc-et-' + clave + '">' + esc(t(txt)) + '</span>' +
+      '<div class="seg acc-seg" role="group" aria-labelledby="acc-et-' + clave + '">' + opciones.map(function (o) {
+        return '<button type="button" data-acc-set="' + clave + '" data-v="' + esc(o[0]) + '" aria-pressed="' + (String(val) === String(o[0])) + '"' + (o[2] ? ' title="' + esc(t(o[2])) + '"' : '') + '>' + o[1] + '</button>';
+      }).join("") + '</div></div>';
+  }
+  function muestraEstados() {
+    return '<div class="acc-muestra" aria-hidden="true">' + ["ok", "min", "maj", "crit", "unk"].map(function (s) {
+      return '<span class="sev sev-' + s + '">' + SEV_TXT[s] + '</span>';
+    }).join("") + '</div>';
+  }
+  function pintarPanel() {
+    Array.prototype.forEach.call(document.querySelectorAll(".acc-btn"), function (b) { b.setAttribute("aria-expanded", String(!!(panel && !panel.hidden))); });
+    if (!panel || panel.hidden) return;
+    var e = estadoPublico();
+    var ae = document.activeElement, foco = null;
+    if (ae && panel.contains(ae)) foco = ae.getAttribute("data-acc-sw") || (ae.getAttribute("data-acc-set") ? ae.getAttribute("data-acc-set") + "=" + ae.getAttribute("data-v") : ae.getAttribute("data-acc"));
+    panel.innerHTML =
+      '<div class="acc-cab"><h2 id="acc-tit">' + ICO_ACC + esc(t({ es: "Accesibilidad", en: "Accessibility" })) + '</h2>' +
+      '<button type="button" class="btn acc-x" data-acc="cerrar" aria-label="' + esc(t({ es: "Cerrar", en: "Close" })) + '" title="Esc">' + API.icono("cerrar", 14) + '</button></div>' +
+      segmento("texto", { es: "Tamaño texto", en: "Text size" }, [[100, "100 %"], [125, "125 %"], [150, "150 %"]], e.texto) +
+      interruptor("contraste", { es: "Alto contraste", en: "High contrast" }, e.contraste) +
+      interruptor("daltonismo", { es: "Colores daltonismo", en: "Colour-blind palette" }, e.daltonismo,
+        { es: "Paleta Okabe-Ito y una forma por estado: ● OK, ▲ MIN, ◆ MAJ, ■ CRIT, ✕ caído.", en: "Okabe-Ito palette and one shape per state: ● OK, ▲ MIN, ◆ MAJ, ■ CRIT, ✕ down." }) +
+      muestraEstados() +
+      interruptor("menosMov", { es: "Menos movimiento", en: "Reduce motion" }, e.menosMov,
+        e.menosMovSistema ? { es: "Ahora sigue el ajuste del sistema.", en: "Now follows the system setting." } : null) +
+      segmento("tema", { es: "Tema", en: "Theme" }, [["oscuro", esc(t({ es: "Oscuro", en: "Dark" }))], ["claro", esc(t({ es: "Claro", en: "Light" }))], ["sistema", esc(t({ es: "Sistema", en: "System" }))]], e.temaElegido) +
+      '<div class="acc-fila acc-leer"><button type="button" class="btn prim" data-acc="leer">' + API.icono("play", 14) + esc(t({ es: "Leer resumen", en: "Read summary" })) + '</button>' +
+      interruptor("voz", { es: "Voz", en: "Voice" }, e.voz, { es: "Además de avisar al lector de pantalla, lo dice en voz alta.", en: "Besides notifying the screen reader, it speaks aloud." }) + '</div>' +
+      '<p class="acc-dicho" id="acc-dicho">' + esc(ultimoDicho) + '</p>' +
+      '<div class="acc-pie"><button type="button" class="btn" data-acc="atajos"><kbd>?</kbd>' + esc(t({ es: "Atajos", en: "Shortcuts" })) + '</button>' +
+      '<button type="button" class="btn" data-acc="restablecer">' + esc(t({ es: "Restablecer", en: "Reset" })) + '</button></div>';
+    if (foco) {
+      var f = panel.querySelector('[data-acc-sw="' + foco + '"]') || (foco.indexOf("=") > 0 ? panel.querySelector('[data-acc-set="' + foco.split("=")[0] + '"][data-v="' + foco.split("=")[1] + '"]') : null) || panel.querySelector('[data-acc="' + foco + '"]');
+      if (f) f.focus();
+    }
+  }
+  ACC.abrir = function () {
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.id = "acc-panel"; panel.className = "acc-panel"; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-modal", "false"); panel.setAttribute("aria-labelledby", "acc-tit");
+      panel.hidden = true;
+      document.body.appendChild(panel);
+    }
+    focoPrevio = document.activeElement;
+    panel.hidden = false;
+    pintarPanel();
+    var p = panel.querySelector("[aria-pressed=true], [role=switch]");
+    if (p) p.focus();
+  };
+  ACC.cerrar = function (devolver) {
+    if (!panel || panel.hidden) return;
+    panel.hidden = true;
+    pintarPanel();
+    var b = document.querySelector(".acc-btn") || focoPrevio;
+    if (devolver !== false && b && b.focus) b.focus();
+  };
+  ACC.alternar = function () { if (panel && !panel.hidden) ACC.cerrar(); else ACC.abrir(); };
+
+  // ---------- atajos ("?") ----------
+  var capa = null;
+  var ATAJOS = [
+    ["?", { es: "Esta ayuda", en: "This help" }],
+    ["1 … 6", { es: "Espacios: Inicio, Red, Simulación, Análisis, Datos, Guía", en: "Workspaces: Home, Network, Simulation, Analysis, Data, Guide" }],
+    ["/", { es: "Buscar un elemento", en: "Search an element" }],
+    ["F", { es: "Simular fallo del elemento elegido", en: "Fail the selected element" }],
+    ["L  [", { es: "Abrir o cerrar el carril", en: "Open or close the rail" }],
+    ["]", { es: "Abrir o cerrar la ficha", en: "Open or close the detail panel" }],
+    ["\\", { es: "Abrir o cerrar el panel inferior", en: "Open or close the bottom panel" }],
+    ["← →", { es: "Reloj: hora anterior / siguiente (Simulación)", en: "Clock: previous / next hour (Simulation)" }],
+    ["Esc", { es: "Cerrar panel, ficha o burbuja", en: "Close panel, detail or tooltip" }],
+    ["Tab", { es: "Ir al siguiente control", en: "Next control" }],
+    ["Alt + A", { es: "Panel de accesibilidad", en: "Accessibility panel" }],
+    ["Alt + R", { es: "Leer resumen de la red", en: "Read network summary" }]
+  ];
+  ACC.atajos = function () {
+    if (!capa) {
+      capa = document.createElement("div");
+      capa.className = "acc-capa"; capa.hidden = true;
+      capa.innerHTML = '<div class="acc-atajos" role="dialog" aria-modal="true" aria-labelledby="acc-at-tit" tabindex="-1"></div>';
+      document.body.appendChild(capa);
+      capa.addEventListener("click", function (ev) { if (ev.target === capa) cerrarAtajos(); });
+    }
+    focoPrevio = document.activeElement;
+    var siglas = Object.keys(API.glosario).filter(function (k) { return ["REF", "LAB", "IMS-EJ", "BH", "KPI"].indexOf(k) < 0; }).sort(function (a, b) { return a.localeCompare(b); });
+    capa.firstChild.innerHTML = '<div class="acc-cab"><h2 id="acc-at-tit">' + esc(t({ es: "Atajos de teclado", en: "Keyboard shortcuts" })) + '</h2>' +
+      '<button type="button" class="btn acc-x" data-acc="cerrar-atajos" aria-label="' + esc(t({ es: "Cerrar", en: "Close" })) + '">' + API.icono("cerrar", 14) + '</button></div>' +
+      '<div class="acc-at-cols"><table class="acc-at-t"><caption class="sr-only">' + esc(t({ es: "Atajos de teclado", en: "Keyboard shortcuts" })) + '</caption><thead><tr><th scope="col">' + esc(t({ es: "Tecla", en: "Key" })) + '</th><th scope="col">' + esc(t({ es: "Acción", en: "Action" })) + '</th></tr></thead><tbody>' +
+      ATAJOS.map(function (a) { return '<tr><th scope="row"><kbd>' + esc(a[0]) + '</kbd></th><td>' + esc(t(a[1])) + '</td></tr>'; }).join("") + '</tbody></table>' +
+      '<div class="acc-glos"><h3>' + esc(t({ es: "Siglas", en: "Acronyms" })) + '</h3><dl>' + siglas.map(function (k) { return '<dt>' + esc(k) + '</dt><dd>' + esc(definicion(k)) + '</dd>'; }).join("") + '</dl></div></div>';
+    capa.hidden = false;
+    capa.firstChild.focus();
+  };
+  function cerrarAtajos() {
+    if (!capa || capa.hidden) return;
+    capa.hidden = true;
+    if (focoPrevio && focoPrevio.focus) focoPrevio.focus();
+  }
+  ACC.cerrarAtajos = cerrarAtajos;
+
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest("[data-acc], [data-acc-sw], [data-acc-set]");
+    if (!b) {
+      if (panel && !panel.hidden && !(ev.target.closest && ev.target.closest(".acc-panel, .noc-burbuja")) && document.documentElement.contains(ev.target)) ACC.cerrar(false);
+      return;
+    }
+    var a = b.getAttribute("data-acc");
+    if (a === "panel") ACC.alternar();
+    else if (a === "cerrar") ACC.cerrar();
+    else if (a === "leer") ACC.leerResumen();
+    else if (a === "atajos") { ACC.cerrar(false); ACC.atajos(); }
+    else if (a === "cerrar-atajos") cerrarAtajos();
+    else if (a === "restablecer") ACC.restablecer();
+    else if (b.hasAttribute("data-acc-sw")) { var k = b.getAttribute("data-acc-sw"); ACC.set(k, !(k === "menosMov" ? menosMovEf() : accEst[k])); }
+    else if (b.hasAttribute("data-acc-set")) ACC.set(b.getAttribute("data-acc-set"), b.getAttribute("data-v"));
+  });
+  document.addEventListener("keydown", function (ev) {
+    var tag = (ev.target.tagName || "").toLowerCase(), escribiendo = tag === "input" || tag === "select" || tag === "textarea" || ev.target.isContentEditable;
+    if (capa && !capa.hidden) {
+      if (ev.key === "Escape" || ev.key === "?") { ev.preventDefault(); ev.stopPropagation(); cerrarAtajos(); return; }
+      if (ev.key === "Tab") {   // foco atrapado en la capa
+        var fs = capa.querySelectorAll("button, [tabindex='0']");
+        if (fs.length) { var pr = fs[0], ul = fs[fs.length - 1]; if (ev.shiftKey && document.activeElement === pr) { ev.preventDefault(); ul.focus(); } else if (!ev.shiftKey && document.activeElement === ul) { ev.preventDefault(); pr.focus(); } }
+      }
+      return;
+    }
+    if (panel && !panel.hidden && ev.key === "Escape") { ev.preventDefault(); ev.stopPropagation(); ACC.cerrar(); return; }
+    if (ev.altKey && !ev.ctrlKey && !ev.metaKey && (ev.code === "KeyA" || ev.code === "KeyR")) {
+      ev.preventDefault();
+      if (ev.code === "KeyA") ACC.alternar(); else ACC.leerResumen();
+      return;
+    }
+    if (escribiendo || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    if (ev.key === "?") { ev.preventDefault(); ACC.atajos(); }
+  }, true);
+
+  // ---------- tablas: scope en cabeceras (todas las vistas, sin tocar su código) ----------
+  function scopes(raiz) {
+    if (!raiz || !raiz.querySelectorAll) return;
+    Array.prototype.forEach.call(raiz.querySelectorAll("thead th:not([scope])"), function (th) { th.setAttribute("scope", "col"); });
+    Array.prototype.forEach.call(raiz.querySelectorAll("tbody th:not([scope])"), function (th) { th.setAttribute("scope", "row"); });
+  }
+  var tScope = null;
+  function vigilarTablas() {
+    scopes(document.body);
+    if (!W.MutationObserver) return;
+    new MutationObserver(function () { if (tScope) return; tScope = setTimeout(function () { tScope = null; scopes(document.body); }, 250); })
+      .observe(document.body, { childList: true, subtree: true });
+  }
+
+  // ---------- arranque (cuando app.js ya ha creado NOC y el shell) ----------
+  function arrancarAcc() {
+    clasesAcc(); vivo(); vigilarTablas();
+    if (!document.querySelector(".saltar") && document.getElementById("principal")) {
+      var sl = document.createElement("a");
+      sl.className = "saltar"; sl.href = "#principal"; sl.textContent = t({ es: "Saltar al contenido", en: "Skip to content" });
+      sl.addEventListener("click", function (ev) { ev.preventDefault(); var m = document.getElementById("principal"); if (m) m.focus(); });
+      document.body.insertBefore(sl, document.body.firstChild);
+    }
+    var n = N();
+    if (n.on) n.on("resultado", alResultado);
+    if (n.on) n.on("lang", function () { pintarPanel(); });
+    // si la barra no trae el botón (p. ej. app.js antiguo), se pone fijo arriba a la derecha
+    setTimeout(function () {
+      if (!document.querySelector(".acc-btn")) {
+        var d = document.createElement("div"); d.className = "acc-fijo"; d.innerHTML = ACC.boton(); document.body.appendChild(d);
+      }
+    }, 0);
+    if (leer("noc.acc.reabrir") === "1") { try { localStorage.removeItem("noc.acc.reabrir"); } catch (e) { /* nada */ } setTimeout(ACC.abrir, 300); }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arrancarAcc); else setTimeout(arrancarAcc, 0);
 })();

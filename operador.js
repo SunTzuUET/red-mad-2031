@@ -74,7 +74,7 @@
     refTit: { es: "Referencia v7: solo lectura", en: "v7 reference: read-only" },
     refTxt: { es: "Los eventos y las acciones del operador forman parte del caso de LABORATORIO. ¿Pasar a LAB y aplicar?", en: "Events and operator actions belong to the LABORATORY case. Switch to LAB and apply?" },
     pasarLab: { es: "Pasar a LAB", en: "Switch to LAB" },
-    refLinea: { es: "REF: sin eventos (los eventos son del caso LAB)", en: "REF: no events (events belong to the LAB case)" },
+    refLinea: { es: "REF: sin eventos (solo LAB)", en: "REF: no events (LAB only)" },
     vacia: { es: "sin eventos · arrastra una marca para moverla · clic en la línea = saltar a esa hora", en: "no events · drag a mark to move it · click the line = jump to that time" },
     vaciar: { es: "Vaciar todos los eventos", en: "Clear all events" },
     plMotor: { es: "Motor.plantillasEventos", en: "Motor.plantillasEventos" },

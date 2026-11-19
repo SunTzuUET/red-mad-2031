@@ -244,7 +244,7 @@
       '<div class="es-fila"><button type="button" class="btn prim" data-es="guardar">' + esc(t(TX.guardar)) + '</button><button type="button" class="btn" data-es="descargar">' + esc(t(TX.descargar)) + '</button>' +
       '<label class="btn es-file">' + esc(t(TX.subir)) + '<input type="file" accept=".json,application/json" data-es="fichero" hidden></label>' +
       '<button type="button" class="btn" data-es="compartir">' + esc(t(TX.compartir)) + '</button></div><div class="es-url tx3" hidden></div>' +
-      '<p class="nota tx3">' + esc(t({ es: "Se guarda el caso completo (modo, tráfico, año, evento, fallos, eventos del operador y modelo propio), la vista, la hora del reloj y la selección.", en: "Saves the full case (mode, traffic, year, event, failures, operator events and own model), the view, the clock time and the selection." })) + '</p></div>' +
+      '<p class="nota tx3 solo-experto">' + esc(t({ es: "Se guarda el caso completo (modo, tráfico, año, evento, fallos, eventos del operador y modelo propio), la vista, la hora del reloj y la selección.", en: "Saves the full case (mode, traffic, year, event, failures, operator events and own model), the view, the clock time and the selection." })) + '</p>' + (NOC.info ? '<span class="solo-simple">' + NOC.info(t({ es: "Se guarda el caso completo (modo, tráfico, año, evento, fallos, eventos del operador y modelo propio), la vista, la hora del reloj y la selección.", en: "Saves the full case (mode, traffic, year, event, failures, operator events and own model), the view, the clock time and the selection." })) + '</span>' : '') + '</div>' +
       '<div class="es-sec"><div class="es-tit">' + esc(t(TX.pasos)) + ' <span class="tx3">' + BOR.pasos.length + '</span></div>' +
       (BOR.pasos.length ? '<ol class="es-pasos">' + BOR.pasos.map(function (p, i) {
         return '<li><div class="es-paso-cab"><span class="mono tx2">' + esc(descPaso(p)) + '</span><span class="es-paso-b"><button type="button" class="es-mini" data-es-sube="' + i + '" title="↑"' + (i ? "" : " disabled") + '>↑</button><button type="button" class="es-mini" data-es-baja="' + i + '" title="↓"' + (i < BOR.pasos.length - 1 ? "" : " disabled") + '>↓</button><button type="button" class="es-mini" data-es-ir="' + i + '" title="' + esc(t({ es: "Ir", en: "Go" })) + '">▶</button><button type="button" class="es-mini" data-es-quita="' + i + '" title="' + esc(t(TX.borrar)) + '">×</button></span></div>' +
@@ -304,6 +304,7 @@
     if (esNum(p.t_min)) irHora(p.t_min);
     else if (NOC.reloj && NOC.reloj.estado && NOC.reloj.estado().pelicula && NOC.reloj.volverHC) { try { NOC.reloj.volverHC(); } catch (e) { /* nada */ } }
     if (p.sel) setTimeout(function () { seleccionarSel(p.sel); }, 30);
+    if (NOC.anotar) { NOC.limpiarAnotaciones("defensa"); if (p.sel && p.texto) setTimeout(function () { NOC.anotar([{ elem: p.sel, texto: String(p.texto).split(String.fromCharCode(10))[0], tipo: "defensa" }], { limpiar: false, grupo: "defensa" }); }, 400); }  // Rev. 12: globo anclado (anotar.js)
     else if (NOC.cerrarFicha) NOC.cerrarFicha();
   }
   function defensa(est) {
@@ -453,25 +454,25 @@
       '<label class="pl-ctl">A <select class="sel" data-es-ab="a"></select></label><span class="tx3">vs</span>' +
       '<label class="pl-ctl">B <select class="sel" data-es-ab="b"></select></label>' +
       '<button type="button" class="btn" data-es-c="cruzar" title="A ⇄ B">⇄</button>' +
-      '<label class="pl-ctl"><input type="checkbox" data-es-c="resaltar"' + (C.resaltar ? " checked" : "") + '> ' + esc(t({ es: "Resaltar en mapa y unifilar", en: "Highlight on map and diagram" })) + '</label>' +
-      '<span class="pl-esp"></span><span class="tx3">' + esc(t({ es: "Δ = B − A. Estudios: caso a su hora del reloj con los eventos activos.", en: "Δ = B − A. Studies: case at its clock time with active events." })) + '</span></div>';
+      '<label class="pl-ctl"><input type="checkbox" data-es-c="resaltar"' + (C.resaltar ? " checked" : "") + '> ' + esc(t({ es: "Resaltar cambios", en: "Highlight changes" })) + '</label>' +
+      '<span class="pl-esp"></span><span class="tx3 solo-experto">' + esc(t({ es: "Δ = B − A. Estudios: caso a su hora del reloj con los eventos activos.", en: "Δ = B − A. Studies: case at its clock time with active events." })) + '</span>' + (NOC.info ? '<span class="solo-simple">' + NOC.info(t({ es: "Δ = B − A. Estudios: caso a su hora del reloj con los eventos activos.", en: "Δ = B − A. Studies: case at its clock time with active events." })) + '</span>' : '') + '</div>';
     var r = C.res;
     if (!r) { el.innerHTML = h + '<div class="vacio">' + esc(C.err || "—") + '</div>'; pintarSelectoresAB(); return; }
     var c = r.c;
-    h += '<div class="pl-cuerpo"><section class="pl-sec"><h3 class="lbl">KPI</h3><table class="tabla pl-tab"><thead><tr><th></th><th class="n">A · ' + esc(r.nombreA) + '</th><th class="n">B · ' + esc(r.nombreB) + '</th><th class="n">Δ</th></tr></thead><tbody>' +
+    h += '<div class="pl-cuerpo"><section class="pl-sec"><h3 class="lbl">KPI</h3><table class="tabla pl-tab"><thead><tr><th scope="col"></th><th scope="col" class="n">A · ' + esc(r.nombreA) + '</th><th scope="col" class="n">B · ' + esc(r.nombreB) + '</th><th scope="col" class="n">Δ</th></tr></thead><tbody>' +
       KPI.map(function (k) {
         var x = c.kpi[k[0]] || {};
         return '<tr><td>' + esc(t(k[1])) + (k[2] ? ' <span class="tx3">' + esc(k[2]) + '</span>' : '') + '</td><td class="n">' + (esNum(x.a) ? fmt(x.a * k[4], k[3]) : "—") + '</td><td class="n">' + (esNum(x.b) ? fmt(x.b * k[4], k[3]) : "—") + '</td><td class="n">' + dTxt(x.d, k[3], k[4]) + '</td></tr>';
       }).join("") + '</tbody></table>' +
-      '<p class="tx3 es-cambios">' + esc(t({ es: "Cambian", en: "Changed" })) + ': ' + c.n_cambios.enlaces + ' ' + esc(t({ es: "enlaces", en: "links" })) + ' · ' + c.n_cambios.nodos + ' ' + esc(t({ es: "nodos", en: "nodes" })) + ' · ' + c.n_cambios.demandas + ' ' + esc(t({ es: "demandas", en: "demands" })) + ' · ' + c.n_cambios.sla + ' slices</p>' +
-      (c.energia_nota ? '<p class="nota tx3">' + esc(t({ es: "Energía", en: "Energy" })) + ': ' + esc(c.energia_nota) + '</p>' : '') + '</section>';
-    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t({ es: "Enlaces que más cambian (ocupación)", en: "Links that change most (occupancy)" })) + '</h3>' + tablaTop(c.top.enlaces_ocupacion, "enlace", 100, 1, "%", "pp") + '</section>';
-    h += '<section class="pl-sec"><h3 class="lbl">SLA</h3><table class="tabla pl-tab"><thead><tr><th>Slice</th><th class="n">' + esc(t({ es: "Cumple A", en: "Meets A" })) + '</th><th class="n">' + esc(t({ es: "Cumple B", en: "Meets B" })) + '</th><th class="n">P95 A</th><th class="n">P95 B</th><th class="n">Δ P95</th></tr></thead><tbody>' +
+      '<p class="tx3 es-cambios solo-experto">' + esc(t({ es: "Cambian", en: "Changed" })) + ': ' + c.n_cambios.enlaces + ' ' + esc(t({ es: "enlaces", en: "links" })) + ' · ' + c.n_cambios.nodos + ' ' + esc(t({ es: "nodos", en: "nodes" })) + ' · ' + c.n_cambios.demandas + ' ' + esc(t({ es: "demandas", en: "demands" })) + ' · ' + c.n_cambios.sla + ' slices</p>' +
+      (c.energia_nota ? '<p class="nota tx3 solo-experto">' + esc(t({ es: "Energía", en: "Energy" })) + ': ' + esc(c.energia_nota) + '</p>' : '') + '</section>';
+    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t({ es: "Enlaces que cambian", en: "Links that change" })) + '</h3>' + tablaTop(c.top.enlaces_ocupacion, "enlace", 100, 1, "%", "pp") + '</section>';
+    h += '<section class="pl-sec"><h3 class="lbl">SLA</h3><table class="tabla pl-tab"><thead><tr><th scope="col">Slice</th><th scope="col" class="n">' + esc(t({ es: "Cumple A", en: "Meets A" })) + '</th><th scope="col" class="n">' + esc(t({ es: "Cumple B", en: "Meets B" })) + '</th><th scope="col" class="n solo-experto">P95 A</th><th scope="col" class="n solo-experto">P95 B</th><th scope="col" class="n">Δ P95</th></tr></thead><tbody>' +
       Object.keys(c.sla || {}).map(function (k) {
         var s = c.sla[k], cp = s.cumple_pct || {}, p95 = s.lat_p95_max_ms || {};
-        return '<tr' + (s.cambia ? ' class="es-cambia"' : '') + '><td>' + esc(k) + '</td><td class="n">' + fmt(cp.a, 1) + ' %</td><td class="n' + (cp.d < 0 ? " sev-crit" : "") + '">' + fmt(cp.b, 1) + ' %</td><td class="n">' + fmt(p95.a, 3) + '</td><td class="n">' + fmt(p95.b, 3) + '</td><td class="n">' + dTxt(p95.d, 3, 1) + '</td></tr>';
+        return '<tr' + (s.cambia ? ' class="es-cambia"' : '') + '><td>' + esc(k) + '</td><td class="n">' + fmt(cp.a, 1) + ' %</td><td class="n' + (cp.d < 0 ? " sev-crit" : "") + '">' + fmt(cp.b, 1) + ' %</td><td class="n solo-experto">' + fmt(p95.a, 3) + '</td><td class="n solo-experto">' + fmt(p95.b, 3) + '</td><td class="n">' + dTxt(p95.d, 3, 1) + '</td></tr>';
       }).join("") + '</tbody></table></section>';
-    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t({ es: "Demandas: servido y latencia", en: "Demands: served and latency" })) + '</h3>' +
+    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t({ es: "Cambios en demandas", en: "Demand changes" })) + '</h3>' +
       (c.top.demandas_servida.length ? '<div class="es-sub tx2">' + esc(t({ es: "Servido (Gbit/s)", en: "Served (Gbit/s)" })) + '</div>' + tablaTop(c.top.demandas_servida, "demanda", 1, 2, "", "Gbit/s") : '<p class="tx3">' + esc(t({ es: "Ninguna demanda cambia de servido.", en: "No demand changes served traffic." })) + '</p>') +
       (c.top.demandas_lat.length ? '<div class="es-sub tx2">' + esc(t({ es: "Latencia media (ms)", en: "Mean latency (ms)" })) + '</div>' + tablaTop(c.top.demandas_lat, "demanda", 1, 3, "", "ms") : '') + '</section></div>';
     el.innerHTML = h;
@@ -480,7 +481,7 @@
   function tablaTop(lst, tipo, mul, dec, uv, ud) {
     if (!lst || !lst.length) return '<p class="tx3">—</p>';
     var max = 0; lst.forEach(function (x) { max = Math.max(max, Math.abs(x.d || 0)); });
-    return '<table class="tabla pl-tab"><thead><tr><th>id</th><th class="n">A' + (uv ? " " + uv : "") + '</th><th class="n">B' + (uv ? " " + uv : "") + '</th><th class="n">Δ ' + esc(ud) + '</th><th></th></tr></thead><tbody>' +
+    return '<table class="tabla pl-tab"><thead><tr><th scope="col">id</th><th scope="col" class="n">A' + (uv ? " " + uv : "") + '</th><th scope="col" class="n">B' + (uv ? " " + uv : "") + '</th><th scope="col" class="n">Δ ' + esc(ud) + '</th><th scope="col"></th></tr></thead><tbody>' +
       lst.slice(0, 15).map(function (x) {
         var attr = tipo === "enlace" ? ' data-id="' + esc(x.id) + '" data-tipo="enlace"' : ' data-es-dem="' + esc(x.id) + '"';
         var w = max > 0 ? Math.abs(x.d) / max * 100 : 0;

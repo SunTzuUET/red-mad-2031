@@ -72,8 +72,8 @@
     h += M.sec(t({ es: "Carga actual (simulador)", en: "Current load (simulator)" }), '<div data-arq-carga-ficha>' + M.cargaRed({ nodos: x.red.nodos, enlaces: x.red.enlaces }) + '</div>');
     var fs = (x.v7 ? [{ doc: ARQ.referencia.doc, seccion: x.v7.seccion, v7: true }] : []).concat(x.fuente || []);
     if (x.si_falla && x.si_falla.v7) fs.push({ doc: ARQ.referencia.doc, seccion: x.si_falla.seccion, v7: true });
-    h += M.sec(t({ es: "Fuente", en: "Source" }), M.fuentes(fs));
-    h += M.sec(t({ es: "Para pensar", en: "To think about" }), M.preguntas(x.preguntas));
+    h += '<div class="solo-experto">' + M.sec(t({ es: "Fuente", en: "Source" }), M.fuentes(fs)) + '</div>';
+    h += '<div class="solo-experto">' + M.sec(t({ es: "Para pensar", en: "To think about" }), M.preguntas(x.preguntas)) + '</div>';
     return { titulo: t(NOMBRE[id] || { es: id, en: id }), subtitulo: id + " · " + t({ es: "interconexión", en: "interconnection" }), html: h + '</div>' };
   }
 
@@ -83,25 +83,27 @@
     if (!raiz) return;
     if (!ARQ || !A()) { raiz.innerHTML = '<div class="vi-error">arquitectura_datos.js / vista_capas.js ' + esc(t({ es: "no se pudieron cargar", en: "could not be loaded" })) + '</div>'; return; }
     var M = A(), s = NOC.seleccion;
-    var h = '<div class="vi-cab"><span class="rot">' + esc(t({ es: "Interconexiones con redes externas · Entrega 2 (v7)", en: "Interconnections with external networks · Deliverable 2 (v7)" })) + '</span>' +
+    var h = '<div class="vi-cab"><span class="rot">' + esc(t({ es: "Redes externas", en: "External networks" })) + '<span class="solo-experto">' + esc(t({ es: " · interconexiones · Entrega 2 (v7)", en: " · interconnections · Deliverable 2 (v7)" })) + '</span>' +
+      (NOC.info ? NOC.info({ es: "Marcas: E2 v7 = memoria conjunta v7; DOC. ANTERIOR = inventarios de grupo previos; SUPUESTO = deducido. Pulsa una fila para ver la ficha.",
+        en: "Marks: E2 v7 = joint report v7; EARLIER DOC. = earlier group inventories; ASSUMPTION = inferred. Click a row for its sheet." }) : "") + '</span>' +
       '<span class="vi-n mono">' + ARQ.interconexiones.length + '</span></div>' +
-      '<table class="tabla vi-tabla"><thead><tr><th>' + esc(t({ es: "Interconexión", en: "Interconnection" })) + '</th><th>' + esc(t({ es: "Punto físico", en: "Physical point" })) +
-      '</th><th>' + esc(t({ es: "Protocolo", en: "Protocol" })) + '</th><th>' + esc(t({ es: "Capacidad", en: "Capacity" })) + '</th><th>' +
-      esc(t({ es: "Si falla", en: "If it fails" })) + '</th><th>' + esc(t({ es: "Ocup. actual", en: "Current util." })) + '</th><th>' + esc(t({ es: "Fuente", en: "Source" })) + '</th></tr></thead><tbody>';
+      '<table class="tabla vi-tabla"><thead><tr><th scope="col">' + esc(t({ es: "Interconexión", en: "Interconnection" })) + '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Punto físico", en: "Physical point" })) +
+      '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Protocolo", en: "Protocol" })) + '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Capacidad", en: "Capacity" })) + '</th><th scope="col" class="solo-experto">' +
+      esc(t({ es: "Si falla", en: "If it fails" })) + '</th><th scope="col">' + esc(t({ es: "Ocup. actual", en: "Current util." })) + '</th><th scope="col" class="solo-experto">' + esc(t({ es: "Fuente", en: "Source" })) + '</th></tr></thead><tbody>';
     lista().forEach(function (x) {
       var cap = capacidad(x), sf = siFalla(x);
       var tieneRed = x.red.nodos.length || x.red.enlaces.length;
       h += '<tr data-id="' + esc(x.id) + '" data-arq-ix="' + esc(x.id) + '" class="' + (x.excluida ? "vi-excl" : "") + (s && s.tipo === "interconexion" && s.id === x.id ? " sel" : "") + '">' +
-        '<td class="txt vi-nom"><span class="mono">' + esc(x.id) + '</span><br>' + esc(t(NOMBRE[x.id] || { es: x.red_externa, en: x.red_externa })) +
+        '<td class="txt vi-nom"><span class="mono solo-experto">' + esc(x.id) + '</span><br class="solo-experto">' + esc(t(NOMBRE[x.id] || { es: x.red_externa, en: x.red_externa })) +
         (x.excluida ? ' <span class="marca ant">' + esc(t({ es: "EXCLUIDA", en: "EXCLUDED" })) + '</span>' : "") + '</td>' +
-        '<td class="txt">' + (x.punto_fisico ? esc(x.punto_fisico) : '<span class="arq-ne">' + esc(t(NE)) + '</span>') + '</td>' +
-        '<td class="txt">' + (x.protocolo ? esc(x.protocolo) : '<span class="arq-ne">' + esc(t(NE)) + '</span>') + '</td>' +
-        '<td class="txt ' + cap.cls + '">' + cap.html + '</td>' +
-        '<td class="txt ' + sf.cls + '">' + sf.html + '</td>' +
+        '<td class="txt solo-experto">' + (x.punto_fisico ? esc(x.punto_fisico) : '<span class="arq-ne">' + esc(t(NE)) + '</span>') + '</td>' +
+        '<td class="txt solo-experto">' + (x.protocolo ? esc(x.protocolo) : '<span class="arq-ne">' + esc(t(NE)) + '</span>') + '</td>' +
+        '<td class="txt solo-experto ' + cap.cls + '">' + cap.html + '</td>' +
+        '<td class="txt solo-experto ' + sf.cls + '">' + sf.html + '</td>' +
         '<td class="vi-oc" data-vi-oc="' + esc(x.id) + '">' + (tieneRed ? M.celdaCarga(x.red.nodos, x.red.enlaces) : '<span class="arq-ne">—</span>') + '</td>' +
-        '<td class="txt vi-fte mono">' + esc(fuenteCorta(x)) + '</td></tr>';
+        '<td class="txt vi-fte mono solo-experto">' + esc(fuenteCorta(x)) + '</td></tr>';
     });
-    h += '</tbody></table><p class="nota vi-pie">' + esc(t({ es: "Marcas: E2 v7 = memoria conjunta v7; DOC. ANTERIOR = inventarios de grupo previos; SUPUESTO = deducido. Pulsa una fila para ver la ficha.",
+    h += '</tbody></table><p class="nota vi-pie solo-experto">' + esc(t({ es: "Marcas: E2 v7 = memoria conjunta v7; DOC. ANTERIOR = inventarios de grupo previos; SUPUESTO = deducido. Pulsa una fila para ver la ficha.",
       en: "Marks: E2 v7 = joint report v7; EARLIER DOC. = earlier group inventories; ASSUMPTION = inferred. Click a row for its sheet." })) + '</p>';
     raiz.innerHTML = h;
   }

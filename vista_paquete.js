@@ -165,7 +165,8 @@
     if (c.dcOps && c.dcOps.length > 1) h += '<label class="vp-ctl"><span class="rot">DC</span>' +
       sel("dc", c.dcOps.map(function (d) { return [d, TR.dc[d].nombre + (d === c.dcDef ? " *" : "")]; }), c.dc) + '</label>';
     else if (c.dc) h += '<span class="vp-ctl"><span class="rot">DC</span><span class="mono">' + esc(TR.dc[c.dc].nombre) + '</span></span>';
-    h += '</div>';
+    h += (NOC.info ? NOC.info({ es: "Se suma solo el transporte; la radio, el procesado y la cola de la aplicación van aparte. Pulsa un salto para ver su ficha.",
+      en: "Only transport is summed; radio, processing and application queueing are separate. Click a hop to see its sheet." }) : "") + '</div>';
 
     var r = recorrer(f, c), acum = 0, hayNE = false;
     h += '<div class="vp-camino" role="list">';
@@ -173,7 +174,7 @@
       if (i > 0) {
         var le = p.enlace ? A().estadoRed("enlace", p.enlace) : null;
         h += '<div class="vp-con" aria-hidden="true"><span class="vp-ifz">' + esc(p.ifz || "—") + '</span><span class="vp-flecha"></span>' +
-          (p.enlace ? '<span class="vp-enl mono">' + esc(p.enlace) + '</span><span class="vp-oc">' + A().insignia(le) + '</span>' : '<span class="vp-enl"></span>') + '</div>';
+          (p.enlace ? '<span class="vp-enl mono solo-experto">' + esc(p.enlace) + '</span><span class="vp-oc">' + A().insignia(le) + '</span>' : '<span class="vp-enl"></span>') + '</div>';
       }
       if (p.us == null) hayNE = true; else acum += p.us;
       var ne = p.us == null;
@@ -181,10 +182,10 @@
       var en = p.nodo ? A().estadoRed("nodo", p.nodo) : null;
       h += '<button type="button" class="vp-salto ' + cls + '" role="listitem" data-arq-el="' + esc(p.el) + '">' +
         '<span class="vp-n">' + (i + 1) + '</span><span class="vp-el">' + esc(p.txt) + '</span>' +
-        (p.nodo ? '<span class="vp-nodo mono">' + esc(p.nodo) + (en && (en.oc != null || en.caido) ? ' '+ A().insignia(en) : "") + '</span>' : '<span class="vp-nodo arq-ne">' + esc(t({ es: "sin nodo en el simulador", en: "no simulator node" })) + '</span>') +
-        '<span class="vp-t mono">' + (ne ? '<span class="arq-ne">+ ' + esc(t(NE)) + '</span>' : "+" + NOC.fmt(p.us, 0) + " µs") + '</span>' +
+        (p.nodo ? '<span class="vp-nodo mono"><span class="solo-experto">' + esc(p.nodo) + '</span>' + (en && (en.oc != null || en.caido) ? ' '+ A().insignia(en) : "") + '</span>' : '<span class="vp-nodo arq-ne solo-experto">' + esc(t({ es: "sin nodo en el simulador", en: "no simulator node" })) + '</span>') +
+        '<span class="vp-t mono solo-experto">' + (ne ? '<span class="arq-ne">+ ' + esc(t(NE)) + '</span>' : "+" + NOC.fmt(p.us, 0) + " µs") + '</span>' +
         '<span class="vp-acum mono">Σ ' + ms(acum) + (hayNE ? " +?" : "") + '</span>' +
-        (p.nota ? '<span class="vp-nota">' + esc(p.nota) + '</span>' : "") + '</button>';
+        (p.nota ? '<span class="vp-nota solo-experto">' + esc(p.nota) + '</span>' : "") + '</button>';
     });
     h += '</div>';
     if (r.err) h += '<div class="vp-aviso">' + (NOC.insignia ? NOC.insignia("crit", "CRIT") : "") + ' ' + esc(r.err) + '</div>';
@@ -207,7 +208,7 @@
       f.nota_sup ? [t({ es: "Supuesto", en: "Assumption" }), M.marca("sup") + ' ' + esc(f.nota_sup)] : null,
       f.inferido ? [t({ es: "Camino", en: "Path" }), M.marca("sup") + ' ' + esc(t({ es: "deducido de los documentos", en: "inferred from the documents" }))] : null
     ]);
-    h += '<div class="vp-res"><div class="vp-res-cab rot">' + esc(t({ es: "Resumen del flujo", en: "Flow summary" })) + '</div>' + res +
+    h += '<div class="vp-res solo-experto"><div class="vp-res-cab rot">' + esc(t({ es: "Resumen del flujo", en: "Flow summary" })) + '</div>' + res +
       (reg.tex ? '<div class="formula" data-tex="' + esc(reg.tex) + '">' + esc(reg.tex) + '</div>' : "") +
       '<div class="vp-fuente">' + M.fuentes(f.fuente) + '</div>' +
       '<p class="nota">' + esc(t({ es: "Se suma solo el transporte; la radio, el procesado y la cola de la aplicación van aparte. Pulsa un salto para ver su ficha.",

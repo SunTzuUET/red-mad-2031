@@ -277,7 +277,7 @@
   function construir() {
     var cont = el.querySelector(".uf-lienzo");
     cont.innerHTML = "";
-    svg = S("svg", { class: "uf-svg", role: "img", "aria-label": t({ es: "Esquema unifilar de la red por capas", en: "Single-line diagram of the network by layer" }) }, cont);
+    svg = S("svg", { class: "uf-svg", role: "img", "aria-label": t({ es: "Esquema unifilar de la red por capas: acceso → agregación → anillo metro → Edge/DC/núcleo → interconexión; el color de cada línea y caja indica su ocupación", en: "Single-line diagram of the network by layer: access → aggregation → metro ring → Edge/DC/core → interconnection; each line and box colour shows its occupancy" }) }, cont);
     var defs = S("defs", null, svg);
     var pat = S("pattern", { id: "uf-rayado", width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
     S("rect", { width: 6, height: 6, fill: C.bg1 }, pat);
@@ -315,8 +315,8 @@
       b.bdr = S("rect", { x: b.w - 38, y: 4, width: 33, height: 12 }, b.bd);
       b.bdt = S("text", { x: b.w - 21.5, y: 13, "text-anchor": "middle" }, b.bd);
       if (b.h >= H_GR) {
-        b.t2 = S("text", { x: 6, y: 25, class: "uf-v" }, g);
-        b.t2r = S("text", { x: b.w - 6, y: 25, class: "uf-v uf-dim", "text-anchor": "end" }, g);
+        b.t2 = S("text", { x: 6, y: 25, class: "uf-v" + (b.tipo === "zona" ? " solo-experto" : "") }, g);
+        b.t2r = S("text", { x: b.w - 6, y: 25, class: "uf-v uf-dim solo-experto", "text-anchor": "end" }, g);
         b.mf = S("rect", { x: 6, y: 31, width: b.w - 48, height: 5, class: "uf-mf" }, g);
         b.mb = S("g", null, g);
         b.m = S("rect", { x: 6, y: 31, width: 0, height: 5 }, b.mb);
@@ -326,7 +326,7 @@
         b.t2r = S("text", { x: b.w - 42, y: 14, class: "uf-v", "text-anchor": "end" }, g);
       } else {
         b.t2 = S("text", { x: 6, y: 26, class: "uf-v" }, g);
-        b.t2r = S("text", { x: b.w - 6, y: 26, class: "uf-v uf-dim", "text-anchor": "end" }, g);
+        b.t2r = S("text", { x: b.w - 6, y: 26, class: "uf-v uf-dim solo-experto", "text-anchor": "end" }, g);
       }
     });
     escalar();
@@ -412,7 +412,7 @@
     if (b.t3) {
       setT(b.t2r, lat);
       if (o != null && !caido) { medidor(b, o, colorSev(sevO(o))); setT(b.t3, fmt(o * 100, 1) + " %"); }
-      else { medidor(b, null); setT(b.t3, caido ? "" : t({ es: "sin límite", en: "no limit" })); }
+      else { medidor(b, null); setT(b.t3, caido ? "" : t({ es: "∞", en: "∞" })); }
     } else setT(b.t2r, o != null && !caido ? fmt(o * 100, 0) + " %" : "");
   }
   var NIV = [0.1, 1, 10, 100, 1000];
@@ -497,7 +497,7 @@
       '<button type="button" class="uf-seg" data-zoom="1" aria-pressed="' + (est.zoom === "1") + '">1:1</button>' +
       '<span class="uf-hora mono">' + esc(etiquetaHora()) + '</span>' +
       (f.length ? '<span class="sev sev-unk">' + f.length + ' DOWN</span>' : '') +
-      '<span class="uf-nota tx3">' + esc(hayAcc ? t({ es: "acceso: resultado.acceso (EMPL)", en: "access: resultado.acceso (EMPL)" }) :
+      '<span class="uf-nota tx3 solo-experto">' + esc(hayAcc ? t({ es: "acceso: resultado.acceso (EMPL)", en: "access: resultado.acceso (EMPL)" }) :
         t({ es: "acceso: demanda del motor por zona (sin EMPL)", en: "access: engine demand per zone (no EMPL)" })) + '</span>';
     if (b._h !== html) { b.innerHTML = html; b._h = html; }
   }
@@ -516,8 +516,8 @@
     lg.innerHTML = '<button type="button" class="ley-cab" aria-expanded="' + !pleg + '">' + esc(t({ es: "Leyenda", en: "Legend" })) + ' ' + (pleg ? "▸" : "▾") + '</button>' +
       '<div class="ley-cuerpo">' + cuerpo +
       '<div class="fila"><i class="disc"></i><span class="sev sev-unk">DOWN</span><span>' + esc(t({ es: "caído", en: "down" })) + '</span></div>' +
-      '<div class="tx3" style="margin-top:4px">' + esc(t({ es: "Grosor ∝ log(Gbit/s del sentido más cargado). Guiones: sentido del flujo, más rápidos con más carga.", en: "Width ∝ log(Gbit/s, busier direction). Dashes: flow direction, faster with more load." })) + '</div>' +
-      '<div class="tx3" style="margin-top:4px">' + esc(t({ es: "Caja: carga / capacidad (G = Gbit/s) · latencia máx. de las demandas que pasan · ocupación. Zona: DL 5G · FTTH, barra por servicio, % servido si < 99,5 %.", en: "Box: load / capacity (G = Gbit/s) · max latency of demands through it · occupancy. Zone: DL 5G · FTTH, bar by service, % served if < 99.5 %." })) + '</div>' +
+      '<div class="tx3 solo-experto" style="margin-top:4px">' + esc(t({ es: "Grosor ∝ log(Gbit/s del sentido más cargado). Guiones: sentido del flujo, más rápidos con más carga.", en: "Width ∝ log(Gbit/s, busier direction). Dashes: flow direction, faster with more load." })) + '</div>' +
+      '<div class="tx3 solo-experto" style="margin-top:4px">' + esc(t({ es: "Caja: carga / capacidad (G = Gbit/s) · latencia máx. de las demandas que pasan · ocupación. Zona: DL 5G · FTTH, barra por servicio, % servido si < 99,5 %.", en: "Box: load / capacity (G = Gbit/s) · max latency of demands through it · occupancy. Zone: DL 5G · FTTH, bar by service, % served if < 99.5 %." })) + '</div>' +
       '<div class="tx3" style="margin-top:4px">' + esc(t({ es: "Clic: ficha · clic dcho.: fallo (LAB)", en: "Click: details · right-click: fault (LAB)" })) + '</div></div>';
   }
 
