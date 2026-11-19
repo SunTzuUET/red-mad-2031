@@ -604,7 +604,9 @@
         if (!o) return;
         var id = o.caja ? (o.caja.nodo ? o.caja.id : null) : (o.linea && !o.linea.virtual ? o.linea.id : null);
         if (!id) return;
-        ev.preventDefault(); NOC.alternarFallo(id);
+        ev.preventDefault();
+        if (NOC.menuOperador && NOC.menuOperador(ev, id)) return;   // Revisión 7: menú de acciones del operador (operador.js)
+        NOC.alternarFallo(id);
       });
       lienzo.addEventListener("mousemove", moverTip);
       lienzo.addEventListener("mouseleave", function () { tipEl.hidden = true; tipEl._o = null; });

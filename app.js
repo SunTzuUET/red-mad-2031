@@ -240,7 +240,7 @@
   var MT = RED.modelos_trafico || {};
   var CR = MT.crecimiento || {};
   var ANIO_MIN = CR.anio_min || 2025, ANIO_MAX = CR.anio_max || 2031;
-  var caso = { trafico: "BH", dia: "laborable", anio: ANIO_MAX, hora: 21, evento: typeof Motor.casos === "function" ? "E-EVENTO" : "", fallos: [] };
+  var caso = { trafico: "BH", dia: "laborable", anio: ANIO_MAX, hora: 21, evento: typeof Motor.casos === "function" ? "E-EVENTO" : "", fallos: [], eventos: [] };   // eventos: Revisión 7 (operador.js)
   try { var g0 = JSON.parse(leer("noc.caso") || "null"); if (g0) Object.keys(caso).forEach(function (k) { if (g0[k] != null) caso[k] = g0[k]; }); } catch (e) { /* nada */ }
   try { var c0 = JSON.parse(leer("noc.capas") || "null"); if (c0) Object.keys(NOC.capas).forEach(function (k) { if (typeof c0[k] === "boolean") NOC.capas[k] = c0[k]; }); } catch (e) { /* nada */ }
   NOC.caso = caso;

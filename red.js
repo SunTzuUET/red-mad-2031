@@ -11967,6 +11967,277 @@ var RED = {
    "fuente_parcial": "v7 §6.2.7 (tamaño de hexágono)",
    "alternativa": "Posiciones reales de los emplazamientos y padrón por sección censal.",
    "estado": "pendiente"
+  },
+  {
+   "id": "S-087",
+   "clave": "evt.apagar_capa",
+   "ambito": "eventos",
+   "elementos": [
+    "n258",
+    "n28",
+    "n78"
+   ],
+   "campo": "capa radio apagada",
+   "valor": "toda la demanda de los sitios de la capa desborda a sus sitios de desborde (n258 → n78 → n28); sin capa siguiente, queda sin capa",
+   "unidad": "",
+   "motivo": "La v7 cita n258/RedCap como evolución, no el apagado nocturno ni su reparto.",
+   "fuente_parcial": "v7 §6.2.1, §7.4",
+   "alternativa": "Medir la cobertura real de la capa que queda.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-088",
+   "clave": "evt.degradar",
+   "ambito": "eventos",
+   "elementos": [
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC",
+    "L-CORE1-METC",
+    "L-CORE1-METN",
+    "L-CORE2-METE",
+    "L-CORE2-METN",
+    "L-CORE3-METC",
+    "L-CORE3-METS",
+    "motor.serie"
+   ],
+   "campo": "capacidad (degradar)",
+   "valor": "capacidad × factor (0,5 si no se da) en los dos sentidos; en un LAG, miembros_caidos = k → (N−k)/N, y con k ≥ 2 el LAG cae (min-links = N−1) y actúa el FRR",
+   "unidad": "×",
+   "motivo": "La v7 describe la pérdida de un λ (LAG con N−1 y min-links) pero no degradaciones parciales de otros elementos.",
+   "fuente_parcial": "v7 §6.4.4 (LAG, min-links = N−1)",
+   "alternativa": "Degradación con pérdidas o latencia en vez de capacidad.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-089",
+   "clave": "evt.instantaneo",
+   "ambito": "eventos",
+   "elementos": [
+    "motor.serie"
+   ],
+   "campo": "aplicación de eventos",
+   "valor": "cada evento cuenta entero desde el primer paso con t ≥ t_min; sin transitorios",
+   "unidad": "",
+   "motivo": "La serie es cuasi-estática: no modela la conmutación FRR (≈50 ms), la de satélite (≤60 s) ni el tiempo de reparación dentro del paso.",
+   "fuente_parcial": "v7 §6.4.4 (FRR, make-before-break), §6.11 (conmutación ≤60 s)",
+   "alternativa": "Modelar el transitorio con pasos de segundos.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-090",
+   "clave": "evt.modulo_ampliacion",
+   "ambito": "eventos",
+   "elementos": [
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC",
+    "L-CORE1-METC",
+    "L-CORE1-METN",
+    "L-CORE2-METE",
+    "L-CORE2-METN",
+    "L-CORE3-METC",
+    "L-CORE3-METS",
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE"
+   ],
+   "campo": "capacidad añadida (anadir_lambda)",
+   "valor": "enlace con λ: +400 Gbit/s por λ hasta 14 λ (2 × 7); backhaul e IX +100GE; acceso +10GbE; satélite +1 terminal (100 Mbit/s); efecto inmediato",
+   "unidad": "Gbit/s",
+   "motivo": "El módulo de 400G y el plan de 2 × 7 λ son de la v7 para los vanos; para acometidas y el resto de enlaces el módulo lo pone el simulador.",
+   "fuente_parcial": "v7 §6.4.1, §6.4.4 (LAG 400GE, 2 enlaces × 7 λ por vano)",
+   "alternativa": "Tiempo de aprovisionamiento real.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-091",
+   "clave": "evt.ntn_rescate",
+   "ambito": "eventos",
+   "elementos": [
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE",
+    "S-NTN-EMERGENCIA"
+   ],
+   "campo": "servicio por satélite (activar_ntn)",
+   "valor": "entra S-NTN-EMERGENCIA (como en E-INCIDENTE-NTN) y cada terminal lleva las demandas de voz y telemetría del hospital de sus zonas que se quedan sin ruta terrestre, hasta 100/20 Mbit/s, por prioridad",
+   "unidad": "Mbit/s",
+   "motivo": "La v7 da la capacidad por terminal y los servicios prioritarios, no cómo se reparte el terminal ni qué zonas cubre cada uno.",
+   "fuente_parcial": "v7 §6.11 (≥100/20 Mbit/s, voz, telemetría y gestión)",
+   "alternativa": "Reparto por SLA del operador.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-092",
+   "clave": "evt.prioridad_slice",
+   "ambito": "eventos",
+   "elementos": [
+    "PRIV-SUR",
+    "URLLC",
+    "eMBB",
+    "mMTC"
+   ],
+   "campo": "prioridad (priorizar_slice)",
+   "valor": "la prioridad de la asignación voraz de las demandas del slice/clase pasa al valor dado (0 = primero)",
+   "unidad": "",
+   "motivo": "La v7 fija ARP por servicio; cambiarlo en vivo es una acción del simulador.",
+   "fuente_parcial": "v7 §4 (ARP)",
+   "alternativa": "Expropiación por ARP según 3GPP TS 23.501.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-093",
+   "clave": "evt.te_reoptimizar",
+   "ambito": "eventos",
+   "elementos": [
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC"
+   ],
+   "campo": "rutas (te_reencaminar)",
+   "valor": "las demandas elegidas (fracción, origen, destino) se vuelven a señalizar por mínimos saltos sin el enlace (sin FRR, make-before-break); el resto sigue igual",
+   "unidad": "",
+   "motivo": "La v7 describe RSVP-TE sobre el LAG y FRR, no una política del operador para vaciar un tramo.",
+   "fuente_parcial": "v7 §6.4.4 (RSVP-TE, make-before-break)",
+   "alternativa": "Reparto explícito por LSP de A11.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-094",
+   "clave": "evt.umbrales_alarma",
+   "ambito": "eventos",
+   "elementos": [
+    "motor.serie"
+   ],
+   "campo": "sucesos de alarma",
+   "valor": "MAJ ≥ 85 %, CRIT ≥ 100 % de la demanda sobre la capacidad",
+   "unidad": "%",
+   "motivo": "Umbrales del registro de sucesos fijados en el contrato de la UI; la v7 reserva ≤70 % en normal y ≤90 % con fallo en los LAG.",
+   "fuente_parcial": "v7 §6.4.4 (reserva RSVP 70 % / 90 %)",
+   "alternativa": "Umbrales 70/90 % de la v7.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-095",
+   "clave": "evt.ventana_evento",
+   "ambito": "eventos",
+   "elementos": [
+    "E-EVENTO",
+    "motor.serie"
+   ],
+   "campo": "demanda del evento",
+   "valor": "mientras dura el evento, los servicios que nombra el escenario van a su valor de diseño × factor (perfil = 1); fuera de la ventana, como en el caso base",
+   "unidad": "",
+   "motivo": "La v7 da la demanda del partido en hora cargada, no su evolución minuto a minuto dentro del partido.",
+   "fuente_parcial": "v7 §3.4.2 y A7 (50 000 usuarios activos)",
+   "alternativa": "Perfil propio de entrada/salida del público.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-096",
+   "clave": "mod.crecimiento_cagr",
+   "ambito": "modelo",
+   "elementos": [
+    "modelo_usuario.crecimiento"
+   ],
+   "campo": "crecimiento por clase",
+   "valor": "factor (1 + CAGR)^(año − año_base) por clase de servicio, encima del crecimiento del modelo de tráfico del caso",
+   "unidad": "×",
+   "motivo": "El CAGR lo da el usuario; aplicarlo encima del crecimiento del caso (y no en su lugar) es del simulador.",
+   "fuente_parcial": "3.2 (proyección de volumen)",
+   "alternativa": "Sustituir el crecimiento del modelo por el CAGR del usuario.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-097",
+   "clave": "mod.importar_relativo",
+   "ambito": "modelo",
+   "elementos": [
+    "importar.js"
+   ],
+   "campo": "DL importado de demandas/zonas.csv",
+   "valor": "un DL editado se convierte en factor = nuevo / exportado del mismo caso y se aplica a todas las horas; los cambios menores que el redondeo del CSV se ignoran",
+   "unidad": "×",
+   "motivo": "El CSV exportado da el DL de un caso y una hora; para usarlo en la película se necesita una regla del simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Importar valores absolutos por hora.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-098",
+   "clave": "mod.montecarlo",
+   "ambito": "modelo",
+   "elementos": [
+    "motor.serieMontecarlo"
+   ],
+   "campo": "percentiles de la película",
+   "valor": "n réplicas (≤ 50) con semillas <semilla>#k; P5/P50/P95/P99 empíricos por paso (rango más cercano), por KPI y por enlace",
+   "unidad": "",
+   "motivo": "Con pocas réplicas el P99 es el máximo observado; es un método del simulador, no un dato.",
+   "fuente_parcial": "—",
+   "alternativa": "Más réplicas o ajuste de una distribución.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-099",
+   "clave": "mod.movilidad",
+   "ambito": "modelo",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS",
+    "modelo_usuario.movilidad"
+   ],
+   "campo": "movilidad pendular (modelo propio)",
+   "valor": "fracción × presencia(h) de la demanda móvil (eMBB y voz IMS) de las zonas residenciales se traslada a las de oficinas/mixtas en proporción a su demanda (o según origen_destino); el total se conserva",
+   "unidad": "",
+   "motivo": "La v7 no da movilidad casa↔trabajo; la presencia horaria es la del modelo PEND (supuesto) y el reparto es del simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Matriz origen-destino de la Encuesta Domiciliaria de Movilidad (CRTM).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-100",
+   "clave": "mod.perfil_usuario",
+   "ambito": "modelo",
+   "elementos": [
+    "modelo_usuario.perfiles"
+   ],
+   "campo": "perfil horario importado",
+   "valor": "la curva del usuario sustituye a la forma horaria de las demandas que casan (id > perfil|zona > clase|zona > *|zona > perfil > clase > *), sin multiplicador de tipo de día; interpolación lineal entre horas; no se aplica a la foto de hora cargada",
+   "unidad": "0..1",
+   "motivo": "El usuario da una forma horaria; cómo se combina con el modelo de tráfico del caso lo decide el simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Multiplicar la curva del usuario por la del modelo.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-101",
+   "clave": "mod.ruido_lognormal",
+   "ambito": "modelo",
+   "elementos": [
+    "modelo_usuario.ruido"
+   ],
+   "campo": "variación aleatoria",
+   "valor": "cada demanda × exp(σz − σ²/2) (media 1), z ~ N(0,1) independiente por demanda y paso, de un generador determinista (FNV-1a + mulberry32) con la semilla del modelo",
+   "unidad": "σ",
+   "motivo": "Ningún documento da la variabilidad de la demanda; la forma lognormal y la independencia entre demandas y pasos son del simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Ruido correlado entre zonas o en el tiempo (AR(1)).",
+   "estado": "pendiente"
   }
  ]
 };

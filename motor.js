@@ -3,6 +3,9 @@
 // Contrato y reglas del modelo: ver PLAN.md.
 // API: calcular(RED, opciones) · barridoN1(RED, opciones) · casos(RED) · serieDiaria · puntosUnicosFallo · demandasBase
 //   · serie(RED, caso, {paso_min, desde, hasta, fallos, eventos}) · serieAsync (Web Worker serie_worker.js) — CONTRATO_UI Revisión 4.
+//   · eventos ampliados y acciones del operador en serie (y opciones.acciones en calcular), sucesos por paso,
+//     plantillasEventos(RED), opcionesPaso, tiposEvento — Revisión 7.
+//   · opciones.modelo_usuario (calcular y serie) · serieMontecarlo (Promise, worker) / serieMontecarloSync · factorRuido — Revisión 8.
 //   · resultado.acceso (sitios, por_tec, nucleo BNG/UPF/IMS) · tecnologias(RED) · claseDeTec(tec) — Revisión 5; necesita
 //     window.EMPL (emplazamientos_datos.js, cargarlo antes que motor.js) o opciones.empl; opciones.acceso === false lo omite.
 // opciones: escenario, hora, fallos[], factores, modelo{id,anio,dia}, reparto_core, hora_cargada,
@@ -190,8 +193,16 @@ var Motor = (function () {
   // `ruta`/`enlaces`/`destino` son los del camino de más peso; `caminos` reparte la demanda (Σpeso ≤ 1:
   // lo que falta hasta 1 no tiene ruta, p. ej. el 40 % del estadio en el respaldo MEC).
   // modo "dijkstra": un camino por latencia mínima. modo "v7": reglas de la memoria v7 (enrutarV7).
-  function enrutar(G, demandas, caidosN, caidosL, modo) {
-    if (modo === "v7") return enrutarV7(G, demandas, caidosN, caidosL);
+  // excl (Revisión 7, te_reencaminar): {id enlace: true} que no se usan para enrutar aunque estén vivos; a diferencia
+  // de un corte no activan FRR: los LSP se vuelven a señalizar por mínimos saltos sin ese enlace (make-before-break).
+  function enrutar(G, demandas, caidosN, caidosL, modo, excl) {
+    if (excl) {
+      var cx = {}, kx;
+      for (kx in caidosL) cx[kx] = caidosL[kx];
+      for (kx in excl) if (excl[kx]) cx[kx] = true;
+      caidosL = cx;
+    }
+    if (modo === "v7") return enrutarV7(G, demandas, caidosN, caidosL, excl);
     var m = mascaras(G, caidosN, caidosL), cN = m.cN, cL = m.cL;
     var cache = {};
     return demandas.map(function (d) {
@@ -273,12 +284,12 @@ var Motor = (function () {
     return s;
   }
 
-  function enrutarV7(G, demandas, caidosN, caidosL) {
+  function enrutarV7(G, demandas, caidosN, caidosL, excl) {
     var m = mascaras(G, caidosN, caidosL), cN = m.cN, cL = m.cL;
     // Cortes de tramo protegidos por FRR (los dos extremos vivos) y su arco opuesto por sentido
     var cLpre = new Uint8Array(cL), arcos = {}, hayCortes = false;
     G.enlaces.forEach(function (l, li) {
-      if (!cL[li] || !G.anilloL[li]) return;
+      if (!cL[li] || !G.anilloL[li] || (excl && excl[l.id])) return;
       var a = G.idx[l.a], b = G.idx[l.b];
       if (cN[a] || cN[b]) return;
       hayCortes = true; cLpre[li] = 0;
@@ -573,6 +584,189 @@ var Motor = (function () {
   }
   var EVENTO_NINGUNO = "E-NORMAL";
 
+  // ---------- eventos y acciones del operador (CONTRATO_UI Revisión 7, PLAN_v3 §1 y §5.1) ----------
+  // Un evento es {t_min, tipo, id?, params?}; en calcular() se pasan los activos en opciones.acciones = [{tipo, id, params}].
+  //   fallo / reparacion (id nodo o enlace) · degradar (capacidad × params.factor, o params.miembros_caidos de un LAG) ·
+  //   evento_demanda (id escenario de RED, p. ej. E-EVENTO) · te_reencaminar (id enlace; params.fraccion, origen, destino) ·
+  //   activar_ntn (id terminal/enlace sat/zona; sin id = todos) · anadir_lambda (id enlace; params.n o params.gbps) ·
+  //   priorizar_slice (id slice | "clase:x" | "tipo:x" | zona | demanda; params.prioridad, 0 por defecto) ·
+  //   apagar_capa (id tecnología radio: n258, n78, n28).
+  // Cualquiera admite params.hasta_min (o params.duracion_min): deja de aplicarse en ese instante. "reparacion" quita
+  // también una degradación del mismo id. Reglas que no vienen de documento: supuestos del ámbito "eventos" (evt.*).
+  var TIPOS_EVENTO = [
+    { id: "fallo", origen: "evento", es: "Fallo", en: "Failure", objetivo: "nodo|enlace", params: [] },
+    { id: "reparacion", origen: "evento", es: "Reparación", en: "Repair", objetivo: "nodo|enlace", params: [] },
+    { id: "degradar", origen: "evento", es: "Degradación", en: "Degradation", objetivo: "nodo|enlace",
+      params: ["factor", "miembros_caidos", "hasta_min"] },
+    { id: "evento_demanda", origen: "evento", es: "Evento de demanda", en: "Demand event", objetivo: "escenario",
+      params: ["hasta_min", "duracion_min"] },
+    { id: "te_reencaminar", origen: "accion", es: "Reencaminar (TE)", en: "Reroute (TE)", objetivo: "enlace",
+      params: ["fraccion", "origen", "destino", "hasta_min"] },
+    { id: "activar_ntn", origen: "accion", es: "Activar satélite (NTN)", en: "Activate satellite (NTN)", objetivo: "terminal|zona|—",
+      params: ["hasta_min"] },
+    { id: "anadir_lambda", origen: "accion", es: "Añadir λ / capacidad", en: "Add λ / capacity", objetivo: "enlace",
+      params: ["n", "gbps", "hasta_min"] },
+    { id: "priorizar_slice", origen: "accion", es: "Priorizar slice", en: "Prioritise slice", objetivo: "slice|clase:x|demanda",
+      params: ["prioridad", "hasta_min"] },
+    { id: "apagar_capa", origen: "accion", es: "Apagar capa radio", en: "Switch off radio layer", objetivo: "n258|n78|n28",
+      params: ["hasta_min"] }
+  ];
+  var TIPO_EV = {};
+  TIPOS_EVENTO.forEach(function (t) { TIPO_EV[t.id] = t; });
+  // Supuesto de cada tipo (clave estable del registro, ámbito "eventos")
+  var SUP_TIPO = { degradar: "evt.degradar", evento_demanda: "evt.ventana_evento", te_reencaminar: "evt.te_reoptimizar",
+    activar_ntn: "evt.ntn_rescate", anadir_lambda: "evt.modulo_ampliacion", priorizar_slice: "evt.prioridad_slice",
+    apagar_capa: "evt.apagar_capa" };
+  // v7 §6.4.4: un λ = un miembro 400GE del LAG; v7 §6.4.1: plan óptico de 2 enlaces × 7 λ por vano (tope 14 λ).
+  var LAMBDA_GBPS = 400, LAMBDA_MAX = 14;
+  // [Supuesto evt.modulo_ampliacion] módulo de los enlaces sin λ: backhaul e IX n × 100GE (como su dimensionado),
+  // acceso de servicio 10GbE (UNI de la v7 §6.9), satélite un terminal OneWeb más (100 Mbit/s, v7 §6.11).
+  var MODULO_TIPO = { backhaul: 100, ix: 100, acceso: 10, sat: 0.1 };
+  // v7 §6.11: el satélite lleva voz, telemetría del hospital (sin objetivo de 10 ms) y gestión; ≥100/20 Mbit/s por terminal
+  var NTN_PRIORITARIOS = { "S-HOSPITAL-CRITICO": 1 };
+  var NTN_SERVICIO = "S-NTN-EMERGENCIA", NTN_UL_FRAC = 0.2;
+
+  function copiaPlana(o) { var x = {}, k; for (k in (o || {})) x[k] = o[k]; return x; }
+  function finEvento(e) {
+    var p = e.params || {};
+    if (typeof p.hasta_min === "number") return p.hasta_min;
+    if (typeof p.duracion_min === "number") return e.t_min + p.duracion_min;
+    return undefined;
+  }
+  // Terminales satélite: enlaces tipo "sat" (extremo a = nodo con terminal, b = hub) y zonas que cubre cada uno
+  function terminalesNTN(RED) {
+    var zonaDe = {}, out = [];
+    (RED.zonas || []).forEach(function (z) {
+      if (z.agg) (zonaDe[z.agg] || (zonaDe[z.agg] = [])).push(z.id);
+      if (z.edge) (zonaDe[z.edge] || (zonaDe[z.edge] = [])).push(z.id);
+    });
+    (RED.enlaces || []).forEach(function (l) {
+      if (!l || l.tipo !== "sat") return;
+      out.push({ enlace: l.id, nodo: l.a, hub: l.b, zonas: zonaDe[l.a] || [] });
+    });
+    return out;
+  }
+
+  // opciones.acciones → estado A que usa calcular()
+  function normalizarAcciones(RED, lista, esc) {
+    var A = { n: 0, fallos: [], degradar: {}, lambdas: {}, ov: null, pico: {}, te: [], teExcl: null, ntn: null,
+      prio: [], apagar: {}, claves: [], avisos: [], aplicadas: [] };
+    if (!Array.isArray(lista) || !lista.length) return A;
+    var nodos = {}, enl = {}, escs = {};
+    (RED.nodos || []).forEach(function (n) { nodos[n.id] = n; });
+    (RED.enlaces || []).forEach(function (l) { enl[l.id] = l; });
+    (RED.escenarios || []).forEach(function (e) { escs[e.id] = e; });
+    function clave(k) { if (A.claves.indexOf(k) < 0) A.claves.push(k); }
+    function aviso(t) { A.avisos.push(t); }
+    var miembros = {};
+    lista.forEach(function (a) {
+      if (!a || !TIPO_EV[a.tipo]) { if (a) aviso("Tipo de evento desconocido: " + a.tipo); return; }
+      var p = a.params || {}, id = a.id;
+      A.n++;
+      A.aplicadas.push({ tipo: a.tipo, id: id || null });
+      if (SUP_TIPO[a.tipo]) clave(SUP_TIPO[a.tipo]);
+      switch (a.tipo) {
+        case "fallo": if (id) A.fallos.push(id); break;
+        case "reparacion": break;   // en calcular puntual no hay nada que levantar
+        case "degradar":
+          if (!nodos[id] && !enl[id]) { aviso("degradar: elemento desconocido " + id); break; }
+          if (typeof p.miembros_caidos === "number" && enl[id] && enl[id].canales_400g) {
+            miembros[id] = (miembros[id] || 0) + p.miembros_caidos;
+          } else {
+            var f = typeof p.factor === "number" ? Math.max(0, p.factor) : 0.5;
+            A.degradar[id] = (A.degradar[id] === undefined ? 1 : A.degradar[id]) * f;
+          }
+          break;
+        case "evento_demanda":
+          var e = escs[id];
+          if (!e) { aviso("evento_demanda: escenario desconocido " + id); break; }
+          if ((e.fallos || []).length) aviso("evento_demanda " + id + ": se aplican sus factores, no sus fallos (use eventos de fallo)");
+          A.ov = A.ov || {};
+          Object.keys(e.factores || {}).forEach(function (k) {
+            A.ov[k] = e.factores[k];
+            if (k.indexOf("tipo:") !== 0 && k.indexOf("slice:") !== 0 && e.factores[k] > 0) A.pico[k] = 1;
+          });
+          break;
+        case "te_reencaminar":
+          if (!enl[id]) { aviso("te_reencaminar: enlace desconocido " + id); break; }
+          A.te.push({ id: id, f: typeof p.fraccion === "number" ? Math.max(0, Math.min(1, p.fraccion)) : 1,
+            origen: p.origen || null, destino: p.destino || null });
+          (A.teExcl || (A.teExcl = {}))[id] = true;
+          break;
+        case "activar_ntn":
+          var ts = terminalesNTN(RED), sel = ts.filter(function (t) {
+            return !id || id === "*" || t.enlace === id || t.nodo === id || t.zonas.indexOf(id) >= 0;
+          });
+          if (!sel.length) { if (id) aviso("activar_ntn: " + id + " no tiene terminal; se activan todos"); sel = ts; }
+          A.ntn = A.ntn || {};
+          sel.forEach(function (t) { A.ntn[t.enlace] = t; });
+          break;
+        case "anadir_lambda":
+          var l = enl[id];
+          if (!l || !esCap(l.capacidad_gbps)) { aviso("anadir_lambda: enlace desconocido o sin capacidad " + id); break; }
+          var g;
+          if (typeof p.gbps === "number") g = p.gbps;
+          else if (l.canales_400g) {
+            var ya = Math.round((A.lambdas[id] || 0) / LAMBDA_GBPS), nl = typeof p.n === "number" ? Math.round(p.n) : 1;
+            nl = Math.min(nl, LAMBDA_MAX - l.canales_400g - ya);
+            if (nl <= 0 && (typeof p.n !== "number" || p.n > 0)) { aviso("anadir_lambda: " + id + " ya tiene " + LAMBDA_MAX + " λ (2 × 7, v7 §6.4.1)"); break; }
+            g = nl * LAMBDA_GBPS;
+          } else g = (typeof p.n === "number" ? p.n : 1) * num(MODULO_TIPO[l.tipo], 100);
+          A.lambdas[id] = (A.lambdas[id] || 0) + g;
+          break;
+        case "priorizar_slice":
+          var sel2 = id || p.slice || p.clase;
+          if (!sel2) { aviso("priorizar_slice: sin slice"); break; }
+          A.prio.push({ sel: sel2, prioridad: typeof p.prioridad === "number" ? p.prioridad : 0 });
+          break;
+        case "apagar_capa":
+          var tec = id || p.tec;
+          if (ORDEN_CAPAS.indexOf(tec) < 0) { aviso("apagar_capa: solo capas radio " + ORDEN_CAPAS.join("/") + " (" + tec + ")"); break; }
+          A.apagar[tec] = 1;
+          break;
+      }
+    });
+    // LAG (v7 §6.4.4): con un miembro menos sigue con N−1; min-links = N−1, así que con dos o más caídos el LAG cae y actúa el FRR
+    Object.keys(miembros).forEach(function (id) {
+      var N = enl[id].canales_400g + Math.round((A.lambdas[id] || 0) / LAMBDA_GBPS), k = Math.min(miembros[id], N);
+      if (k >= 2) { A.fallos.push(id); A.lagCaidos = A.lagCaidos || {}; A.lagCaidos[id] = k; }
+      else if (k > 0) A.degradar[id] = (A.degradar[id] === undefined ? 1 : A.degradar[id]) * (N - k) / N;
+    });
+    if (A.ntn) {   // el satélite de emergencia (S-NTN-EMERGENCIA, inactivo por defecto) entra como en E-INCIDENTE-NTN
+      A.ov = A.ov || {};
+      A.ov[NTN_SERVICIO] = 1; A.pico[NTN_SERVICIO] = 1;
+    }
+    return A;
+  }
+  function capEf(id, cap, A, l) {
+    if (!esCap(cap)) return null;
+    var c = cap + (A.lambdas[id] || 0);
+    if (A.degradar[id] !== undefined) c *= A.degradar[id];
+    return Math.max(0, c);
+  }
+  function casaPrio(p, d) {
+    var s = p.sel;
+    if (s.indexOf("clase:") === 0) return d.clase_servicio === s.slice(6);
+    if (s.indexOf("tipo:") === 0) return d.tipo === s.slice(5);
+    return d.slice === s || (d.padre || d.id) === s || d.id === s || d.zona === s;
+  }
+  function casaTE(t, b) {
+    if (t.origen && b.origen !== t.origen && b.zona !== t.origen) return false;
+    if (t.destino && b.core_fijo !== t.destino && b.edge !== t.destino && b.destino_fijo !== t.destino) return false;
+    return true;
+  }
+  // Mezcla de rutas: (1 − f) por la ruta normal y f por la reencaminada
+  function mezclarRutas(r, x, f) {
+    if (!x) return r;
+    if (!r || f >= 1 - 1e-9) return x;
+    var cams = r.caminos.map(function (c) { var y = copiaPlana(c); y.peso = c.peso * (1 - f); return y; })
+      .concat(x.caminos.map(function (c) { var y = copiaPlana(c); y.peso = c.peso * f; return y; }));
+    var main = cams[0], lat = 0;
+    cams.forEach(function (c) { if (c.peso > main.peso + EPS) main = c; lat = Math.max(lat, c.latencia); });
+    return { destino: main.destino, ruta: main.ruta, enlaces: main.enlaces, latencia: lat, caminos: cams,
+      reglas: [].concat(r.reglas || [], x.reglas || []) };
+  }
+
   function resolverOpciones(RED, opciones) {
     opciones = traducirCaso(RED, opciones || {});
     var esc = null;
@@ -584,6 +778,9 @@ var Motor = (function () {
     var fallos = [].concat((esc && esc.fallos) || [], opciones.fallos || []);
     // fallos_exactos (uso interno de serie(): fallos del caso ± eventos ya resueltos) sustituye a la lista
     if (Array.isArray(opciones.fallos_exactos)) fallos = opciones.fallos_exactos.slice();
+    // Revisión 7: acciones/eventos activos (fallos que añaden, p. ej. LAG por debajo de min-links)
+    var A = normalizarAcciones(RED, opciones.acciones, esc);
+    if (A.fallos.length) fallos = fallos.concat(A.fallos);
     // hora_cargada: todas las demandas en su hora cargada a la vez (reproduce las tablas de dimensionado)
     var cargada = !!(opciones.hora_cargada || (esc && esc.hora_cargada));
     // perfil_horario (uso de serie()): un caso de hora cargada se recorre con los perfiles horarios
@@ -592,7 +789,12 @@ var Motor = (function () {
     if (forzarHoraria && cargada) { cargada = false; forzada = true; }
     var reparto = opciones.reparto_core || (esc && esc.reparto_core) ||
       (RED.meta && RED.meta.reparto_core) || "equitativo";
-    var factores = [esc && esc.factores, opciones.factores], perfiles = null, avisoModelo = null, modeloInfo = null;
+    var escFac = esc && esc.factores;
+    if (A.ov && escFac) {   // evento_demanda / NTN: sus factores sustituyen a los del escenario base para esas claves
+      escFac = {};
+      Object.keys(esc.factores).forEach(function (k) { if (!(k in A.ov)) escFac[k] = esc.factores[k]; });
+    }
+    var factores = [escFac, opciones.factores, A.ov], perfiles = null, avisoModelo = null, modeloInfo = null;
     // Modelo de tráfico (modelos.js, PLAN_v2 §4): añade factores (año, pico, día, pendular) y perfiles por demanda
     if (opciones.modelo) {
       var Mo = typeof Modelos !== "undefined" ? Modelos :
@@ -609,9 +811,12 @@ var Motor = (function () {
       } else avisoModelo = "modelos.js no cargado: se ignora el modelo de tráfico";
     }
     if (forzada && (hora === null || hora === undefined)) hora = 21;
+    // Revisión 8: modelo de demanda del usuario (encima del caso)
+    var MU = opciones.modelo_usuario && typeof opciones.modelo_usuario === "object" ? compilarMU(RED, opciones.modelo_usuario) : null;
+    if (MU) factores.push(MU.factores);
     return { esc: esc, escId: opciones.escenario || null, hora: hora, fallos: fallos, rutas: modoRutas(RED, opciones),
       factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo, modelo: modeloInfo,
-      forzada: forzada, cache: opciones._cache || null };
+      forzada: forzada, cache: opciones._cache || null, A: A, MU: MU };
   }
 
   // ---------- procedencia: supuestos de los que depende cada resultado (CONTRATO_UI Revisión 3) ----------
@@ -639,6 +844,224 @@ var Motor = (function () {
   }
   function anadir(lista, ids) { for (var i = 0; i < ids.length; i++) if (ids[i] && lista.indexOf(ids[i]) < 0) lista.push(ids[i]); }
 
+  // activar_ntn (Revisión 7, supuesto evt.ntn_rescate): cada terminal OneWeb activo (enlace "sat" desde su AGG/Edge al hub)
+  // lleva las demandas prioritarias (v7 §6.11: voz y telemetría del hospital) de sus zonas que se han quedado sin ruta
+  // terrestre, hasta su capacidad (100/20 Mbit/s por terminal), por orden de prioridad. Necesita vivos el terminal, el hub
+  // y la salida del hub a un DC. Lo que pasa por el satélite cuenta como servido (estado "degradado" si no llega al 99 %).
+  function rescateNTN(G, A, dem, enlacesOut, caidosN, caidosL, alertas) {
+    var out = { terminales: {}, demandas: [], gbps: 0 };
+    var salidaHub = {};
+    G.enlaces.forEach(function (l) {
+      if (l.tipo === "sat") return;
+      [["a", "b"], ["b", "a"]].forEach(function (x) {
+        var hub = l[x[0]], otro = l[x[1]];
+        if (G.nodos[hub] && G.nodos[hub].tipo === "ix" && G.nodos[otro] && G.nodos[otro].tipo === "core" &&
+            !caidosN[otro] && !caidosL[l.id] && !(enlacesOut[l.id] && enlacesOut[l.id].caido)) salidaHub[hub] = l.id;
+      });
+    });
+    Object.keys(A.ntn).sort().forEach(function (lid) {
+      var t = A.ntn[lid], e = enlacesOut[lid];
+      var vivo = e && !caidosN[t.nodo] && !caidosN[t.hub] && !caidosL[lid] && salidaHub[t.hub];
+      var o = { nodo: t.nodo, zonas: t.zonas, activo: !!vivo, capacidad_gbps: e ? e.capacidad_gbps : 0, dl_gbps: 0, ul_gbps: 0, demandas: [] };
+      out.terminales[lid] = o;
+      if (!vivo) return;
+      var lista = dem.filter(function (d) {
+        if (d.estado !== "caido" || d.dl_gbps <= EPS) return false;
+        if (!(d.clase_servicio === "voz" || NTN_PRIORITARIOS[d.padre || d.id])) return false;
+        return d.origen === t.nodo || (d.zona && t.zonas.indexOf(d.zona) >= 0);
+      }).sort(function (a, b) { return (a.prioridad - b.prioridad) || (a.dl_gbps - b.dl_gbps); });
+      var capD = num(e.capacidad_gbps, 0), capU = capD * NTN_UL_FRAC, hubL = enlacesOut[salidaHub[t.hub]];
+      // sentido DL: del hub al terminal
+      var sdl = G.enlacePorId[lid].a === t.nodo ? "ba" : "ab", sul = sdl === "ab" ? "ba" : "ab";
+      lista.forEach(function (d) {
+        var s = Math.min(d.dl_gbps * d.h, Math.max(0, capD - o.dl_gbps)), su = Math.min(d.ul_gbps * d.h, Math.max(0, capU - o.ul_gbps));
+        if (s <= EPS && su <= EPS) return;
+        o.dl_gbps += s; o.ul_gbps += su;
+        d.servida_gbps = s / d.h; d.servida_ul_gbps = su / d.h; d.via = "ntn"; d.ntn = lid;
+        d.estado = d.servida_gbps < 0.99 * d.dl_gbps ? "degradado" : "ok";
+        o.demandas.push(d.id); out.demandas.push(d.id);
+        e["carga_" + sdl] += s; e["carga_" + sul] += su;
+        e.por_servicio[d.clase_servicio][sdl] += s; e.por_servicio[d.clase_servicio][sul] += su;
+        if (e.demandas.indexOf(d.id) < 0) e.demandas.push(d.id);
+        if (hubL) {
+          var hdl = G.enlacePorId[salidaHub[t.hub]].a === t.hub ? "ba" : "ab";
+          hubL["carga_" + hdl] += s; hubL["carga_" + (hdl === "ab" ? "ba" : "ab")] += su;
+          if (hubL.demandas.indexOf(d.id) < 0) hubL.demandas.push(d.id);
+        }
+      });
+      out.gbps += o.dl_gbps;
+    });
+    var nt = Object.keys(out.terminales).filter(function (k) { return out.terminales[k].activo; }).length;
+    alertas.push({ nivel: "info", texto: "Satélite NTN activo (" + nt + " terminal" + (nt === 1 ? "" : "es") + "): " +
+      out.demandas.length + " demandas prioritarias por satélite (" + fmt(out.gbps * 1000, 0) + " Mbit/s)" });
+    return out;
+  }
+
+  // ---------- modelo de demanda del usuario (CONTRATO_UI Revisión 8, PLAN_v3 §4) ----------
+  // opciones.modelo_usuario = {id, nombre, perfiles:{clave:[24]}, factores:{clave:f}, crecimiento:{clase|"*": CAGR}, anio_base, anio,
+  //   prioridades:{demanda|servicio: p}, ruido:{sigma, semilla}, movilidad:{activa, fraccion, presencia?, origen_destino?},
+  //   eventos_demanda?:[{t_min, id, params}], proc?:{clave: {t:"usuario", f}}}. Se aplica encima del caso (LAB).
+  // Claves de perfiles (de más a menos concreta): id de demanda/servicio · "perfil|zona" · "clase|zona" · "*|zona" · perfil · clase · "*".
+  //   perfil = nombre de RED.perfiles / perfiles_extra (con modelo horario, el móvil y la voz usan "movil-<tipo de zona>"); clase = clase
+  //   de servicio (movil, ftth, voz, urllc, iot, empresa, evento, ntn). La curva sustituye a la forma horaria (supuesto mod.perfil_usuario).
+  // Claves de factores: zona · demanda/servicio · "tipo:x" · "slice:x" (como los escenarios) · "clase:x" o el nombre de la clase.
+  var SUP_MU = { perfil: "mod.perfil_usuario", ruido: "mod.ruido_lognormal", mov: "mod.movilidad", crec: "mod.crecimiento_cagr",
+    mc: "mod.montecarlo" };
+  var MOV_TIPOS = ["movil-ebb", "voz-ims"], MOV_FRACCION = 0.2;
+  function esArr24(a) {
+    if (!a || a.length !== 24) return false;
+    for (var i = 0; i < 24; i++) if (typeof a[i] !== "number" || !isFinite(a[i])) return false;
+    return true;
+  }
+  function compilarMU(RED, mu) {
+    var C = { mu: mu, perfiles: {}, factores: {}, clase: {}, crec: {}, prio: {}, ruido: null, mov: null, avisos: [], nPerf: 0, nFac: 0 };
+    var zonas = {}, ids = {};
+    (RED.zonas || []).forEach(function (z) { zonas[z.id] = z; (z.necesidades || []).forEach(function (n) { ids[n.id] = 1; }); });
+    (RED.servicios || []).forEach(function (s) { ids[s.id] = 1; });
+    Object.keys(mu.perfiles || {}).forEach(function (k) {
+      var a = mu.perfiles[k];
+      if (!esArr24(a)) { C.avisos.push("Perfil «" + k + "» ignorado: necesita 24 valores numéricos"); return; }
+      C.perfiles[k] = a.map(function (x) { return Math.max(0, x); }); C.nPerf++;
+    });
+    Object.keys(mu.factores || {}).forEach(function (k) {
+      var f = mu.factores[k];
+      if (typeof f !== "number" || !isFinite(f) || f < 0) { C.avisos.push("Factor «" + k + "» ignorado: " + f); return; }
+      C.nFac++;
+      var m = /^clase:(.+)$/.exec(k);
+      if (m) { C.clase[m[1]] = f; return; }
+      if (CLASES_SERVICIO.indexOf(k) >= 0 && !zonas[k] && !ids[k]) { C.clase[k] = f; return; }
+      if (!(zonas[k] || ids[k] || /^(tipo|slice):/.test(k))) C.avisos.push("Factor «" + k + "»: clave que no casa con ninguna zona, demanda ni servicio");
+      C.factores[k] = f;
+    });
+    var anio = num(mu.anio, null), base = num(mu.anio_base, 2031);
+    Object.keys(mu.crecimiento || {}).forEach(function (k) {
+      var g = mu.crecimiento[k];
+      if (typeof g !== "number" || !isFinite(g) || g <= -1) { C.avisos.push("Crecimiento «" + k + "» ignorado: " + g); return; }
+      C.crec[k] = g;
+    });
+    C.anio = anio; C.anio_base = base;
+    Object.keys(mu.prioridades || {}).forEach(function (k) {
+      var p = mu.prioridades[k];
+      if (typeof p === "number" && isFinite(p)) C.prio[k] = p;
+    });
+    var rz = mu.ruido;
+    if (rz && typeof rz.sigma === "number" && rz.sigma > 0) C.ruido = { sigma: Math.min(rz.sigma, 2), semilla: rz.semilla === undefined || rz.semilla === null ? 1 : rz.semilla };
+    var mv = mu.movilidad;
+    if (mv && mv.activa !== false && (mv.activa || mv.fraccion !== undefined || mv.origen_destino)) {
+      var MT = RED.modelos_trafico || {}, pe = MT.pendular || {};
+      C.mov = { fraccion: mv.fraccion === undefined ? MOV_FRACCION : mv.fraccion,
+        presencia: esArr24(mv.presencia) ? mv.presencia : (esArr24(pe.presencia) ? pe.presencia : null),
+        od: mv.origen_destino || null, tz: MT.tipos_zona || {}, tipos: Array.isArray(mv.tipos) ? mv.tipos : MOV_TIPOS };
+      if (!C.mov.presencia) { C.avisos.push("Movilidad sin perfil de presencia (RED.modelos_trafico.pendular.presencia): no se aplica"); C.mov = null; }
+    }
+    C.proc = mu.proc || {};
+    C.fuente = mu.fuente || mu.nombre || mu.id || "modelo de usuario";
+    return C;
+  }
+  // Nombre del perfil con el que va la demanda en este caso (el del modelo horario si lo hay)
+  function nombrePerfilMU(RED, b, conModelo) {
+    if (conModelo && (b.tipo === "movil-ebb" || b.tipo === "voz-ims")) {
+      var tz = (RED.modelos_trafico && RED.modelos_trafico.tipos_zona) || {};
+      return "movil-" + (tz[b.zona] || "residencial");
+    }
+    return b.perfil || null;
+  }
+  function perfilMU(C, b, nombre) {
+    var P = C.perfiles, id = b.padre || b.id, z = b.zona, cl = b.clase_servicio;
+    var claves = [id];
+    if (z) { if (nombre) claves.push(nombre + "|" + z); claves.push(cl + "|" + z, "*|" + z); }
+    if (nombre) claves.push(nombre);
+    claves.push(cl, "*");
+    for (var i = 0; i < claves.length; i++) if (P[claves[i]]) return { k: claves[i], arr: P[claves[i]] };
+    return null;
+  }
+  // Multiplicador por clase de servicio y crecimiento CAGR: (1 + g)^(año − año_base)
+  function multMU(C, b, anioCaso) {
+    var f = 1, cl = b.clase_servicio, crec = false, clase = false;
+    if (typeof C.clase[cl] === "number") { f *= C.clase[cl]; clase = true; }
+    var g = typeof C.crec[cl] === "number" ? C.crec[cl] : C.crec["*"];
+    var anio = C.anio !== null ? C.anio : (anioCaso || 2031);
+    if (typeof g === "number" && anio !== C.anio_base) { f *= Math.pow(1 + g, anio - C.anio_base); crec = true; }
+    return { f: f, crec: crec, clase: clase };
+  }
+  // Ruido lognormal determinista: z ~ N(0,1) de un generador con semilla (FNV-1a de "semilla|demanda|t" → mulberry32 → Box-Muller);
+  // factor = exp(σ z − σ²/2) (media 1). Misma (semilla, demanda, paso) → mismo factor en node, navegador y worker.
+  function hash32(s) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  }
+  function mulberry32(a) {
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function normalDet(clave) {
+    var r = mulberry32(hash32(clave)), u1 = r(), u2 = r();
+    if (u1 < 1e-12) u1 = 1e-12;
+    return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  }
+  function factorRuido(sigma, semilla, id, t) {
+    var z = normalDet(String(semilla) + "|" + id + "|" + t);
+    return Math.exp(sigma * z - sigma * sigma / 2);
+  }
+  // Movilidad pendular (supuesto mod.movilidad): una fracción f × presencia(h) de la demanda móvil (eMBB y voz IMS) de cada zona
+  // residencial se traslada a las zonas de oficinas/mixtas (Centro) en proporción a su demanda del mismo tipo, o según origen_destino
+  // ({origen: {destino: peso}}). Se conserva el total (DL); el UL de cada grupo se escala con el mismo factor.
+  function aplicarMovilidad(C, dem, hora, marcar) {
+    var M = C.mov, out = { gbps: 0, presencia: 0 };
+    if (!M || hora === null || hora === undefined) return out;
+    var pres = valorPerfil(M.presencia, hora, 0);
+    out.presencia = pres;
+    if (!(pres > 0)) return out;
+    M.tipos.forEach(function (tipo) {
+      var grupos = {};
+      dem.forEach(function (d, i) {
+        if (d.clase !== "necesidad" || d.tipo !== tipo || !d.zona) return;
+        var g = grupos[d.zona] || (grupos[d.zona] = { idx: [], dl: 0 });
+        g.idx.push(i); g.dl += d.dl_gbps;
+      });
+      var zs = Object.keys(grupos).sort(), od = {};
+      if (M.od) Object.keys(M.od).forEach(function (o) { od[o] = M.od[o]; });
+      else {
+        var dests = zs.filter(function (z) { var t = M.tz[z] || "residencial"; return t === "oficinas" || t === "mixto"; });
+        zs.forEach(function (z) {
+          if ((M.tz[z] || "residencial") !== "residencial") return;
+          var w = {};
+          dests.forEach(function (x) { w[x] = grupos[x].dl; });
+          od[z] = w;
+        });
+      }
+      var escala = {};
+      Object.keys(od).sort().forEach(function (o) {
+        var go = grupos[o];
+        if (!go || !(go.dl > EPS)) return;
+        var f = typeof M.fraccion === "number" ? M.fraccion : num(M.fraccion && M.fraccion[o], 0);
+        var s = Math.max(0, Math.min(1, f * pres));
+        var pesos = od[o] || {}, tot = 0;
+        Object.keys(pesos).forEach(function (x) { if (x !== o && grupos[x] && grupos[x].dl > EPS && pesos[x] > 0) tot += pesos[x]; });
+        if (!(s > 0) || !(tot > 0)) return;
+        var movido = s * go.dl;
+        escala[o] = (escala[o] || 0) - movido;
+        Object.keys(pesos).forEach(function (x) {
+          if (x === o || !grupos[x] || !(grupos[x].dl > EPS) || !(pesos[x] > 0)) return;
+          escala[x] = (escala[x] || 0) + movido * pesos[x] / tot;
+        });
+        out.gbps += movido;
+      });
+      Object.keys(escala).forEach(function (z) {
+        var g = grupos[z], k = 1 + escala[z] / g.dl;
+        if (k < 0) k = 0;
+        g.idx.forEach(function (i) { dem[i].dl_gbps *= k; dem[i].ul_gbps *= k; marcar(i, SUP_MU.mov); });
+      });
+    });
+    return out;
+  }
+
   // ---------- cálculo principal ----------
   function calcular(RED, opciones) {
     var op = resolverOpciones(RED, opciones);
@@ -651,6 +1074,8 @@ var Motor = (function () {
 
     if (op.escId && !op.esc) alertas.push({ nivel: "aviso", texto: "Escenario desconocido: " + op.escId });
     if (op.avisoModelo) alertas.push({ nivel: "aviso", texto: op.avisoModelo });
+    var A = op.A;
+    A.avisos.forEach(function (t) { alertas.push({ nivel: "aviso", texto: t }); });
 
     // Fallos
     var caidosN = {}, caidosL = {}, hayFallos = false, vistos = {};
@@ -662,17 +1087,27 @@ var Motor = (function () {
     });
 
     // Rutas sin fallos y con fallos
-    function rutasDe(cN, cL, clave) {
-      if (!CE) return enrutar(G, base, cN, cL, op.rutas);
-      return CE.rutas[clave] || (CE.rutas[clave] = enrutar(G, base, cN, cL, op.rutas));
+    function rutasDe(cN, cL, clave, excl) {
+      if (!CE) return enrutar(G, base, cN, cL, op.rutas, excl);
+      return CE.rutas[clave] || (CE.rutas[clave] = enrutar(G, base, cN, cL, op.rutas, excl));
     }
     var rutasBase = rutasDe({}, {}, "");
-    var rutas = hayFallos ? rutasDe(caidosN, caidosL, Object.keys(caidosN).sort().join(",") + "|" + Object.keys(caidosL).sort().join(",")) : rutasBase;
+    var claveF = Object.keys(caidosN).sort().join(",") + "|" + Object.keys(caidosL).sort().join(",");
+    var rutasF = hayFallos ? rutasDe(caidosN, caidosL, claveF) : rutasBase, rutas = rutasF;
+    // te_reencaminar (Revisión 7): las demandas que casan van (en la fracción pedida) por rutas sin los enlaces excluidos
+    if (A.te.length) {
+      var rutasTE = rutasDe(caidosN, caidosL, claveF + "|te:" + Object.keys(A.teExcl).sort().join(","), A.teExcl);
+      rutas = rutasF.map(function (r, i) {
+        var f = 0;
+        A.te.forEach(function (t) { if (casaTE(t, base[i])) f = Math.max(f, t.f); });
+        return f > 0 ? mezclarRutas(r, rutasTE[i], f) : r;
+      });
+    }
 
     // Estructuras de salida
     var enlacesOut = {}, nodosOut = {}, residualL = {}, residualN = {}, ofertaL = {}, ofertaN = {};
     G.enlaces.forEach(function (l) {
-      var cap = esCap(l.capacidad_gbps) ? l.capacidad_gbps : null;
+      var cap = capEf(l.id, l.capacidad_gbps, A);
       // Enlaces full duplex: carga por sentido (ab = a→b, ba = b→a); carga_gbps = sentido más cargado (v7 A11.4)
       enlacesOut[l.id] = { carga_gbps: 0, carga_ab: 0, carga_ba: 0, capacidad_gbps: cap, ocupacion: 0,
         caido: !!(caidosL[l.id] || caidosN[l.a] || caidosN[l.b]), demandas: [], demanda_gbps: 0,
@@ -681,7 +1116,7 @@ var Motor = (function () {
       ofertaL[l.id] = { ab: 0, ba: 0 };
     });
     G.ordenNodos.forEach(function (id) {
-      var n = G.nodos[id], cap = esCap(n.capacidad_gbps) ? n.capacidad_gbps : null;
+      var n = G.nodos[id], cap = capEf(id, n.capacidad_gbps, A);
       nodosOut[id] = { carga_gbps: 0, capacidad_gbps: cap, ocupacion: 0, caido: !!caidosN[id],
         demandas: [], absorbe_de: [], demanda_gbps: 0 };
       residualN[id] = cap === null ? Infinity : cap;
@@ -689,14 +1124,34 @@ var Motor = (function () {
     });
 
     // Demandas con valor de la hora
+    var MU = op.MU, muClaves = [], muUsu = [];
     var dem = base.map(function (b, i) {
-      var r = rutas[i], rb = rutasBase[i];
+      var r = rutas[i], rb = rutasBase[i], rf = rutasF[i];
       var pp = op.perfiles && op.perfiles[b.padre || b.id];
-      var ph = op.cargada ? 1 : (pp ? valorPerfil(pp, op.hora, 1) : perfilDe(RED, b.perfil, op.hora));
-      var f = ph * factorDe(b, op.factores) * (b.reparto || 1);
+      // evento_demanda / NTN activos: sus servicios a su valor de pico (perfil = 1) mientras dura la ventana (evt.ventana_evento)
+      var ph = (op.cargada || A.pico[b.padre || b.id]) ? 1 : (pp ? valorPerfil(pp, op.hora, 1) : perfilDe(RED, b.perfil, op.hora));
+      var fmu = 1;
+      if (MU) {   // Revisión 8: curva del usuario (sustituye la forma horaria) y factores por clase / crecimiento
+        var cl = muClaves[i] = [], pu = [];
+        if (!op.cargada && !A.pico[b.padre || b.id] && typeof op.hora === "number") {
+          var up = perfilMU(MU, b, nombrePerfilMU(RED, b, !!op.perfiles));
+          if (up) { ph = valorPerfil(up.arr, op.hora, 1); cl.push(SUP_MU.perfil); pu.push("perfiles." + up.k); }
+        }
+        var mm = multMU(MU, b, op.modelo && op.modelo.anio);
+        fmu = mm.f;
+        if (mm.crec) { cl.push(SUP_MU.crec); pu.push("crecimiento"); }
+        if (mm.clase) pu.push("factores.clase:" + b.clase_servicio);
+        var kid = b.padre || b.id;
+        [b.zona, kid, "tipo:" + b.tipo, b.slice ? "slice:" + b.slice : null].forEach(function (k) {
+          if (k && typeof MU.factores[k] === "number") pu.push("factores." + k);
+        });
+        muUsu[i] = pu;
+      }
+      var f = ph * factorDe(b, op.factores) * (b.reparto || 1) * fmu;
       var dl = b.dl_gbps * f;
       var via = "principal";
-      if (r && (!rb || firmaRuta(rb) !== firmaRuta(r))) via = "respaldo";
+      if (r && (!rb || firmaRuta(rb) !== firmaRuta(rf || r))) via = "respaldo";
+      else if (r && r !== rf) via = "te";
       var caminos = r ? r.caminos.map(function (c) {
         return { peso: c.peso, destino: c.destino, ruta: c.ruta, enlaces: c.enlaces, latencia_ms: c.latencia,
           sds: c.enlaces.map(function (id, k) { return sentidoDL(G, c, k); }) };
@@ -710,6 +1165,46 @@ var Motor = (function () {
         caminos: caminos, fraccion_con_ruta: pesoRuta,
         latencia_ms: r ? r.latencia : null, latencia_max_ms: b.latencia_max_ms,
         via: r ? via : "respaldo", estado: "ok" };
+    });
+
+    // Revisión 8: prioridades, movilidad pendular y ruido del modelo de usuario; procedencia "usuario" por demanda
+    var muOut = null;
+    if (MU) {
+      var marcar = function (i, k) { if (muClaves[i].indexOf(k) < 0) muClaves[i].push(k); };
+      dem.forEach(function (d, i) {
+        var k = d.padre || d.id;
+        if (typeof MU.prio[k] === "number") { d.prioridad_base = d.prioridad; d.prioridad = MU.prio[k]; muUsu[i].push("prioridades." + k); }
+      });
+      var mov = aplicarMovilidad(MU, dem, op.cargada ? null : op.hora, marcar);
+      if (MU.ruido) {
+        var tR = typeof op.hora === "number" && !op.cargada ? Math.round(op.hora * 60) : -1;
+        dem.forEach(function (d, i) {
+          var x = factorRuido(MU.ruido.sigma, MU.ruido.semilla, d.padre || d.id, tR);
+          d.dl_gbps *= x; d.ul_gbps *= x; marcar(i, SUP_MU.ruido);
+        });
+      }
+      var nUsu = 0;
+      dem.forEach(function (d, i) {
+        if (!muUsu[i].length) return;
+        nUsu++;
+        var f = muUsu[i].map(function (k) { var p = MU.proc[k]; return p && p.f ? p.f : k; })
+          .filter(function (x, j, a) { return a.indexOf(x) === j; }).join(" · ");
+        var pc = { t: "usuario", f: MU.fuente + ": " + f };
+        d.proc_usuario = { dl_gbps: pc, ul_gbps: pc };
+        if (muUsu[i].some(function (k) { return k.indexOf("prioridades.") === 0; })) d.proc_usuario.prioridad = pc;
+      });
+      muOut = { id: MU.mu.id || null, nombre: MU.mu.nombre || null, fuente: MU.fuente, avisos: MU.avisos.slice(),
+        perfiles: MU.nPerf, factores: MU.nFac, demandas_usuario: nUsu, ruido: MU.ruido ? { sigma: MU.ruido.sigma, semilla: MU.ruido.semilla, t: tR } : null,
+        movilidad: MU.mov ? { gbps_movidos: mov.gbps, presencia: mov.presencia } : null, supuestos: [] };
+    }
+
+    // priorizar_slice (Revisión 7): cambia la prioridad de la asignación voraz de las demandas que casan
+    if (A.prio.length) dem.forEach(function (d) {
+      A.prio.forEach(function (p) {
+        if (!casaPrio(p, d)) return;
+        if (d.prioridad_base === undefined) d.prioridad_base = d.prioridad;
+        d.prioridad = p.prioridad;
+      });
     });
 
     // Oferta por elemento (para % de demanda sobre capacidad)
@@ -775,6 +1270,7 @@ var Motor = (function () {
       else if (d.latencia_max_ms !== null && d.latencia_max_ms !== undefined && d.latencia_ms > d.latencia_max_ms) d.estado = "latencia";
       else d.estado = "ok";
     });
+    var ntnOut = A.ntn ? rescateNTN(G, A, dem, enlacesOut, caidosN, caidosL, alertas) : null;
 
     // ---- Procedencia: supuestos de los que depende cada demanda y cada enlace ----
     var M = mapaSupuestos(RED), usados = [];
@@ -810,6 +1306,7 @@ var Motor = (function () {
       if (d.estado === "degradado") rec.push("mot.umbral_degradado");
       anadir(dep, ids(rec));
       anadir(dep, gIds);
+      if (MU && muClaves[i] && muClaves[i].length) anadir(dep, ids(muClaves[i]));
       anadir(dep, d.clase === "necesidad" ? gZ : gS);
       if (escS && (!escF.length || escF.some(function (k) {
         return k === d.zona || k === (d.padre || d.id) || k === "tipo:" + d.tipo || k === "slice:" + d.slice; }))) anadir(dep, [escS]);
@@ -833,6 +1330,8 @@ var Motor = (function () {
     G.enlaces.forEach(function (l) { var dp = enlacesOut[l.id].depende; dp.sort(); anadir(usados, dp); });
     if (M.porClave["mot.clasificacion_servicio"]) anadir(usados, [M.porClave["mot.clasificacion_servicio"]]);
     if (escS) anadir(usados, [escS]);
+    if (A.claves.length) anadir(usados, ids(A.claves));
+    if (muOut) { muClaves.forEach(function (c) { if (c) anadir(muOut.supuestos, ids(c)); }); muOut.supuestos.sort(); anadir(usados, muOut.supuestos); }
     usados.sort();
 
     // Ocupaciones
@@ -913,10 +1412,10 @@ var Motor = (function () {
     // ---- Sin ruta y latencia ----
     var caidas = dem.filter(function (d) { return d.estado === "caido"; });
     if (caidas.length) {
-      var ids = caidas.slice(0, 5).map(function (d) { return d.id; }).join(", ") + (caidas.length > 5 ? "…" : "");
+      var listaCaidas = caidas.slice(0, 5).map(function (d) { return d.id; }).join(", ") + (caidas.length > 5 ? "…" : "");
       var gb = 0; caidas.forEach(function (d) { gb += d.dl_gbps; });
       alertas.push({ nivel: "grave", texto: plural(caidas.length, "demanda sin ruta", "demandas sin ruta") +
-        " (" + fmtG(gb) + " Gbit/s perdidos): " + ids });
+        " (" + fmtG(gb) + " Gbit/s perdidos): " + listaCaidas });
     }
     var lentas = dem.filter(function (d) { return d.estado === "latencia"; });
     if (lentas.length) {
@@ -978,7 +1477,11 @@ var Motor = (function () {
       }
     };
     // Acceso por emplazamiento (Revisión 5): solo lee demandas y nodos; opciones.acceso === false lo omite
-    if (!opciones || opciones.acceso !== false) res.acceso = acceso(RED, res, opciones);
+    if (A.n) res.acciones = { aplicadas: A.aplicadas, avisos: A.avisos, degradar: A.degradar, lambdas_gbps: A.lambdas,
+      lag_caidos: A.lagCaidos || {}, te: A.te.map(function (t) { return { id: t.id, fraccion: t.f, origen: t.origen, destino: t.destino }; }),
+      prioridades: A.prio.slice(), apagar: Object.keys(A.apagar), ntn: ntnOut, supuestos: ids(A.claves) };
+    if (muOut) res.modelo_usuario = muOut;
+    if (!opciones || opciones.acceso !== false) res.acceso = acceso(RED, res, opciones, A);
     return res;
   }
 
@@ -1043,8 +1546,8 @@ var Motor = (function () {
   }
   function pct(x, c) { return c ? x / c * 100 : 0; }
 
-  function acceso(RED, r, opciones) {
-    var E = emplDe(RED, opciones);
+  function acceso(RED, r, opciones, A) {
+    var E = emplDe(RED, opciones), apag = (A && A.apagar) || {};
     if (!E || !E.sitios || !E.meta) return null;
     var X = indiceAcceso(E, RED), nuc = E.meta.nucleo || {};
     // 1. demanda pedida por clave (zona|radio, zona|fijo, id de servicio) y destinos de núcleo
@@ -1082,18 +1585,22 @@ var Motor = (function () {
         caido: !!((nAgg && nAgg.caido) || (nN && nN.caido) || caidoK) };
     }
     // 3. desborde entre capas n258 → n78 → n28 (lo que pasa del 100 % va a los sitios de la capa siguiente)
-    var desb = 0;
+    //    apagar_capa (Revisión 7, supuesto evt.apagar_capa): un sitio de una capa apagada desborda toda su demanda;
+    //    si no tiene capa siguiente, esa demanda queda sin capa (sin_capa_gbps).
+    var desb = 0, desbTec = {}, sinCapa = 0;
     ORDEN_CAPAS.forEach(function (tec) {
+      var off = !!apag[tec];
       (X.porTec[tec] || []).forEach(function (i) {
         var s = X.sit[i], td = dl[i] + rdl[i], tu = ul[i] + rul[i];
-        var ed = s.cdl !== null ? Math.max(0, td - s.cdl) : 0, eu = s.cul !== null ? Math.max(0, tu - s.cul) : 0;
+        var ed = off ? td : (s.cdl !== null ? Math.max(0, td - s.cdl) : 0), eu = off ? tu : (s.cul !== null ? Math.max(0, tu - s.cul) : 0);
+        if (off) sitios[s.id].apagado = true;
         if ((ed > EPS || eu > EPS) && s.des.length) {
           var m = s.des.length;
           for (var q = 0; q < m; q++) { rdl[s.des[q]] += ed / m; rul[s.des[q]] += eu / m; }
           sitios[s.id].desborde_mbps = { dl: ed, ul: eu };
-          desb += ed + eu;
+          desb += ed + eu; desbTec[tec] = (desbTec[tec] || 0) + (ed + eu) / 1000;
           td -= ed; tu -= eu;
-        }
+        } else if (off) { sinCapa += td + tu; td = 0; tu = 0; }
         dl[i] = td; ul[i] = tu; rdl[i] = 0; rul[i] = 0;
       });
     });
@@ -1170,7 +1677,7 @@ var Motor = (function () {
       } else {
         u = Math.max(s.cdl ? pct(dl[i], s.cdl) : 0, s.cul ? pct(ul[i], s.cul) : 0);
       }
-      if (out.caido) u = 0;
+      if (out.caido || out.apagado) u = 0;
       out.dl_mbps = dl[i]; out.ul_mbps = ul[i]; out.util_pct = u;
       var pt = porTec[s.tec] || (porTec[s.tec] = { dl_gbps: 0, ul_gbps: 0, util_max_pct: 0, sitio_max: null, sitios_sat: 0, sitios_caidos: 0, n: 0 });
       pt.n++;
@@ -1180,7 +1687,9 @@ var Motor = (function () {
       if (out.caido) pt.sitios_caidos++;
     }
     if (porTec.dc) { porTec.dc.dl_gbps = upfOut.dl_gbps; porTec.dc.ul_gbps = upfOut.ul_gbps; }
+    Object.keys(apag).forEach(function (t) { if (porTec[t]) porTec[t].apagada = true; });
     return { sitios: sitios, por_tec: porTec, nucleo: { BNG: bngOut, UPF: upfOut, IMS: imsOut }, desborde_gbps: desb / 1000,
+      desborde_por_tec: desbTec, sin_capa_gbps: sinCapa / 1000, capas_apagadas: Object.keys(apag),
       supuestos: (E.meta.proc ? Object.keys(E.meta.proc).map(function (k) { return E.meta.proc[k].s; }) : []) };
   }
 
@@ -1257,19 +1766,164 @@ var Motor = (function () {
     var m = Math.round(tm), h = Math.floor(m / 60), mm = m - h * 60;
     return (h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm;
   }
-  // Fallos activos en el instante t: los del caso + eventos con t_min <= t aplicados en orden
-  // ("fallo" tumba el elemento, "reparacion" lo levanta, aunque viniera del caso).
-  function fallosEn(baseF, eventos, t) {
-    var act = {}, orden = [];
+  // Estado en el instante t: fallos activos (los del caso + eventos con t_min <= t aplicados en orden; "fallo" tumba,
+  // "reparacion" levanta aunque viniera del caso) y acciones/eventos activos (todo lo demás que no haya acabado).
+  // [Supuesto evt.instantaneo] cada evento cuenta entero desde el primer paso con t >= t_min (sin transitorios).
+  function estadoEn(baseF, eventos, t) {
+    var act = {}, orden = [], deg = {}, otros = [];
     baseF.forEach(function (id) { if (!act[id]) { act[id] = 1; orden.push(id); } });
     for (var i = 0; i < eventos.length; i++) {
       var e = eventos[i];
       if (e.t_min > t + 1e-9) break;
-      if (e.tipo === "fallo") { if (!act[e.id]) { act[e.id] = 1; orden.push(e.id); } }
-      else if (e.tipo === "reparacion" && act[e.id]) { delete act[e.id]; }
+      var vivo = !(typeof e.fin === "number" && t >= e.fin - 1e-9);
+      if (e.tipo === "fallo") {
+        if (vivo) { if (!act[e.id]) { act[e.id] = 1; orden.push(e.id); } }
+        else delete act[e.id];
+      } else if (e.tipo === "reparacion") { delete act[e.id]; delete deg[e.id]; }
+      else if (e.tipo === "degradar") { if (vivo) (deg[e.id] || (deg[e.id] = [])).push(e); else delete deg[e.id]; }
+      else if (vivo) otros.push(e);
     }
-    return orden.filter(function (id) { return act[id]; });
+    var acc = [];
+    Object.keys(deg).forEach(function (id) { deg[id].forEach(function (e) { acc.push(e); }); });
+    acc = acc.concat(otros).sort(function (a, b) { return a._i - b._i; })
+      .map(function (e) { var o = { tipo: e.tipo }; if (e.id) o.id = e.id; if (e.params) o.params = e.params; return o; });
+    return { fallos: orden.filter(function (id) { return act[id]; }), acciones: acc };
   }
+  function fallosEn(baseF, eventos, t) { return estadoEn(baseF, eventos, t).fallos; }
+
+  // ---------- sucesos (registro tipo SCADA, Revisión 7) ----------
+  // {t_min, nivel: CRIT|MAJ|MIN|WRN|INFO, origen: evento|accion|motor, texto: {es, en}, id}
+  // Alarmas de ocupación: MAJ ≥ 85 %, CRIT ≥ 100 % de la demanda sobre la capacidad (supuesto evt.umbrales_alarma).
+  var UMBRAL_MAJ = 85, UMBRAL_CRIT = 100;
+  function fmtEn(x, dec) { return (Math.round(x * Math.pow(10, dec)) / Math.pow(10, dec)).toFixed(dec); }
+  function txt(es, en) { return { es: es, en: en }; }
+  function nombreEl(G, id) { return G.nodos[id] ? nombreNodo(G, id) : id; }
+  function textoEvento(G, e, fin) {
+    var p = e.params || {}, id = e.id || "", n = nombreEl(G, id), T = TIPO_EV[e.tipo];
+    function minus(x) { return x.charAt(0).toLowerCase() + x.slice(1); }
+    if (fin) return txt("Fin de " + minus(T.es) + (id ? ": " + n : ""), "End of " + minus(T.en) + (id ? ": " + n : ""));
+    switch (e.tipo) {
+      case "fallo": return txt("Fallo: " + n, "Failure: " + n);
+      case "reparacion": return txt("Reparación: " + n, "Repair: " + n);
+      case "degradar":
+        if (typeof p.miembros_caidos === "number") return txt("Degradación: " + n + " pierde " + p.miembros_caidos + " λ del LAG",
+          "Degradation: " + n + " loses " + p.miembros_caidos + " λ of the LAG");
+        var f = typeof p.factor === "number" ? p.factor : 0.5;
+        return txt("Degradación: " + n + " al " + fmt(f * 100, 0) + " % de su capacidad", "Degradation: " + n + " at " + fmtEn(f * 100, 0) + " % of capacity");
+      case "evento_demanda": return txt("Evento de demanda: " + id, "Demand event: " + id);
+      case "te_reencaminar":
+        var fr = typeof p.fraccion === "number" ? p.fraccion : 1;
+        return txt("TE: LSP fuera de " + n + " (" + fmt(fr * 100, 0) + " %)", "TE: LSPs moved off " + n + " (" + fmtEn(fr * 100, 0) + " %)");
+      case "activar_ntn": return txt("Satélite NTN activado" + (id ? " (" + n + ")" : ""), "NTN satellite activated" + (id ? " (" + n + ")" : ""));
+      case "anadir_lambda":
+        return txt("Ampliación de " + n + (typeof p.gbps === "number" ? " +" + fmtG(p.gbps) + " Gbit/s" : " +" + (typeof p.n === "number" ? p.n : 1) + " módulo(s)"),
+          "Capacity added to " + n + (typeof p.gbps === "number" ? " +" + fmtEn(p.gbps, 0) + " Gbit/s" : " +" + (typeof p.n === "number" ? p.n : 1) + " module(s)"));
+      case "priorizar_slice":
+        var pr = typeof p.prioridad === "number" ? p.prioridad : 0;
+        return txt("Prioridad " + pr + " para " + id, "Priority " + pr + " for " + id);
+      case "apagar_capa": return txt("Capa " + id + " apagada", "Layer " + id + " switched off");
+    }
+    return txt(e.tipo + " " + id, e.tipo + " " + id);
+  }
+  function nivelEvento(G, e, fin) {
+    if (fin || e.tipo === "reparacion") return "INFO";
+    if (e.tipo === "fallo") return G.nodos[e.id] ? "CRIT" : "MAJ";
+    if (e.tipo === "degradar") return "MIN";
+    return "INFO";
+  }
+  function nivelOcup(p) { return p >= UMBRAL_CRIT - 1e-9 ? 2 : (p >= UMBRAL_MAJ - 1e-9 ? 1 : 0); }
+
+  // Compara el resultado del paso con el anterior (estado en `prev`) y devuelve los sucesos del motor
+  function sucesosMotor(G, r, tm, prev, fallos) {
+    var out = [], ahora = { alarma: {}, caidas: {}, degr: {}, frr: {}, desb: {}, sinCapa: 0, ntn: -1 };
+    function add(nivel, es, en, id) { out.push({ t_min: tm, nivel: nivel, origen: "motor", texto: txt(es, en), id: id }); }
+    // FRR: tramo de anillo caído con los dos extremos vivos
+    var caidoN = {}, f;
+    fallos.forEach(function (id) { if (G.nodos[id]) caidoN[id] = 1; });
+    fallos.forEach(function (id) {
+      var li = G.idxL[id];
+      if (li === undefined || !G.anilloL[li]) return;
+      var l = G.enlaces[li];
+      if (!caidoN[l.a] && !caidoN[l.b]) ahora.frr[id] = 1;
+    });
+    var teTot = {};
+    ((r.acciones && r.acciones.te) || []).forEach(function (t) { if (t.fraccion >= 1 - 1e-9 && !t.origen && !t.destino) teTot[t.id] = 1; });
+    Object.keys(ahora.frr).forEach(function (id) {
+      if (prev.frr[id]) return;
+      if (teTot[id]) add("INFO", "FRR armado en " + id + " sin tráfico: los LSP ya estaban fuera por TE",
+        "FRR armed on " + id + " with no traffic: LSPs had already been moved by TE", id);
+      else add("MAJ", "FRR activo en " + id + ": el tráfico del tramo va por el arco opuesto del anillo",
+        "FRR active on " + id + ": span traffic takes the opposite ring arc", id);
+    });
+    Object.keys(prev.frr).forEach(function (id) {
+      if (!ahora.frr[id]) add("INFO", "FRR desactivado en " + id, "FRR cleared on " + id, id);
+    });
+    // Alarmas de ocupación de enlaces y nodos con capacidad (demanda sobre capacidad)
+    function alarma(id, nombre, cap, carga, demanda, caido) {
+      if (!cap || caido) { if (prev.alarma[id]) add("INFO", nombre + " sale de alarma", nombre + " alarm cleared", id); return; }
+      var p = Math.max(carga, demanda) / cap * 100, n = nivelOcup(p), a = prev.alarma[id] || 0;
+      if (n) ahora.alarma[id] = n;
+      if (n === a) return;
+      if (n === 0) add("INFO", nombre + " sale de alarma (" + fmt(p, 0) + " %)", nombre + " alarm cleared (" + fmtEn(p, 0) + " %)", id);
+      else if (n > a) add(n === 2 ? "CRIT" : "MAJ", nombre + " al " + fmt(p, 0) + " %" + (n === 2 ? " (saturado)" : ""),
+        nombre + " at " + fmtEn(p, 0) + " %" + (n === 2 ? " (saturated)" : ""), id);
+      else add("MAJ", nombre + " baja al " + fmt(p, 0) + " %", nombre + " down to " + fmtEn(p, 0) + " %", id);
+    }
+    G.enlaces.forEach(function (l) {
+      var e = r.enlaces[l.id];
+      alarma(l.id, "Enlace " + l.id, e.capacidad_gbps, e.carga_gbps, e.demanda_gbps, e.caido);
+    });
+    G.ordenNodos.forEach(function (id) {
+      var x = r.nodos[id];
+      if (x.capacidad_gbps) alarma(id, nombreNodo(G, id), x.capacidad_gbps, x.carga_gbps, x.demanda_gbps, x.caido);
+    });
+    if (r.acceso && r.acceso.nucleo) ["BNG", "UPF", "IMS"].forEach(function (k) {
+      var u = r.acceso.nucleo[k], p = u ? u.util_pct : 0;
+      alarma(k, k, 100, p, p, false);
+    });
+    // Demandas perdidas / recuperadas / degradadas (por demanda, sin contar las subdemandas por DC)
+    var est = {};
+    r.demandas.forEach(function (d) {
+      var k = d.padre || d.id, g = GRAV_EST[d.estado] || 0, x = est[k];
+      if (!x) est[k] = { g: g, dl: d.dl_gbps, ntn: d.via === "ntn" }; else { x.g = Math.max(x.g, g); x.dl += d.dl_gbps; if (d.via === "ntn") x.ntn = true; }
+    });
+    Object.keys(est).forEach(function (k) {
+      var x = est[k];
+      if (x.g === 3) ahora.caidas[k] = 1; else if (x.g === 2) ahora.degr[k] = 1;
+      if (x.g === 3 && !prev.caidas[k]) add("CRIT", "Demanda perdida (sin ruta): " + k + " · " + fmtG(x.dl) + " Gbit/s",
+        "Demand lost (no route): " + k + " · " + fmtEn(x.dl, x.dl >= 10 ? 0 : 1) + " Gbit/s", k);
+      else if (x.g < 3 && prev.caidas[k]) add("INFO", "Demanda recuperada: " + k + (x.ntn ? " (por satélite)" : ""),
+        "Demand restored: " + k + (x.ntn ? " (via satellite)" : ""), k);
+      else if (x.g === 2 && !prev.degr[k] && !prev.caidas[k]) add("MIN", "Demanda degradada: " + k, "Demand degraded: " + k, k);
+      else if (x.g < 2 && prev.degr[k]) add("INFO", "Demanda normalizada: " + k, "Demand back to normal: " + k, k);
+    });
+    Object.keys(prev.caidas).forEach(function (k) { if (!est[k]) add("INFO", "Demanda recuperada: " + k, "Demand restored: " + k, k); });
+    // Desborde de capas radio y demanda sin capa
+    var A = r.acceso;
+    if (A) {
+      var dt = A.desborde_por_tec || {};
+      Object.keys(dt).forEach(function (tec) {
+        if (dt[tec] <= 1e-6) return;
+        ahora.desb[tec] = 1;
+        if (!prev.desb[tec]) add("WRN", "Desborde de la capa " + tec + " a la siguiente: " + fmtG(dt[tec]) + " Gbit/s",
+          "Layer " + tec + " overflows to the next one: " + fmtEn(dt[tec], dt[tec] >= 10 ? 0 : 1) + " Gbit/s", tec);
+      });
+      Object.keys(prev.desb).forEach(function (tec) {
+        if (!ahora.desb[tec]) add("INFO", "Fin del desborde de la capa " + tec, "Layer " + tec + " overflow ended", tec);
+      });
+      ahora.sinCapa = A.sin_capa_gbps > 1e-6 ? 1 : 0;
+      if (ahora.sinCapa && !prev.sinCapa) add("MAJ", "Demanda radio sin capa (capa apagada sin desborde): " + fmtG(A.sin_capa_gbps) + " Gbit/s",
+        "Radio demand without a layer (switched-off layer with no overflow): " + fmtEn(A.sin_capa_gbps, 1) + " Gbit/s", (A.capas_apagadas || [])[0] || null);
+      else if (!ahora.sinCapa && prev.sinCapa) add("INFO", "Toda la demanda radio vuelve a tener capa", "All radio demand has a layer again", null);
+    }
+    // Satélite: demandas por NTN
+    var nt = r.acciones && r.acciones.ntn;
+    ahora.ntn = nt ? nt.demandas.length : -1;
+    if (nt && ahora.ntn !== prev.ntn && ahora.ntn > 0) add("WRN", "NTN: " + ahora.ntn + " demandas prioritarias por satélite (" + fmt(nt.gbps * 1000, 0) + " Mbit/s)",
+      "NTN: " + ahora.ntn + " priority demands via satellite (" + fmtEn(nt.gbps * 1000, 0) + " Mbit/s)", null);
+    return { sucesos: out, estado: ahora };
+  }
+  var PESO_NIVEL = { CRIT: 0, MAJ: 1, MIN: 2, WRN: 3, INFO: 4 };
 
   function serie(RED, caso, opciones) {
     var t0 = ahoraMs();
@@ -1286,6 +1940,12 @@ var Motor = (function () {
       base.caso = { trafico: tc, evento: base.caso.evento, fallo: base.caso.fallo };
     }
     if (opciones.fallos && opciones.fallos.length) base.fallos = [].concat(base.fallos || [], opciones.fallos);
+    // Revisión 8: modelo de usuario (en opciones de la serie o en el caso); sus eventos_demanda se suman a los eventos
+    var mu = opciones.modelo_usuario || (caso && caso.modelo_usuario) || null;
+    if (mu) base.modelo_usuario = mu; else delete base.modelo_usuario;
+    var evIn = opciones.eventos || [];
+    if (mu && Array.isArray(mu.eventos_demanda) && mu.eventos_demanda.length)
+      evIn = evIn.concat(mu.eventos_demanda.map(function (e) { var o = copiaPlana(e); o.tipo = o.tipo || "evento_demanda"; return o; }));
 
     // ¿Es un caso de hora cargada? Entonces la película usa los perfiles horarios (supuesto) y se avisa.
     var op0 = resolverOpciones(RED, base);
@@ -1299,11 +1959,23 @@ var Motor = (function () {
         "paso reproduce la hora cargada coincidente (tampoco el de las 21:00). Para la foto v7 use el cálculo de hora cargada.";
     }
     var baseF = op0.fallos.slice();
-    var eventos = (opciones.eventos || []).filter(function (e) {
-      return e && typeof e.t_min === "number" && (e.tipo === "fallo" || e.tipo === "reparacion") && e.id;
-    }).map(function (e, i) { return { t_min: e.t_min, tipo: e.tipo, id: e.id, _i: i }; });
+    // Revisión 7: tipos ampliados; los que necesitan elemento sin id (o tipos desconocidos) van a eventos_descartados
+    var descartados = [];
+    var eventos = evIn.filter(function (e) {
+      var ok = e && typeof e.t_min === "number" && isFinite(e.t_min) && TIPO_EV[e.tipo] &&
+        (e.id || e.tipo === "activar_ntn" || (e.tipo === "apagar_capa" && e.params && e.params.tec) ||
+         (e.tipo === "priorizar_slice" && e.params && (e.params.slice || e.params.clase)));
+      if (!ok && e) descartados.push(e);
+      return ok;
+    }).map(function (e, i) {
+      var o = { t_min: e.t_min, tipo: e.tipo, _i: i };
+      if (e.id) o.id = e.id;
+      if (e.params) o.params = e.params;
+      var f = finEvento(e);
+      if (typeof f === "number") o.fin = f;
+      return o;
+    });
     eventos.sort(function (a, b) { return (a.t_min - b.t_min) || (a._i - b._i); });
-    eventos.forEach(function (e) { delete e._i; });
 
     var ts = [];
     for (var t = desde * 60; t < hasta * 60 - 1e-9; t += paso) ts.push(t);
@@ -1312,7 +1984,9 @@ var Motor = (function () {
     var enl = {}, nod = {};
     G.enlaces.forEach(function (l) { enl[l.id] = { ocup: new Float32Array(n), carga: new Float32Array(n) }; });
     G.ordenNodos.forEach(function (id) { nod[id] = { carga: new Float32Array(n), ocup: new Float32Array(n) }; });
-    var cache = {}, pasos = [], usados = [], pico = null, acc = null, accN = null;
+    var cache = {}, pasos = [], usados = [], pico = null, acc = null, accN = null, todos = [];
+    var prevSuc = { alarma: {}, caidas: {}, degr: {}, frr: {}, desb: {}, sinCapa: 0, ntn: -1 }, tPrev = -Infinity;
+    var M = mapaSupuestos(RED);
     var E = emplDe(RED, base);
     if (E && opciones.acceso !== false) {
       acc = {}; accN = {};
@@ -1323,9 +1997,31 @@ var Motor = (function () {
       var o = {}, k;
       for (k in base) o[k] = base[k];
       o.hora = tm / 60;
-      o.fallos_exactos = fallosEn(baseF, eventos, tm);
+      var est = estadoEn(baseF, eventos, tm);
+      o.fallos_exactos = est.fallos;
+      if (est.acciones.length) o.acciones = est.acciones;
       o._cache = cache;
       var r = calcular(RED, o), R = r.resumen;
+      // sucesos del paso: eventos que empiezan o acaban en (paso anterior, este paso] + cambios de estado del motor
+      var suc = [];
+      eventos.forEach(function (e) {
+        var T = TIPO_EV[e.tipo];
+        if (e.t_min > tPrev + 1e-9 && e.t_min <= tm + 1e-9)
+          suc.push({ t_min: e.t_min, nivel: nivelEvento(G, e, false), origen: T.origen, texto: textoEvento(G, e, false), id: e.id || null, tipo: e.tipo });
+        if (typeof e.fin === "number" && e.fin > tPrev + 1e-9 && e.fin <= tm + 1e-9)
+          suc.push({ t_min: e.fin, nivel: "INFO", origen: T.origen, texto: textoEvento(G, e, true), id: e.id || null, tipo: e.tipo });
+      });
+      if (i === 0) baseF.forEach(function (id) {
+        suc.push({ t_min: tm, nivel: G.nodos[id] ? "CRIT" : "MAJ", origen: "evento",
+          texto: txt("Fallo del caso: " + nombreEl(G, id), "Case failure: " + nombreEl(G, id)), id: id, tipo: "fallo" });
+      });
+      if (r.acciones) r.acciones.avisos.forEach(function (a) { suc.push({ t_min: tm, nivel: "WRN", origen: "accion", texto: txt(a, a), id: null }); });
+      var sm = sucesosMotor(G, r, tm, prevSuc, R.fallos);
+      prevSuc = sm.estado;
+      suc = suc.concat(sm.sucesos);
+      suc.sort(function (a, b) { return (a.t_min - b.t_min) || (PESO_NIVEL[a.nivel] - PESO_NIVEL[b.nivel]); });
+      tPrev = tm;
+      Array.prototype.push.apply(todos, suc);
       var nAl = 0, nGr = 0;
       R.alertas.forEach(function (a) { if (a.nivel !== "info") nAl++; if (a.nivel === "grave") nGr++; });
       var ps = {};
@@ -1335,7 +2031,8 @@ var Motor = (function () {
         resumen: { dl_total_gbps: R.dl_total_gbps, servida_gbps: R.servida_gbps, servido_pct: R.pct_servida,
           ocup_max_pct: ocMax, ocup_max_id: R.enlace_max, n_alarmas: nAl, n_graves: nGr,
           demandas_afectadas: R.demandas_afectadas, por_servicio: ps },
-        fallos: o.fallos_exactos.slice() });
+        fallos: o.fallos_exactos.slice(), sucesos: suc,
+        opciones_paso: est.acciones.length ? { acciones: est.acciones } : null });
       Object.keys(r.enlaces).forEach(function (id) {
         var e = r.enlaces[id], s = enl[id];
         if (!s) return;
@@ -1357,10 +2054,14 @@ var Motor = (function () {
       anadir(usados, R.supuestos_usados);
       if (!pico || ocMax > pico.ocup_max_pct + 1e-9) pico = { t_min: tm, ocup_max_pct: ocMax, id: R.enlace_max };
     });
+    // supuestos de la propia serie de eventos: umbrales de alarma de los sucesos y aplicación instantánea
+    ["evt.umbrales_alarma"].concat(eventos.length ? ["evt.instantaneo"] : []).forEach(function (k) { if (M.porClave[k]) anadir(usados, [M.porClave[k]]); });
     usados.sort();
+    eventos.forEach(function (e) { delete e._i; });
     return { pasos: pasos, enlaces: enl, nodos: nod, acceso_tec: acc, acceso_nucleo: accN, pico: pico, supuestos_usados: usados,
       ms: ahoraMs() - t0, n: n, paso_min: paso, desde: desde, hasta: hasta,
-      hora_cargada: cargada, aviso: aviso, eventos: eventos, fallos_base: baseF };
+      hora_cargada: cargada, aviso: aviso, eventos: eventos, eventos_descartados: descartados, fallos_base: baseF, sucesos: todos,
+      modelo_usuario: mu ? { id: mu.id || null, nombre: mu.nombre || null, ruido: mu.ruido || null, movilidad: !!(mu.movilidad && mu.movilidad.activa !== false) } : null };
   }
 
   // Buffers de los Float32Array de una serie (para postMessage con transferencia)
@@ -1375,20 +2076,101 @@ var Motor = (function () {
     return out;
   }
 
+  // ---------- Montecarlo del ruido del modelo de usuario (CONTRATO_UI Revisión 8) ----------
+  // Motor.serieMontecarloSync(RED, caso, opciones, n) -> {n, percentiles:[5,50,95,99], t_min, etiquetas, kpi:{k:{p5,p50,p95,p99,media}},
+  //   enlaces:{id:{ocup:{p5,p50,p95,p99}, carga:{p50,p95}, prob_85, prob_100}}, pico:{p50,p95,p99, por_replica}, semillas, …}
+  // Cada réplica k es Motor.serie con la semilla "<semilla>#<k>" (mismas opciones, eventos y modelo); n ≤ 50.
+  // Percentiles empíricos por rango más cercano (supuesto mod.montecarlo). Sin opciones.acceso === true omite el acceso (más rápido).
+  var PCT_MC = [5, 50, 95, 99], KPI_MC = ["dl_total_gbps", "servida_gbps", "servido_pct", "ocup_max_pct", "n_alarmas", "demandas_afectadas"];
+  function percentilOrdenado(a, p) { var i = Math.ceil(p / 100 * a.length) - 1; return a[Math.max(0, Math.min(a.length - 1, i))]; }
+  function serieMontecarloSync(RED, caso, opciones, n) {
+    var t0 = ahoraMs();
+    opciones = opciones || {};
+    n = Math.max(1, Math.min(50, Math.round(num(n, num(opciones.n, 20)))));
+    var mu = opciones.modelo_usuario || (caso && caso.modelo_usuario) || {}, rz = mu.ruido || {}, avisos = [];
+    var sigma = num(rz.sigma, 0), semilla = rz.semilla === undefined || rz.semilla === null ? 1 : rz.semilla;
+    if (!(sigma > 0)) avisos.push("Modelo sin ruido (sigma = 0): todas las réplicas salen iguales");
+    var o = copiaPlana(opciones);
+    delete o.n; delete o.worker;
+    if (o.acceso === undefined) o.acceso = false;
+    var reps = [], semillas = [], usados = [];
+    for (var k = 0; k < n; k++) {
+      var m = copiaPlana(mu), sk = String(semilla) + "#" + k;
+      m.ruido = { sigma: sigma, semilla: sk };
+      o.modelo_usuario = m;
+      var s = serie(RED, caso, o);
+      reps.push(s); semillas.push(sk); anadir(usados, s.supuestos_usados);
+    }
+    var s0 = reps[0], np = s0.n, kpi = {}, buf = new Array(n);
+    KPI_MC.forEach(function (key) {
+      var x = { media: new Float32Array(np) };
+      PCT_MC.forEach(function (p) { x["p" + p] = new Float32Array(np); });
+      for (var i = 0; i < np; i++) {
+        var sum = 0;
+        for (var r = 0; r < n; r++) { buf[r] = num(reps[r].pasos[i].resumen[key], 0); sum += buf[r]; }
+        var a = buf.slice(0, n).sort(function (u, v) { return u - v; });
+        PCT_MC.forEach(function (p) { x["p" + p][i] = percentilOrdenado(a, p); });
+        x.media[i] = sum / n;
+      }
+      kpi[key] = x;
+    });
+    var enl = {};
+    Object.keys(s0.enlaces).forEach(function (id) {
+      var oc = {}, ca = { p50: new Float32Array(np), p95: new Float32Array(np) }, s85 = 0, s100 = 0;
+      PCT_MC.forEach(function (p) { oc["p" + p] = new Float32Array(np); });
+      for (var i = 0; i < np; i++) {
+        var a = [], c = [];
+        for (var r = 0; r < n; r++) { a.push(reps[r].enlaces[id].ocup[i]); c.push(reps[r].enlaces[id].carga[i]); }
+        a.sort(function (u, v) { return u - v; }); c.sort(function (u, v) { return u - v; });
+        PCT_MC.forEach(function (p) { oc["p" + p][i] = percentilOrdenado(a, p); });
+        ca.p50[i] = percentilOrdenado(c, 50); ca.p95[i] = percentilOrdenado(c, 95);
+      }
+      for (var r2 = 0; r2 < n; r2++) {
+        var mx = 0, oc2 = reps[r2].enlaces[id].ocup;
+        for (var j = 0; j < np; j++) if (oc2[j] > mx) mx = oc2[j];
+        if (mx >= 85 - 1e-6) s85++;
+        if (mx >= 100 - 1e-6) s100++;
+      }
+      enl[id] = { ocup: oc, carga: ca, prob_85: s85 / n, prob_100: s100 / n };
+    });
+    var picos = reps.map(function (s) { return s.pico ? s.pico.ocup_max_pct : 0; }), ps = picos.slice().sort(function (u, v) { return u - v; });
+    var M = mapaSupuestos(RED);
+    if (M.porClave[SUP_MU.mc]) anadir(usados, [M.porClave[SUP_MU.mc]]);
+    usados.sort();
+    return { n: n, percentiles: PCT_MC.slice(), paso_min: s0.paso_min, desde: s0.desde, hasta: s0.hasta, np: np,
+      t_min: s0.pasos.map(function (p) { return p.t_min; }), etiquetas: s0.pasos.map(function (p) { return p.etiqueta; }),
+      kpi: kpi, enlaces: enl, sigma: sigma, semilla: semilla, semillas: semillas,
+      pico: { p50: percentilOrdenado(ps, 50), p95: percentilOrdenado(ps, 95), p99: percentilOrdenado(ps, 99), por_replica: picos,
+        ids: reps.map(function (s) { return s.pico ? s.pico.id : null; }) },
+      hora_cargada: s0.hora_cargada, aviso: s0.aviso, avisos: avisos, supuestos_usados: usados, ms: ahoraMs() - t0 };
+  }
+  function transferiblesMontecarlo(mc) {
+    var out = [];
+    function rec(x) {
+      if (!x || typeof x !== "object") return;
+      if (x.buffer && x.BYTES_PER_ELEMENT) { if (out.indexOf(x.buffer) < 0) out.push(x.buffer); return; }
+      Object.keys(x).forEach(function (k) { rec(x[k]); });
+    }
+    rec(mc.kpi); rec(mc.enlaces);
+    return out;
+  }
+
   // Motor.serieAsync(RED, caso, opciones) -> Promise<serie>. Usa serie_worker.js si hay Worker (http/https);
   // si no (file://, node, error del worker) calcula en el hilo principal. opciones.worker === false fuerza síncrono.
+  // Motor.serieMontecarlo(RED, caso, opciones, n) -> Promise<montecarlo>, por el mismo worker (o síncrono si no hay).
   var trab = null, trabRoto = false, trabSeq = 0, trabPend = {};
+  function promesa(fn) {
+    return new Promise(function (res, rej) { try { res(fn()); } catch (e) { rej(e); } });
+  }
   function sincrono(RED, caso, opciones) {
-    return new Promise(function (res, rej) {
-      try { var s = serie(RED, caso, opciones); s.via = "sincrono"; res(s); } catch (e) { rej(e); }
-    });
+    return promesa(function () { var s = serie(RED, caso, opciones); s.via = "sincrono"; return s; });
   }
   function caerASincrono() {
     trabRoto = true;
     try { if (trab) trab.terminate(); } catch (e) { /* nada */ }
     trab = null;
     var p = trabPend; trabPend = {};
-    Object.keys(p).forEach(function (id) { sincrono(p[id].RED, p[id].caso, p[id].opciones).then(p[id].res, p[id].rej); });
+    Object.keys(p).forEach(function (id) { p[id].fb().then(p[id].res, p[id].rej); });
   }
   function trabajador() {
     if (trab || trabRoto) return trab;
@@ -1403,15 +2185,25 @@ var Motor = (function () {
     trab.onerror = function (ev) { if (ev && ev.preventDefault) ev.preventDefault(); caerASincrono(); };
     return trab;
   }
-  function serieAsync(RED, caso, opciones) {
-    var w = (opciones && opciones.worker === false) ? null : trabajador();
-    if (!w) return sincrono(RED, caso, opciones);
+  function alTrabajador(msg, fb, sinWorker) {
+    var w = sinWorker ? null : trabajador();
+    if (!w) return fb();
     return new Promise(function (res, rej) {
       var id = ++trabSeq;
-      trabPend[id] = { res: res, rej: rej, RED: RED, caso: caso, opciones: opciones };
-      try { w.postMessage({ tipo: "serie", id: id, red: RED, caso: caso, opciones: opciones }); }
-      catch (e) { delete trabPend[id]; sincrono(RED, caso, opciones).then(res, rej); }
+      trabPend[id] = { res: res, rej: rej, fb: fb };
+      msg.id = id;
+      try { w.postMessage(msg); }
+      catch (e) { delete trabPend[id]; fb().then(res, rej); }
     });
+  }
+  function serieAsync(RED, caso, opciones) {
+    return alTrabajador({ tipo: "serie", red: RED, caso: caso, opciones: opciones },
+      function () { return sincrono(RED, caso, opciones); }, !!(opciones && opciones.worker === false));
+  }
+  function serieMontecarlo(RED, caso, opciones, n) {
+    return alTrabajador({ tipo: "montecarlo", red: RED, caso: caso, opciones: opciones, n: n },
+      function () { return promesa(function () { var r = serieMontecarloSync(RED, caso, opciones, n); r.via = "sincrono"; return r; }); },
+      !!(opciones && opciones.worker === false));
   }
 
   // ---------- puntos únicos de fallo ----------
@@ -1554,6 +2346,61 @@ var Motor = (function () {
       rutas: (RED.meta && RED.meta.referencia) ? "v7" : "dijkstra" };
   }
 
+  // ---------- plantillas de eventos (Revisión 7) ----------
+  // Motor.plantillasEventos(RED) -> [{id, es, en, descripcion:{es, en}, eventos:[{t_min, tipo, id?, params?}]}]
+  // Los ids se buscan en RED (tramo E-S, escenario de partido, DC-Sur…); una plantilla cuyo elemento no existe se omite.
+  function plantillasEventos(RED) {
+    RED = RED || {};
+    var tramo = {}, nodos = {}, escs = {};
+    (RED.enlaces || []).forEach(function (l) { if (l && l.anillo && l.tramo) tramo[l.tramo] = l.id; });
+    (RED.nodos || []).forEach(function (n) { if (n) nodos[n.id] = n; });
+    (RED.escenarios || []).forEach(function (e) { escs[e.id] = e; });
+    var dcSur = (RED.nodos || []).filter(function (n) { return n.tipo === "core" && /sur/i.test(n.nombre || ""); })[0];
+    var partido = escs["E-EVENTO"] || (RED.escenarios || []).filter(function (e) {
+      return !(e.fallos || []).length && Object.keys(e.factores || {}).some(function (k) { return /ESTADIO/.test(k) && e.factores[k] > 0; });
+    })[0];
+    var E = emplDe(RED, null), hayN258 = !E || (E.sitios || []).some(function (s) { return s.tec === "n258"; });
+    function h(hh, mm) { return hh * 60 + (mm || 0); }
+    var out = [];
+    if (tramo["E-S"]) out.push({ id: "corte_es", es: "Corte E–S 19:30 + reparación 21:10", en: "E–S cut 19:30 + repair 21:10",
+      descripcion: txt("Corte de fibra del tramo Metro-Este – Metro-Sur a las 19:30 (FRR por el arco opuesto) y reparación a las 21:10.",
+        "Fibre cut on the Metro-East – Metro-South span at 19:30 (FRR over the opposite arc), repaired at 21:10."),
+      eventos: [{ t_min: h(19, 30), tipo: "fallo", id: tramo["E-S"] }, { t_min: h(21, 10), tipo: "reparacion", id: tramo["E-S"] }] });
+    if (partido) out.push({ id: "partido", es: "Partido 21:00–23:00", en: "Match 21:00–23:00",
+      descripcion: txt("Partido en el Metropolitano (" + partido.id + "): servicios del estadio a su valor de diseño de 21:00 a 23:00.",
+        "Match at the Metropolitano (" + partido.id + "): stadium services at their design value from 21:00 to 23:00."),
+      eventos: [{ t_min: h(21), tipo: "evento_demanda", id: partido.id, params: { hasta_min: h(23) } }] });
+    if (tramo["N-E"]) out.push({ id: "mantenimiento", es: "Mantenimiento 03:00 (N–E)", en: "Maintenance 03:00 (N–E)",
+      descripcion: txt("Ventana de mantenimiento del tramo Metro-Norte – Metro-Este: TE saca los LSP a las 02:55, corte programado 03:00–05:00, TE se retira a las 05:05.",
+        "Maintenance window on the Metro-North – Metro-East span: TE moves the LSPs away at 02:55, planned outage 03:00–05:00, TE removed at 05:05."),
+      eventos: [{ t_min: h(2, 55), tipo: "te_reencaminar", id: tramo["N-E"], params: { fraccion: 1, hasta_min: h(5, 5) } },
+        { t_min: h(3), tipo: "fallo", id: tramo["N-E"], params: { motivo: "mantenimiento" } },
+        { t_min: h(5), tipo: "reparacion", id: tramo["N-E"] }] });
+    if (hayN258) out.push({ id: "n258_noche", es: "Apagado nocturno n258 01:00–06:00", en: "Night switch-off n258 01:00–06:00",
+      descripcion: txt("Se apaga la capa n258 (ahorro de energía): su demanda desborda a n78.",
+        "The n258 layer is switched off (energy saving): its demand overflows to n78."),
+      eventos: [{ t_min: h(1), tipo: "apagar_capa", id: "n258", params: { hasta_min: h(6) } }] });
+    if (dcSur) out.push({ id: "caida_dc_sur", es: "Caída " + (dcSur.nombre || dcSur.id) + " 20:00 + activar NTN 20:05",
+      en: "Loss of " + (dcSur.nombre || dcSur.id) + " 20:00 + NTN on 20:05",
+      descripcion: txt("Cae " + (dcSur.nombre || dcSur.id) + " a las 20:00 (su parte pasa a los DC supervivientes) y a las 20:05 se activa el satélite de emergencia.",
+        (dcSur.nombre || dcSur.id) + " fails at 20:00 (its share moves to the surviving DCs) and the emergency satellite is activated at 20:05."),
+      eventos: [{ t_min: h(20), tipo: "fallo", id: dcSur.id }, { t_min: h(20, 5), tipo: "activar_ntn" }] });
+    return out;
+  }
+  // Motor.opcionesPaso(o, serie, i): opciones de calcular() que reproducen el paso i de la serie (fallos + acciones activas)
+  function opcionesPaso(o, s, i) {
+    var p = s && s.pasos && s.pasos[i];
+    if (!p) return o;
+    o = o || {};
+    if (Array.isArray(p.fallos)) o.fallos_exactos = p.fallos.slice();
+    if (p.opciones_paso && p.opciones_paso.acciones) o.acciones = p.opciones_paso.acciones.slice(); else delete o.acciones;
+    return o;
+  }
+  // Motor.tiposEvento() -> catálogo de tipos para el formulario de la UI
+  function tiposEvento() {
+    return TIPOS_EVENTO.map(function (t) { var o = copiaPlana(t); o.params = t.params.slice(); o.supuesto = SUP_TIPO[t.id] || null; return o; });
+  }
+
   // Registro de supuestos (RED.supuestos de fusionar.py; [] si la red no lo trae)
   function supuestos(RED) { return (RED && RED.supuestos) || []; }
 
@@ -1566,6 +2413,10 @@ var Motor = (function () {
     serieDiaria: serieDiaria,
     serie: serie,
     serieAsync: serieAsync,
+    serieMontecarlo: serieMontecarlo,
+    serieMontecarloSync: serieMontecarloSync,
+    transferiblesMontecarlo: transferiblesMontecarlo,
+    factorRuido: factorRuido,
     transferiblesSerie: transferiblesSerie,
     valorPerfil: valorPerfil,
     puntosUnicosFallo: puntosUnicosFallo,
@@ -1573,6 +2424,9 @@ var Motor = (function () {
     claseServicio: claseServicio,
     tecnologias: tecnologias,
     claseDeTec: claseDeTec,
+    plantillasEventos: plantillasEventos,
+    opcionesPaso: opcionesPaso,
+    tiposEvento: tiposEvento,
     _construirGrafo: construirGrafo
   };
 })();

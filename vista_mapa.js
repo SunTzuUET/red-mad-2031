@@ -212,7 +212,11 @@
   function grupo(c) { return grupos[c] || (grupos[c] = L.layerGroup()); }
   function eventos(capa, tipo, id) {
     capa.on("click", function (ev) { L.DomEvent.stopPropagation(ev); NOC.seleccionar(tipo, id); });
-    if (tipo !== "zona") capa.on("contextmenu", function (ev) { L.DomEvent.preventDefault(ev.originalEvent || ev); NOC.alternarFallo(id); });
+    if (tipo !== "zona") capa.on("contextmenu", function (ev) {
+      L.DomEvent.preventDefault(ev.originalEvent || ev);
+      if (NOC.menuOperador && NOC.menuOperador(ev.originalEvent || ev, id)) return;   // Revisión 7 (operador.js)
+      NOC.alternarFallo(id);
+    });
   }
   function construir() {
     calcularDisp();

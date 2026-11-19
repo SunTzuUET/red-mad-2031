@@ -67,6 +67,7 @@
       (m.escenario_proc ? "<dt>" + t("Escenario", "Scenario") + "</dt><dd>" + esc(m.escenario_proc) + "</dd>" : "") +
       "<dt>" + t("Filtros", "Filters") + "</dt><dd>" + esc(m.filtros) + "</dd></dl>" + kpis(m) +
       '<ol class="indice">' + P.tablas.filter(function (tb) { return tb.id !== "supuestos"; }).map(function (tb) { return '<li><a href="#t-' + esc(tb.id) + '">' + esc(tb.n) + "</a> · " + tb.filas.length + "</li>"; }).join("") +
+      (P.trazabilidad ? '<li><a href="#trazabilidad">' + t("Trazabilidad", "Traceability") + '</a></li>' : '') +
       '<li><a href="#registro">' + t("Registro de supuestos", "Assumption register") + '</a></li><li><a href="#leyenda">' + t("Leyenda de procedencia", "Provenance legend") + "</a></li></ol></section>";
   }
 
@@ -102,6 +103,56 @@
     return h + "</section>";
   }
 
+  // Revisión 6: trazabilidad hasta el origen (Exportar.informe → P.trazabilidad, de linaje_datos.js)
+  function barraTz(a) {
+    var tot = a.total || 0, w = function (n) { return tot ? (n / tot * 100).toFixed(2) : 0; };
+    return '<span style="display:inline-flex;width:160px;height:8px;background:var(--line2);vertical-align:middle">' +
+      '<i style="display:block;height:100%;width:' + w(a.trazado || 0) + '%;background:#30a46c"></i>' +
+      '<i style="display:block;height:100%;width:' + w(a.hueco || 0) + '%;background:repeating-linear-gradient(-45deg,#c9a20f 0 2px,#7a6510 2px 5px)"></i>' +
+      '<i style="display:block;height:100%;width:' + w(a.discrepa || 0) + '%;background:#e5484d"></i></span>';
+  }
+  function trazabilidad(P) {
+    var z = P.trazabilidad;
+    if (!z) return "";
+    var T = z.total || {}, h3 = '<h3 style="font-size:14px;margin:18px 0 6px">';
+    var h = '<section class="sec" id="trazabilidad"><h2>' + t("Trazabilidad", "Traceability") + '<span class="n">' + num(T.total, 0) + " " + t("valores de la memoria", "report values") + "</span></h2>" +
+      '<p class="desc">' + t("Cada valor de la memoria v7 se sigue hasta una fuente externa (INE, CNMC, normas, fabricante, material de clase) a través de fórmulas justificadas. " +
+        "TRAZADO = la cadena entera llega a fuentes verificadas; HUECO = algún eslabón es un supuesto sin fuente; DISCREPA = el recálculo no da el valor de la memoria. Generado ",
+        "Each v7 report value is traced to an external source (INE, CNMC, standards, vendor, class material) through justified formulas. " +
+        "TRACED = whole chain reaches verified sources; GAP = some link is an assumption without source; MISMATCH = recomputation differs from the report. Generated ") + esc(z.generado) + ".</p>" +
+      '<div class="kpis"><div class="kpi"><b>' + num(T.pct_trazado, 1) + " %</b><span>" + t("trazado", "traced") + " · " + num(T.trazado, 0) + "/" + num(T.total, 0) + "</span></div>" +
+      '<div class="kpi"><b>' + num(T.pct_hueco, 1) + " %</b><span>" + t("hueco", "gap") + " · " + num(T.hueco, 0) + "</span></div>" +
+      '<div class="kpi"><b>' + num(T.discrepa, 0) + "</b><span>" + t("discrepancias", "mismatches") + " · " + num(z.con_ref, 0) + " " + t("comparados", "compared") + "</span></div>" +
+      '<div class="kpi"><b>' + num(z.fuentes.length, 0) + " · " + num(z.n_formulas, 0) + "</b><span>" + t("fuentes · fórmulas", "sources · formulas") + (z.todos ? " · " + num(z.todos.total, 0) + " " + t("valores en total", "values in all") : "") + "</span></div></div>";
+    h += h3 + t("Cobertura por ámbito", "Coverage by scope") + '</h3><div class="envol"><table><thead><tr><th>' + t("Ámbito", "Scope") + "</th><th>Total</th><th>" +
+      t("Cobertura", "Coverage") + "</th><th>" + t("Trazado", "Traced") + "</th><th>" + t("Hueco", "Gap") + "</th><th>" + t("Discrepa", "Mismatch") + "</th></tr></thead><tbody>" +
+      z.ambitos.map(function (a) {
+        return "<tr><td>" + esc(a.id) + '</td><td class="num">' + num(a.total, 0) + "</td><td>" + barraTz(a) + '</td><td class="num">' + num(a.trazado, 0) + " (" + num(a.pct_trazado, 1) + ' %)</td><td class="num">' +
+          num(a.hueco, 0) + '</td><td class="num">' + num(a.discrepa, 0) + "</td></tr>";
+      }).join("") + '<tr><td><b>Total</b></td><td class="num"><b>' + num(T.total, 0) + "</b></td><td>" + barraTz(T) + '</td><td class="num"><b>' + num(T.trazado, 0) + '</b></td><td class="num">' + num(T.hueco, 0) + '</td><td class="num">' + num(T.discrepa, 0) + "</td></tr></tbody></table></div>";
+    h += h3 + t("Huecos: dónde se cortan las cadenas", "Gaps: where chains break") + ' <span style="color:var(--tx3);font-weight:400;font-size:12px">' + t("ordenados por valores de la memoria que bloquean", "sorted by report values they block") + "</span></h3>" +
+      '<div class="envol"><table><thead><tr><th>' + t("Raíz", "Root") + "</th><th>" + t("Bloquea", "Blocks") + "</th><th>" + t("Valor", "Value") + "</th><th>" + t("Supuesto", "Assumption") + "</th><th>" + t("Fuente propuesta", "Proposed source") + "</th></tr></thead><tbody>" +
+      z.huecos.map(function (x) {
+        return '<tr><td style="font-family:var(--code);font-size:10.5px">' + esc(x.id) + '</td><td class="num"><b>' + num(x.bloquea, 0) + '</b></td><td class="num">' + esc(x.valor) + (x.unidad ? " " + esc(x.unidad) : "") +
+          '</td><td class="largo"><sup class="s">' + esc(x.supuesto) + "</sup> " + esc(x.texto) + '</td><td class="largo">' + esc(x.propuesta) + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+    h += h3 + t("Discrepancias", "Mismatches") + "</h3>" + (z.discrepa.length ?
+      '<div class="envol"><table><thead><tr><th>' + t("Valor", "Value") + "</th><th>" + t("Elemento · campo", "Element · field") + "</th><th>" + t("Memoria", "Report") + "</th><th>" + t("Recalculado", "Recomputed") + "</th><th>Δ %</th><th>" + t("Dónde", "Where") + "</th></tr></thead><tbody>" +
+      z.discrepa.map(function (d) {
+        return '<tr><td style="font-family:var(--code);font-size:10.5px">' + esc(d.id) + "</td><td>" + esc(d.elemento + (d.campo ? " · " + d.campo : "")) + '</td><td class="num">' + esc(d.memoria) + '</td><td class="num">' + esc(d.recalculado) +
+          '</td><td class="num">' + esc(d.dif_pct) + '</td><td class="medio">' + esc(d.donde) + "</td></tr>";
+      }).join("") + "</tbody></table></div>" :
+      '<p class="desc">' + t("Ninguna: los ", "None: all ") + num(z.con_ref, 0) + t(" valores comparados con la memoria o el simulador coinciden con su recálculo dentro de la tolerancia.", " values compared with the report or the simulator match their recomputation within tolerance.") + "</p>");
+    h += h3 + t("Fuentes", "Sources") + '</h3><div class="envol"><table><thead><tr><th>Id</th><th>' + t("Tipo", "Type") + "</th><th>" + t("Fuente", "Source") + "</th><th>" + t("Localizador", "Locator") +
+      "</th><th>" + t("Verificada", "Verified") + "</th><th>" + t("Usos", "Uses") + "</th></tr></thead><tbody>" +
+      z.fuentes.map(function (f) {
+        return '<tr><td style="font-family:var(--code);font-size:10.5px">' + esc(f.id) + "</td><td>" + esc(f.tipo) + '</td><td class="largo"><b>' + esc(f.editor) + "</b> · " + esc(f.titulo) +
+          (f.url && /^https?:\/\//i.test(f.url) ? '<br><a href="' + esc(f.url) + '" style="color:var(--tx2);font-size:10.5px;overflow-wrap:anywhere">' + esc(f.url) + "</a>" : "") + '</td><td class="largo">' + esc(f.localizador) + "</td><td>" +
+          (f.verificada ? t("sí", "yes") : "<b>NO</b>") + '</td><td class="num">' + num(f.n_valores, 0) + " v · " + num(f.n_formulas, 0) + " fx</td></tr>";
+      }).join("") + "</tbody></table></div></section>";
+    return h;
+  }
+
   function leyenda() {
     var f = [
       ['<span class="muestra">24,0</span>', "v7", t("Dato de la Entrega 2 (memoria conjunta v7). Sin marca.", "Deliverable 2 data (joint report v7). No mark.")],
@@ -129,7 +180,7 @@
     document.getElementById("barra-sub").textContent = t("Informe", "Report") + " · " + P.meta.modo + " · " + P.meta.fecha;
     btn.textContent = t("Imprimir / Guardar PDF", "Print / Save as PDF");
     var t0 = Date.now();
-    raiz.innerHTML = portada(P) + P.tablas.filter(function (tb) { return tb.id !== "supuestos"; }).map(tabla).join("") + registro(P) + leyenda();
+    raiz.innerHTML = portada(P) + P.tablas.filter(function (tb) { return tb.id !== "supuestos"; }).map(tabla).join("") + trazabilidad(P) + registro(P) + leyenda();
     btn.disabled = false;
     var filas = P.tablas.reduce(function (s, x) { return s + x.filas.length; }, 0);
     estado.textContent = P.tablas.length + " " + t("tablas", "tables") + " · " + filas + " " + t("filas", "rows") + " · " + t("A4; tablas anchas en apaisado", "A4; wide tables in landscape") + " · " + (Date.now() - t0) + " ms";
@@ -149,12 +200,12 @@
   }
   function demo(lab, en) {
     estado.textContent = "demo…";
-    ["red.js", "arquitectura_datos.js", "radio_datos.js", "motor.js", "exportar.js"].reduce(function (p, f) { return p.then(function () { return cargar(f); }); }, Promise.resolve()).then(function () {
+    ["red.js", "arquitectura_datos.js", "radio_datos.js", "motor.js", "exportar.js"].reduce(function (p, f) { return p.then(function () { return cargar(f); }); }, Promise.resolve()).then(function () { return cargar("linaje_datos.js").catch(function () { /* opcional */ }); }).then(function () {
       var op = { caso: { trafico: "BH", evento: "E-EVENTO" } }, opL = { caso: { trafico: "BH", evento: "E-EVENTO", fallo: ["L-CORE1-METC"] } };
       var R0 = Motor.calcular(RED, op), R = lab ? Motor.calcular(RED, opL) : R0;
       var tablas = {}; Exportar.CATALOGO.forEach(function (c) { tablas[c.id] = c.id !== "n1" || lab; });
       if (/corto/.test(location.hash)) ["demandas", "valores_detallados", "enlaces_servicio", "arquitectura", "flujos", "interfaces", "interconexiones"].forEach(function (k) { tablas[k] = false; });
-      pintar(Exportar.informe({ RED: RED, ARQ: window.ARQ, RADIO: window.RADIO, Motor: Motor, resultado: R, referencia: R0, opciones: lab ? opL : op, modo: lab ? "lab" : "ref", lang: en ? "en" : "es",
+      pintar(Exportar.informe({ RED: RED, ARQ: window.ARQ, RADIO: window.RADIO, LINAJE: window.LINAJE || null, Motor: Motor, resultado: R, referencia: R0, opciones: lab ? opL : op, modo: lab ? "lab" : "ref", lang: en ? "en" : "es",
         caso: { texto: lab ? "LAB · BH · E-EVENTO · fallo L-CORE1-METC" : "REF · Entrega 2 (v7) · hora cargada · evento estadio", trafico: "BH", evento: "E-EVENTO", fallos: lab ? ["L-CORE1-METC"] : [] } },
         Object.assign(Exportar.SEL_DEFECTO(), { tablas: tablas, delta: true })));
     }).catch(function (e) { raiz.innerHTML = '<p class="error">demo: ' + esc(e.message) + "</p>"; });

@@ -39,6 +39,9 @@
     { id: "alarmas", n: { es: "Alarmas", en: "Alarms" } },
     { id: "n1", n: { es: "Barrido N-1", en: "N-1 sweep" }, lento: true },
     { id: "serie", n: { es: "Serie temporal 24 h (reloj)", en: "24 h time series (clock)" } },
+    { id: "sucesos", n: { es: "Sucesos (registro SCADA)", en: "Events log (SCADA)" } },
+    { id: "eventos", n: { es: "Eventos del caso LAB", en: "LAB case events" } },
+    { id: "linaje", n: { es: "Linaje (valores, fórmulas, fuentes)", en: "Lineage (values, formulas, sources)" } },
     { id: "supuestos", n: { es: "Registro de supuestos", en: "Assumption register" } },
     { id: "valores_detallados", n: { es: "Valores detallados", en: "Detailed values" } }
   ];
@@ -629,8 +632,32 @@
       });
     }
 
+    // ---- sucesos y eventos (Revisión 7, operador.js). Solo si hay filas.
+    function hhmmX(m) { m = Math.round(m || 0); return pad(Math.floor(m / 60)) + ":" + pad(m % 60); }
+    if (quiere.sucesos && Array.isArray(ctx.sucesos) && ctx.sucesos.length) {
+      var tsu = poner(nuevaTabla("sucesos", { es: "Sucesos", en: "Events log" },
+        { es: "Registro tipo SCADA de la película de 24 h: eventos aplicados, acciones del operador y alarmas que entran o salen.", en: "SCADA-style log of the 24 h run: applied events, operator actions and alarms raised or cleared." },
+        [C("hora", "hora", "time", { rol: "id" }), K("t_min", "minuto", "minute", { dec: 0 }), K("nivel", "nivel", "level"), C("origen", "origen", "origin"),
+          K("texto", "texto", "text", { ancho: "largo" }), C("elemento", "elemento", "element")]));
+      ctx.sucesos.forEach(function (s, i) {
+        anadir(tsu, null, { hora: hhmmX(s.t_min), t_min: s.t_min, nivel: s.nivel || "", origen: s.origen || "", texto: tr(s.texto, lang), elemento: s.id || "" }, { dep: arr(s.depende), clave: "s" + i });
+      });
+    }
+    if (quiere.eventos && Array.isArray(ctx.eventos) && ctx.eventos.length) {
+      var tev = poner(nuevaTabla("eventos", { es: "Eventos del caso", en: "Case events" },
+        { es: "Eventos y acciones del operador del caso LAB (entrada de Motor.serie).", en: "Events and operator actions of the LAB case (Motor.serie input)." },
+        [C("hora", "hora", "time", { rol: "id" }), C("t_min", "minuto", "minute", { tipo: "num", dec: 0 }), C("tipo", "tipo", "type"), C("elemento", "elemento", "element"),
+          C("parametros", "parametros", "parameters", { ancho: "largo" })]));
+      ctx.eventos.forEach(function (e, i) {
+        anadir(tev, null, { hora: hhmmX(e.t_min), t_min: e.t_min, tipo: e.tipo || "", elemento: e.id || "", parametros: e.params ? JSON.stringify(e.params) : "" }, { dep: arr(e.supuesto), clave: "e" + i });
+      });
+    }
+
     // ---- filtros finales: solo filas con supuestos
     if (sel.solo) tablas.forEach(function (t) { t.filas = t.filas.filter(tieneSup); });
+
+    // ---- linaje (Revisión 6): valores → fórmulas → fuentes. Sin columnas de procedencia: la tabla ES la procedencia.
+    if (quiere.linaje && ctx.LINAJE && Array.isArray(ctx.LINAJE.valores)) linajeTablas(ctx.LINAJE, lang).forEach(poner);
 
     // ---- registro de supuestos y a qué filas afecta
     var reg = registroDe(ctx);
@@ -700,6 +727,97 @@
     return { meta: meta, tablas: tablas, registro: registro, lang: lang };
   }
   X.construir = construir;
+
+  // ======================================================================== linaje (CONTRATO_UI Revisión 6; datos de linaje_datos.js)
+  var EST_LIN = { trazado: { es: "trazado", en: "traced" }, hueco: { es: "hueco", en: "gap" }, discrepa: { es: "discrepa", en: "mismatch" } };
+  function linajeUsos(L) {
+    var uf = {}, ufx = {}, ufxF = {};
+    (L.fuentes || []).forEach(function (f) { uf[f.id] = 0; ufxF[f.id] = 0; });
+    (L.formulas || []).forEach(function (f) { ufx[f.id] = 0; (f.refs || []).forEach(function (r) { if (r in ufxF) ufxF[r]++; }); });
+    L.valores.forEach(function (v) { if (v.fuente && v.fuente.id in uf) uf[v.fuente.id]++; if (v.formula && v.formula in ufx) ufx[v.formula]++; });
+    return { fuente: uf, formula: ufx, fuenteFx: ufxF };
+  }
+  function linajeTablas(L, lang) {
+    var U = linajeUsos(L), out = [];
+    function tabla(id, n, desc, cols) { var t = nuevaTabla(id, n, desc, cols); t.sinProc = true; out.push(t); return t; }
+    function fila(t, v, clave) { t.filas.push({ v: v, c: {}, cuenta: {}, sup: [], dep: [], det: true, hayDato: false, clave: clave }); }
+    var tv = tabla("linaje_valores", { es: "Linaje · valores", en: "Lineage · values" },
+      { es: "Un valor por fila: estado (trazado/hueco/discrepa), fórmula y entradas (V-ids), fuente directa, supuesto que corta la cadena y comparación con la memoria v7 o el simulador.",
+        en: "One value per row: status (traced/gap/mismatch), formula and inputs (V-ids), direct source, assumption that breaks the chain and comparison with the v7 report or the simulator." },
+      [C("id", "id", "id", { rol: "id" }), C("elemento", "elemento", "element"), C("campo", "campo", "field"), C("ambito", "ambito", "scope"),
+        C("valor", "valor", "value", { tipo: "mixto" }), C("unidad", "unidad", "unit"), C("tipo", "tipo", "type"), C("estado", "estado", "status"),
+        C("formula", "formula", "formula"), C("entradas", "entradas", "inputs", { ancho: "medio" }), C("fuente", "fuente", "source"), C("localizador", "localizador", "locator", { ancho: "medio" }),
+        C("id_supuesto", "id_supuesto", "assumption_id"), C("memoria", "memoria_v7", "v7_report"), C("ref_valor", "valor_referencia", "reference_value", { tipo: "mixto" }),
+        C("ref_donde", "referencia_en", "reference_in", { ancho: "medio" }), C("dif", "diferencia", "difference", { u: "pct", dec: 4 }),
+        C("huecos_raiz", "se_corta_en", "breaks_at", { ancho: "medio" }), C("alias", "alias", "aliases"), C("nota", "nota", "note", { ancho: "largo" })]);
+    L.valores.forEach(function (v) {
+      var r = v.ref || null, d = r && esNum(r.valor) && esNum(v.valor) ? (esNum(v.dif_rel) ? v.dif_rel * 100 : (r.valor ? (v.valor - r.valor) / Math.abs(r.valor) * 100 : null)) : null;
+      fila(tv, { id: v.id, elemento: v.elemento || "", campo: v.campo || "", ambito: v.ambito || "", valor: v.valor, unidad: v.unidad && v.unidad !== "—" ? v.unidad : "",
+        tipo: v.tipo || "", estado: tr(EST_LIN[v.estado] || v.estado, lang), formula: v.formula || "", entradas: (v.entradas || []).join(" "),
+        fuente: v.fuente ? v.fuente.id : "", localizador: v.fuente ? v.fuente.localizador || "" : "", id_supuesto: v.supuesto || "", memoria: v.memoria || "",
+        ref_valor: r ? r.valor : null, ref_donde: r ? (r.donde || "") + (r.localizador ? ": " + r.localizador : "") : "", dif: d,
+        huecos_raiz: (v.huecos_raiz || []).join(" "), alias: (v.tambien || []).join(" "), nota: v.nota || "" }, v.id);
+    });
+    var tf = tabla("linaje_formulas", { es: "Linaje · fórmulas", en: "Lineage · formulas" },
+      { es: "Fórmulas usadas en las deducciones, con variables y unidades, justificación y fuentes que la respaldan.", en: "Formulas used in the derivations, with variables and units, justification and supporting sources." },
+      [C("id", "id", "id", { rol: "id" }), C("nombre", "nombre", "name", { ancho: "medio" }), C("expresion", "expresion", "expression", { ancho: "medio" }),
+        C("variables", "variables", "variables", { ancho: "largo" }), C("justificacion", "justificacion", "justification", { ancho: "largo" }), C("refs", "fuentes", "sources"),
+        C("n", "n_valores", "n_values", { dec: 0 })]);
+    (L.formulas || []).forEach(function (f) {
+      var vars = Object.keys(f.variables || {}).map(function (k) { var x = f.variables[k] || {}; return k + ": " + (x.desc || "") + (x.unidad ? " [" + x.unidad + "]" : ""); }).join(" | ");
+      fila(tf, { id: f.id, nombre: f.nombre || "", expresion: f.expr || "", variables: vars, justificacion: f.justificacion || "", refs: (f.refs || []).join(" "), n: U.formula[f.id] || 0 }, f.id);
+    });
+    var tfu = tabla("linaje_fuentes", { es: "Linaje · fuentes", en: "Lineage · sources" },
+      { es: "Fuentes externas (INE, CNMC…), normas, fabricantes, material de clase (ruta del apunte en el vault), documentos del grupo y nuestra memoria.", en: "External sources (INE, CNMC…), standards, vendors, class material (vault note path), team documents and our report." },
+      [C("id", "id", "id", { rol: "id" }), C("tipo", "tipo", "type"), C("titulo", "titulo", "title", { ancho: "largo" }), C("editor", "editor", "publisher"), C("fecha", "fecha", "date"),
+        C("localizador", "localizador", "locator", { ancho: "largo" }), C("url", "url", "url", { ancho: "medio" }), C("verificada", "verificada", "verified"),
+        C("n_valores", "n_valores_directos", "n_direct_values", { dec: 0 }), C("n_formulas", "n_formulas", "n_formulas", { dec: 0 }), C("nota", "nota", "note", { ancho: "largo" })]);
+    (L.fuentes || []).forEach(function (f) {
+      fila(tfu, { id: f.id, tipo: f.tipo || "", titulo: f.titulo || "", editor: f.editor || "", fecha: f.fecha || "", localizador: f.localizador || "", url: f.url || "",
+        verificada: !!f.verificada, n_valores: U.fuente[f.id] || 0, n_formulas: U.fuenteFx[f.id] || 0, nota: f.nota || "" }, f.id);
+    });
+    if (Array.isArray(L.supuestos) && L.supuestos.length) {
+      var bl = {}; ((L.cobertura || {}).raices_hueco || []).forEach(function (r) { if (r.supuesto) bl[r.supuesto] = (bl[r.supuesto] || 0) + (r.bloquea || 0); });
+      var ts = tabla("linaje_supuestos", { es: "Linaje · supuestos que cortan cadenas", en: "Lineage · assumptions that break chains" },
+        { es: "Supuestos S-L del linaje (los S-0xx están en supuestos.csv): qué falta y qué fuente lo cerraría.", en: "Lineage S-L assumptions (S-0xx are in supuestos.csv): what is missing and which source would close it." },
+        [C("id", "id", "id", { rol: "id" }), C("texto", "texto", "text", { ancho: "largo" }), C("motivo", "motivo", "reason", { ancho: "largo" }),
+          C("fuente_propuesta", "fuente_propuesta", "proposed_source", { ancho: "largo" }), C("bloquea", "valores_memoria_bloqueados", "report_values_blocked", { dec: 0 })]);
+      L.supuestos.forEach(function (s) { fila(ts, { id: s.id, texto: s.texto || "", motivo: s.motivo || "", fuente_propuesta: s.fuente_propuesta || "", bloquea: bl[s.id] || 0 }, s.id); });
+    }
+    return out;
+  }
+  // Resumen de trazabilidad para el informe (cobertura, huecos, discrepancias, fuentes)
+  function linajeInforme(L, lang) {
+    if (!L || !Array.isArray(L.valores)) return null;
+    var c = L.cobertura || {}, V = {}, S = {}, U = linajeUsos(L);
+    L.valores.forEach(function (v) { V[v.id] = v; });
+    (L.supuestos || []).forEach(function (s) { S[s.id] = s; });
+    var amb = c.por_ambito || {};
+    return {
+      generado: L.generado || "", alcance: c.alcance || "",
+      total: { total: c.total, trazado: c.trazado, hueco: c.hueco, discrepa: c.discrepa, pct_trazado: c.pct_trazado, pct_hueco: c.pct_hueco },
+      todos: c.todos || null,
+      ambitos: Object.keys(amb).map(function (k) { var a = amb[k]; return { id: k, total: a.total, trazado: a.trazado, hueco: a.hueco, discrepa: a.discrepa, pct_trazado: a.pct_trazado }; })
+        .sort(function (a, b) { return b.total - a.total; }),
+      huecos: (c.raices_hueco || []).map(function (r) {
+        var v = V[r.id] || {}, s = S[r.supuesto] || {};
+        return { id: r.id, bloquea: r.bloquea, supuesto: r.supuesto || "", texto: s.texto || v.nota || "", propuesta: s.fuente_propuesta || "",
+          valor: Array.isArray(v.valor) ? v.valor.length + " val." : numInf(v.valor, null, lang), unidad: v.unidad && v.unidad !== "—" ? v.unidad : "" };
+      }),
+      discrepa: L.valores.filter(function (v) { return v.estado === "discrepa"; }).map(function (v) {
+        var r = v.ref || {};
+        return { id: v.id, elemento: v.elemento || "", campo: v.campo || "", memoria: numInf(r.valor, null, lang), recalculado: numInf(v.valor, null, lang),
+          dif_pct: esNum(v.dif_rel) ? numInf(v.dif_rel * 100, 2, lang) : "", donde: (r.donde || "") + (r.localizador ? ": " + r.localizador : "") || v.memoria || "" };
+      }),
+      con_ref: L.valores.filter(function (v) { return v.ref; }).length,
+      fuentes: (L.fuentes || []).map(function (f) {
+        return { id: f.id, tipo: f.tipo || "", titulo: f.titulo || "", editor: f.editor || "", localizador: f.localizador || "", url: f.url || "", verificada: !!f.verificada,
+          n_valores: U.fuente[f.id] || 0, n_formulas: U.fuenteFx[f.id] || 0 };
+      }),
+      n_formulas: (L.formulas || []).length, n_valores: L.valores.length
+    };
+  }
+  X.linajeTablas = linajeTablas; X.linajeInforme = linajeInforme;
 
   // proc uniforme para un elemento sin proc (todas las celdas del mismo tipo)
   function uniforme(o, t) {
@@ -840,7 +958,7 @@
   X.nombreCol = nombreCol;
   function colsCSV(t, lang) {
     var cols = t.cols.slice();
-    if (!t.larga && t.id !== "supuestos") {
+    if (!t.larga && !t.sinProc && t.id !== "supuestos") {
       cols.push({ k: "__proc", n: { es: "procedencia", en: "provenance" }, tipo: "txt" });
       cols.push({ k: "__sup", n: { es: "supuestos", en: "assumptions" }, tipo: "txt" });
       cols.push({ k: "__dep", n: { es: "depende_de", en: "depends_on" }, tipo: "txt" });
@@ -1029,7 +1147,7 @@
       return { id: s.id, ambito: s.ambito, elementos: s.elementos, campo: s.campo, valor: esNum(s.valor) ? numInf(s.valor, null, lang) : texto(s.valor, lang), unidad: s.unidad,
         motivo: s.motivo, fuente_parcial: s.fuente_parcial, alternativa: s.alternativa, estado: s.estado, n_dependen: s.n_dependen, usado: !!s.usado, afecta: s.afecta || {} };
     });
-    return { version: X.VERSION, meta: r.meta, tablas: tablas, registro: registro, lang: lang,
+    return { version: X.VERSION, meta: r.meta, tablas: tablas, registro: registro, lang: lang, trazabilidad: ctx.LINAJE ? linajeInforme(ctx.LINAJE, lang) : null,
       nombres: CATALOGO.reduce(function (o, c) { o[c.id] = tr(c.n, lang); return o; }, {}) };
   };
 
@@ -1076,12 +1194,14 @@
   function ctxActual(sel) {
     var cap = document.querySelector(".caso-resumen");
     return {
-      RED: NOC.RED || window.RED, ARQ: window.ARQ || null, RADIO: window.RADIO || null, Motor: window.Motor,
+      RED: NOC.RED || window.RED, ARQ: window.ARQ || null, RADIO: window.RADIO || null, Motor: window.Motor, LINAJE: window.LINAJE || null,
       resultado: NOC.resultado, referencia: NOC.referencia, opciones: NOC.opciones, modo: NOC.modo, lang: NOC.lang,
       caso: { texto: cap ? cap.textContent : "", trafico: NOC.caso && NOC.caso.trafico, evento: NOC.caso && NOC.caso.evento,
         fallos: NOC.modo === "lab" && NOC.caso ? (NOC.caso.fallos || []).slice() : [], anio: NOC.caso && NOC.caso.anio, dia: NOC.caso && NOC.caso.dia, hora: NOC.caso && NOC.caso.hora },
       alarmas: NOC.alarmas ? NOC.alarmas() : null,
       serie: NOC.reloj && NOC.reloj.serie ? NOC.reloj.serie() : null,
+      sucesos: NOC.operador && NOC.operador.sucesos ? NOC.operador.sucesos() : null,
+      eventos: NOC.operador && NOC.operador.eventos ? NOC.operador.eventos() : null,
       capas: NOC.capas, servicios: NOC.sv ? NOC.sv.activos : null,
       capaNodo: NOC.capaNodo, capaEnlace: NOC.capaEnlace, fecha: new Date()
     };

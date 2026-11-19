@@ -1,0 +1,88 @@
+/* operador.css — eventos en el tiempo, acciones del operador y SUCESOS (CONTRATO_UI Revisión 7). Solo tokens de noc.css. */
+
+/* ---------- línea de tiempo de eventos (fila extra de la barra superior) ---------- */
+.tb-f.op-fila { flex-wrap: nowrap; gap: 8px; min-height: 34px; }
+.op-fila .op-n { font-size: 10.5px; color: var(--tx2); min-width: 14px; text-align: right; }
+.op-linea { position: relative; flex: 1; min-width: 160px; height: 28px; border: 1px solid var(--line2); background: var(--bg0); cursor: crosshair; touch-action: none; overflow: hidden; }
+.op-linea.ref { background: var(--hatch-suave); cursor: default; }
+.op-eje { position: absolute; inset: 0; pointer-events: none; }
+.op-tick { position: absolute; bottom: 0; width: 1px; height: 4px; background: var(--line2); }
+.op-tick.may { height: 100%; background: var(--line); }
+.op-hl { position: absolute; bottom: 1px; margin-left: 2px; font: 8.5px var(--sans); color: var(--tx4); font-variant-numeric: tabular-nums; }
+.op-cur { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px solid var(--steel); pointer-events: none; }
+.op-vacia { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--tx3); white-space: nowrap; pointer-events: none; }
+.op-span { position: absolute; height: 3px; opacity: .55; pointer-events: none; }
+.op-span.c0 { top: 11px; } .op-span.c1 { top: 24px; }
+.op-marca { position: absolute; top: 1px; transform: translateX(-50%); height: 12px; min-width: 22px; padding: 0 3px; border: 1px solid var(--c); background: var(--bg0);
+  color: var(--c); font: 700 8.5px var(--sans); letter-spacing: .03em; line-height: 10px; cursor: grab; z-index: 1; white-space: nowrap; }
+.op-marca.c1 { top: 14px; }
+.op-marca::before { content: ""; position: absolute; left: 50%; top: -2px; bottom: -30px; width: 1px; background: var(--c); opacity: .35; pointer-events: none; }
+.op-marca.acc { background: var(--c); color: #000; }
+.op-marca.sin-motor { border-style: dashed; opacity: .7; }
+.op-marca:hover, .op-marca:focus-visible { z-index: 2; outline: 1px solid var(--steel); }
+.op-marca.arr { cursor: grabbing; z-index: 3; outline: 1px solid var(--steel); }
+.op-marca.arr::after { content: attr(data-t); position: absolute; left: 100%; top: -1px; margin-left: 3px; padding: 0 3px; background: var(--steel); color: #000; font: 600 9px var(--sans); }
+
+/* ---------- popover / menú contextual ---------- */
+.op-pop { position: fixed; z-index: 2000; min-width: 220px; max-width: 360px; background: var(--bg1); border: 1px solid var(--line3); box-shadow: 0 6px 20px rgba(0,0,0,.6); font-size: 11.5px; color: var(--tx1); }
+.op-pop-cab { padding: 6px 8px; border-bottom: 1px solid var(--line2); font: 600 10.5px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--tx2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.op-pop-cab .mono { text-transform: none; letter-spacing: 0; color: var(--tx1); }
+.op-pop-cab .op-fuente, .op-pop-cab .tx3 { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.op-pop-acc { display: flex; gap: 6px; padding: 8px; border-top: 1px solid var(--line); }
+.op-nota { margin: 0; padding: 6px 8px; font-size: 11px; color: var(--tx2); line-height: 1.4; }
+.op-aviso { color: var(--wrn); padding: 4px 0 0; }
+.op-form { padding: 4px 8px 0; display: grid; gap: 5px; }
+.op-form .op-pop-acc { margin: 4px -8px 0; }
+.op-campo { display: grid; grid-template-columns: 88px 1fr; align-items: center; gap: 6px; }
+.op-campo[hidden] { display: none; }
+.op-campo input, .op-campo select { width: 100%; min-width: 0; box-sizing: border-box; }
+.op-campo input[type=time] { height: 22px; background: var(--bg0); border: 1px solid var(--line2); color: var(--tx1); font: 12px var(--sans); color-scheme: dark; padding: 0 4px; }
+.op-elnom { font-size: 10.5px; min-height: 13px; padding-left: 94px; }
+.op-params { display: grid; gap: 5px; }
+.op-err { font-size: 11px; padding: 2px 4px; }
+.op-err[hidden] { display: none; }
+.op-menu { display: flex; flex-direction: column; padding: 3px 0; }
+.op-mi { display: flex; align-items: center; gap: 7px; width: 100%; min-height: 24px; padding: 3px 10px; border: 0; background: transparent; color: var(--tx1); font: 11.5px var(--sans); text-align: left; cursor: pointer; flex-wrap: wrap; }
+.op-mi b { font-weight: 600; flex: 1 1 100%; }
+.op-mi .mono { font-size: 10px; }
+.op-mi:hover:not(:disabled), .op-mi:focus-visible { background: rgba(255,255,255,.07); outline: none; }
+.op-mi:disabled { color: var(--tx4); cursor: not-allowed; }
+.op-mi-peligro { color: var(--crit); border-top: 1px solid var(--line); margin-top: 3px; }
+.op-sep { height: 1px; background: var(--line); margin: 3px 0; }
+.op-ctx-rot { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-bottom: 1px solid var(--line); font-size: 11px; }
+.op-sw { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 13px; padding: 0 2px; border: 1px solid var(--c, var(--line3));
+  color: var(--c, var(--tx2)); font: 700 8.5px var(--sans); font-style: normal; letter-spacing: .03em; flex: none; }
+.op-sw.vacio { --c: var(--line3); }
+
+/* ---------- ficha ---------- */
+.op-fbtn { display: flex; flex-wrap: wrap; gap: 4px; padding: 2px 0 6px; }
+.op-fbtn .btn { font-size: 11px; }
+.op-fsub { margin: 4px 0 2px; }
+.op-ftab tr { cursor: pointer; }
+.op-ftab tr:hover td { background: rgba(255,255,255,.05); }
+
+/* ---------- pestaña SUCESOS ---------- */
+.op-su-fil { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; height: 30px; box-sizing: border-box; overflow-x: auto; overflow-y: hidden; padding: 0 8px; background: var(--bg1); border-bottom: 1px solid var(--line); }
+.op-su-tab th { top: 30px; }
+.op-su-niv { height: 20px; line-height: 18px; border: 1px solid currentColor; cursor: pointer; font: 600 10px var(--sans); flex: none; }
+.op-su-niv.sev-ok { background: rgba(48,164,108,.12); }
+.op-su-fil > * { flex: none; }
+.op-su-niv.off { opacity: .3; filter: grayscale(1); }
+.op-su-fil input[type=search] { width: 170px; }
+.op-chk { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--tx2); white-space: nowrap; cursor: pointer; }
+.op-su-meta { font-size: 10px; margin-left: auto; white-space: nowrap; }
+.op-su-tab td:first-child { width: 48px; }
+.op-su-tab td:nth-child(2) { width: 50px; }
+.op-su-tab td:nth-child(3) { width: 64px; font-size: 10.5px; color: var(--tx2); }
+.op-su-tab td.op-or-accion { color: var(--wrn); }
+.op-su-tab td.op-or-evento { color: var(--tx1); }
+.op-su-tab tbody tr { cursor: pointer; }
+.op-su-tab tbody tr:hover td { background: rgba(255,255,255,.05); }
+.op-su-tab tbody tr.fut td { opacity: .38; }
+.op-su-tab tbody tr.actual { box-shadow: inset 3px 0 0 var(--steel); background: rgba(255,255,255,.06); }
+.op-su-vacio { padding: 10px; }
+
+@media (max-width: 720px) {
+  .tb-f.op-fila { flex-wrap: wrap; }
+  .op-linea { flex-basis: 100%; order: 3; }
+}

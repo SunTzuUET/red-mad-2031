@@ -78,8 +78,11 @@
     else o.hora = h;
     return o;
   }
-  function claveCaso() { return JSON.stringify([NOC.modo, sinHora(S.baseOp), S.paso, NOC.paramsEditados || 0]); }
+  // Revisión 7 (operador.js): eventos del caso LAB que se pasan a Motor.serie
+  function eventosSerie() { try { return NOC.operador && NOC.operador.eventosSerie ? NOC.operador.eventosSerie() : []; } catch (e) { return []; } }
+  function claveCaso() { return JSON.stringify([NOC.modo, sinHora(S.baseOp), S.paso, NOC.paramsEditados || 0, eventosSerie()]); }
 
+  var oyentesSerie = [];
   // ---------- serie (Motor.serieAsync → serie_worker.js; Motor.serie síncrono si no hay worker) ----------
   // Unidades del contrato: enlaces[id].ocup en %, carga en Gbit/s; hasta exclusivo (24/96/288 pasos).
   function normalizar(s) {
@@ -97,7 +100,7 @@
   }
   function serieOk() { return !!(S.serie && S.serie.pasos.length); }
   function calcularSerie() {
-    var gen = ++S.gen, op = sinHora(S.baseOp), opts = { paso_min: S.paso, desde: 0, hasta: 24, fallos: [], eventos: [] }, t0 = ahora();
+    var gen = ++S.gen, op = sinHora(S.baseOp), opts = { paso_min: S.paso, desde: 0, hasta: 24, fallos: [], eventos: eventosSerie() }, t0 = ahora();
     S.estado = "calculando"; S.serie = null; S.error = ""; S.cacheP = {}; S.motorCache = {};
     pintarTodo();
     function fin(s) {
@@ -107,6 +110,7 @@
       S.ms = Math.round(esNum(s.ms) ? s.ms : ahora() - t0);
       S.estado = serieOk() ? "ok" : "no";
       S.genPint++;
+      oyentesSerie.forEach(function (f) { try { f(S.serie); } catch (e) { console.error("reloj: oyente de serie", e); } });
       if (!serieOk()) { parar(); if (S.cargada && S.pelicula) volverHC(); }
       else if (S.pelicula) irA(S.t == null ? 0 : S.t, true);
       pintarTodo();
@@ -136,6 +140,9 @@
     o.hora = p.t_min / 60;
     if (S.serie.hora_cargada) o.perfil_horario = true;
     if (Array.isArray(p.fallos)) o.fallos_exactos = p.fallos.slice();
+    // Revisión 7: estado de eventos/acciones del paso (si el motor lo da) para que el paso pintado = paso de la serie
+    if (p.opciones_paso && typeof p.opciones_paso === "object") Object.keys(p.opciones_paso).forEach(function (k) { o[k] = p.opciones_paso[k]; });
+    if (typeof Motor.opcionesPaso === "function") { try { o = Motor.opcionesPaso(o, S.serie, i) || o; } catch (e) { console.error("Motor.opcionesPaso", e); } }
     o._cache = S.motorCache;
     var r = Motor.calcular(RED, o);
     r.paso_reloj = { t_min: p.t_min, i: i, paso_min: S.dt, etiqueta: p.etiqueta || hhmm(p.t_min) };
@@ -641,7 +648,10 @@
   NOC.reloj = {
     serie: function () { return serieOk() ? S.serie : null; },
     estado: function () { return { t_min: S.t, i: S.i, pelicula: S.pelicula, play: S.play, paso_min: S.dt || S.paso, vel: S.vel, fuente: S.fuente, cargada: S.cargada, aviso: S.serie && S.serie.aviso }; },
-    ir: function (tm) { irA(tm, true); }, jugar: jugar, parar: function () { parar(); pintarReloj(); }, volverHC: volverHC
+    ir: function (tm) { irA(tm, true); }, jugar: jugar, parar: function () { parar(); pintarReloj(); }, volverHC: volverHC,
+    // Revisión 7 (operador.js): recalcular la serie si cambian los eventos; aviso cuando hay serie nueva
+    refrescar: function () { var k = claveCaso(); if (k !== S.clave && S.baseOp) { S.clave = k; calcularSerie(); } },
+    alSerie: function (fn) { if (typeof fn === "function") oyentesSerie.push(fn); }
   };
 
   montarBarra();
