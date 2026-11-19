@@ -318,7 +318,7 @@
   }
 
   NOC.registrarVista({
-    id: "casos",
+    id: "casos", grupo: "analisis",
     titulo: { es: "Casos", en: "Cases" },
     montar: function (el) {
       raiz = el; el.classList.add("vc");

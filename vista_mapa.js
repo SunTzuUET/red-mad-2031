@@ -10,7 +10,7 @@
   var RED = NOC.RED, t = NOC.t, fmt = NOC.fmt, esc = NOC.esc;
 
   if (typeof window.L === "undefined") {
-    NOC.registrarVista({ id: "mapa", titulo: { es: "Mapa", en: "Map" },
+    NOC.registrarVista({ id: "mapa", grupo: ["red", "simulacion"], titulo: { es: "Mapa", en: "Map" },
       montar: function (el) { el.innerHTML = '<div class="vacio">' + esc(t({ es: "Leaflet no se pudo cargar (requiere Internet).", en: "Leaflet could not be loaded (requires Internet)." })) + '</div>'; } });
     return;
   }
@@ -364,7 +364,7 @@
 
   // ---------- registro ----------
   NOC.registrarVista({
-    id: "mapa",
+    id: "mapa", grupo: ["red", "simulacion"],
     titulo: { es: "Mapa", en: "Map" },
     montar: function (contenedor) {
       el = contenedor;

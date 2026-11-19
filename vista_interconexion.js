@@ -122,7 +122,7 @@
 
   if (window.ARQ_VISTAS) window.ARQ_VISTAS.registrarFicha("ix", ficha);
   NOC.registrarVista({
-    id: "interconexion",
+    id: "interconexion", grupo: "datos",
     titulo: { es: "Interconexión", en: "Interconnection" },
     montar: function (el) { raiz = el; el.classList.add("vi"); pintar(); },
     activar: function () { actualizarCargas(); marcarSel(); },

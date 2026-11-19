@@ -581,7 +581,7 @@
   // ---------- registro ----------
   var metaUltima = null;
   NOC.registrarVista({
-    id: ID, titulo: { es: "Plano sistema", en: "System diagram" },
+    id: ID, grupo: ["red", "simulacion"], titulo: { es: "Plano sistema", en: "System diagram" },
     montar: function (contenedor) {
       el = contenedor;
       leerTokens();

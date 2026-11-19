@@ -18,7 +18,7 @@
   var TITULO = { es: "Plano demanda", en: "Demand plan" };
 
   if (typeof window.L === "undefined") {
-    NOC.registrarVista({ id: ID, titulo: TITULO, montar: function (el) {
+    NOC.registrarVista({ id: ID, grupo: ["red", "simulacion"], titulo: TITULO, montar: function (el) {
       el.innerHTML = '<div class="vacio">' + esc(t({ es: "Leaflet no se pudo cargar (requiere Internet).", en: "Leaflet could not be loaded (requires Internet)." })) + '</div>';
     } });
     return;
@@ -410,7 +410,7 @@
   // ---------- registro ----------
   var metaUltima = null;
   NOC.registrarVista({
-    id: ID, titulo: TITULO,
+    id: ID, grupo: ["red", "simulacion"], titulo: TITULO,
     montar: function (contenedor) {
       el = contenedor;
       leerTecs();

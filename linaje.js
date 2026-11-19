@@ -494,7 +494,7 @@
     pintarVista();
   }
   NOC.registrarVista({
-    id: "trazabilidad", titulo: TX.vista,
+    id: "trazabilidad", grupo: "datos", titulo: TX.vista,
     montar: montarVista,
     activar: function () { },
     desactivar: function () { }

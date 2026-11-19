@@ -219,7 +219,7 @@
   }
 
   NOC.registrarVista({
-    id: "paquete",
+    id: "paquete", grupo: "red",
     titulo: { es: "Sigue el paquete", en: "Follow the packet" },
     montar: function (el) {
       raiz = el; el.classList.add("vp");

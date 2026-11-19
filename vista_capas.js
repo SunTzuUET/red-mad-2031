@@ -367,7 +367,7 @@
   }
 
   NOC.registrarVista({
-    id: "capas",
+    id: "capas", grupo: "red",
     titulo: { es: "Capas", en: "Layers" },
     montar: function (el) {
       raiz = el; el.classList.add("vc");

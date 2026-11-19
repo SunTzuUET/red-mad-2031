@@ -784,7 +784,7 @@
 
   // ======================================================================== registro
   NOC.registrarPestanaDock && NOC.registrarPestanaDock({
-    id: "sucesos", titulo: { es: "Sucesos", en: "Events log" },
+    id: "sucesos", grupo: "simulacion", titulo: { es: "Sucesos", en: "Events log" },
     cnt: function () { return SU.haySerie ? SU.lista.length : ""; },
     pintar: function (el) { pintarSucesos(el); }
   });

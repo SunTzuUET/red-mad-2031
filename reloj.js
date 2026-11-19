@@ -664,7 +664,7 @@
 
   // ---------- registro ----------
   NOC.registrarPestanaDock && NOC.registrarPestanaDock({
-    id: "tiempo", titulo: { es: "Tiempo", en: "Time" },
+    id: "tiempo", grupo: "simulacion", titulo: { es: "Tiempo", en: "Time" },
     cnt: function () { return serieOk() ? S.dt + " min" : ""; },
     pintar: pintarTiempo
   });
