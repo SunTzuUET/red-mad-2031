@@ -576,7 +576,7 @@
   function pintarTabs() {
     $("#tabs").innerHTML = VISTAS.map(function (x) {
       return '<button type="button" class="tab" role="tab" data-vista="' + esc(x.def.id) + '" aria-selected="' + (activa === x.def.id) + '">' + esc(t(x.def.titulo)) + '</button>';
-    }).join("") + '<a class="tab ext" href="demanda.html">' + esc(t(T.demanda)) + '</a><a class="tab ext" href="guia.html">' + esc(t({es:"GUÍA ↗", en:"GUIDE ↗"})) + '</a>';
+    }).join("") + '<a class="tab ext" href="demanda.html">' + esc(t(T.demanda)) + '</a><a class="tab ext" href="guia.html">' + esc(t({es:"GUÍA", en:"GUIDE"})) + '</a>';
   }
   function activarVista(id) {
     var v = VISTAS.filter(function (x) { return x.def.id === id; })[0];
