@@ -12,15 +12,15 @@
   function guardar(v) { try { W.localStorage.setItem(CLAVE, v); } catch (e) { /* sin almacenamiento */ } }
 
   var PASOS = [
-    { sel: ".espacios", ico: "inicio",
-      tit: { es: "Seis espacios", en: "Six workspaces" },
-      txt: { es: "INICIO resume todo. RED es el mapa, SIMULACIÓN la película de 24 h, ANÁLISIS el N-1 y los SLA, DATOS de dónde sale cada cifra.",
-        en: "HOME sums it all up. NETWORK is the map, SIMULATION the 24 h run, ANALYSIS the N-1 and SLAs, DATA where each figure comes from." } },
+    { sel: ".espacios", ico: "red",
+      tit: { es: "Espacios de trabajo", en: "Workspaces" },
+      txt: { es: "RED es la red sobre el mapa de Madrid, SIMULACIÓN la película de 24 h, ANÁLISIS el N-1 y los SLA, DATOS de dónde sale cada cifra.",
+        en: "NETWORK is the network over the Madrid map, SIMULATION the 24 h run, ANALYSIS the N-1 and SLAs, DATA where each figure comes from." } },
     { sel: ".nivel-seg", ico: "experto",
       tit: { es: "Simple o experto", en: "Simple or expert" },
       txt: { es: "En SIMPLE ves gráficos y nombres cortos. EXPERTO añade tablas, ids, fórmulas y fuentes.",
         en: "SIMPLE shows charts and short names. EXPERT adds tables, ids, formulas and sources." } },
-    { sel: ".tb-kpi", ico: "alarma",
+    { sel: ".tb-kpi .kpis, .kpis", ico: "alarma",
       tit: { es: "Estado de un vistazo", en: "Status at a glance" },
       txt: { es: "Tráfico servido, enlace más cargado y alarmas del caso activo. El color va siempre con un icono y un texto (OK, MIN, MAJ, CRIT).",
         en: "Traffic served, busiest link and alarms of the active case. Colour always comes with an icon and text (OK, MIN, MAJ, CRIT)." } },
@@ -28,7 +28,7 @@
       tit: { es: "El caso que se simula", en: "The case being simulated" },
       txt: { es: "REF reproduce la Entrega 2 y no se toca. En LAB eliges tráfico, hora, evento y fallos; todo se recalcula al momento.",
         en: "REF reproduces Deliverable 2 and is locked. In LAB you pick traffic, hour, event and faults; everything recomputes instantly." } },
-    { sel: ".mini-red, .vista-inicio, main", ico: "info",
+    { sel: ".vista-viva .vv-lienzo, .mini-red, .vista-inicio, main", ico: "info",
       tit: { es: "Toca para ver detalle", en: "Tap for details" },
       txt: { es: "Pulsa un enlace o nodo para abrir su ficha con gráficos. Los botones ⓘ explican cada pieza sin llenar la pantalla de texto.",
         en: "Click a link or node to open its card with charts. The ⓘ buttons explain each piece without filling the screen with text." } }

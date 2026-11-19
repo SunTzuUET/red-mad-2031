@@ -468,7 +468,8 @@
   var ACC_DEF = { texto: 100, contraste: false, daltonismo: false, menosMov: null, tema: "oscuro", voz: false };
   var accEst = (function () {
     var o = {}, g = null;
-    try { g = JSON.parse(leer(ACC_K) || "null"); } catch (e) { g = null; }
+    // 2026-11-19: panel de accesibilidad retirado a petición de David; siempre valores por defecto.
+    try { localStorage.removeItem(ACC_K); } catch (e) { /* nada */ }
     Object.keys(ACC_DEF).forEach(function (k) { o[k] = g && g[k] !== undefined ? g[k] : ACC_DEF[k]; });
     if ([100, 125, 150].indexOf(Number(o.texto)) < 0) o.texto = 100;
     o.texto = Number(o.texto);
@@ -698,9 +699,7 @@
     ["\\", { es: "Abrir o cerrar el panel inferior", en: "Open or close the bottom panel" }],
     ["← →", { es: "Reloj: hora anterior / siguiente (Simulación)", en: "Clock: previous / next hour (Simulation)" }],
     ["Esc", { es: "Cerrar panel, ficha o burbuja", en: "Close panel, detail or tooltip" }],
-    ["Tab", { es: "Ir al siguiente control", en: "Next control" }],
-    ["Alt + A", { es: "Panel de accesibilidad", en: "Accessibility panel" }],
-    ["Alt + R", { es: "Leer resumen de la red", en: "Read network summary" }]
+    ["Tab", { es: "Ir al siguiente control", en: "Next control" }]
   ];
   ACC.atajos = function () {
     if (!capa) {
@@ -754,7 +753,7 @@
       return;
     }
     if (panel && !panel.hidden && ev.key === "Escape") { ev.preventDefault(); ev.stopPropagation(); ACC.cerrar(); return; }
-    if (ev.altKey && !ev.ctrlKey && !ev.metaKey && (ev.code === "KeyA" || ev.code === "KeyR")) {
+    if (false && ev.altKey && !ev.ctrlKey && !ev.metaKey && (ev.code === "KeyA" || ev.code === "KeyR")) {
       ev.preventDefault();
       if (ev.code === "KeyA") ACC.alternar(); else ACC.leerResumen();
       return;
@@ -791,11 +790,11 @@
     if (n.on) n.on("lang", function () { pintarPanel(); });
     // si la barra no trae el botón (p. ej. app.js antiguo), se pone fijo arriba a la derecha
     setTimeout(function () {
-      if (!document.querySelector(".acc-btn")) {
+      if (false && !document.querySelector(".acc-btn")) {
         var d = document.createElement("div"); d.className = "acc-fijo"; d.innerHTML = ACC.boton(); document.body.appendChild(d);
       }
     }, 0);
-    if (leer("noc.acc.reabrir") === "1") { try { localStorage.removeItem("noc.acc.reabrir"); } catch (e) { /* nada */ } setTimeout(ACC.abrir, 300); }
+    if (false && leer("noc.acc.reabrir") === "1") { try { localStorage.removeItem("noc.acc.reabrir"); } catch (e) { /* nada */ } setTimeout(ACC.abrir, 300); }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arrancarAcc); else setTimeout(arrancarAcc, 0);
 })();

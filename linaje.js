@@ -501,22 +501,37 @@
     if (!claves.length && !sin.length && !L) return "";
     var h = '<h3>' + esc(t(TX.sec)) + '</h3>' + bloqueUsuario(sel.id);
     if (!L) return h + '<p class="nota tx3">' + esc(t(TX.sinDatos)) + '</p>';
+    if (claves.length && NOC.linajeMapa) h += cadenasSimple(sel, claves);
     if (claves.length) {
       var n = { trazado: 0, hueco: 0, discrepa: 0 };
       claves.forEach(function (c) { var v = V[c.v]; if (v) n[v.estado] = (n[v.estado] || 0) + 1; });
-      h += '<div class="lj-res"><span class="tx3">' + claves.length + ' ' + esc(t(TX.campos)) + '</span>' +
+      h += '<div class="' + (NOC.linajeMapa ? "solo-experto" : "") + '"><div class="lj-res"><span class="tx3">' + claves.length + ' ' + esc(t(TX.campos)) + '</span>' +
         ['trazado', 'hueco', 'discrepa'].map(function (e) { return n[e] ? ' ' + marcaEstado(e) + '<span class="mono"> ' + n[e] + '</span>' : ''; }).join("") + '</div>';
       var etq = function (c) { return c.elemento === sel.id ? c.campo : c.elemento.replace(sel.id + "/", "").replace("R-" + sel.id + "-", "") + " · " + c.campo; };
       h += bloqueGrafo(claves.map(function (c) { return { v: c.v, et: etq(c).replace(/_/g, " ") }; }));
       h += '<div class="lj-arbol solo-experto">' + claves.map(function (c) {
         return nodoValor(c.v, sel.id + "|" + c.clave, etq(c));
-      }).join("") + '</div>';
+      }).join("") + '</div></div>';
     }
     if (sin.length || !claves.length) {
-      h += '<div class="lj-sin"><span class="rot">' + esc(t(TX.sinLinaje)) + '</span> ' +
+      h += '<div class="lj-sin' + (NOC.linajeMapa && claves.length ? " solo-experto" : "") + '"><span class="rot">' + esc(t(TX.sinLinaje)) + '</span> ' +
         (sin.length ? sin.map(function (k) { return '<span class="lj-sin-c">' + esc(k) + '</span>'; }).join(" ") : '<span class="tx3">' + esc(sel.id) + '</span>') + '</div>';
     }
     return h;
+  }
+  // Revisión 13 (SIMPLE): una mini-cadena fuente → cálculo → valor por campo clave; clic = mapa con esa cadena enfocada
+  function cadenasSimple(sel, claves) {
+    var orden = CAMPOS[sel.tipo] || [], vistos = {};
+    var l = claves.filter(function (c) { if (vistos[c.v]) return false; vistos[c.v] = 1; return true; }).sort(function (a, b) {
+      var pa = a.elemento === sel.id ? 0 : 1, pb = b.elemento === sel.id ? 0 : 1;
+      if (pa !== pb) return pa - pb;
+      var ia = orden.indexOf(a.campo), ib = orden.indexOf(b.campo);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    var MAX = 4, cad = function (c) { return NOC.linajeMapa.cadenaHTML(c.v); };
+    return '<div class="lj-cads solo-simple">' + l.slice(0, MAX).map(cad).join("") +
+      (l.length > MAX ? '<details class="lj-cads-mas"><summary>+' + (l.length - MAX) + ' ' + esc(t(TXP.mas)) + '</summary>' + l.slice(MAX).map(cad).join("") + '</details>' : '') +
+      '<button type="button" class="btn lj-vermapa" data-lm-ir="e:' + esc(sel.id) + '">' + (NOC.icono ? NOC.icono("traza", 14) : "") + '<span>' + esc(t(TXP.verMapa)) + '</span></button></div>';
   }
   var CACHE = { clave: "", el: null };
   function pintarFicha() {
@@ -554,14 +569,16 @@
     var tipo = v.elemento ? tipoElemento(v.elemento) : null;
     var usa = (PADRES[vid] || []);
     var html = '<div class="ficha-sec lj-ficha lj-sola" data-pl="linaje"><h3>' + esc(t(TX.sec)) + '</h3>' +
-      '<div class="lj-res">' + marcaEstado(v.estado) + ' <span class="mono">' + esc(v.id) + '</span> <span class="tx3">' + esc(v.ambito || "") + '</span>' +
+      '<div class="lj-res' + (NOC.linajeMapa ? " solo-experto" : "") + '">' + marcaEstado(v.estado) + ' <span class="mono">' + esc(v.id) + '</span> <span class="tx3">' + esc(v.ambito || "") + '</span>' +
       (tipo ? ' · <a href="#" data-lj-elem="' + esc(v.elemento) + '" data-lj-tipo="' + tipo + '">' + esc(t(TX.verFicha)) + ' ' + esc(v.elemento) + '</a>' : '') + '</div>' +
+      (NOC.linajeMapa ? '<div class="lj-cads solo-simple">' + NOC.linajeMapa.cadenaHTML(vid) + '</div><div class="solo-experto">' : '<div>') +
       bloqueGrafo([{ v: vid, et: nombreValor(v) }]) +
-      '<div class="lj-arbol solo-experto">' + nodoValor(vid, "solo", nombreValor(v), true) + '</div>' +
-      (usa.length ? '<div class="lj-usa"><span class="rot">' + esc(t(TX.usadoEn)) + ' · ' + usa.length + '</span> ' + usa.slice(0, 30).map(function (p) {
+      '<div class="lj-arbol solo-experto">' + nodoValor(vid, "solo", nombreValor(v), true) + '</div></div>' +
+      (usa.length ? '<div class="lj-usa' + (NOC.linajeMapa ? " solo-experto" : "") + '"><span class="rot">' + esc(t(TX.usadoEn)) + ' · ' + usa.length + '</span> ' + usa.slice(0, 30).map(function (p) {
         return '<button type="button" class="chip lj-chip" data-lj-abrir="' + esc(p) + '">' + esc(p) + '</button>';
       }).join(" ") + (usa.length > 30 ? ' <span class="tx3">+' + (usa.length - 30) + '</span>' : '') + '</div>' : '') + '</div>';
-    NOC.abrirFicha({ titulo: vid, subtitulo: nombreValor(v) + " · " + valorTxt(v) + unidad(v.unidad) + " · " + t(TX.sec), html: html });
+    var llano = NOC.linajeMapa && NOC.nivel !== "experto";
+    NOC.abrirFicha({ titulo: llano ? NOC.linajeMapa.nombreValor(vid) : vid, subtitulo: llano ? valorTxt(v) + unidad(v.unidad) + " · " + t(TX.sec) : nombreValor(v) + " · " + valorTxt(v) + unidad(v.unidad) + " · " + t(TX.sec), html: html });
     if (NOC.plegado && NOC.plegado("ficha")) NOC.plegar("ficha", false);
     var c = document.getElementById("ficha-cuerpo");
     if (c) c.scrollTop = 0;
@@ -595,9 +612,27 @@
   }
 
   // ======================================================================== vista TRAZABILIDAD
-  var EST = { alcance: "memoria", cat: "fuentes", q: "", abierto: null };
-  try { var g = JSON.parse(localStorage.getItem("noc.linaje") || "null"); if (g) { if (g.alcance) EST.alcance = g.alcance; if (g.cat) EST.cat = g.cat; } } catch (e) { /* sin almacenamiento */ }
-  function guardarEst() { try { localStorage.setItem("noc.linaje", JSON.stringify({ alcance: EST.alcance, cat: EST.cat })); } catch (e) { /* nada */ } }
+  var EST = { alcance: "memoria", cat: "fuentes", q: "", abierto: null, pane: "tablas" };
+  try { var g = JSON.parse(localStorage.getItem("noc.linaje") || "null"); if (g) { if (g.alcance) EST.alcance = g.alcance; if (g.cat) EST.cat = g.cat; if (g.pane) EST.pane = g.pane; } } catch (e) { /* sin almacenamiento */ }
+  function guardarEst() { try { localStorage.setItem("noc.linaje", JSON.stringify({ alcance: EST.alcance, cat: EST.cat, pane: EST.pane })); } catch (e) { /* nada */ } }
+  // Revisión 13: en SIMPLE la vista es solo el mapa de procedencia (linaje_mapa.js); en EXPERTO se elige Mapa | Tablas (por defecto Tablas).
+  var TXP = { mapa: { es: "Mapa", en: "Map" }, tablas: { es: "Tablas", en: "Tables" }, verMapa: { es: "Ver en el mapa", en: "See on the map" }, mas: { es: "más", en: "more" } };
+  var elRaiz = null;
+  function conmutador() {
+    if (!NOC.linajeMapa) return "";
+    return '<span class="seg lj-conm solo-experto" role="group">' + ["mapa", "tablas"].map(function (k) {
+      return '<button type="button" data-lj-pane="' + k + '" aria-pressed="' + (EST.pane === k) + '">' + esc(t(TXP[k])) + '</button>';
+    }).join("") + '</span>';
+  }
+  function aplicarPane() {
+    if (!elRaiz) return;
+    var mapa = !!NOC.linajeMapa && (NOC.nivel !== "experto" || EST.pane === "mapa");
+    elRaiz.classList.toggle("lj-ver-mapa", mapa);
+    Array.prototype.forEach.call(elRaiz.querySelectorAll("[data-lj-pane]"), function (b) { b.setAttribute("aria-pressed", String(EST.pane === b.getAttribute("data-lj-pane"))); });
+    if (mapa && NOC.linajeMapa) NOC.linajeMapa.redibujar();
+  }
+  document.addEventListener("lj-ver-mapa", function () { if (NOC.nivel === "experto" && EST.pane !== "mapa") { EST.pane = "mapa"; guardarEst(); aplicarPane(); } });
+  if (NOC.alNivel) NOC.alNivel(function () { aplicarPane(); });
   var elV = null;
   function pct(n, d) { return d ? n / d * 100 : 0; }
   function barra(x) {
@@ -646,7 +681,7 @@
     if (!L) { elV.innerHTML = '<div class="lj-v"><p class="vacio">' + esc(t(TX.sinDatos)) + '</p></div>'; return; }
     var C = cobertura(EST.alcance), T0 = C.total;
     var alc = [["memoria", TX.alcMem], ["indice", TX.alcIdx], ["todos", TX.alcTodos]];
-    var cab = '<div class="lj-cab"><span class="lbl">' + esc(t(TX.vista)) + '</span>' +
+    var cab = '<div class="lj-cab"><span class="lbl">' + esc(t(TX.vista)) + '</span>' + conmutador() +
       '<span class="lj-kpi"><b>' + num(pct(T0.trazado, T0.total), 1) + ' %</b> ' + marcaEstado("trazado") + ' <span class="mono">' + T0.trazado + '/' + T0.total + '</span></span>' +
       '<span class="lj-kpi"><b>' + num(pct(T0.hueco, T0.total), 1) + ' %</b> ' + marcaEstado("hueco") + ' <span class="mono">' + T0.hueco + '</span></span>' +
       '<span class="lj-kpi"><b>' + T0.discrepa + '</b> ' + marcaEstado("discrepa") + '</span>' + (NOC.info ? NOC.info(TX.leyenda) : "") +
@@ -731,10 +766,17 @@
       (vals.length > 40 ? ' <span class="tx3">+' + (vals.length - 40) + '</span>' : '') + '</div>';
   }
   function montarVista(el) {
-    elV = el;
+    elRaiz = el;
     el.classList.add("lj-vista");
+    if (NOC.linajeMapa) {
+      el.innerHTML = '<div class="lj-pane-mapa"></div><div class="lj-pane-tablas"></div>';
+      elV = el.querySelector(".lj-pane-tablas");
+      NOC.linajeMapa.montar(el.querySelector(".lj-pane-mapa"), { extra: conmutador() });
+    } else elV = el;
     el.addEventListener("click", function (ev) {
-      var b = ev.target.closest("[data-lj-alc]");
+      var b = ev.target.closest("[data-lj-pane]");
+      if (b) { EST.pane = b.getAttribute("data-lj-pane"); guardarEst(); aplicarPane(); return; }
+      b = ev.target.closest("[data-lj-alc]");
       if (b) { EST.alcance = b.getAttribute("data-lj-alc"); guardarEst(); pintarVista(); return; }
       b = ev.target.closest("[data-lj-cat]");
       if (b) { EST.cat = b.getAttribute("data-lj-cat"); EST.abierto = null; guardarEst(); pintarVista(); return; }
@@ -746,6 +788,7 @@
       EST.q = ev.target.value; EST.abierto = null; pintarCatalogo();
     });
     pintarVista();
+    aplicarPane();
   }
   NOC.registrarVista({
     id: "trazabilidad", grupo: "datos", titulo: TX.vista,

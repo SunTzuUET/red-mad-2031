@@ -197,6 +197,20 @@
       }
       ENT[e.id] = ent; LISTA_E.push(ent);
     });
+    // Revisión 14: disposición GEOGRÁFICA del nivel RED (sobre el mapa de Madrid): posición real con una repulsión
+    // suave para que los nodos co-ubicados (núcleo, metro y edge del centro, a < 1 km) no se tapen
+    var DMIN = 26;
+    LISTA_N.forEach(function (e) { e.p.rg = [e.p.madrid[0], e.p.madrid[1]]; });
+    for (var it = 0; it < 240; it++) {
+      for (var i = 0; i < LISTA_N.length; i++) for (var j = i + 1; j < LISTA_N.length; j++) {
+        var a = LISTA_N[i].p.rg, b = LISTA_N[j].p.rg, dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy);
+        if (d >= DMIN) continue;
+        if (d < 1e-6) { dx = Math.cos(i + j); dy = Math.sin(i + j); d = 1; }
+        var m = (DMIN - d) / 2 * 0.5 / d;
+        a[0] -= dx * m; a[1] -= dy * m; b[0] += dx * m; b[1] += dy * m;
+      }
+      LISTA_N.forEach(function (e) { var g = e.p.madrid; e.p.rg[0] += (g[0] - e.p.rg[0]) * 0.02; e.p.rg[1] += (g[1] - e.p.rg[1]) * 0.02; });
+    }
     // sitios de acceso (EMPL) por zona, para el nivel ZONA
     var E = window.EMPL;
     if (E && Array.isArray(E.sitios)) E.sitios.forEach(function (s) {
@@ -215,7 +229,8 @@
     if (ent.k === "nodo") return ent.id === agg || ent.id === MET_DE[agg];
     return ent.id === BACKHAUL[agg];
   }
-  function posNivel(ent, nv) { return ent.p[nv === "zona" ? "zona" : nv]; }
+  function posNivel(ent, nv) { return nv === "red" && GEO_RED ? ent.p.rg : ent.p[nv === "zona" ? "zona" : nv]; }
+  function ctrlNivel(ent, nv) { return nv === "red" && GEO_RED ? null : ent.c[nv]; }
 
   // ---------------------------------------------------------------- valores (con transición de 400 ms)
   var VAL = {}, PREV = {}, T_VAL = 0, DUR_VAL = 400, MAXREL = {}, SITV = {}, HALO = {}, RESUMEN = "";
@@ -300,10 +315,13 @@
   var NIV = NIVELES.indexOf(est.nivel) >= 0 ? est.nivel : "red", ZONA = IDX.zonas[est.zona] ? est.zona : "Z-MADRID";
   if (NIV === "zona" && !AGG_DE_ZONA_ok(ZONA)) NIV = "red";
   function AGG_DE_ZONA_ok(z) { var zz = IDX.zonas[z]; return !!(zz && zz.agg); }
-  var cam = { x: 0, y: 0, k: 1 }, camAnim = null, TR = null, RES = null, hover = null, foco = null, armada = null, leyendaAbierta = est.ley !== false;
+  var cam = { x: 0, y: 0, k: 1 }, camAnim = null, TR = null, RES = null, hover = null, foco = null, armada = null, leyendaAbierta = est.ley === true;
+  // Revisión 14: RED en disposición geográfica sobre el mapa de Madrid (por defecto) o esquemática (anillo)
+  var GEO_RED = est.geo !== false, mapaL = null, mapaUlt = "", AREA_B = 64, camVista = null;
+  function conMapa(nv) { return nv !== "red" || GEO_RED; }
   var oyentes = [], verPos = 0, verPosAvisada = -1, raf = 0;
 
-  function guardarEst() { guardar("noc.viva", JSON.stringify({ nivel: NIV, zona: ZONA, ley: leyendaAbierta })); }
+  function guardarEst() { guardar("noc.viva", JSON.stringify({ nivel: NIV, zona: ZONA, ley: leyendaAbierta, geo: GEO_RED })); }
   function leerTokens() {
     var cs = getComputedStyle(document.documentElement);
     ["bg0", "bg1", "bg2", "line", "line2", "line3", "tx1", "tx2", "tx3", "tx4", "ok", "min", "maj", "crit", "wrn", "unk", "steel"].forEach(function (k) {
@@ -316,7 +334,8 @@
   function colorSev(s) { return s === "nd" ? C.tx3 : s === "unk" ? C.unk : C[s] || C.tx3; }
 
   // ---------------------------------------------------------------- cámara
-  function area() { return { l: 76, t: 50, r: VW - 18, b: VH - 104 }; }
+  function area() { return { l: 58, t: 46, r: VW - 14, b: VH - AREA_B }; }
+  function medirReloj() { var r = el && el.querySelector(".vv-reloj"); AREA_B = r && r.offsetParent ? r.offsetHeight + 18 : 14; }
   function aPant(p, c) { var A = area(); return [(p[0] - c.x) * c.k + (A.l + A.r) / 2, (p[1] - c.y) * c.k + (A.t + A.b) / 2]; }
   function aMundo(s, c) { var A = area(); return [(s[0] - (A.l + A.r) / 2) / c.k + c.x, (s[1] - (A.t + A.b) / 2) / c.k + c.y]; }
   function caja(nv, zona) {
@@ -395,6 +414,7 @@
   function calcularPantalla(tm) {
     var p = 1, de = null;
     if (TR) { p = suave((tm - TR.t0) / TR.dur); de = TR.de; if (p >= 1) { var f = TR.fin; TR = null; de = null; p = 1; if (f) setTimeout(f, 0); } verPos++; }
+    camVista = de ? { x: lerp(de.cam.x, cam.x, p), y: lerp(de.cam.y, cam.y, p), k: Math.exp(lerp(Math.log(de.cam.k), Math.log(cam.k), p)), mapa: conMapa(NIV) && conMapa(de.nv) } : { x: cam.x, y: cam.y, k: cam.k, mapa: conMapa(NIV) };
     LISTA_N.forEach(function (ent) {
       var b = pantallaEn(ent, NIV, ZONA, cam);
       if (!de) { ent.s = b.s; ent.al = b.a; ent.r = radio(ent, NIV, cam); return; }
@@ -409,7 +429,8 @@
       var enB = enNivel(ent, NIV, ZONA) ? 1 : 0, enA = de ? (enNivel(ent, de.nv, de.zona) ? 1 : 0) : enB;
       ent.al = lerp(enA, enB, p) * Math.min(1, Math.max(A.al, 0.001) * 1) ;
       ent.al = Math.min(ent.al, Math.max(A.al, B.al));
-      var cB = ent.c[NIV] ? aPant(ent.c[NIV], cam) : null, cA = de && ent.c[de.nv] ? aPant(ent.c[de.nv], de.cam) : null;
+      var c1 = ctrlNivel(ent, NIV), c0 = de ? ctrlNivel(ent, de.nv) : null;
+    var cB = c1 ? aPant(c1, cam) : null, cA = c0 ? aPant(c0, de.cam) : null;
       var mid = [(A.s[0] + B.s[0]) / 2, (A.s[1] + B.s[1]) / 2];
       if (!de) ent.sc = cB || mid;
       else {
@@ -499,7 +520,8 @@
     frameN++;
     var mov = !menosMov(), seg = mov ? tm / 1000 : 0;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    ctx.fillStyle = C.bg0; ctx.fillRect(0, 0, VW, VH);
+    if (camVista && camVista.mapa && mapaL) ctx.clearRect(0, 0, VW, VH);   // Revisión 14: el mapa de Madrid se ve debajo
+    else { ctx.fillStyle = C.bg0; ctx.fillRect(0, 0, VW, VH); }
     // anillo de fondo (guía) en RED
     var cubos = {}, nCubos = 0;
     function punto(color, x, y, t2) { var b = cubos[color]; if (!b) { b = cubos[color] = []; nCubos++; } b.push(x, y, t2); }
@@ -595,7 +617,7 @@
       } else if (v.o != null) { frac = v.o; colFill = colorSev(s); }
       else { frac = MAXREL[n.tipo] > 0 ? v.G / MAXREL[n.tipo] : 0; colFill = C.tx3; }
       if (mov && !v.down && !burbuja) r *= 1 + 0.06 * Math.min(1, frac) * Math.sin(tm / 1000 * 2 * Math.PI * 0.45 + x * 0.01);
-      var tipoForma = burbuja ? "agg" : n.tipo;
+      var tipoForma = "agg";   // Revisión 14: cuerpo redondo + icono fiel del equipo dentro
       // cuerpo
       camino(tipoForma, x, y, r);
       ctx.fillStyle = burbuja ? "rgba(255,255,255,0.04)" : C.bg1; ctx.fill();
@@ -620,6 +642,12 @@
       ctx.strokeStyle = sel ? C.tx1 : v.down ? C.unk : s === "nd" ? C.tx2 : colorSev(s);
       if (v.down) ctx.setLineDash([4, 3]);
       ctx.stroke(); ctx.setLineDash([]);
+      // icono del equipo (torre gNB, router, DC, MEC, IX, satélite, estadio…)
+      if (!burbuja && window.NOC_ICONOS && NOC_ICONOS.imagen) {
+        var tamI = Math.round(clamp(r * 1.3, 10, 22)), im = NOC_ICONOS.imagen(NOC_ICONOS.claveNodo(n.ref), C.tx1, tamI);
+        if (im.complete && im.naturalWidth) ctx.drawImage(im, Math.round(x - tamI / 2), Math.round(y - tamI / 2), tamI, tamI);
+        else if (!im._vv) { im._vv = 1; im.addEventListener("load", function () { pedirFrame(); }); }
+      }
       // glifo de estado
       if (v.down) glifo("unk", x, y, r * 1.1);
       else glifo(s, x + r * 0.95, y - r * 0.95, burbuja ? 12 : 10);
@@ -629,7 +657,7 @@
         ctx.font = (n.tipo === "metro" || n.tipo === "core" || burbuja ? "600 12px " : "11px ") + FUENTE;
         ctx.textAlign = "center"; ctx.textBaseline = "top";
         var dentro = burbuja && r > 30, tx = x, ty = dentro ? y - 6 : y + r + 4, dr = DIR_ROT[n.id];
-        if (dr && NIV === "red" && !TR && !burbuja) {   // rótulo hacia fuera (abanicos y DC), sin pisar a los vecinos
+        if (dr && NIV === "red" && !GEO_RED && !TR && !burbuja) {   // rótulo hacia fuera (abanicos y DC), sin pisar a los vecinos
           tx = x + dr[0] * (r + 6); ty = y + dr[1] * (r + 6);
           ctx.textAlign = dr[0] > 0.35 ? "left" : dr[0] < -0.35 ? "right" : "center";
           ctx.textBaseline = dr[1] > 0.35 ? "top" : dr[1] < -0.35 ? "bottom" : "middle";
@@ -671,6 +699,33 @@
     return nombre(n.id);
   }
 
+  // ---------------------------------------------------------------- mapa de Madrid de fondo (Leaflet, Revisión 14)
+  // Mundo VIVA = equirectangular local (x = Δlon·cos(LAT0)·1000, y = −Δlat·1000); a escala k px/unidad le corresponde el
+  // zoom de Leaflet z = log2(k·360·cos(LAT0)·1000/256). Error frente a Mercator < 30 m en el área de Madrid.
+  function crearMapa() {
+    var div = el.querySelector(".vv-mapa");
+    if (!div || !window.L || !L.map) return;
+    try {
+      mapaL = L.map(div, { zoomControl: false, attributionControl: true, dragging: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false,
+        keyboard: false, touchZoom: false, zoomSnap: 0, zoomAnimation: false, fadeAnimation: false, inertia: false, minZoom: 3, maxZoom: 20 });
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 20, maxNativeZoom: 16, attribution: "Tiles &copy; Esri" }).addTo(mapaL);
+      mapaL.setView([LAT0, LON0], 10, { animate: false });
+      mapaUlt = "";
+    } catch (e) { console.error("viva: mapa", e); mapaL = null; }
+  }
+  function sincMapa() {
+    if (!mapaL || !camVista) return;
+    el.classList.toggle("sin-mapa", !camVista.mapa);
+    if (!camVista.mapa) return;
+    var w = aMundo([VW / 2, VH / 2], camVista);
+    var lat = LAT0 - w[1] / KG, lon = LON0 + w[0] / (COSL * KG), z = Math.log(camVista.k * 360 * COSL * KG / 256) / Math.LN2;
+    var clave = lat.toFixed(6) + "|" + lon.toFixed(6) + "|" + z.toFixed(4) + "|" + VW + "x" + VH;
+    if (clave === mapaUlt) return;
+    mapaUlt = clave;
+    try { mapaL.setView([lat, lon], clamp(z, 3, 20), { animate: false }); } catch (e) { /* mapa aún sin tamaño */ }
+  }
+
   // ---------------------------------------------------------------- bucle (60 fps; parado si la vista no se ve)
   var FPS = { n: 0, t0: 0, v: 0 };
   function animando() { return !menosMov(); }
@@ -681,6 +736,7 @@
     tm = ahora();
     pasoCam(tm);
     calcularPantalla(tm);
+    sincMapa();
     dibujar(tm);
     if (verPos !== verPosAvisada) { verPosAvisada = verPos; colocarOverlay(); avisarMover(); }
     pintarCursorReloj();
@@ -985,7 +1041,7 @@
     if (!arrastre.mov && Math.hypot(ev.clientX - arrastre.x0, ev.clientY - arrastre.y0) > 5) {
       arrastre.mov = true;
       var f = document.createElement("div");
-      f.className = "vv-fantasma"; f.innerHTML = ico(arrastre.k, 26);
+      f.className = "vv-fantasma"; f.innerHTML = ico(arrastre.k, 20);
       document.body.appendChild(f); arrastre.fantasma = f;
       el.classList.add("arrastrando");
       ocultarTarjeta(); cerrarRadial();
@@ -1118,7 +1174,10 @@
     if (NIV === "zona") it.push(["zona", z ? z.nombre : ZONA]);
     m.innerHTML = it.map(function (x, i) {
       return (i ? '<span class="vv-sep" aria-hidden="true">›</span>' : '') + '<button type="button" data-nivel-vv="' + x[0] + '"' + (x[0] === NIV ? ' aria-current="true"' : '') + '>' + esc(x[1]) + '</button>';
-    }).join("") + '<span class="vv-zoom">' +
+    }).join("") + (NIV === "red" ? '<span class="vv-disp" role="group" aria-label="' + esc(t({ es: "Disposición", en: "Layout" })) + '">' +
+      '<button type="button" data-geo-vv="1" aria-pressed="' + GEO_RED + '">' + esc(t({ es: "Mapa", en: "Map" })) + '</button>' +
+      '<button type="button" data-geo-vv="0" aria-pressed="' + !GEO_RED + '">' + esc(t({ es: "Esquema", en: "Schematic" })) + '</button></span>' : '') +
+      '<span class="vv-zoom">' +
       '<button type="button" data-zoom-vv="mas" aria-label="' + esc(t(TX.mas)) + '" data-tip="' + esc(t(TX.mas)) + '">' + ico("mas", 16) + '</button>' +
       '<button type="button" data-zoom-vv="menos" aria-label="' + esc(t(TX.menos)) + '" data-tip="' + esc(t(TX.menos)) + '">' + ico("menos", 16) + '</button>' +
       '<button type="button" data-zoom-vv="encajar" aria-label="' + esc(t(TX.encajar)) + '" data-tip="' + esc(t(TX.encajar)) + '">' + ico("encajar", 16) + '</button></span>' +
@@ -1131,11 +1190,16 @@
       return '<span class="vv-li"><i class="tri" style="--c:' + (C[TEC_TOK[k]] || C.tx2) + '"></i>' + esc(k.toUpperCase()) + '</span>';
     });
     else filas = CLASES.map(function (c) { return '<span class="vv-li"><i style="--c:' + C["sv-" + c] + '"></i>' + esc(t(NOMSV[c])) + '</span>'; });
+    var I = window.NOC_ICONOS, equipos = I && I.svg ? [["core", { es: "DC / núcleo", en: "DC / core" }], ["metro", { es: "Metro WDM", en: "Metro WDM" }], ["agg", { es: "Agregación", en: "Aggregation" }],
+      ["edge", { es: "Edge / MEC", en: "Edge / MEC" }], ["ix", { es: "IX", en: "IX" }], ["gnb", { es: "gNB", en: "gNB" }], ["ntn", { es: "Satélite", en: "Satellite" }],
+      ["estadio", { es: "Estadio", en: "Stadium" }], ["hospital", { es: "Hospital", en: "Hospital" }], ["fabrica", { es: "Fábrica", en: "Factory" }], ["v2x", { es: "V2X", en: "V2X" }]].map(function (x) {
+        return '<span class="vv-li">' + I.svg(x[0], C.tx2, 14) + esc(t(x[1])) + '</span>';
+      }).join("") : "";
     var est_ = [["ok", "●"], ["min", "▲"], ["maj", "◆"], ["crit", "■"], ["unk", "✕"]].map(function (x) {
       return '<span class="vv-li"><b class="vv-g" style="color:' + colorSev(x[0]) + '">' + x[1] + '</b>' + SEVTXT[x[0]] + '</span>';
     }).join("");
     lg.innerHTML = '<button type="button" class="vv-ley-b" aria-expanded="' + leyendaAbierta + '">' + esc(t(TX.leyenda)) + '</button>' +
-      (leyendaAbierta ? '<div class="vv-ley-c"><div class="vv-ley-f">' + filas.join("") + '</div><div class="vv-ley-f">' + est_ + '</div></div>' : '');
+      (leyendaAbierta ? '<div class="vv-ley-c">' + (equipos && NIV !== "zona" ? '<div class="vv-ley-f">' + equipos + '</div>' : '') + '<div class="vv-ley-f">' + filas.join("") + '</div><div class="vv-ley-f">' + est_ + '</div></div>' : '');
   }
 
   // ---------------------------------------------------------------- aria-live y resumen
@@ -1252,9 +1316,12 @@
   // ---------------------------------------------------------------- montaje
   function medir() {
     var L = el.querySelector(".vv-lienzo"), w = L.clientWidth || 800, h = L.clientHeight || 600, d = window.devicePixelRatio || 1;
-    if (w === VW && h === VH && d === DPR && cv.width) return false;
+    var bAnt = AREA_B; medirReloj();
+    if (w === VW && h === VH && d === DPR && cv.width) { if (bAnt !== AREA_B) { kEncaje = camEncaje(NIV, ZONA).k; verPos++; return true; } return false; }
     var rel = { x: cam.x, y: cam.y, k: cam.k / Math.max(1e-6, kEncaje) };
     VW = w; VH = h; DPR = d;
+    medirReloj();
+    if (mapaL) { try { mapaL.invalidateSize(false); } catch (e) { /* nada */ } mapaUlt = ""; }
     cv.width = Math.round(w * d); cv.height = Math.round(h * d);
     cv.style.width = w + "px"; cv.style.height = h + "px";
     ov.setAttribute("width", w); ov.setAttribute("height", h); ov.setAttribute("viewBox", "0 0 " + w + " " + h);
@@ -1264,16 +1331,18 @@
     return true;
   }
   function montar(contenedor) {
+    if (mapaL) { try { mapaL.remove(); } catch (e) { /* nada */ } mapaL = null; }
     el = contenedor;
     leerTokens();
     el.innerHTML =
       '<div class="vv-lienzo">' +
+      '<div class="vv-mapa" aria-hidden="true"></div>' +
       '<canvas class="vv-cv" role="img" aria-label="' + esc(t(TX.titulo)) + '"></canvas>' +
       '<svg class="vv-ov" aria-label="' + esc(t(TX.titulo)) + '" role="group"><g class="vv-ovg"></g></svg>' +
       '<div class="vv-capa"></div>' +
       '</div>' +
       '<div class="vv-herr" role="toolbar" aria-label="' + esc(t(TX.herramientas)) + '" aria-orientation="vertical">' + HERR.map(function (h) {
-        return '<button type="button" data-herr="' + h.k + '" aria-pressed="false" aria-label="' + esc(t(TX[h.k]) + " (" + h.tecla.toUpperCase() + ")") + '" data-tip="' + esc(t(TX[h.k]) + " · " + h.tecla.toUpperCase()) + '">' + ico(h.k, 24) + '</button>';
+        return '<button type="button" data-herr="' + h.k + '" aria-pressed="false" aria-label="' + esc(t(TX[h.k]) + " (" + h.tecla.toUpperCase() + ")") + '" data-tip="' + esc(t(TX[h.k]) + " · " + h.tecla.toUpperCase()) + '">' + ico(h.k, 16) + '</button>';
       }).join("") + '</div>' +
       '<nav class="vv-migas" aria-label="' + esc(t({ es: "Nivel de zoom", en: "Zoom level" })) + '"></nav>' +
       '<div class="vv-ley"></div>' +
@@ -1285,6 +1354,7 @@
     ov = el.querySelector(".vv-ov"); gOv = el.querySelector(".vv-ovg"); capa = el.querySelector(".vv-capa");
     tarjeta = el.querySelector(".vv-tarjeta"); vivo = el.querySelector('[aria-live]');
     montado = true;
+    crearMapa();
     medir();
     kEncaje = camEncaje(NIV, ZONA).k;
     cam = camEncaje(NIV, ZONA);
@@ -1373,6 +1443,12 @@
     el.querySelector(".vv-migas").addEventListener("click", function (ev) {
       var b = ev.target.closest("[data-nivel-vv]");
       if (b) { irNivel(b.getAttribute("data-nivel-vv"), ZONA); return; }
+      var g = ev.target.closest("[data-geo-vv]");
+      if (g) {
+        var nuevoG = g.getAttribute("data-geo-vv") === "1";
+        if (nuevoG !== GEO_RED) { GEO_RED = nuevoG; guardarEst(); kEncaje = camEncaje(NIV, ZONA).k; cam = camEncaje(NIV, ZONA); camAnim = null; verPos++; mapaUlt = ""; construirOverlay(); pintarMigas(); pedirFrame(); }
+        return;
+      }
       var z = ev.target.closest("[data-zoom-vv]"); if (!z) return;
       var a = z.getAttribute("data-zoom-vv"), A = area(), centro = [(A.l + A.r) / 2, (A.t + A.b) / 2];
       if (a === "encajar") moverCam(camEncaje(NIV, ZONA));
@@ -1415,7 +1491,7 @@
   }
   function aggCercano(w) {
     var mejor = null, d = Infinity;
-    LISTA_N.forEach(function (e) { if (e.tipo !== "agg" || !e.zona) return; var p = e.p.red, dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < d) { d = dd; mejor = e.zona.id; } });
+    LISTA_N.forEach(function (e) { if (e.tipo !== "agg" || !e.zona) return; var p = posNivel(e, "red"), dd = Math.hypot(p[0] - w[0], p[1] - w[1]); if (dd < d) { d = dd; mejor = e.zona.id; } });
     return d < 60 ? mejor : null;
   }
 
@@ -1441,6 +1517,7 @@
     var cont = el; montado = false; cont.innerHTML = "";
     montar(cont); if (activa) pedirFrame();
   });
-  NOC.on("nivel", function () { if (montado) { tarjetaId = null; pintarMigas(); } });
+  NOC.on("nivel", function () { if (montado) { tarjetaId = null; pintarMigas(); if (medir()) pedirFrame(); } });
+  NOC.on("espacio", function () { if (montado && activa) setTimeout(function () { if (medir()) pedirFrame(); }, 0); });
   if (NOC.resultado) nuevoResultado();
 })();

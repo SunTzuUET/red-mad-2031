@@ -26,7 +26,7 @@
 
   var IDX = NOC.idx;
   var RANGO_TIPO = { core: 0, metro: 1, edge: 2, ix: 3, agg: 4, site: 5 };
-  var TAM = { core: 16, metro: 15, edge: 13, ix: 14, agg: 11, site: 11 };
+  var TAM = { core: 18, metro: 16, edge: 16, ix: 15, agg: 14, site: 15 };
   // Revisión 11: etiqueta en todos los nodos, por niveles de zoom (1: núcleo y metro, 2: edge/IX/agregación, 3: emplazamientos).
   // En SIMPLE muestra el nombre corto con icono; en EXPERTO, el id.
   var CON_ETIQUETA = { core: 1, metro: 1, edge: 2, ix: 3, agg: 2, site: 3 };
@@ -39,7 +39,7 @@
   }
   function htmlEtq(n) {
     var corto = NOC.nombreCorto ? NOC.nombreCorto(n.id) : n.id;
-    return '<span class="etq-n' + CON_ETIQUETA[n.tipo] + '">' + (NOC.icono ? NOC.icono(n.tipo, 11) : '') + '<b class="solo-simple">' + esc(corto) + '</b><b class="solo-experto">' + esc(n.id) + '</b></span>';
+    return '<span class="etq-n' + CON_ETIQUETA[n.tipo] + '">' + (NOC.icono ? NOC.icono(window.NOC_ICONOS && NOC_ICONOS.claveNodo ? NOC_ICONOS.claveNodo(n) : n.tipo, 11) : '') + '<b class="solo-simple">' + esc(corto) + '</b><b class="solo-experto">' + esc(n.id) + '</b></span>';
   }
 
   // ---------- estado de servicios y radio (mismo bloque en carril_servicios.js) ----------
@@ -98,7 +98,12 @@
     }
     return '<circle cx="' + h + '" cy="' + h + '" r="' + (h - 1.5) + '" ' + a + '/>';
   }
-  NOC.formaNodo = function (tipo, s, fill, stroke) { return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '">' + forma(tipo, s, fill, stroke, 1.2) + '</svg>'; };
+  // Revisión 14: con iconos.js, la "forma" de un tipo es su icono fiel (trazo en el color de relleno)
+  NOC.formaNodo = function (tipo, s, fill, stroke) {
+    var I = window.NOC_ICONOS;
+    if (I && I.svg) return I.svg(tipo, fill, s);
+    return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '">' + forma(tipo, s, fill, stroke, 1.2) + '</svg>';
+  };
 
   // ---------- estado de cada elemento ----------
   function resN(id) { return NOC.resultado && NOC.resultado.nodos ? NOC.resultado.nodos[id] : null; }
@@ -108,10 +113,14 @@
     var r = resN(n.id), caido = r && r.caido, o = NOC.ocupacion(r), s = TAM[n.tipo] || 11;
     var sel = NOC.seleccion && NOC.seleccion.id === n.id;
     var fill = caido ? C.bg2 : (o == null ? C.tx2 : colSev(NOC.sevOcupacion(o))), stroke = caido ? C.unk : C.bg0;
-    var pad = 4, S = s + pad * 2;
+    var pad = 4, S = s + pad * 2, I = window.NOC_ICONOS;
+    // Revisión 14: icono fiel al elemento (torre gNB, router, DC, MEC, IX, satélite, estadio…) en el color de su estado,
+    // sobre un disco oscuro; sin el juego de iconos se queda la forma geométrica de antes.
+    var dibujo = I && I.svg ? '<circle cx="' + (s / 2) + '" cy="' + (s / 2) + '" r="' + (s / 2 + 2.5) + '" fill="' + C.bg0 + '" fill-opacity=".82" stroke="' + fill + '" stroke-width="1"/>' +
+      I.svg(I.claveNodo(n), caido ? C.unk : fill, s, 0, 0) : forma(n.tipo, s, fill, stroke, caido ? 1.4 : 1.2);
     var svg = '<svg width="' + S + '" height="' + S + '" viewBox="' + (-pad) + ' ' + (-pad) + ' ' + S + ' ' + S + '">' +
       (sel ? '<rect x="' + (-pad + 0.5) + '" y="' + (-pad + 0.5) + '" width="' + (S - 1) + '" height="' + (S - 1) + '" fill="none" stroke="' + C.acc + '" stroke-width="1"/>' : '') +
-      forma(n.tipo, s, fill, stroke, caido ? 1.4 : 1.2) +
+      dibujo +
       (caido ? '<path d="M2 2L' + (s - 2) + ' ' + (s - 2) + 'M' + (s - 2) + ' 2L2 ' + (s - 2) + '" stroke="' + C.crit + '" stroke-width="1.6"/>' : '') +
       '</svg>';
     return L.divIcon({ className: "noc-nodo t-" + n.tipo + (caido ? " caido" : ""), html: svg, iconSize: [S, S], iconAnchor: [S / 2, S / 2] });
@@ -370,7 +379,7 @@
         '<div class="tx3">' + esc(t({ es: "Trazo discontinuo = supuesto (forma o posición)", en: "Dashed outline = assumption (shape or position)" })) + '</div>' : '') +
       '<div class="rot" style="margin-top:6px">' + esc(t({ es: "Nodos", en: "Nodes" })) + '</div>' +
       '<div class="formas">' + tipos.map(function (tp) {
-        return '<span>' + NOC.formaNodo(tp, 11, C.tx2, C.bg0) + esc(t(NOC.TIPO_NODO[tp])) + '</span>';
+        return '<span>' + NOC.formaNodo(tp, 14, C.tx2, C.bg0) + esc(t(NOC.TIPO_NODO[tp])) + '</span>';
       }).join("") + '</div>' +
       '<div class="tx3" style="margin-top:6px">' + esc(t({ es: "Nodos co-ubicados en abanico. Clic: ficha · clic dcho. o F: fallo", en: "Co-located nodes fanned out. Click: details · right-click or F: fault" })) + '</div></div>';
   }

@@ -65,7 +65,11 @@
   var ESP_IDS = ["inicio", "red", "simulacion", "analisis", "datos", "guia"];
   function espDeHash() { var m = /[#&]e=([a-z]+)/.exec(location.hash || ""); return m && ESP_IDS.indexOf(m[1]) >= 0 && m[1] !== "guia" ? m[1] : null; }
   var ESP = espDeHash() || leer("noc.espacio");
-  if (ESP_IDS.indexOf(ESP) < 0 || ESP === "guia") ESP = "inicio";
+  if (ESP_IDS.indexOf(ESP) < 0 || ESP === "guia") ESP = "red";
+  // Revisión 14: sin preguntas guiadas. En SIMPLE no hay INICIO: la app arranca en RED (mapa de Madrid con la red encima);
+  // la portada INICIO queda solo para EXPERTO.
+  function sinInicio() { return NOC.nivel !== "experto"; }
+  if (ESP === "inicio" && sinInicio()) ESP = "red";
   // El dock se pliega por espacio ("dock@<espacio>"): abierto por defecto solo en SIMULACIÓN.
   function claveP(id) { return id === "dock" ? "dock@" + ESP : id; }
   var PLEG_DEF = { carril: true };
@@ -568,7 +572,7 @@
 
     var nav = ESPACIOS.map(function (e, i) {
       var cur = e.id === ESP;
-      return (e.href ? '<a class="esp-b ext" href="' + e.href + '"' : '<button type="button" class="esp-b" data-espacio="' + e.id + '"' + (cur ? ' aria-current="page"' : '')) +
+      return (e.href ? '<a class="esp-b ext" href="' + e.href + '"' : '<button type="button" class="esp-b' + (e.id === "inicio" ? ' solo-experto' : '') + '" data-espacio="' + e.id + '"' + (cur ? ' aria-current="page"' : '')) +
         ' title="' + esc(t(e.d)) + ' (' + (i + 1) + ')">' + ico(e.id, 16) + '<kbd class="solo-experto">' + (i + 1) + '</kbd><span>' + esc(t(e.n)) + '</span>' + (e.href ? '</a>' : '</button>');
     }).join("");
     $("#tb").innerHTML =
@@ -584,7 +588,6 @@
         '<span class="buscar">' + ICO.lupa + '<input type="search" id="buscar" list="noc-lista" placeholder="' + esc(t(T.buscar)) + '" aria-label="' + esc(t(T.buscar)) + '"></span>' +
         '<button type="button" class="btn" data-accion="exportar" aria-pressed="false" title="' + esc(t({ es: "Exportar tablas CSV (.zip) o informe PDF", en: "Export CSV tables (.zip) or PDF report" })) + '">' + esc(t({ es: "Exportar", en: "Export" })) + '</button>' +
         (NOC.interruptorNivel ? NOC.interruptorNivel() : '') +
-        (NOC.accesibilidad && NOC.accesibilidad.boton ? NOC.accesibilidad.boton() : '') +   // Revisión 12: panel de accesibilidad
         '<div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="' + (NOC.lang === "es") + '">ES</button><button type="button" data-lang="en" aria-pressed="' + (NOC.lang === "en") + '">EN</button></div>' +
       '</div>' +
       '<div class="tb-f tb-kpi">' +
@@ -700,13 +703,15 @@
     if (!r) { el.innerHTML = '<div class="kpi"><span class="rot">' + esc(t(T.motorMal)) + '</span></div>'; return; }
     var s = r.resumen, s0 = R0 ? R0.resumen : null, m = ocMax(r), m0 = ocMax(R0);
     var ref = NOC.modo === "ref";
+    // Revisión 14: rótulo corto en SIMPLE (barra única de 40 px)
+    function corta(largo, corto) { return '<span class="solo-experto">' + esc(t(largo)) + '</span><span class="solo-simple" title="' + esc(t(largo)) + '">' + esc(t(corto)) + '</span>'; }
     function k(rot, v, d, tit, cls) {
       return '<div class="kpi' + (cls ? " " + cls : "") + '"' + (tit ? ' title="' + esc(tit) + '"' : '') + '><span class="rot">' + rot + '</span><span class="v">' + v + '</span>' + (ref ? "" : d) + '</div>';
     }
     el.innerHTML =
-      k(esc(t(T.kDl)), fmt(s.dl_total_gbps, 0) + ' <small>Gbit/s</small>', s0 ? delta(s.dl_total_gbps, s0.dl_total_gbps, 0, null) : "") +
-      k(esc(t(T.kServ)), fmt(s.pct_servida, 2) + ' <small>%</small>', s0 ? delta(s.pct_servida, s0.pct_servida, 2, false, " pp") : "") +
-      k(esc(t(T.kOc)) + ' <span class="mono kpi-id solo-experto">' + esc(m.id || "") + '</span><span class="kpi-id solo-simple">' + esc(corto(m.id || "")) + '</span>',
+      k(corta(T.kDl, { es: "DL", en: "DL" }), fmt(s.dl_total_gbps, 0) + ' <small>Gbit/s</small>', s0 ? delta(s.dl_total_gbps, s0.dl_total_gbps, 0, null) : "") +
+      k(corta(T.kServ, { es: "Servido", en: "Served" }), fmt(s.pct_servida, 2) + ' <small>%</small>', s0 ? delta(s.pct_servida, s0.pct_servida, 2, false, " pp") : "") +
+      k(corta(T.kOc, { es: "Máx.", en: "Max." }) + ' <span class="mono kpi-id solo-experto">' + esc(m.id || "") + '</span><span class="kpi-id solo-simple">' + esc(corto(m.id || "")) + '</span>',
         (m.o == null ? "—" : (NOC.icono ? '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + ico(NOC.sevOcupacion(m.o), 16) + '</span> ' : '') + '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + fmt(m.o * 100, 1) + '</span>') + ' <small>%</small>',
         s0 && m0.o != null && m.o != null ? delta(m.o * 100, m0.o * 100, 1, true, " pp") : "", m.id ? m.id + " · " + corto(m.id) + " · " + (NOC.sevOcupacion(m.o) || "").toUpperCase() : "") +
       k(esc(t(T.kAfect)), fmt(s.demandas_afectadas, 0) + ' <small>/ ' + fmt((r.demandas || []).length, 0) + '</small>', s0 ? delta(s.demandas_afectadas, s0.demandas_afectadas, 0, true) : "", "", "solo-experto") +
@@ -830,14 +835,24 @@
     pintarTabs();
     if (listo && !activa && enEspacio(v.def)) activarVista(v.id);
   };
+  // Revisión 14: en SIMPLE cada espacio muestra 1–3 pestañas (el resto, solo en EXPERTO). RED: Mapa (red viva sobre Madrid),
+  // Esquema (unifilar) y Flujos; SIMULACIÓN: la red viva con reloj; ANÁLISIS: N-1, planificación y SLA; DATOS: trazabilidad + Exportar.
+  var TABS_SIMPLE = { red: ["viva", "unifilar", "flujos"], simulacion: ["viva"], analisis: ["n1", "planificacion", "sla"], datos: ["trazabilidad"], inicio: ["inicio"] };
+  var TIT_SIMPLE = { red: { viva: { es: "Mapa", en: "Map" }, unifilar: { es: "Esquema", en: "Schematic" } } };
+  function tabVisible(def) {
+    if (NOC.nivel === "experto") return true;
+    var l = TABS_SIMPLE[ESP];
+    return !l || l.indexOf(def.id) >= 0;
+  }
   function pintarTabs() {
     var extra = "";
     if (ESP === "analisis") extra = '<button type="button" class="tab acc" data-accion="estudios" title="' + esc(t({ es: "Guardar, cargar y compartir estudios; modo defensa (diapositivas sobre el simulador)", en: "Save, load and share studies; defence mode (slides over the simulator)" })) + '">' + esc(t({ es: "Estudios · defensa", en: "Studies · defence" })) + '</button>';
-    else if (ESP === "datos") extra = '<a class="tab ext" href="demanda.html">' + esc(t(T.demanda)) + '</a>' +
+    else if (ESP === "datos") extra = '<a class="tab ext solo-experto" href="demanda.html">' + esc(t(T.demanda)) + '</a>' +
       '<button type="button" class="tab acc" data-accion="exportar">' + esc(t({ es: "Exportar CSV / informe", en: "Export CSV / report" })) + '</button>';
     var e = espPorId(ESP);
-    $("#tabs").innerHTML = '<span class="tabs-esp lbl">' + esc(t(e.n)) + '</span>' + VISTAS.filter(function (x) { return enEspacio(x.def); }).map(function (x) {
-      return '<button type="button" class="tab" role="tab" data-vista="' + esc(x.def.id) + '" aria-selected="' + (activa === x.def.id) + '">' + esc(t(x.def.titulo)) + '</button>';
+    $("#tabs").innerHTML = '<span class="tabs-esp lbl">' + esc(t(e.n)) + '</span>' + VISTAS.filter(function (x) { return enEspacio(x.def) && (tabVisible(x.def) || x.def.id === activa); }).map(function (x) {
+      var tit = NOC.nivel !== "experto" && TIT_SIMPLE[ESP] && TIT_SIMPLE[ESP][x.def.id] || x.def.titulo;
+      return '<button type="button" class="tab" role="tab" data-vista="' + esc(x.def.id) + '" aria-selected="' + (activa === x.def.id) + '">' + esc(t(tit)) + '</button>';
     }).join("") + extra;
   }
   // ---------- espacios (Revisión 10) ----------
@@ -845,6 +860,7 @@
   try { ultimaPorEsp = JSON.parse(leer("noc.vistaEsp") || "{}") || {}; } catch (e) { ultimaPorEsp = {}; }
   function dockLista() {
     var base = [["alarmas", T.alarmas, ["red", "simulacion", "analisis"]], ["enlaces", T.enlaces, ["red", "analisis"]]];
+    if (NOC.nivel !== "experto" && ESP !== "simulacion") return [];   // Revisión 14: en SIMPLE el dock solo vive en SIMULACIÓN
     var l = base.filter(function (x) { return x[2].indexOf(ESP) >= 0; }).map(function (x) { return x[0]; });
     PEST_DOCK.forEach(function (p) { if (enEspacio(p)) l.push(p.id); });
     if (ESP === "simulacion") { var o = ["tiempo", "sucesos", "alarmas", "enlaces"]; l.sort(function (a, b) { return (o.indexOf(a) + 1 || 99) - (o.indexOf(b) + 1 || 99); }); }
@@ -867,6 +883,7 @@
     opc = opc || {};
     if (e === "guia") { location.href = "guia.html"; return; }
     if (ESP_IDS.indexOf(e) < 0) return;
+    if (e === "inicio" && sinInicio()) e = "red";
     var cambia = e !== ESP;
     if (dock.tab) tabDockEsp[ESP] = dock.tab;
     ESP = e; NOC.espacio = e;
@@ -882,7 +899,8 @@
     if (!opc.sinVista) {
       var actual = VISTAS.filter(function (x) { return x.def.id === activa; })[0];
       if (!actual || !enEspacio(actual.def)) {
-        var u = ultimaPorEsp[e], cand = VISTAS.filter(function (x) { return enEspacio(x.def); });
+        var u = ultimaPorEsp[e], cand = VISTAS.filter(function (x) { return enEspacio(x.def) && tabVisible(x.def); });
+        if (!cand.length) cand = VISTAS.filter(function (x) { return enEspacio(x.def); });
         var v = cand.filter(function (x) { return x.def.id === u; })[0] || cand[0];
         if (v) activarVista(v.def.id); else pintarTabs();
       } else pintarTabs();
@@ -1034,8 +1052,7 @@
   }
   function pintarInicio() {
     if (!elInicio) return;
-    // Revisión 12 (PREGUNTAS, inicio.js): en SIMPLE, INICIO = "¿Qué quieres saber?"; esta portada queda para EXPERTO
-    if (typeof NOC.pintarInicio === "function" && NOC.nivel !== "experto") { try { if (NOC.pintarInicio(elInicio) !== false) return; } catch (e) { console.error("NOC.pintarInicio", e); } }
+    // Revisión 14: las preguntas guiadas (inicio.js) se retiran; esta portada es solo de EXPERTO (en SIMPLE se va a RED)
     var r = NOC.resultado, ref = NOC.modo === "ref", c = cuentaSev(), m = ocMax(r);
     pedirDisp();
     // 1 · estado de la red (gráfico)
@@ -1101,9 +1118,9 @@
       barraTraza() + (nSup ? '<p class="ini-sup">' + ico("documento", 14) + '<span class="chip">' + nSup + ' ' + esc(t({ es: "supuestos", en: "assumptions" })) + '</span><span class="chip">' + nPend + ' ' + esc(t({ es: "por validar", en: "to validate" })) + '</span></p>' : '') +
       '<div class="solo-experto">' + det + '</div>',
       boton('data-espacio="datos"', t({ es: "Abrir DATOS", en: "Open DATA" }), "", true));
-    // 4 · espacios: icono grande + 1 línea
+    // 4 · espacios: icono pequeño + 1 línea (Revisión 14: sin iconos gigantes)
     var tEsp = '<nav class="ini-esps" aria-label="' + esc(t(T.espacios)) + '">' + ESPACIOS.filter(function (e) { return e.id !== "inicio"; }).map(function (e) {
-      var i = ESP_IDS.indexOf(e.id) + 1, cuerpo = ico(e.id, 34) + '<b>' + esc(t(e.n)) + '</b><span>' + esc(t(ESP_CORTO[e.id] || e.d)) + '</span><kbd class="solo-experto">' + i + '</kbd>';
+      var i = ESP_IDS.indexOf(e.id) + 1, cuerpo = ico(e.id, 18) + '<b>' + esc(t(e.n)) + '</b><span>' + esc(t(ESP_CORTO[e.id] || e.d)) + '</span><kbd class="solo-experto">' + i + '</kbd>';
       return e.href ? '<a class="ie" href="' + e.href + '" title="' + esc(t(e.d)) + '">' + cuerpo + '</a>' : '<button type="button" class="ie" data-espacio="' + e.id + '" title="' + esc(t(e.d)) + '">' + cuerpo + '</button>';
     }).join("") + '</nav>';
     // 5 · accesos rápidos
@@ -1275,7 +1292,7 @@
     var caido = r ? r.caido : caso.fallos.indexOf(id) >= 0;
     var o = NOC.ocupacion(r), cd = NOC.claseDato(n);
     var cap = n.capacidad_gbps;
-    var h = sec(t(T.estado), '<div class="fi-est">' + (NOC.icono ? NOC.icono(n.tipo, 28) : '') + '<div>' +
+    var h = sec(t(T.estado), '<div class="fi-est">' + (NOC.icono ? NOC.icono(window.NOC_ICONOS && NOC_ICONOS.claveNodo ? NOC_ICONOS.claveNodo(n) : n.tipo, 20) : '') + '<div>' +
       (caido ? (NOC.textoEstado ? NOC.textoEstado("unk", "DOWN") : NOC.insignia("unk", "DOWN")) + ' <span>' + esc(t(T.caido)) + '</span>' : (NOC.textoEstado ? NOC.textoEstado(o == null ? "ok" : NOC.sevOcupacion(o), o == null ? "OK" : null) : NOC.insignia(o == null ? "ok" : NOC.sevOcupacion(o))) + ' <span>' + esc(t(T.servicio)) + '</span>') +
       '<div class="tx2">' + esc(t(TIPO_NODO[n.tipo] || { es: n.tipo })) + (esNum(cap) ? ' · ' + gb(cap) : '') + '<span class="tx3 mono solo-experto"> · ' + t({ es: "capa ", en: "layer " }) + NOC.capaNodo(n) + '</span></div></div></div>' +
       (r && o != null ? medOcup(o, caido, gb(r.carga_gbps) + (esNum(cap) ? " / " + gb(cap) : "")) : '') + botonFallo(id, caido));
@@ -1721,7 +1738,8 @@
   NOC.setLang = setLang;
   // Revisión 11: al cambiar SIMPLE / EXPERTO se repintan las piezas que cambian de texto (lo demás lo oculta el CSS)
   if (NOC.alNivel) NOC.alNivel(function (nv) {
-    try { pintarBarra(); pintarDock(); pintarEstado(); refrescarFicha(); if (ESP === "inicio") pintarInicio(); } catch (e) { console.error("nivel", e); }
+    try { aplicarClasesEsp(); pintarBarra(); pintarDock(); pintarEstado(); refrescarFicha(); if (ESP === "inicio") { if (sinInicio()) setEspacio("red"); else pintarInicio(); }
+      else { var va = VISTAS.filter(function (x) { return x.def.id === activa; })[0]; if (va && !tabVisible(va.def)) { var c1 = VISTAS.filter(function (x) { return enEspacio(x.def) && tabVisible(x.def); })[0]; if (c1) activarVista(c1.def.id); } else pintarTabs(); } } catch (e) { console.error("nivel", e); }
     emitir("nivel", nv);
   });
 

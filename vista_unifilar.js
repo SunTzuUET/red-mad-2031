@@ -309,7 +309,16 @@
       b.g = g;
       b.r = S("rect", { x: 0.5, y: 0.5, width: b.w - 1, height: b.h - 1, class: "uf-r" }, g);
       var chica = b.h < 30;
-      b.t1 = S("text", { x: 6, y: chica ? 14 : 13, class: "uf-id" + (chica ? " uf-id-s" : "") }, g);
+      // Revisión 14: icono fiel del equipo (torre gNB, router, DC, MEC, IX, satélite, estadio…) delante del nombre
+      var I = window.NOC_ICONOS, nd = NOC.idx && NOC.idx.nodos ? NOC.idx.nodos[b.id] : null, xi = 6;
+      if (I && I.trazos && nd) {
+        var k = I.claveNodo(nd); k = I.alias[k] || k;
+        var ic = S("svg", { x: 5, y: chica ? 4 : 3, width: 12, height: 12, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2,
+          "stroke-linecap": "round", "stroke-linejoin": "round", class: "uf-ico", "aria-hidden": "true" }, g);
+        ic.innerHTML = I.trazos[k] || "";
+        xi = 20;
+      }
+      b.t1 = S("text", { x: xi, y: chica ? 14 : 13, class: "uf-id" + (chica ? " uf-id-s" : "") }, g);
       setT(b.t1, rotulo(b));
       b.bd = S("g", { class: "uf-bd" }, g);
       b.bdr = S("rect", { x: b.w - 38, y: 4, width: 33, height: 12 }, b.bd);

@@ -68,8 +68,83 @@
     experto: '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="10" cy="18" r="1.6"/>',
     simple: '<path d="M4 8h16M4 16h16"/><circle cx="12" cy="8" r="1.6"/><circle cx="12" cy="16" r="1.6"/>'
   };
+  // ---------- Revisión 14: iconos fieles a cada elemento (pequeños, 14–20 px, trazo fino) ----------
+  // gNB = mástil con 3 paneles de sector; la banda se marca con una onda (n28 larga, n78 media, n258 corta y densa).
+  var TORRE = '<path d="M9 10v11M6.5 21 9 10l2.5 11M7.3 17h3.4"/><path d="M5 3v5M9 2v5M13 3v5M5 5.5h8"/>';
+  P.gnb = TORRE + '<path d="M15.5 9.5a4 4 0 0 1 0 5M18 7.5a7 7 0 0 1 0 9"/>';
+  P.sitio = P.gnb;
+  P.n28 = TORRE + '<path d="M14.5 16q2.25-4.5 4.5 0t4.5 0"/>';
+  P.n78 = TORRE + '<path d="M14.5 16q1.1-3 2.25 0t2.25 0t2.25 0t2.25 0"/>';
+  P.n258 = TORRE + '<path d="M14.5 16q.55-2 1.1 0t1.1 0t1.1 0t1.1 0t1.1 0t1.1 0t1.1 0t1.1 0"/>';
+  // OLT / armario de acceso fijo con divisor PON
+  P.olt = '<rect x="3" y="2.5" width="10" height="19"/><path d="M5.5 6h5M5.5 9h5M5.5 12h5M8 17.5h.01"/><path d="M13 15h3M16 15l5-4M16 15h5M16 15l5 4"/>';
+  // router (agregación): cilindro con flechas cruzadas
+  P.router = '<ellipse cx="12" cy="9" rx="9" ry="3.5"/><path d="M3 9v6c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V9"/><path d="M7 8l3 1.6M17 10l-3-1.6M14.5 7.2l-1 1M9.5 10.8l1-1"/>';
+  P.agg = P.router;
+  // metro (WDM): caja de conmutación con flechas en los dos sentidos
+  P.metro = '<rect x="2.5" y="5" width="19" height="14"/><path d="M6 9.5h8M12 7.5l2 2-2 2M18 14.5h-8M12 12.5l-2 2 2 2"/>';
+  // DC: edificio con racks
+  P.dc = '<path d="M4 21V5.5L12 3l8 2.5V21M2.5 21h19"/><path d="M8 8.5h8M8 11.5h8M8 14.5h8"/><path d="M10.5 21v-3h3v3"/>';
+  // Edge / MEC: servidor bajo una nube
+  P.edge = '<path d="M7.5 10.5a3.3 3.3 0 0 1 .3-6.6 4.4 4.4 0 0 1 8.4 1.1 2.8 2.8 0 0 1 .3 5.5z"/><rect x="5" y="13.5" width="14" height="3.3"/><rect x="5" y="17.8" width="14" height="3.3"/><path d="M7.5 15.15h.01M7.5 19.45h.01M12 10.5v3"/>';
+  // IX: punto de intercambio (nodo central con 4 redes)
+  P.ix = '<circle cx="12" cy="12" r="3.2"/><circle cx="4.5" cy="4.5" r="2"/><circle cx="19.5" cy="4.5" r="2"/><circle cx="4.5" cy="19.5" r="2"/><circle cx="19.5" cy="19.5" r="2"/><path d="M6 6l3.7 3.7M18 6l-3.7 3.7M6 18l3.7-3.7M18 18l-3.7-3.7"/>';
+  // NTN: satélite con paneles y haz
+  P.ntn = '<rect x="9.2" y="7.2" width="5.6" height="5.6" transform="rotate(45 12 10)"/><path d="M9 7 6.5 4.5M15 13l2.5 2.5"/><path d="M3 5.5 5.5 3l3 3L6 8.5zM16 14.5l2.5-2.5 3 3-2.5 2.5z"/><path d="M9 16.5a5 5 0 0 0-5 5M12 18.5a3 3 0 0 0-3 3"/>';
+  // V2X: coche + semáforo
+  P.v2x = '<path d="M2.5 18v-3l2-4.5h8l2 4.5v3z"/><path d="M2.5 15h12"/><circle cx="5.5" cy="18.5" r="1.3"/><circle cx="11.5" cy="18.5" r="1.3"/><rect x="17.5" y="2.5" width="4" height="10"/><path d="M19.5 5h.01M19.5 7.5h.01M19.5 10h.01M19.5 12.5V21.5"/>';
+  // IoT: sensor con señal
+  P.iot = '<rect x="3.5" y="11" width="9" height="9"/><circle cx="8" cy="15.5" r="1.6"/><path d="M6 11V9M10 11V9"/><path d="M14.5 7.5a4.5 4.5 0 0 1 3 3M14.5 3.5a8.5 8.5 0 0 1 7 7"/>';
+  // demandas especiales
+  P.hospital = '<path d="M4 21V7h16v14M2.5 21h19"/><path d="M8 7V3.5h8V7"/><path d="M12 9.5v6M9 12.5h6"/><path d="M10 21v-3h4v3"/>';
+  P.fabrica = '<path d="M2.5 21V11l5 3v-3l5 3v-3l5 3V3.5h3.5V21z"/><path d="M6 17.5h2M11 17.5h2"/>';
+  P.estadio = '<ellipse cx="12" cy="9.5" rx="9.5" ry="4"/><ellipse cx="12" cy="9.5" rx="5" ry="1.8"/><path d="M2.5 9.5v5c0 2.2 4.3 4 9.5 4s9.5-1.8 9.5-4v-5M7 18v-4M17 18v-4M12 18.5v-4"/>';
+  P.evento = P.estadio;
+  P.camara = '<rect x="2.5" y="8" width="13" height="8"/><path d="M15.5 10.5 21.5 8v8l-6-2.5"/><path d="M5.5 16v4.5M3 20.5h5"/>';
+  P.empresa = P.l2vpn;
+
   // Alias: claves del motor (CLASES_SERVICIO, tipo de nodo, severidad) -> icono
   var ALIAS = { movil: "embb", empresa: "l2vpn", core: "dc", site: "sitio", unk: "down", caido: "down", grave: "crit",
-    sat: "ntn", wdm: "metro", mpls: "enlace", backhaul: "agg", acceso: "sitio", simulación: "simulacion", análisis: "analisis" };
-  window.NOC_ICONOS = { trazos: P, alias: ALIAS };
+    sat: "ntn", wdm: "metro", mpls: "enlace", backhaul: "agg", acceso: "sitio", simulación: "simulacion", análisis: "analisis",
+    mec: "edge", oneweb: "ntn", antena: "gnb" };
+  // Icono de un nodo de RED: por tipo y, en sitios e IX, por lo que es (estadio, hospital, fábrica, V2X, satélite, cámaras, L2VPN)
+  function claveNodo(n) {
+    if (!n) return "unk";
+    var id = String(n.id || "");
+    if (n.tipo === "ix") return /ONEWEB|SAT/.test(id) ? "ntn" : /IMS/.test(id) ? "ims" : "ix";
+    if (n.tipo === "site") {
+      if (/METROPOLITANO|ESTADIO/.test(id)) return "estadio";
+      if (/HOSPITAL/.test(id)) return "hospital";
+      if (/INDUSTRIA|FABRICA/.test(id)) return "fabrica";
+      if (/V2X/.test(id)) return "v2x";
+      if (/NTN/.test(id)) return "ntn";
+      if (/L2VPN/.test(id)) return "l2vpn";
+      if (/VALDEBEBAS|CAMARA/.test(id)) return "camara";
+      return "gnb";
+    }
+    return ALIAS[n.tipo] || n.tipo || "unk";
+  }
+  // Imagen (para <canvas>) de un icono con un color; caché por clave|color|tamaño
+  var IMG = {};
+  function imagen(clave, color, tam) {
+    var k = ALIAS[clave] || clave, p = P[k] || P.unk;
+    tam = Math.max(8, Math.round(tam || 16));
+    var c = clave + "|" + color + "|" + tam;
+    if (IMG[c]) return IMG[c];
+    var sw = Math.max(0.75, 1.5 * 24 / tam).toFixed(2);
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + tam + '" height="' + tam + '" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="' + sw +
+      '" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>';
+    var im = new Image();
+    im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    IMG[c] = im;
+    return im;
+  }
+  // SVG en línea con color fijo (para marcadores de Leaflet y SVG anidados)
+  function svgColor(clave, color, tam, x, y) {
+    var k = ALIAS[clave] || clave, p = P[k] || P.unk;
+    tam = tam || 16;
+    return '<svg' + (x != null ? ' x="' + x + '" y="' + y + '"' : '') + ' width="' + tam + '" height="' + tam + '" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="' + Math.max(0.75, 1.5 * 24 / tam).toFixed(2) +
+      '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + p + '</svg>';
+  }
+  window.NOC_ICONOS = { trazos: P, alias: ALIAS, claveNodo: claveNodo, imagen: imagen, svg: svgColor };
 })();

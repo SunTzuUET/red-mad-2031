@@ -49,3 +49,4 @@
   font: 11px/1.45 var(--sans); padding: 3px 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .uf-tip[hidden] { display: none; }
 .uf-sw { display: inline-block; width: 8px; height: 8px; margin-right: 4px; }
+.uf-ico { color: var(--tx2); pointer-events: none; }

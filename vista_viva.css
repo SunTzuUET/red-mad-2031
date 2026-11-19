@@ -120,3 +120,33 @@
 body.menos-mov .vista-viva .vv-rb { animation: none; }
 /* la capa accesible dibuja su propio anillo de foco (el contorno rectangular del <g> tapaba la red) */
 .vista-viva .vv-ov .vv-o:focus, .vista-viva .vv-ov .vv-o:focus-visible { outline: none !important; }
+
+/* ---------- Revisión 14: mapa de Madrid de fondo y cromo compacto (portátil) ---------- */
+.vista-viva .vv-mapa { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: var(--bg0); }
+.vista-viva .vv-cv { z-index: 1; }
+.vista-viva .vv-ov { z-index: 2; }
+.vista-viva .vv-capa { z-index: 2; }
+.vista-viva.sin-mapa .vv-mapa { visibility: hidden; }
+.vista-viva .vv-mapa .leaflet-control-container .leaflet-bottom.leaflet-right { pointer-events: auto; }
+.vista-viva .vv-mapa .leaflet-control-attribution { font-size: 8px; opacity: .7; }
+.vista-viva .vv-herr { left: 8px; top: 50%; transform: translateY(-50%); gap: 3px; padding: 3px; background: rgba(0,0,0,.72); }
+.vista-viva .vv-herr button { width: 32px; height: 32px; }
+.vista-viva .vv-migas { left: 50px; top: 8px; }
+.vista-viva .vv-migas > button { font-size: 11px; padding: 4px 8px; background: rgba(0,0,0,.6); }
+.vista-viva .vv-zoom { margin-left: 8px; }
+.vista-viva .vv-zoom button { width: 26px; height: 26px; background: rgba(0,0,0,.72); }
+.vista-viva .vv-disp { display: inline-flex; margin-left: 8px; border: 1px solid var(--line2); }
+.vista-viva .vv-disp button { background: rgba(0,0,0,.72); color: var(--tx2); border: 0; font: 600 11px var(--sans); padding: 4px 8px; cursor: pointer; }
+.vista-viva .vv-disp button[aria-pressed="true"] { background: var(--tx1); color: var(--bg0); }
+.vista-viva .vv-ley { right: 8px; top: 8px; max-width: 320px; }
+.vista-viva .vv-ley-b, .vista-viva .vv-ley-c { background: rgba(0,0,0,.78); }
+.vista-viva .vv-li svg { flex: none; }
+.vista-viva .vv-reloj { left: 50px; right: 10px; bottom: 8px; height: 44px; grid-template-columns: 30px 96px 1fr; gap: 8px; padding: 4px 8px; background: rgba(0,0,0,.8); }
+.vista-viva .vv-rplay { width: 30px; height: 30px; }
+.vista-viva .vv-rh { font-size: 20px; }
+.vista-viva .vv-rbanda { height: 34px; }
+.vista-viva .vv-rbanda svg { height: 24px; }
+.vista-viva .vv-rcursor { height: 28px; }
+.vista-viva .vv-rhoras { top: 24px; font-size: 9px; }
+/* en SIMPLE no hay reloj propio sobre el mapa: en SIMULACIÓN ya está la fila HORA de la barra */
+body.n-simple .vista-viva .vv-reloj { display: none; }

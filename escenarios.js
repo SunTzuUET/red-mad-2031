@@ -451,7 +451,7 @@
       return '<h3 class="ds-h3">' + esc(t(tit)) + '</h3><div class="ds-tarjetas">' + xs.map(function (x) {
         var cur = UI.partida === x.k;
         return '<button type="button" class="ds-tj' + (cur ? " cur" : "") + '" data-ds="partida" data-k="' + esc(x.k) + '" aria-pressed="' + cur + '"' + (x.desc ? ' title="' + esc(typeof x.desc === "string" ? x.desc : t(x.desc)) + '"' : '') + '>' +
-          '<span class="ds-tj-ico">' + ico(x.ico, 26) + '</span><span class="ds-tj-n">' + esc(t(x.n)) + '</span>' +
+          '<span class="ds-tj-ico">' + ico(x.ico, 18) + '</span><span class="ds-tj-n">' + esc(t(x.n)) + '</span>' +
           (x.sub ? '<span class="ds-tj-s">' + esc(x.sub) + '</span>' : '') + tiraEventos(x.evs) + '</button>';
       }).join("") + '</div>';
     }
@@ -1281,7 +1281,7 @@
     if (!ini || ini.querySelector(".ds-entrada-ini")) return;
     var d = document.createElement("div");
     d.className = "ds-entrada-ini";
-    d.innerHTML = '<button type="button" class="ds-ini-btn" data-accion="disenar-escenario">' + ico("quepasa", 28) +
+    d.innerHTML = '<button type="button" class="ds-ini-btn" data-accion="disenar-escenario">' + ico("quepasa", 18) +
       '<span><b>' + esc(t({ es: "Diseñar escenario", en: "Design scenario" })) + '</b><small>' + esc(t({ es: "Partida · cuándo · qué pasa · operador · resultado", en: "Start · when · what happens · operator · result" })) + '</small></span>' + ico("der", 18) + '</button>';
     var cab = ini.querySelector(".ini-cab");
     if (cab && cab.nextSibling) ini.insertBefore(d, cab.nextSibling); else ini.insertBefore(d, ini.firstChild);
