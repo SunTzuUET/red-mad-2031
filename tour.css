@@ -1,0 +1,18 @@
+/* tour.css — recorrido guiado (Revisión 11). Solo tokens de noc.css. */
+.tour { position: fixed; inset: 0; z-index: 4000; }
+.tour-foco { position: fixed; border: 2px solid var(--steel); box-shadow: 0 0 0 9999px rgba(0,0,0,.72); pointer-events: none; transition: all .18s ease; }
+.tour-foco[hidden] { display: block; left: 50%; top: 50%; width: 0; height: 0; border: 0; }
+.tour-caja { position: fixed; width: 340px; max-width: calc(100vw - 16px); background: var(--bg1); border: 1px solid var(--line3); border-top: 2px solid var(--steel);
+  padding: 14px 16px; color: var(--tx1); font: 400 14px/1.5 var(--sans); }
+.tour-cab { display: flex; align-items: center; gap: 10px; }
+.tour-cab svg { color: var(--steel); }
+.tour-cab h2 { margin: 0; flex: 1; font: 600 14px var(--sans); letter-spacing: .06em; text-transform: uppercase; }
+.tour-n { color: var(--tx3); font-size: 12px; }
+.tour-caja p { margin: 10px 0 12px; color: var(--tx1); }
+.tour-puntos { display: flex; gap: 6px; margin-bottom: 12px; }
+.tour-puntos i { width: 18px; height: 3px; background: var(--line3); }
+.tour-puntos i.on { background: var(--steel); }
+.tour-pie { display: flex; align-items: center; gap: 8px; }
+.tour-pie .btn { height: 30px; min-width: 28px; }
+.tour-esp { flex: 1; }
+@media (prefers-reduced-motion: reduce) { .tour-foco { transition: none; } }

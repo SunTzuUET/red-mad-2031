@@ -224,6 +224,227 @@
     if (b) { ev.preventDefault(); ev.stopPropagation(); NOC.seleccionar(b.getAttribute("data-lj-tipo"), b.getAttribute("data-lj-elem")); }
   }, true);
 
+  // ======================================================================== grafo fuente → fórmula → valor (Revisión 11, GRAFICOS)
+  // Filas de arriba abajo: orígenes (fuentes externas, de clase, supuestos o huecos; los que llegan por varios pasos, con línea
+  // discontinua) → entradas → fórmula (con el supuesto propio al lado) → valor. Clic en una entrada = el grafo se centra en ella
+  // (con "volver"); clic en un origen o en la fórmula = su detalle debajo. Tooltips con data-tip (ratón, foco y toque).
+  var GLIFO = {
+    externa: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5S9.4 5.9 12 3.5z"/>',
+    norma: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h5"/>',
+    fabricante: '<rect x="6" y="6" width="12" height="12"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/>',
+    clase: '<path d="M3 5.5c3-1 6-1 9 1v13c-3-2-6-2-9-1z"/><path d="M21 5.5c-3-1-6-1-9 1v13c3-2 6-2 9-1z"/>',
+    memoria: '<path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/>',
+    sup: '<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.6"/><path d="M12 16.8v.4"/>',
+    hueco: '<path d="M9 7.5 7.5 6a3.5 3.5 0 0 0-5 5L4 12.5M15 16.5l1.5 1.5a3.5 3.5 0 0 0 5-5L20 11.5"/><path d="M8 2.5v2.5M2.5 8H5M16 21.5V19M21.5 16H19"/>',
+    dato: '<path d="M9.5 4 7.5 20M16.5 4l-2 16M4.5 9h15M4 15h15"/>',
+    fx: '<path d="M15.5 4.5c-2.5-.8-4 .4-4.5 3L8.5 19.5c-.5 2.2-2 2.8-4 2.2M7 10h8"/>',
+    mas: '<path d="M12 6v12M6 12h12"/>'
+  };
+  function glifo(k, x, y, tam) {
+    tam = tam || 16;
+    return '<g class="lg-ico lg-ico-' + k + '" transform="translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ') scale(' + (tam / 24).toFixed(3) + ')"><g fill="none" stroke="currentColor" stroke-width="' + (1.5 * 24 / tam).toFixed(2) + '" stroke-linecap="round" stroke-linejoin="round">' + (GLIFO[k] || GLIFO.dato) + '</g></g>';
+  }
+  function glifoHTML(k, tam) {
+    tam = tam || 14;
+    return '<svg class="lg-ico-h lg-ico-' + k + '" width="' + tam + '" height="' + tam + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (1.5 * 24 / tam).toFixed(2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (GLIFO[k] || "") + '</svg>';
+  }
+  function claseFuente(tp) { return tp === "externa" ? "externa" : tp === "norma" ? "norma" : tp === "fabricante" ? "fabricante" : tp === "clase" ? "clase" : "memoria"; }
+  // orígenes raíz (fuentes de los datos hoja, supuestos y huecos) de un valor, con memo
+  var RAIZ = {};
+  function raices(vid, pila) {
+    if (RAIZ[vid]) return RAIZ[vid];
+    var v = V[vid], out = {};
+    if (!v) return out;
+    pila = pila || {};
+    if (pila[vid]) return out;
+    pila[vid] = 1;
+    if (v.fuente) out["fuente:" + v.fuente.id] = { k: "fuente", id: v.fuente.id, loc: v.fuente.localizador };
+    if (v.supuesto) out[(v.estado === "hueco" && !(v.entradas || []).length ? "hueco:" : "sup:") + v.supuesto] = { k: v.estado === "hueco" && !(v.entradas || []).length ? "hueco" : "sup", id: v.supuesto, vid: vid };
+    if (!v.fuente && !v.supuesto && !(v.entradas || []).length && v.estado === "hueco") out["hueco:" + vid] = { k: "hueco", id: vid, vid: vid };
+    (v.entradas || []).forEach(function (e) { var r = raices(e, pila); Object.keys(r).forEach(function (q) { out[q] = r[q]; }); });
+    delete pila[vid];
+    RAIZ[vid] = out;
+    return out;
+  }
+  function origenDirecto(x) {
+    if (x.fuente) return { k: "fuente", id: x.fuente.id, loc: x.fuente.localizador };
+    if (x.supuesto && !(x.entradas || []).length) return { k: x.estado === "hueco" ? "hueco" : "sup", id: x.supuesto, vid: x.id };
+    if (x.estado === "hueco" && !(x.entradas || []).length) return { k: "hueco", id: x.id, vid: x.id };
+    return null;
+  }
+  function claveNodo(n) { return n.k + ":" + n.id; }
+  function cortar(s, n) { s = String(s || ""); return s.length > n ? s.slice(0, Math.max(1, n - 1)) + "…" : s; }
+  function etiquetaValor(x) { return x.campo && x.campo !== "valor" ? x.campo.replace(/_/g, " ") : (x.elemento || x.id); }
+  function textoNodo(n) {
+    if (n.k === "valor") {
+      var x = V[n.id] || {};
+      return { l1: etiquetaValor(x), l2: valorTxt(x) + unidad(x.unidad), tip: x.id + " · " + nombreValor(x) + " = " + valorTxt(x) + unidad(x.unidad) + " · " + t(TX[x.estado] || { es: x.estado, en: x.estado }) + ((x.entradas || []).length ? " · " + t({ es: "clic: ver de dónde sale", en: "click: see where it comes from" }) : ""), ico: x.formula ? "fx" : x.supuesto && !x.fuente ? "sup" : "dato" };
+    }
+    if (n.k === "fuente") {
+      var f = FU[n.id] || { id: n.id };
+      return { l1: f.editor || f.id, l2: cortar(f.localizador || f.titulo || f.id, 60), tip: (f.editor ? f.editor + " · " : "") + (f.titulo || f.id) + (f.localizador ? " · " + f.localizador : "") + " · " + (f.verificada ? t(TX.verif) : t(TX.noVerif)), ico: claseFuente(f.tipo) };
+    }
+    if (n.k === "sup" || n.k === "hueco") {
+      var s = SUP[n.id] || {}, xv = n.vid && V[n.vid];
+      return { l1: n.k === "hueco" ? t(TX.hueco) : t(TX.supuesto), l2: (SUP[n.id] ? n.id + " · " : "") + cortar(s.texto || s.motivo || (xv ? nombreValor(xv) : n.id), 60), tip: n.id + " · " + (s.texto || s.motivo || "") + (s.fuente_propuesta ? " · " + t(TX.propuesta) + ": " + s.fuente_propuesta : ""), ico: n.k };
+    }
+    if (n.k === "fx") {
+      var fx = FX[n.id] || { id: n.id };
+      return { l1: "ƒ " + fx.id + (fx.nombre ? " · " + fx.nombre : ""), l2: fx.expr || "", tip: fx.id + " · " + (fx.nombre || "") + " · " + (fx.expr || "") + (fx.justificacion ? " · " + fx.justificacion : ""), ico: "fx" };
+    }
+    return { l1: "+" + n.n, l2: t({ es: "entradas más", en: "more inputs" }), tip: "+" + n.n, ico: "mas" };
+  }
+  function maquetaGrafo(vid) {
+    var v = V[vid], filas = [], aristas = [], vistos = {};
+    var obj = { k: "valor", id: vid, obj: true };
+    function nodo(n) { var c = claveNodo(n); if (!vistos[c]) vistos[c] = n; return vistos[c]; }
+    var ent = v.entradas || [];
+    if (ent.length) {
+      var MAXE = 6, ins = ent.slice(0, MAXE).map(function (id) { return nodo({ k: "valor", id: id }); });
+      if (ent.length > MAXE) ins.push({ k: "mas", id: vid + "+", n: ent.length - MAXE });
+      var orig = [], MAXO = 6, sobran = 0;
+      ins.forEach(function (n) {
+        if (n.k !== "valor" || !V[n.id]) return;
+        var x = V[n.id], d = origenDirecto(x);
+        var lista = d ? [{ n: d, dir: true }] : Object.keys(raices(n.id)).map(function (q) { return { n: raices(n.id)[q], dir: false }; });
+        lista.forEach(function (o) {
+          var c = claveNodo(o.n);
+          if (!vistos[c]) { if (orig.length >= MAXO) { sobran++; return; } orig.push(nodo(o.n)); }
+          aristas.push({ a: vistos[c], b: n, ind: !o.dir });
+        });
+      });
+      if (sobran) orig.push({ k: "mas", id: vid + "+o", n: sobran });
+      if (orig.length) filas.push(orig);
+      filas.push(ins);
+      var fila3 = [];
+      var fx = v.formula ? nodo({ k: "fx", id: v.formula }) : null;
+      if (fx) { fila3.push(fx); ins.forEach(function (n) { aristas.push({ a: n, b: fx }); }); aristas.push({ a: fx, b: obj }); }
+      else ins.forEach(function (n) { aristas.push({ a: n, b: obj }); });
+      var propio = v.fuente ? { k: "fuente", id: v.fuente.id, loc: v.fuente.localizador } : v.supuesto ? { k: "sup", id: v.supuesto, vid: vid } : null;
+      if (propio) { var pn = nodo(propio); if (orig.indexOf(pn) < 0) { fila3.push(pn); aristas.push({ a: pn, b: obj }); } }
+      if (fila3.length) filas.push(fila3);
+    } else {
+      var o = origenDirecto(v) || (v.formula ? { k: "fx", id: v.formula } : null);
+      if (o) { var on = nodo(o); filas.push([on]); aristas.push({ a: on, b: obj }); }
+    }
+    filas.push([obj]);
+    // posiciones (ancho fijo del viewBox; el SVG escala al ancho de la ficha)
+    var W = 340, bh = 40, gx = 8, gy = 24, y = 6;
+    filas.forEach(function (f, fi) {
+      var unico = f.length === 1, porLinea = unico ? 1 : Math.min(f.length, 3);
+      for (var i = 0; i < f.length; i += porLinea) {
+        var trozo = f.slice(i, i + porLinea), n = trozo.length;
+        var bw = unico ? (f[0].obj ? 250 : 230) : (W - gx * (porLinea - 1)) / porLinea;
+        var anchoT = n * bw + (n - 1) * gx, x0 = (W - anchoT) / 2;
+        trozo.forEach(function (nd, j) { nd.x = x0 + j * (bw + gx); nd.y = y; nd.w = bw; nd.h = nd.obj ? 46 : bh; nd.fila = fi; });
+        y += (trozo[0].obj ? 46 : bh) + (i + porLinea < f.length ? 8 : gy);
+      }
+    });
+    return { filas: filas, aristas: aristas, W: W, H: y - gy + 10, obj: obj };
+  }
+  function grafoSVG(vid) {
+    var v = V[vid];
+    if (!v) return "";
+    var G = maquetaGrafo(vid), o = "";
+    o += '<svg class="lg-svg" viewBox="0 0 ' + G.W + ' ' + G.H + '" width="100%" role="group" aria-label="' + esc(t(TX.sec) + ": " + nombreValor(v)) + '">' +
+      '<defs><marker id="lg-flecha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--tx3)"/></marker>' +
+      '<pattern id="lg-rayas" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(245,197,24,.35)" stroke-width="2"/></pattern></defs>';
+    G.aristas.forEach(function (e) {
+      var a = e.a, b = e.b;
+      if (a.x == null || b.x == null) return;
+      var x1 = a.x + a.w / 2, y1 = a.y + a.h, x2 = b.x + b.w / 2, y2 = b.y - 2, ym = (y1 + y2) / 2;
+      o += '<path class="lg-ar' + (e.ind ? " lg-ar-ind" : "") + '" d="M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + 'C' + x1.toFixed(1) + ' ' + ym.toFixed(1) + ' ' + x2.toFixed(1) + ' ' + ym.toFixed(1) + ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1) + '" marker-end="url(#lg-flecha)"/>';
+    });
+    G.filas.forEach(function (f) {
+      f.forEach(function (n) {
+        var tx = textoNodo(n), est = n.k === "valor" ? (V[n.id] || {}).estado : n.k === "hueco" ? "hueco" : "";
+        var clase = "lg-n lg-" + n.k + (n.obj ? " lg-obj" : "") + (est ? " lg-e-" + est : "") + (n.k === "fuente" ? " lg-f-" + claseFuente((FU[n.id] || {}).tipo) : "");
+        var ir = n.k === "valor" && !n.obj ? ' data-lj-gir="' + esc(n.id) + '"' : n.k === "mas" ? "" : ' data-lj-gdet="' + esc(n.k + "|" + n.id + "|" + (n.loc || n.vid || "")) + '"';
+        var car = Math.floor((n.w - 34) / 6.2);
+        o += '<g class="' + clase + '"' + ir + ' tabindex="0" role="button" aria-label="' + esc(tx.tip) + '" data-tip="' + esc(tx.tip) + '">' +
+          '<rect class="lg-r" x="' + n.x.toFixed(1) + '" y="' + n.y.toFixed(1) + '" width="' + n.w.toFixed(1) + '" height="' + n.h + '"/>' +
+          (est === "hueco" ? '<rect x="' + n.x.toFixed(1) + '" y="' + n.y.toFixed(1) + '" width="' + n.w.toFixed(1) + '" height="' + n.h + '" fill="url(#lg-rayas)" pointer-events="none"/>' : '') +
+          glifo(tx.ico, n.x + 6, n.y + (n.h - 16) / 2, 16) +
+          '<text class="lg-t1" x="' + (n.x + 28).toFixed(1) + '" y="' + (n.y + (n.obj ? 19 : 16)).toFixed(1) + '">' + esc(cortar(tx.l1, car)) + '</text>' +
+          '<text class="lg-t2" x="' + (n.x + 28).toFixed(1) + '" y="' + (n.y + (n.obj ? 36 : 31)).toFixed(1) + '">' + esc(cortar(tx.l2, car)) + '</text>';
+        if (n.k === "valor" && est && est !== "trazado") o += '<text class="lg-tag lg-tag-' + est + '" x="' + (n.x + n.w - 4).toFixed(1) + '" y="' + (n.y + 11).toFixed(1) + '" text-anchor="end">' + esc(t(TX[est])) + '</text>';
+        if (n.k === "fuente" && FU[n.id] && !FU[n.id].verificada) o += '<text class="lg-tag lg-tag-nover" x="' + (n.x + n.w - 4).toFixed(1) + '" y="' + (n.y + 11).toFixed(1) + '" text-anchor="end">?</text>';
+        if (n.k === "valor" && !n.obj && (V[n.id] || {}).entradas && V[n.id].entradas.length) o += '<text class="lg-mas" x="' + (n.x + n.w - 5).toFixed(1) + '" y="' + (n.y + n.h - 6).toFixed(1) + '" text-anchor="end">▸</text>';
+        o += '</g>';
+      });
+    });
+    return o + '</svg>';
+  }
+  function leyendaGrafo() {
+    return '<div class="lg-ley">' + [["externa", { es: "fuente externa", en: "external source" }], ["clase", { es: "material de clase", en: "class material" }],
+      ["fx", { es: "fórmula", en: "formula" }], ["sup", TX.supuesto], ["hueco", TX.hueco]].map(function (x) {
+      return '<span class="lg-ley-i lg-ico-' + x[0] + '">' + glifoHTML(x[0], 14) + esc(t(x[1])) + '</span>';
+    }).join("") + '<span class="lg-ley-i"><svg width="22" height="8" aria-hidden="true"><path d="M0 4H22" class="lg-ar lg-ar-ind"/></svg>' + esc(t({ es: "por varios pasos", en: "via several steps" })) + '</span></div>';
+  }
+  // contenedor del grafo: navegación propia (pila) dentro de la ficha
+  function grafoHTML(vid, pila) {
+    pila = pila || [];
+    var v = V[vid];
+    if (!v) return "";
+    var migas = pila.length ? '<button type="button" class="btn lg-volver" data-lj-gvolver="1">← ' + esc(t({ es: "volver", en: "back" })) + '</button><span class="lg-migas tx3">' +
+      pila.concat([vid]).map(function (p) { return esc(etiquetaValor(V[p] || { id: p })); }).join(" › ") + '</span>' : '';
+    return '<div class="lg-cab">' + marcaEstado(v.estado) + '<b class="lg-tit">' + esc(nombreValor(v)) + '</b>' + migas + '</div>' + grafoSVG(vid) + leyendaGrafo() + '<div class="lg-det"></div>';
+  }
+  function pintarGrafo(cont, vid, pila) {
+    cont.setAttribute("data-lj-g", vid);
+    cont.setAttribute("data-lj-pila", JSON.stringify(pila || []));
+    cont.innerHTML = grafoHTML(vid, pila);
+  }
+  function detalleNodo(k, id, extra) {
+    if (k === "fuente") return fuenteHTML(id, extra, true);
+    if (k === "fx") {
+      var f = FX[id] || { id: id }, vars = Object.keys(f.variables || {});
+      return '<div class="lj-blq lj-fx"><div class="lj-blq-cab"><span class="rot">' + esc(t(TX.formula)) + '</span> <span class="mono">' + esc(f.id) + '</span> ' + esc(f.nombre || "") + '</div><div class="lj-expr">' + esc(f.expr || "") + '</div>' +
+        (vars.length ? '<dl class="lj-vars">' + vars.map(function (q) { var x = f.variables[q] || {}; return '<dt>' + esc(q) + '</dt><dd>' + esc(x.desc || "") + (x.unidad ? ' <span class="lj-u">[' + esc(x.unidad) + ']</span>' : '') + '</dd>'; }).join("") + '</dl>' : '') +
+        (f.justificacion ? '<p class="nota lj-just"><span class="rot">' + esc(t(TX.justif)) + '</span> ' + esc(f.justificacion) + '</p>' : '') +
+        ((f.refs || []).length ? '<div class="lj-refs"><span class="rot">' + esc(t(TX.refs)) + '</span>' + f.refs.map(function (r) { return fuenteHTML(r); }).join("") + '</div>' : '') + '</div>';
+    }
+    if (k === "sup" || k === "hueco") return SUP[id] ? supHTML(id) : (V[id] ? '<div class="lj-sup">' + esc(nombreValor(V[id])) + ' · ' + esc(t(TX.hueco)) + (V[id].nota ? '<div class="nota">' + esc(V[id].nota) + '</div>' : '') + '</div>' : '');
+    return "";
+  }
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest("[data-lj-gir], [data-lj-gdet], [data-lj-gvolver], [data-lj-gcampo]");
+    if (!b) return;
+    var cont = b.closest(".lj-grafo");
+    if (!cont) return;
+    ev.preventDefault(); ev.stopPropagation();
+    var pila = []; try { pila = JSON.parse(cont.getAttribute("data-lj-pila") || "[]"); } catch (e) { pila = []; }
+    var act = cont.getAttribute("data-lj-g");
+    if (b.hasAttribute("data-lj-gir")) { pila.push(act); pintarGrafo(cont, b.getAttribute("data-lj-gir"), pila); }
+    else if (b.hasAttribute("data-lj-gvolver")) { var prev = pila.pop(); if (prev) pintarGrafo(cont, prev, pila); }
+    else if (b.hasAttribute("data-lj-gcampo")) {
+      var w = b.closest(".lj-gw");
+      Array.prototype.forEach.call(w.querySelectorAll("[data-lj-gcampo]"), function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      pintarGrafo(cont, b.getAttribute("data-lj-gcampo"), []);
+    } else {
+      var p = b.getAttribute("data-lj-gdet").split("|"), det = cont.querySelector(".lg-det");
+      if (det) { var html = detalleNodo(p[0], p[1], p.slice(2).join("|")); det.innerHTML = det.getAttribute("data-k") === b.getAttribute("data-lj-gdet") ? "" : html; det.setAttribute("data-k", det.innerHTML ? b.getAttribute("data-lj-gdet") : ""); }
+    }
+  }, true);
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    var b = ev.target.closest && ev.target.closest(".lj-grafo [data-lj-gir], .lj-grafo [data-lj-gdet]");
+    if (!b) return;
+    ev.preventDefault();
+    b.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  });
+  // bloque de ficha: chips de campo (si hay varios) + grafo
+  function bloqueGrafo(lista) {
+    if (!lista.length) return "";
+    var pref = lista.filter(function (c) { var v = V[c.v]; return v && (v.entradas || []).length; })[0] || lista[0];
+    var chips = lista.length > 1 ? '<div class="lg-campos" role="group">' + lista.slice(0, 14).map(function (c) {
+      var v = V[c.v] || {};
+      return '<button type="button" class="lg-campo lg-c-' + esc(v.estado || "") + '" data-lj-gcampo="' + esc(c.v) + '" aria-pressed="' + (c === pref) + '" title="' + esc(c.v + " · " + t(TX[v.estado] || { es: "", en: "" })) + '">' + esc(c.et) + '</button>';
+    }).join("") + (lista.length > 14 ? '<span class="tx3">+' + (lista.length - 14) + '</span>' : '') + '</div>' : '';
+    var cont = '<div class="lj-grafo" data-lj-g="' + esc(pref.v) + '" data-lj-pila="[]">' + grafoHTML(pref.v, []) + '</div>';
+    return '<div class="lj-gw">' + chips + cont + '</div>';
+  }
+
   // ======================================================================== ficha: "¿De dónde sale?"
   var CAMPOS = {
     zona: ["poblacion", "poblacion_2025", "hogares", "hogares_2025", "hogar_medio", "empresas_2025", "abonados_fijos", "abonados_moviles", "lineas_datos_moviles", "dl_gbps", "ul_gbps"],
@@ -285,9 +506,10 @@
       claves.forEach(function (c) { var v = V[c.v]; if (v) n[v.estado] = (n[v.estado] || 0) + 1; });
       h += '<div class="lj-res"><span class="tx3">' + claves.length + ' ' + esc(t(TX.campos)) + '</span>' +
         ['trazado', 'hueco', 'discrepa'].map(function (e) { return n[e] ? ' ' + marcaEstado(e) + '<span class="mono"> ' + n[e] + '</span>' : ''; }).join("") + '</div>';
-      h += '<div class="lj-arbol">' + claves.map(function (c) {
-        var et = c.elemento === sel.id ? c.campo : c.elemento.replace(sel.id + "/", "").replace("R-" + sel.id + "-", "") + " · " + c.campo;
-        return nodoValor(c.v, sel.id + "|" + c.clave, et);
+      var etq = function (c) { return c.elemento === sel.id ? c.campo : c.elemento.replace(sel.id + "/", "").replace("R-" + sel.id + "-", "") + " · " + c.campo; };
+      h += bloqueGrafo(claves.map(function (c) { return { v: c.v, et: etq(c).replace(/_/g, " ") }; }));
+      h += '<div class="lj-arbol solo-experto">' + claves.map(function (c) {
+        return nodoValor(c.v, sel.id + "|" + c.clave, etq(c));
       }).join("") + '</div>';
     }
     if (sin.length || !claves.length) {
@@ -334,7 +556,8 @@
     var html = '<div class="ficha-sec lj-ficha lj-sola" data-pl="linaje"><h3>' + esc(t(TX.sec)) + '</h3>' +
       '<div class="lj-res">' + marcaEstado(v.estado) + ' <span class="mono">' + esc(v.id) + '</span> <span class="tx3">' + esc(v.ambito || "") + '</span>' +
       (tipo ? ' · <a href="#" data-lj-elem="' + esc(v.elemento) + '" data-lj-tipo="' + tipo + '">' + esc(t(TX.verFicha)) + ' ' + esc(v.elemento) + '</a>' : '') + '</div>' +
-      '<div class="lj-arbol">' + nodoValor(vid, "solo", nombreValor(v), true) + '</div>' +
+      bloqueGrafo([{ v: vid, et: nombreValor(v) }]) +
+      '<div class="lj-arbol solo-experto">' + nodoValor(vid, "solo", nombreValor(v), true) + '</div>' +
       (usa.length ? '<div class="lj-usa"><span class="rot">' + esc(t(TX.usadoEn)) + ' · ' + usa.length + '</span> ' + usa.slice(0, 30).map(function (p) {
         return '<button type="button" class="chip lj-chip" data-lj-abrir="' + esc(p) + '">' + esc(p) + '</button>';
       }).join(" ") + (usa.length > 30 ? ' <span class="tx3">+' + (usa.length - 30) + '</span>' : '') + '</div>' : '') + '</div>';
@@ -382,6 +605,37 @@
     return '<span class="lj-barra" title="' + esc(t(TX.trazado) + " " + x.trazado + " · " + t(TX.hueco) + " " + x.hueco + " · " + t(TX.discrepa) + " " + x.discrepa) + '">' +
       '<i class="lj-b-ok" style="width:' + tr.toFixed(2) + '%"></i><i class="lj-b-hu" style="width:' + hu.toFixed(2) + '%"></i><i class="lj-b-di" style="width:' + di.toFixed(2) + '%"></i></span>';
   }
+  // Revisión 11 (GRAFICOS): cobertura como barra apilada con etiquetas (hueco rayado, discrepa con borde), por ámbito y huecos en barras.
+  function barraGrande(x) {
+    var seg = [["trazado", "ok", x.trazado], ["hueco", "hu", x.hueco], ["discrepa", "di", x.discrepa || 0]].filter(function (q) { return q[2] > 0; });
+    var lbl = seg.map(function (q) { return t(TX[q[0]]) + " " + q[2] + " (" + num(pct(q[2], x.total), 1) + " %)"; }).join(" · ");
+    return '<div class="lj-gb" role="img" aria-label="' + esc(t(TX.cobertura) + ": " + lbl) + '">' + seg.map(function (q) {
+      var w = pct(q[2], x.total);
+      return '<div class="lj-gb-s lj-gb-' + q[1] + '" style="flex:' + Math.max(w, 0.8).toFixed(2) + ' 1 0" data-tip="' + esc(t(TX[q[0]]) + ": " + q[2] + " / " + x.total) + '" tabindex="0">' +
+        (w >= 7 ? '<span class="lj-gb-t">' + glifoHTML(q[0] === "trazado" ? "dato" : q[0] === "hueco" ? "hueco" : "sup", 13) + esc(t(TX[q[0]])) + ' <b>' + num(w, 1) + ' %</b></span>' : '') + '</div>';
+    }).join("") + '</div><div class="lj-gb-ley">' + seg.map(function (q) {
+      return '<span><i class="lj-sw lj-gb-' + q[1] + '"></i>' + esc(t(TX[q[0]])) + ' <b class="mono">' + q[2] + '</b></span>';
+    }).join("") + '<span class="tx3">' + esc(t({ es: "de", en: "of" })) + ' ' + x.total + ' ' + esc(t(TX.valores).toLowerCase()) + '</span></div>';
+  }
+  function barrasAmbito(ambs) {
+    return '<div class="lj-ab" role="list">' + ambs.map(function (a) {
+      var tr = pct(a.trazado, a.total), hu = pct(a.hueco, a.total), di = pct(a.discrepa || 0, a.total);
+      var lbl = a.id + ": " + t(TX.trazado) + " " + num(tr, 1) + " % · " + t(TX.hueco) + " " + a.hueco + " · " + t(TX.discrepa) + " " + (a.discrepa || 0) + " · " + a.total;
+      return '<div class="lj-ab-f" role="listitem" tabindex="0" aria-label="' + esc(lbl) + '" data-tip="' + esc(lbl) + '"><span class="lj-ab-n">' + esc(a.id) + '</span>' +
+        '<span class="lj-ab-b"><i class="lj-gb-ok" style="width:' + tr.toFixed(2) + '%"></i><i class="lj-gb-hu" style="width:' + hu.toFixed(2) + '%"></i><i class="lj-gb-di" style="width:' + di.toFixed(2) + '%"></i></span>' +
+        '<span class="lj-ab-v mono">' + num(tr, 0) + ' %' + (a.hueco ? ' <span class="lj-ab-h">' + glifoHTML("hueco", 11) + a.hueco + '</span>' : '') + '</span></div>';
+    }).join("") + '</div>';
+  }
+  function barrasHuecos(hs) {
+    if (!hs.length) return "";
+    var top = hs.slice(0, 10), mx = top[0].bloquea || 1;
+    return '<div class="lj-hb">' + top.map(function (x) {
+      var v = V[x.id] || {}, s = SUP[x.supuesto] || {}, nom = v.elemento ? nombreValor(v) : x.id;
+      var lbl = x.id + " · " + nom + " · " + t(TX.bloquea) + " " + x.bloquea + (s.texto ? " · " + s.texto : "");
+      return '<button type="button" class="lj-hb-f" data-lj-abrir="' + esc(x.id) + '" aria-label="' + esc(lbl) + '" data-tip="' + esc(lbl) + '">' +
+        '<span class="lj-hb-n">' + glifoHTML("hueco", 12) + esc(cortar(nom, 34)) + '</span><span class="lj-hb-b"><i style="width:' + (x.bloquea / mx * 100).toFixed(1) + '%"></i></span><b class="mono">' + x.bloquea + '</b></button>';
+    }).join("") + (hs.length > 10 ? '<p class="nota tx3">+' + (hs.length - 10) + ' ' + esc(t(TX.mas)) + '</p>' : '') + '</div>';
+  }
   function sec(id, tit, extra, cuerpo) {
     var pl = NOC.plegado("lj:" + id);
     return '<section class="lj-sec' + (pl ? " plegado" : "") + '" data-plegable="lj:' + id + '"><button type="button" class="plg lj-sec-cab" data-plegar="lj:' + id + '" aria-expanded="' + !pl + '">' +
@@ -401,13 +655,13 @@
       }).join("") + '</span></div>' +
       '<div class="lj-banda nota">' + esc(t(TX.leyenda)) + ' <span class="tx3">' + esc(L.generado_por || "") + ' · ' + esc(L.generado || "") + '</span></div>';
     // cobertura por ámbito
-    var hAmb = '<div class="lj-total">' + barra(T0) + '</div><table class="tabla lj-tab"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">' + esc(t({ es: "Total", en: "Total" })) +
+    var hAmb = barraGrande(T0) + barrasAmbito(C.ambitos) + '<table class="tabla lj-tab solo-experto"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">' + esc(t({ es: "Total", en: "Total" })) +
       '</th><th class="lj-bcol">' + esc(t(TX.cobertura)) + '</th><th class="n">' + esc(t(TX.trazado)) + '</th><th class="n">' + esc(t(TX.hueco)) + '</th><th class="n">' + esc(t(TX.discrepa)) + '</th></tr></thead><tbody>' +
       C.ambitos.map(function (a) {
         return '<tr><td>' + esc(a.id) + '</td><td class="n">' + a.total + '</td><td class="lj-bcol">' + barra(a) + '</td><td class="n">' + num(pct(a.trazado, a.total), 1) + ' %</td><td class="n">' + a.hueco + '</td><td class="n">' + (a.discrepa || 0) + '</td></tr>';
       }).join("") + '</tbody></table>';
     // huecos
-    var hHu = '<table class="tabla lj-tab lj-click"><thead><tr><th>' + esc(t({ es: "Raíz", en: "Root" })) + '</th><th class="n">' + esc(t(TX.bloquea)) + '</th><th>' + esc(t(TX.supuesto)) + '</th><th>' + esc(t(TX.propuesta)) + '</th></tr></thead><tbody>' +
+    var hHu = barrasHuecos(C.huecos) + '<table class="tabla lj-tab lj-click solo-experto"><thead><tr><th>' + esc(t({ es: "Raíz", en: "Root" })) + '</th><th class="n">' + esc(t(TX.bloquea)) + '</th><th>' + esc(t(TX.supuesto)) + '</th><th>' + esc(t(TX.propuesta)) + '</th></tr></thead><tbody>' +
       C.huecos.map(function (x) {
         var s = SUP[x.supuesto] || {}, v = V[x.id] || {};
         return '<tr data-lj-abrir="' + esc(x.id) + '" title="' + esc(t(TX.abrir)) + '"><td class="mono">' + esc(x.id) + '<div class="tx3 lj-sub">' + esc(nombreValor(v)) + ' = ' + esc(valorTxt(v) + unidad(v.unidad)) + '</div></td><td class="n"><b>' + x.bloquea + '</b></td>' +

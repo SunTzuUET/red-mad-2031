@@ -83,3 +83,50 @@
 @media (max-width: 900px) {
   .pl-cuerpo, .sd-cuerpo { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---- Revisión 11 (GRAFICOS): mapa de calor elementos × años y barras de disponibilidad ---- */
+.pl-calor { width: 100%; overflow-x: auto; }
+.pl-hm { display: block; }
+.pl-hm-anio { fill: var(--tx3); font: 11px var(--sans); cursor: pointer; font-variant-numeric: tabular-nums; }
+.pl-hm-anio.fuerte { fill: var(--tx1); font-weight: 600; }
+.pl-hm-anio:hover { fill: var(--tx1); }
+.pl-hm-colsel { fill: none; stroke: var(--steel); stroke-width: 1; stroke-dasharray: 3 2; }
+.pl-hm-fila { cursor: pointer; outline: none; }
+.pl-hm-golpe { fill: transparent; }
+.pl-hm-fila:hover .pl-hm-golpe, .pl-hm-fila:focus .pl-hm-golpe { fill: rgba(255,255,255,.05); }
+.pl-hm-fila:focus-visible .pl-hm-golpe { stroke: var(--steel); stroke-width: 1; }
+.pl-hm-et { fill: var(--tx1); font: 12px var(--sans); }
+.pl-hm-ico { color: var(--tx2); }
+.pl-hm-c rect:first-child { stroke: none; }
+.pl-hm-fila:hover .pl-hm-c:hover rect:first-child { stroke: var(--steel); stroke-width: 1.5; }
+.pl-cs-ok { fill: #12301f; background: #12301f; }
+.pl-cs-min { fill: var(--min); background: var(--min); }
+.pl-cs-maj { fill: var(--maj); background: var(--maj); }
+.pl-cs-crit { fill: var(--crit); background: var(--crit); }
+.pl-cs-na { fill: var(--bg2); }
+i.pl-cs { display: inline-block; width: 12px; height: 12px; }
+i.pl-cs-crit { background-image: repeating-linear-gradient(45deg, rgba(0,0,0,.55) 0 2px, transparent 2px 5px); }
+.pl-tt-f i.pl-cs-ok, .pl-tt-f i.pl-cs-min, .pl-tt-f i.pl-cs-maj, .pl-tt-f i.pl-cs-crit { height: 10px; }
+.pl-hm-v { font: 600 11px var(--sans); font-variant-numeric: tabular-nums; pointer-events: none; fill: #000; }
+.pl-hm-v-ok { fill: var(--tx2); font-weight: 400; }
+.pl-hm-v-crit { fill: #fff; paint-order: stroke; stroke: #000; stroke-width: 2.5px; }
+.pl-info { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1px solid var(--line3); color: var(--tx2); font: 600 11px var(--sans); cursor: help; }
+.pl-mini { display: block; margin-bottom: 8px; }
+.pl-mini rect { stroke: #000; stroke-width: 1; }
+
+.sd-bcab { display: flex; align-items: center; gap: 8px; margin: 2px 0 4px; }
+.sd-bcab .sd-tabs { margin: 0; }
+.sd-barras-w { width: 100%; margin-bottom: 10px; }
+.sd-barras { display: block; }
+.sd-b { cursor: pointer; outline: none; }
+.sd-b-golpe { fill: transparent; }
+.sd-b:hover .sd-b-golpe, .sd-b:focus .sd-b-golpe { fill: rgba(255,255,255,.05); }
+.sd-b:focus-visible .sd-b-golpe { stroke: var(--steel); stroke-width: 1; }
+.sd-b-et { fill: var(--tx1); font: 12px var(--sans); }
+.sd-b-pista { fill: var(--bg2); }
+.sd-b-v { fill: var(--steel-flat); }
+.sd-b-v.mal { fill: var(--maj); }
+.sd-b-val { fill: var(--tx2); font: 12px var(--sans); font-variant-numeric: tabular-nums; }
+.sd-b-maj { fill: var(--maj); font-weight: 600; letter-spacing: .06em; }
+.sd-obj { stroke: var(--tx1); stroke-width: 2; }
+.sd-obj-t { fill: var(--tx1); font: 600 10px var(--sans); letter-spacing: .04em; }

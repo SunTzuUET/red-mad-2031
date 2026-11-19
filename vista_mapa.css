@@ -50,3 +50,11 @@
 .mapa-leyenda.plegada .ley-cuerpo { display: none; }
 @media (max-width: 899px) { .mapa-leyenda { display: none; } }
 @media print { .mapa-leyenda { background: #fff; } }
+
+/* Revisión 11: etiquetas por nivel de zoom (clases etq-z1..3 en el contenedor del mapa) */
+.noc-etq span { display: none; align-items: center; gap: 3px; font-family: var(--sans); font-size: 10px; }
+.noc-etq span b { font-weight: 600; }
+.noc-etq span b.solo-experto { font-family: var(--mono); font-size: 9px; }
+.noc-etq svg { color: var(--tx3); }
+.etq-z1 .noc-etq .etq-n1, .etq-z2 .noc-etq .etq-n2, .etq-z3 .noc-etq .etq-n3 { display: inline-flex; }
+.etq-z2 .noc-etq .etq-n1 { color: var(--tx1); }

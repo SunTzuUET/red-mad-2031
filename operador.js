@@ -243,7 +243,9 @@
       '<div class="op-cur" style="left:' + (cursorT() / 1440 * 100).toFixed(3) + '%"></div>' +
       (evs.length ? "" : '<span class="op-vacia">' + esc(t(lab ? TX.vacia : TX.refLinea)) + '</span>') + '</div>' +
       '<button type="button" class="btn" data-op="nuevo">' + esc(t(TX.nuevo)) + '</button>' +
-      '<button type="button" class="btn" data-op="plantillas" aria-haspopup="menu">' + esc(t(TX.plantillas)) + ' ▾</button>';
+      '<button type="button" class="btn" data-op="plantillas" aria-haspopup="menu">' + esc(t(TX.plantillas)) + ' ▾</button>' +
+      // Revisión 11: abre el diseñador de escenarios (escenarios.js) en el paso "Qué pasa"
+      (document.querySelector("script[src='escenarios.js']") ? '<button type="button" class="btn prim" data-accion="disenar-escenario" data-paso="3">' + esc(t({ es: "Diseñar", en: "Design" })) + '</button>' : '');
     fila.innerHTML = h;
   }
   function ejeHTML() {
@@ -812,7 +814,14 @@
     borrar: function (uid) { borrarUid(uid); guardarEventos(); },
     vaciar: function () { lista().length = 0; guardarEventos(); },
     plantillas: plantillas, aplicarPlantilla: function (i) { var p = plantillas()[i]; if (p) aplicarPlantilla(p); },
-    accion: accionEnVivo, tipos: TIPOS, soporta: soporta
+    accion: accionEnVivo, tipos: TIPOS, soporta: soporta,
+    // Revisión 11 (diseñador de escenarios): sustituir toda la lista de una vez (un solo recálculo) y texto legible de un evento
+    reemplazar: function (evs) {
+      var l = lista(); l.length = 0;
+      (evs || []).forEach(function (e) { if (e && esNum(e.t_min) && e.tipo) { var x = anadirEvento(e); if (e.uid) x.uid = e.uid; } });
+      guardarEventos();
+    },
+    textoEvento: textoEvento
   };
 
   montarLinea();

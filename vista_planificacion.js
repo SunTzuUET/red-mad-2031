@@ -48,7 +48,12 @@
     peores: { es: "Peores sucesos (red)", en: "Worst events (network)" },
     latencia: { es: "Latencia", en: "Latency" },
     prop: { es: "propagación", en: "propagation" }, ser: { es: "serialización", en: "serialisation" }, cola: { es: "cola", en: "queue" },
-    sinCola: { es: "sin cola (prop.+ser.+nodos)", en: "no queue (prop.+ser.+nodes)" }
+    sinCola: { es: "sin cola (prop.+ser.+nodos)", en: "no queue (prop.+ser.+nodes)" },
+    calor: { es: "Qué se llena y cuándo", en: "What fills up and when" },
+    calorInfo: { es: "Una fila por elemento que pasa del 60 % algún año (enlaces, nodos, sitios y núcleo), ordenadas por el año en que llegan al 85 %. Cada celda lleva su ocupación en % y el color del estado; rayado = por encima del 100 %. * = año extrapolado. Clic en una fila: su ficha; clic en un año: lo marca.",
+      en: "One row per element that exceeds 60 % in some year (links, nodes, sites and core), sorted by the year they reach 85 %. Each cell shows its occupancy in % and the state colour; hatched = above 100 %. * = extrapolated year. Click a row: its card; click a year: marks it." },
+    dispInfo: { es: "Minutos al año sin servicio esperados por zona (N-1, N-2 por SRLG y fallos comunes, ponderados por probabilidad). La línea vertical es el objetivo de disponibilidad; las barras que la pasan van en MAJ y rayadas. Clic en una barra: su ficha.",
+      en: "Expected minutes per year without service per zone (N-1, N-2 by SRLG and common failures, weighted by probability). The vertical line is the availability target; bars beyond it are MAJ and hatched. Click a bar: its card." }
   };
 
   // ======================================================================== cálculos (con caché por caso)
@@ -208,7 +213,9 @@
       '<div class="pl-lienzo"></div><div class="pl-tt" hidden></div>' +
       '<p class="pl-pie tx3">* ' + esc(t({ es: "años > " + ANIO_MAX + " extrapolados (la v7 llega a 2031). Máximo por familia: enlaces de transporte, sitios de acceso y núcleo (BNG/UPF/IMS).", en: "years > " + ANIO_MAX + " extrapolated (v7 goes up to 2031). Maximum per family: transport links, access sites and core (BNG/UPF/IMS)." })) + '</p>' +
       '<details class="pl-det"><summary>' + esc(t(TX.tabla)) + '</summary>' + tablaAnios(p) + '</details></section>';
-    h += '<section class="pl-sec"><h3 class="lbl">' + esc(t(TX.satura)) + '</h3>' + resumenSat(p) + tablaSatura(p) + '</section>';
+    h += '<section class="pl-sec pl-ancha pl-calor-sec"><div class="pl-cab"><h3 class="lbl">' + esc(t(TX.calor)) + '</h3>' + leyendaCalor() + infoB(t(TX.calorInfo)) + '</div>' +
+      '<div class="pl-calor"></div><div class="pl-tt pl-tt-calor" role="tooltip" hidden></div></section>';
+    h += '<section class="pl-sec solo-experto"><h3 class="lbl">' + esc(t(TX.satura)) + '</h3>' + resumenSat(p) + tablaSatura(p) + '</section>';
     h += '<section class="pl-sec"><h3 class="lbl">' + esc(t(TX.avisos)) + '</h3>' +
       avisos.map(function (a) { return '<p class="pl-aviso dato-sup">' + esc(a) + '</p>'; }).join("") +
       '<div class="pl-sups">' + chipsSup(p.supuestos) + '</div>' +
@@ -222,6 +229,93 @@
     if (!p || !c) return;
     var w = Math.max(360, Math.min(1100, c.clientWidth || 700));
     c.innerHTML = grafica(p, V.anio, w);
+    var hc = V.el.querySelector(".pl-calor");
+    if (hc) hc.innerHTML = mapaCalor(p, Math.max(420, Math.min(1400, hc.clientWidth || 900)));
+  }
+
+  // ======================================================================== mapa de calor elementos × años (Revisión 11, GRAFICOS)
+  // Filas = elementos que pasan del 60 % algún año, ordenadas por año de saturación (85 %, luego 100 %); celda = estado con la cifra dentro.
+  function infoB(txt) {
+    try { if (NOC.info) { var b = NOC.info(txt); if (b) return b; } } catch (e) { /* respaldo */ }
+    return '<span class="pl-info" tabindex="0" title="' + esc(txt) + '" aria-label="' + esc(txt) + '">i</span>';
+  }
+  function icoN(k, tam) { try { return NOC.icono ? NOC.icono(k, tam || 14) : ""; } catch (e) { return ""; } }
+  function nomCorto(id) { try { return NOC.nombreCorto ? NOC.nombreCorto(id) : id; } catch (e) { return id; } }
+  var SEV_TXT = { ok: "OK", min: "MIN", maj: "MAJ", crit: "CRIT" };
+  function leyendaCalor() {
+    return '<div class="pl-ley">' + [["ok", "< 60 %"], ["min", "60–85 %"], ["maj", "85–100 %"], ["crit", "> 100 %"]].map(function (x) {
+      return '<span class="pl-ley-i"><i class="pl-cs pl-cs-' + x[0] + '"></i>' + SEV_TXT[x[0]] + ' <span class="tx3">' + x[1] + '</span></span>';
+    }).join("") + '</div>';
+  }
+  function filasCalor(p) {
+    return (p.elementos || []).filter(function (e) {
+      return (e.pct || []).some(function (v) { return esNum(v) && v >= 60; });
+    }).sort(function (a, b) {
+      return ((a.anio_85 || a.anio_100 || 9999) - (b.anio_85 || b.anio_100 || 9999)) || ((a.anio_100 || 9999) - (b.anio_100 || 9999)) || ((b.pct_fin || 0) - (a.pct_fin || 0));
+    });
+  }
+  function icoFam(e) {
+    if (e.familia === "nucleo") return String(e.tipo || e.id).toLowerCase().indexOf("bng") >= 0 ? "bng" : String(e.tipo || e.id).toLowerCase().indexOf("upf") >= 0 ? "upf" : String(e.tipo || e.id).toLowerCase().indexOf("ims") >= 0 ? "ims" : "dc";
+    if (e.familia === "sitio") return "sitio";
+    if (e.familia === "nodo") return (IDX.nodos[e.id] || {}).tipo === "agg" ? "agg" : "metro";
+    return "enlace";
+  }
+  function mapaCalor(p, W) {
+    var F = filasCalor(p), A = p.anios.map(function (a) { return a.anio; });
+    if (!F.length) return '<div class="vacio">' + esc(t({ es: "Ningún elemento pasa del 60 % en el horizonte.", en: "No element exceeds 60 % within the horizon." })) + '</div>';
+    var ml = Math.min(300, Math.max(180, W * 0.26)), mt = 22, ch = 24, gap = 2;
+    var cw = Math.max(34, (W - ml - 8) / A.length);
+    W = ml + cw * A.length + 8;
+    var H = mt + F.length * ch + 4;
+    var o = '<svg class="pl-hm" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="' + esc(t(TX.calor)) + '">' +
+      '<defs><pattern id="pl-hm-rayas" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(0,0,0,.55)" stroke-width="2"/></pattern></defs>';
+    A.forEach(function (y, j) {
+      var x = ml + j * cw, sel = y === V.anio;
+      if (sel) o += '<rect class="pl-hm-colsel" x="' + (x - 1).toFixed(1) + '" y="' + (mt - 2) + '" width="' + (cw + 0).toFixed(1) + '" height="' + (H - mt) + '"/>';
+      o += '<text class="pl-hm-anio' + (sel ? " fuerte" : "") + '" data-pl-anio="' + y + '" x="' + (x + cw / 2 - 1).toFixed(1) + '" y="' + (mt - 7) + '" text-anchor="middle">' + y + (y > ANIO_MAX ? "*" : "") + '</text>';
+    });
+    F.forEach(function (e, i) {
+      var y = mt + i * ch, nom = nomCorto(e.id);
+      var resumen = nom + " · " + nomFam(e.familia) + " · 85 %: " + (e.anio_85 || t(TX.nunca)) + " · 100 %: " + (e.anio_100 || t(TX.nunca)) + " · " + f1(e.pct_inicio) + " → " + f1(e.pct_fin) + " %";
+      o += '<g class="pl-hm-fila" tabindex="0" role="button" data-pl-el="' + esc(e.id) + '" data-i="' + i + '" aria-label="' + esc(resumen) + '">' +
+        '<rect class="pl-hm-golpe" x="0" y="' + y + '" width="' + W + '" height="' + (ch - gap) + '"/>';
+      var ic = icoN(icoFam(e), 14);
+      if (/^<svg/.test(ic)) o += '<g class="pl-hm-ico" transform="translate(4,' + (y + (ch - gap - 14) / 2).toFixed(1) + ')">' + ic + '</g>';
+      var maxCar = Math.floor((ml - 30) / 6.4);
+      o += '<text class="pl-hm-et" x="24" y="' + (y + ch / 2 + 2).toFixed(1) + '"><title>' + esc(e.id) + '</title>' + esc(nom.length > maxCar ? nom.slice(0, maxCar - 1) + "…" : nom) + '</text>';
+      (e.pct || []).forEach(function (v, j) {
+        var x = ml + j * cw, s = sevPct(v), hay = esNum(v);
+        o += '<g class="pl-hm-c" data-j="' + j + '"><rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + (cw - gap).toFixed(1) + '" height="' + (ch - gap) + '" class="pl-cs-' + (hay ? s : "na") + '"/>' +
+          (s === "crit" ? '<rect x="' + x.toFixed(1) + '" y="' + y + '" width="' + (cw - gap).toFixed(1) + '" height="' + (ch - gap) + '" fill="url(#pl-hm-rayas)"/>' : '') +
+          (cw >= 30 && hay ? '<text class="pl-hm-v pl-hm-v-' + s + '" x="' + (x + (cw - gap) / 2).toFixed(1) + '" y="' + (y + ch / 2 + 2).toFixed(1) + '" text-anchor="middle">' + (v >= 99.5 && v < 100 ? fmt(v, 1) : fmt(v, 0)) + '</text>' : '') + '</g>';
+      });
+      o += '</g>';
+    });
+    return o + '</svg>';
+  }
+  function ttCalor(e, j) {
+    var p = PL.p, y = p.anios[j] && p.anios[j].anio, v = e.pct[j], s = sevPct(v);
+    return '<div class="pl-tt-cab">' + esc(nomCorto(e.id)) + '</div><div class="tx3 mono" style="margin-bottom:4px">' + esc(e.id) + ' · ' + esc(nomFam(e.familia)) + '</div>' +
+      '<div class="pl-tt-f"><i class="pl-cs-' + s + '"></i><span>' + y + (y > ANIO_MAX ? " *" : "") + '</span><b>' + f1(v) + ' %</b><span class="tx3">' + SEV_TXT[s] + '</span></div>' +
+      (esNum((e.oferta || [])[j]) ? '<div class="pl-tt-f"><i></i><span>' + esc(t({ es: "Carga", en: "Load" })) + '</span><b>' + f1(e.oferta[j]) + ' Gbit/s</b><span class="tx3">' + (esNum(e.capacidad_gbps) ? "/ " + f1(e.capacidad_gbps) : "") + '</span></div>' : '') +
+      '<div class="pl-tt-f"><i></i><span>85 % · 100 %</span><b>' + (e.anio_85 || "—") + ' · ' + (e.anio_100 || "—") + '</b><span></span></div>';
+  }
+  function fichaElementoPlan(e) {
+    var p = PL.p, W = 300, H = 90, n = e.pct.length, mx = Math.max(110, Math.max.apply(null, e.pct.filter(esNum)) + 5), bw = W / n;
+    var o = '<svg class="pl-mini" viewBox="0 0 ' + W + ' ' + (H + 14) + '" width="100%" role="img" aria-label="' + esc(nomCorto(e.id) + ": " + e.pct.map(function (v, j) { return p.anios[j].anio + " " + f1(v) + " %"; }).join(", ")) + '">';
+    [85, 100].forEach(function (u) { var yy = H - u / mx * H; o += '<line x1="0" x2="' + W + '" y1="' + yy.toFixed(1) + '" y2="' + yy.toFixed(1) + '" class="pl-umbral" style="stroke:var(--' + (u === 85 ? "maj" : "crit") + ')"/>'; });
+    e.pct.forEach(function (v, j) {
+      if (!esNum(v)) return;
+      var hh = Math.min(H, v / mx * H);
+      o += '<rect x="' + (j * bw + 2).toFixed(1) + '" y="' + (H - hh).toFixed(1) + '" width="' + (bw - 4).toFixed(1) + '" height="' + hh.toFixed(1) + '" class="pl-cs-' + sevPct(v) + '"/>' +
+        '<text x="' + (j * bw + bw / 2).toFixed(1) + '" y="' + (H + 12) + '" text-anchor="middle" class="pl-eje">' + String(p.anios[j].anio).slice(2) + '</text>';
+    });
+    o += '</svg>';
+    NOC.seleccion = { tipo: "planificacion", id: e.id };
+    NOC.abrirFicha({ titulo: nomCorto(e.id), subtitulo: nomFam(e.familia) + " · " + t(TX.plan), html:
+      '<div class="ficha-sec"><h3>' + esc(t({ es: "Ocupación por año", en: "Occupancy per year" })) + '</h3>' + o +
+      '<dl class="kv"><dt>85 %</dt><dd>' + (e.anio_85 || esc(t(TX.nunca))) + '</dd><dt>100 %</dt><dd>' + (e.anio_100 || esc(t(TX.nunca))) + '</dd>' +
+      '<dt>' + p.desde + ' → ' + p.hasta + '</dt><dd>' + f1(e.pct_inicio) + ' → ' + f1(e.pct_fin) + ' %</dd></dl></div>' });
   }
   function tablaAnios(p) {
     return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Año", en: "Year" })) + '</th><th class="n">DL Gbit/s</th>' +
@@ -285,6 +379,25 @@
     V.sucio = true; if (V.activa) pintarPlan();
   }
 
+  function elementoPlan(id) { return ((PL.p && PL.p.elementos) || []).filter(function (e) { return e.id === id; })[0] || null; }
+  function abrirElementoPlan(id) {
+    var e = elementoPlan(id);
+    if (!e) return;
+    if (e.familia === "enlace" && IDX.enlaces[id]) { NOC.seleccionar("enlace", id); return; }
+    if (e.familia === "nodo" && IDX.nodos[id]) { NOC.seleccionar("nodo", id); return; }
+    fichaElementoPlan(e);
+  }
+  function mostrarTTCalor(fila, j, ev) {
+    var tt = V.el.querySelector(".pl-tt-calor"), sec = V.el.querySelector(".pl-calor-sec"), e = elementoPlan(fila.getAttribute("data-pl-el"));
+    if (!tt || !sec || !e) return;
+    if (j == null) j = Math.max(0, Math.min(e.pct.length - 1, V.anio - PL.p.desde));
+    tt.innerHTML = ttCalor(e, j); tt.hidden = false;
+    var box = sec.getBoundingClientRect(), x, y;
+    if (ev && ev.clientX) { x = ev.clientX - box.left + 14; y = ev.clientY - box.top + 12; }
+    else { var r = fila.getBoundingClientRect(); x = r.left - box.left + 200; y = r.bottom - box.top + 4; }
+    if (x + 250 > box.width) x = Math.max(4, x - 270);
+    tt.style.left = x + "px"; tt.style.top = y + "px";
+  }
   function montarPlan(el) {
     V.el = el; el.classList.add("pl");
     el.addEventListener("change", function (ev) {
@@ -298,10 +411,23 @@
         var c = JSON.parse(JSON.stringify(NOC.caso || {})); c.anio = V.anio;
         NOC.aplicarCaso(c); return;
       }
-      if ((b = ev.target.closest("[data-pl-anio]"))) { V.anio = Number(b.getAttribute("data-pl-anio")); pintarPlan(); }
+      if ((b = ev.target.closest("[data-pl-anio]"))) { V.anio = Number(b.getAttribute("data-pl-anio")); pintarPlan(); return; }
+      if ((b = ev.target.closest("[data-pl-el]"))) { ev.stopPropagation(); abrirElementoPlan(b.getAttribute("data-pl-el")); }
     });
+    el.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      var b = ev.target.closest && ev.target.closest("[data-pl-el]");
+      if (b) { ev.preventDefault(); abrirElementoPlan(b.getAttribute("data-pl-el")); }
+    });
+    el.addEventListener("focusin", function (ev) {
+      var f = ev.target.closest && ev.target.closest(".pl-hm-fila");
+      if (f) mostrarTTCalor(f, null, ev);
+    });
+    el.addEventListener("focusout", function () { var tt = el.querySelector(".pl-tt-calor"); if (tt) tt.hidden = true; });
     el.addEventListener("mousemove", function (ev) {
-      var g = ev.target.closest && ev.target.closest(".pl-golpe"), tt = el.querySelector(".pl-tt"), cr = el.querySelector(".pl-cruz");
+      var fc = ev.target.closest && ev.target.closest(".pl-hm-fila"), ttc = el.querySelector(".pl-tt-calor");
+      if (fc) { var cc = ev.target.closest(".pl-hm-c"); mostrarTTCalor(fc, cc ? Number(cc.getAttribute("data-j")) : null, ev); } else if (ttc) ttc.hidden = true;
+      var g = ev.target.closest && ev.target.closest(".pl-golpe"), tt = el.querySelector(".pl-tt:not(.pl-tt-calor)"), cr = el.querySelector(".pl-cruz");
       if (!tt) return;
       if (!g || !PL.p) { tt.hidden = true; if (cr) cr.style.display = "none"; return; }
       var i = Number(g.getAttribute("data-i")), box = el.querySelector(".pl-graf").getBoundingClientRect();
@@ -311,7 +437,7 @@
       tt.style.left = x + "px"; tt.style.top = y + "px";
       if (cr) { var gx = Number(g.getAttribute("x")) + Number(g.getAttribute("width")) / 2; cr.setAttribute("x1", gx); cr.setAttribute("x2", gx); cr.style.display = ""; }
     });
-    el.addEventListener("mouseleave", function () { var tt = el.querySelector(".pl-tt"); if (tt) tt.hidden = true; });
+    el.addEventListener("mouseleave", function () { Array.prototype.forEach.call(el.querySelectorAll(".pl-tt"), function (tt) { tt.hidden = true; }); });
     pintarPlan();
   }
   NOC.registrarVista({ id: "planificacion", grupo: "analisis", titulo: { es: "PLANIFICACIÓN", en: "PLANNING" }, montar: montarPlan,
@@ -431,12 +557,56 @@
     if (tab === "servicios" && NOC.infoServicio && NOC.infoServicio[id]) return t(NOC.infoServicio[id].n || NOC.infoServicio[id].nombre || { es: id, en: id });
     return id;
   }
+  function tabsDisp() {
+    var tabs = [["zonas", { es: "Zonas", en: "Zones" }], ["servicios", { es: "Servicios", en: "Services" }], ["slices", { es: "Slices", en: "Slices" }], ["especiales", { es: "Especiales", en: "Special" }]];
+    return '<div class="sd-tabs" role="tablist">' + tabs.map(function (x) { return '<button type="button" role="tab" class="uf-seg" data-sd-tab="' + x[0] + '" aria-pressed="' + (W.tabD === x[0]) + '" aria-selected="' + (W.tabD === x[0]) + '">' + esc(t(x[1])) + '</button>'; }).join("") + '</div>';
+  }
+  // Barras horizontales (Revisión 11, GRAFICOS): min/año sin servicio por ámbito, con la línea del objetivo; las que la pasan, MAJ y rayadas.
+  function objetivoMin(D, k) {
+    var obj = D.objetivos || {}, P = D.parametros || {}, pct = k === "S-HOSPITAL-CRITICO" ? obj.hospital_pct : obj.nucleo_pct;
+    return esNum(pct) ? { pct: pct, min: (100 - pct) / 100 * (P.minutos_anio || 525960) } : null;
+  }
+  function barrasDisp(D) {
+    var g = D[W.tabD] || {}, ks = Object.keys(g).filter(function (k) { return esNum(g[k].indisp_min_anio); }).sort(function (a, b) { return g[b].indisp_min_anio - g[a].indisp_min_anio; });
+    if (!ks.length) return '<div class="vacio">—</div>';
+    var cont = W.el && W.el.querySelector(".sd-barras-w"), Wd = Math.max(320, Math.min(760, (cont && cont.clientWidth) || 520));
+    var ml = Math.min(170, Math.max(120, Wd * 0.3)), mr = 118, rh = 24, mt = 18, iw = Wd - ml - mr;
+    var mx = 0;
+    ks.forEach(function (k) { var o = objetivoMin(D, k); mx = Math.max(mx, g[k].indisp_min_anio, o ? o.min * 1.12 : 0); });
+    mx = mx || 1;
+    var H = mt + ks.length * rh + 6;
+    function X(v) { return ml + Math.max(0, Math.min(1, v / mx)) * iw; }
+    var o = '<svg class="sd-barras" width="' + Wd + '" height="' + H + '" viewBox="0 0 ' + Wd + ' ' + H + '" role="group" aria-label="' + esc(t({ es: "Indisponibilidad por ámbito, minutos al año", en: "Unavailability per scope, minutes per year" })) + '">' +
+      '<defs><pattern id="sd-rayas" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="rgba(0,0,0,.6)" stroke-width="2.2"/></pattern></defs>' +
+      '<text class="pl-eje" x="' + ml + '" y="11">0</text><text class="pl-eje" x="' + (ml + iw) + '" y="11" text-anchor="end">' + fmt(mx, mx >= 10 ? 0 : 1) + ' min/' + esc(t({ es: "año", en: "yr" })) + '</text>';
+    var objs = {};
+    ks.forEach(function (k, i) {
+      var x = g[k], y = mt + i * rh, ob = objetivoMin(D, k), mal = ob && x.indisp_min_anio > ob.min, nom = nomItem(W.tabD, k);
+      var lbl = nom + ": " + fmt(x.indisp_min_anio, 1) + " min/" + t({ es: "año", en: "yr" }) + " · " + fmt(x.disponibilidad_pct, 4) + " %" + (ob ? " · " + t({ es: "objetivo", en: "target" }) + " " + fmt(ob.pct, ob.pct >= 99.999 ? 3 : 2) + " % (" + fmt(ob.min, 1) + " min)" + (mal ? " · MAJ" : " · OK") : "");
+      o += '<g class="sd-b" data-sd-disp="' + esc(k) + '" tabindex="0" role="button" aria-label="' + esc(lbl) + '" data-tip="' + esc(lbl) + '">' +
+        '<rect class="sd-b-golpe" x="0" y="' + y + '" width="' + Wd + '" height="' + (rh - 2) + '"/>' +
+        '<text class="sd-b-et" x="' + (ml - 8) + '" y="' + (y + rh / 2 + 3) + '" text-anchor="end">' + esc(nom.length > 24 ? nom.slice(0, 23) + "…" : nom) + '</text>' +
+        '<rect class="sd-b-pista" x="' + ml + '" y="' + (y + 5) + '" width="' + iw + '" height="' + (rh - 12) + '"/>' +
+        '<rect class="sd-b-v' + (mal ? " mal" : "") + '" x="' + ml + '" y="' + (y + 5) + '" width="' + Math.max(1.5, X(x.indisp_min_anio) - ml).toFixed(1) + '" height="' + (rh - 12) + '"/>' +
+        (mal ? '<rect x="' + ml + '" y="' + (y + 5) + '" width="' + Math.max(1.5, X(x.indisp_min_anio) - ml).toFixed(1) + '" height="' + (rh - 12) + '" fill="url(#sd-rayas)"/>' : '') +
+        '<text class="sd-b-val" x="' + (ml + iw + 8) + '" y="' + (y + rh / 2 + 3) + '">' + fmt(x.indisp_min_anio, x.indisp_min_anio >= 10 ? 0 : 1) + ' min' + (mal ? ' <tspan class="sd-b-maj">MAJ</tspan>' : '') + '</text>';
+      if (ob) {
+        var ox = X(ob.min);
+        o += '<line class="sd-obj" x1="' + ox.toFixed(1) + '" x2="' + ox.toFixed(1) + '" y1="' + (y + 1) + '" y2="' + (y + rh - 3) + '"/>';
+        objs[ob.pct] = ox;
+      }
+      o += '</g>';
+    });
+    Object.keys(objs).forEach(function (p) {
+      o += '<text class="sd-obj-t" x="' + objs[p].toFixed(1) + '" y="11" text-anchor="middle">' + esc(t({ es: "objetivo", en: "target" })) + ' ' + fmt(Number(p), Number(p) >= 99.999 ? 3 : 2) + ' %</text>';
+    });
+    return o + '</svg>';
+  }
   function tablaDisp(D) {
     var tabs = [["zonas", { es: "Zonas", en: "Zones" }], ["servicios", { es: "Servicios", en: "Services" }], ["slices", { es: "Slices", en: "Slices" }], ["especiales", { es: "Especiales", en: "Special" }]];
     var g = D[W.tabD] || {}, ks = Object.keys(g).sort(function (a, b) { return g[b].indisp_min_anio - g[a].indisp_min_anio; });
     var obj = D.objetivos || {};
-    return '<div class="sd-tabs">' + tabs.map(function (x) { return '<button type="button" class="uf-seg" data-sd-tab="' + x[0] + '" aria-pressed="' + (W.tabD === x[0]) + '">' + esc(t(x[1])) + '</button>'; }).join("") + '</div>' +
-      '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">DL Gbit/s</th><th class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th><th class="n">%</th><th>' +
+    return '<table class="tabla pl-tab"><thead><tr><th>' + esc(t({ es: "Ámbito", en: "Scope" })) + '</th><th class="n">DL Gbit/s</th><th class="n">min/' + esc(t({ es: "año", en: "yr" })) + '</th><th class="n">%</th><th>' +
       esc(t({ es: "Peor suceso", en: "Worst event" })) + '</th></tr></thead><tbody>' +
       ks.map(function (k) {
         var x = g[k], p = x.peor || {}, objPct = k === "S-HOSPITAL-CRITICO" ? obj.hospital_pct : obj.nucleo_pct;
@@ -541,12 +711,15 @@
     c.innerHTML = '<div class="sd-red"><span><span class="tx3">' + esc(t({ es: "Red", en: "Network" })) + '</span> <b class="mono">' + fmt(red.indisp_min_anio, 1) + ' min/' + esc(t({ es: "año", en: "yr" })) + '</b> · <b class="mono">' + fmt(red.disponibilidad_pct, 4) + ' %</b></span>' +
       (esNum(obj.nucleo_pct) ? '<span>' + (red.disponibilidad_pct >= obj.nucleo_pct ? NOC.insignia("ok", "OK") : NOC.insignia("maj", "MAJ")) + ' <span class="tx3">' + esc(t({ es: "objetivo núcleo", en: "core target" })) + '</span> ' + fmt(obj.nucleo_pct, 2) + ' % (' + fmt(minObj, 1) + ' min)</span>' : '') +
       (esNum(obj.hospital_pct) ? '<span class="tx3">' + esc(t({ es: "hospital", en: "hospital" })) + ' ' + fmt(obj.hospital_pct, 3) + ' %</span>' : '') + '</div>' +
+      '<div class="sd-bcab">' + tabsDisp() + infoB(t(TX.dispInfo)) + '</div><div class="sd-barras-w"></div>' +
       '<div class="sd-mapa-w"><div class="sd-mapa"></div><div class="sd-ley"><span class="lbl">min/' + esc(t({ es: "año", en: "yr" })) + '</span>' +
       RAMPA.map(function (c2, i) { return '<span><i style="background:' + c2 + '"></i>' + binTxt(i) + '</span>'; }).join("") +
       '<span class="tx3">' + esc(t({ es: "área ∝ DL", en: "area ∝ DL" })) + '</span></div></div>' +
-      tablaDisp(D) + '<h3 class="lbl sd-h">' + esc(t(TX.peores)) + '</h3>' + tablaSucesos(D) +
-      '<p class="nota tx3 sd-par">' + esc(t({ es: "Parámetros", en: "Parameters" })) + ': ' + esc(Object.keys(P).filter(function (k) { return esNum(P[k]); }).map(function (k) { return k + "=" + (Math.abs(P[k]) < 0.01 ? P[k].toExponential(2) : fmt(P[k], 2)); }).join(" · ")) +
+      '<div class="solo-experto">' + tablaDisp(D) + '<h3 class="lbl sd-h">' + esc(t(TX.peores)) + '</h3>' + tablaSucesos(D) + '</div>' +
+      '<p class="nota tx3 sd-par solo-experto">' + esc(t({ es: "Parámetros", en: "Parameters" })) + ': ' + esc(Object.keys(P).filter(function (k) { return esNum(P[k]); }).map(function (k) { return k + "=" + (Math.abs(P[k]) < 0.01 ? P[k].toExponential(2) : fmt(P[k], 2)); }).join(" · ")) +
       ' · ' + esc(obj.fuente || "") + '</p><div class="pl-sups">' + chipsSup(D.supuestos) + '</div>';
+    var bw = c.querySelector(".sd-barras-w");
+    if (bw) bw.innerHTML = barrasDisp(D);
     pintarMapaDisp(D);
   }
   function montarSLA(el) {
@@ -558,6 +731,11 @@
       if ((b = ev.target.closest("[data-sd-slice]"))) { var k = b.getAttribute("data-sd-slice"); W.slice = W.slice === k ? null : k; pintarSLA(); return; }
       if ((b = ev.target.closest("[data-sd-tab]"))) { W.tabD = b.getAttribute("data-sd-tab"); pintarDisp(); return; }
       if ((b = ev.target.closest("[data-sd-disp]"))) { abrirDisp(b.getAttribute("data-sd-disp")); return; }
+    });
+    el.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      var b = ev.target.closest && ev.target.closest(".sd-b");
+      if (b) { ev.preventDefault(); abrirDisp(b.getAttribute("data-sd-disp")); }
     });
     pintarSLA();
   }

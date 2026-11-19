@@ -862,6 +862,8 @@
   });
   if (NOC.reloj && NOC.reloj.alSerie) NOC.reloj.alSerie(function () { if (E.abierto && E.mc) { var m = panel && panel.querySelector("#em-mc"); if (m) m.innerHTML = htmlMC(); } });
 
-  NOC.editorModelo = { abrir: abrir, cerrar: cerrar, modelo: function () { return copia(modeloCaso()); }, importar: importarCSV, montecarlo: calcularMC, estado: function () { return E; } };
+  NOC.editorModelo = { abrir: abrir, cerrar: cerrar, modelo: function () { return copia(modeloCaso()); }, importar: importarCSV, montecarlo: calcularMC, estado: function () { return E; },
+    // Revisión 11 (diseñador de escenarios): releer el borrador desde NOC.caso.modelo_usuario tras cambiarlo fuera del panel
+    recargar: function () { E.D = copia(modeloCaso()) || {}; pintarBoton(); if (E.abierto) pintarPanel(); } };
   pintarBoton();
 })();

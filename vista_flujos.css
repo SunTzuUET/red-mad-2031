@@ -1,0 +1,88 @@
+/* vista_flujos.css — FLUJOS (Sankey + treemap), CONTRATO_UI Rev. 11 (dueño GRAFICOS). Solo tokens de noc.css.
+   Color = tipo de servicio (--sv-*); lo no servido, rayado con borde CRIT (nunca solo color). */
+.vista.fx { background: var(--bg0); display: flex; flex-direction: column; }
+.vista.fx[hidden] { display: none; }
+.fx-barra-sup { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 6px 12px; border-bottom: 1px solid var(--line); background: var(--bg1); position: sticky; top: 0; z-index: 5; flex: none; }
+.fx-barra-sup .lbl { color: var(--tx1); }
+.fx-kpi { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--tx2); white-space: nowrap; }
+.fx-kpi b { font: 300 20px/1 var(--cond); color: var(--tx1); font-variant-numeric: tabular-nums; }
+.fx-kpi-mal b { color: var(--crit); }
+.fx-lienzo { position: relative; flex: 1; min-height: 380px; margin: 8px 12px 0; }
+.fx-svg, .tm-svg { display: block; overflow: visible; }
+
+/* Sankey */
+.fx-colt { fill: var(--tx3); font: 600 11px var(--sans); letter-spacing: .08em; }
+.fx-l { fill-opacity: .42; transition: fill-opacity .12s; cursor: pointer; }
+.fx-l:hover { fill-opacity: .7; }
+.fx-l-no { fill-opacity: .9; }
+.fx-foco .fx-l { fill-opacity: .07; }
+.fx-lr { fill-opacity: .92; pointer-events: none; stroke: #000; stroke-width: .5; }
+.fx-n { cursor: pointer; outline: none; }
+.fx-golpe { fill: transparent; }
+.fx-nr { stroke: #000; stroke-width: 1; }
+.fx-n-no .fx-nr { stroke: var(--crit); stroke-width: 1.5; }
+.fx-n:hover .fx-nr, .fx-n:focus .fx-nr { stroke: var(--steel); stroke-width: 2; }
+.fx-n:focus-visible .fx-golpe { stroke: var(--steel); stroke-width: 1; stroke-dasharray: 2 2; }
+.fx-et { fill: var(--tx1); font: 500 12px var(--sans); paint-order: stroke; stroke: #000; stroke-width: 3px; stroke-linejoin: round; }
+.fx-et-no { fill: var(--crit); font-weight: 600; letter-spacing: .06em; }
+.fx-cif { fill: var(--tx2); font-weight: 400; font-variant-numeric: tabular-nums; }
+.fx-uso { font: 500 11px var(--sans); paint-order: stroke; stroke: #000; stroke-width: 3px; fill: var(--tx2); }
+.sev-t-ok { fill: var(--tx2); color: var(--tx1); } .sev-t-min { fill: var(--min); color: var(--min); }
+.sev-t-maj { fill: var(--maj); color: var(--maj); } .sev-t-crit { fill: var(--crit); color: var(--crit); }
+.fx-ico { color: var(--tx2); pointer-events: none; }
+
+/* tooltip (ratón y teclado) */
+.fx-tt { position: absolute; z-index: 20; min-width: 200px; max-width: 320px; background: var(--bg2); border: 1px solid var(--line3); padding: 7px 9px; font-size: 12px; color: var(--tx1); pointer-events: none; }
+.fx-tt[hidden] { display: none; }
+.fx-tt-cab { font: 600 12px var(--sans); margin-bottom: 4px; }
+.fx-tt-big { margin-bottom: 4px; color: var(--tx2); }
+.fx-tt-big b { font: 300 20px/1 var(--cond); color: var(--tx1); font-variant-numeric: tabular-nums; }
+.fx-tt-f { display: grid; grid-template-columns: 10px 1fr auto; gap: 6px; align-items: center; line-height: 1.6; color: var(--tx2); }
+.fx-tt-f i { width: 10px; height: 10px; display: inline-block; }
+.fx-tt-f b { font-weight: 600; color: var(--tx1); font-variant-numeric: tabular-nums; text-align: right; }
+.fx-sw-no { display: inline-block; width: 10px; height: 10px; border: 1px solid var(--crit); background: repeating-linear-gradient(45deg, var(--crit) 0 2px, transparent 2px 5px); }
+
+/* leyenda de servicios bajo el gráfico */
+.fx-pie { padding: 6px 12px 10px; flex: none; }
+.fx-ley { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--tx2); }
+.fx-ley span { display: inline-flex; align-items: center; gap: 5px; }
+.fx-ley i { display: inline-block; width: 10px; height: 10px; }
+.fx-info { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1px solid var(--line3); color: var(--tx2); font: 600 11px var(--sans); cursor: help; }
+.fx-exp { padding: 0 12px 14px; flex: none; overflow-x: auto; }
+.fx-mat caption { text-align: left; padding: 6px 0; }
+.fx-mat tbody tr { cursor: pointer; }
+.fx-mat tbody tr:hover td { color: var(--tx1); background: rgba(255,255,255,.03); }
+
+/* treemap */
+.tm-zr { fill: var(--bg1); stroke: #000; stroke-width: 2; }
+.tm-z { cursor: pointer; outline: none; }
+.tm-z:hover .tm-zr, .tm-z:focus .tm-zr { fill: var(--bg2); stroke: var(--steel); stroke-width: 2; }
+.tm-zt { fill: var(--tx1); font: 600 12px var(--sans); pointer-events: none; }
+.tm-zt-p { fill: #000; font-size: 11px; }
+.tm-zc { fill: var(--tx2); font-weight: 400; }
+.tm-c rect:first-child { stroke: #000; stroke-width: 1; }
+.tm-c:hover rect:first-child { stroke: var(--steel); stroke-width: 1.5; }
+.tm-no { stroke: var(--crit) !important; stroke-width: 1 !important; }
+.tm-ct { fill: #000; font: 600 11px var(--sans); pointer-events: none; }
+.tm-cv { fill: #000; font: 500 11px var(--sans); font-variant-numeric: tabular-nums; pointer-events: none; }
+
+/* ficha (nodos del núcleo, bandas) */
+.fx-big { margin-bottom: 6px; color: var(--tx2); }
+.fx-big b { font: 300 26px/1 var(--cond); color: var(--tx1); font-variant-numeric: tabular-nums; }
+.fx-med { margin: 4px 0 8px; display: block; }
+.fx-med .medidor { width: 100%; }
+.fx-barra { position: relative; height: 14px; background: var(--bg2); margin: 4px 0 8px; }
+.fx-barra i { display: block; height: 100%; }
+.fx-barra span { position: absolute; right: 4px; top: 0; font-size: 11px; line-height: 14px; color: var(--tx1); }
+.sev-b-ok { background: var(--ok); } .sev-b-min { background: var(--min); } .sev-b-maj { background: var(--maj); } .sev-b-crit { background: var(--crit); }
+.fx-uni { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 10px; }
+.fx-uni-f { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; align-items: baseline; font-size: 12px; }
+.fx-uni-f b { font-variant-numeric: tabular-nums; }
+.fx-uni-f .fx-med, .fx-uni-f .fx-barra { grid-column: 1 / -1; margin: 0; }
+.fx-apil { display: flex; height: 12px; gap: 2px; margin: 8px 0 4px; }
+.fx-apil i { display: block; height: 100%; min-width: 2px; }
+.fx-apil-ley { display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 11px; color: var(--tx2); }
+.fx-apil-ley span { display: inline-flex; align-items: center; gap: 4px; }
+.fx-apil-ley i { display: inline-block; width: 8px; height: 8px; }
+.fx-apil-ley b { color: var(--tx1); font-weight: 600; }
+.fx-ft tbody tr { cursor: pointer; }

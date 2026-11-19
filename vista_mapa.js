@@ -27,7 +27,20 @@
   var IDX = NOC.idx;
   var RANGO_TIPO = { core: 0, metro: 1, edge: 2, ix: 3, agg: 4, site: 5 };
   var TAM = { core: 16, metro: 15, edge: 13, ix: 14, agg: 11, site: 11 };
-  var CON_ETIQUETA = { core: 1, metro: 1, edge: 1, ix: 1 };
+  // Revisión 11: etiqueta en todos los nodos, por niveles de zoom (1: núcleo y metro, 2: edge/IX/agregación, 3: emplazamientos).
+  // En SIMPLE muestra el nombre corto con icono; en EXPERTO, el id.
+  var CON_ETIQUETA = { core: 1, metro: 1, edge: 2, ix: 3, agg: 2, site: 3 };
+  function zoomClase() {
+    if (!mapa) return;
+    var z = mapa.getZoom(), c = mapa.getContainer();
+    c.classList.toggle("etq-z1", z >= 10);
+    c.classList.toggle("etq-z2", z >= 11);
+    c.classList.toggle("etq-z3", z >= 12.5);
+  }
+  function htmlEtq(n) {
+    var corto = NOC.nombreCorto ? NOC.nombreCorto(n.id) : n.id;
+    return '<span class="etq-n' + CON_ETIQUETA[n.tipo] + '">' + (NOC.icono ? NOC.icono(n.tipo, 11) : '') + '<b class="solo-simple">' + esc(corto) + '</b><b class="solo-experto">' + esc(n.id) + '</b></span>';
+  }
 
   // ---------- estado de servicios y radio (mismo bloque en carril_servicios.js) ----------
   var CLASES = (window.Motor && window.Motor.CLASES_SERVICIO) || ["movil", "ftth", "voz", "urllc", "iot", "empresa", "evento", "ntn"];
@@ -248,7 +261,7 @@
       nodosL[n.id] = m; grupo(cap).addLayer(m);
       if (CON_ETIQUETA[n.tipo]) {
         var et = L.marker(disp[n.id], { pane: "etiquetas", interactive: false, keyboard: false,
-          icon: L.divIcon({ className: "noc-etq", html: '<span>' + esc(n.id) + '</span>', iconSize: [0, 0], iconAnchor: [-10, 6] }) });
+          icon: L.divIcon({ className: "noc-etq", html: htmlEtq(n), iconSize: [0, 0], iconAnchor: [-10, 6] }) });
         etiqL[n.id] = et; grupo(cap).addLayer(et);
       }
     });
@@ -397,6 +410,7 @@
       construir();
       montado = true;
       mapa.on("zoomend", recolocar);
+      mapa.on("zoomend", zoomClase); zoomClase();
       mapa.on("click", function () { if (NOC.seleccion) NOC.cerrarFicha(); });
       if (window.ResizeObserver) new ResizeObserver(function () { if (mapa) mapa.invalidateSize(); }).observe(el);
       var lg = el.querySelector(".mapa-leyenda");

@@ -51,7 +51,12 @@
     },
     on: function (ev, fn) { (oyentes[ev] = oyentes[ev] || []).push(fn); }
   };
+  // Revisión 11: lo que dejó ui_comun.js (cargado antes) pasa al NOC definitivo (nivel, icono, info, color, medidor…)
+  Object.keys(previo).forEach(function (k) { if (!(k in NOC) && k !== "_colaCarril") NOC[k] = previo[k]; });
   var t = NOC.t, fmt = NOC.fmt;
+  var ico = function (k, n, o) { return NOC.icono ? NOC.icono(k, n, o) : ""; };
+  var info = function (x, o) { return NOC.info ? NOC.info(x, o) : ""; };
+  var corto = function (id) { return NOC.nombreCorto ? NOC.nombreCorto(id) : id; };
 
   // ---------- plegables (Revisión 2 punto 2): localStorage["noc.plegado"] = {id: true si plegado} ----------
   // Ids del shell: "caso" (barra del caso), "carril" (true = carril estrecho de 40 px), "ficha", "dock",
@@ -564,7 +569,7 @@
     var nav = ESPACIOS.map(function (e, i) {
       var cur = e.id === ESP;
       return (e.href ? '<a class="esp-b ext" href="' + e.href + '"' : '<button type="button" class="esp-b" data-espacio="' + e.id + '"' + (cur ? ' aria-current="page"' : '')) +
-        ' title="' + esc(t(e.d)) + ' (' + (i + 1) + ')"><kbd>' + (i + 1) + '</kbd>' + esc(t(e.n)) + (e.href ? '</a>' : '</button>');
+        ' title="' + esc(t(e.d)) + ' (' + (i + 1) + ')">' + ico(e.id, 16) + '<kbd class="solo-experto">' + (i + 1) + '</kbd><span>' + esc(t(e.n)) + '</span>' + (e.href ? '</a>' : '</button>');
     }).join("");
     $("#tb").innerHTML =
       '<div class="tb-f tb-top">' +
@@ -578,6 +583,7 @@
         '<span class="esp"></span>' +
         '<span class="buscar">' + ICO.lupa + '<input type="search" id="buscar" list="noc-lista" placeholder="' + esc(t(T.buscar)) + '" aria-label="' + esc(t(T.buscar)) + '"></span>' +
         '<button type="button" class="btn" data-accion="exportar" aria-pressed="false" title="' + esc(t({ es: "Exportar tablas CSV (.zip) o informe PDF", en: "Export CSV tables (.zip) or PDF report" })) + '">' + esc(t({ es: "Exportar", en: "Export" })) + '</button>' +
+        (NOC.interruptorNivel ? NOC.interruptorNivel() : '') +
         '<div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="' + (NOC.lang === "es") + '">ES</button><button type="button" data-lang="en" aria-pressed="' + (NOC.lang === "en") + '">EN</button></div>' +
       '</div>' +
       '<div class="tb-f tb-kpi">' +
@@ -610,7 +616,7 @@
             '<input type="range" min="0" max="23" step="1" id="rng-hora" value="' + (cargado ? 21 : caso.hora) + '"' + (cargado ? " disabled" : "") + '>' +
             '<output class="mono" id="out-hora">' + (cargado ? t(T.hc) + " " : "") + String(cargado ? 21 : caso.hora).padStart(2, "0") + ':00</output></span>' +
         '</div>' +
-        '<p class="nota tx3 cp-pie">' + esc(t({ es: "La hora y la película de 24 h se manejan en SIMULACIÓN (reloj y eventos).", en: "The hour and the 24 h run are handled in SIMULATION (clock and events)." })) + '</p>' +
+        '<p class="nota tx3 cp-pie solo-experto">' + esc(t({ es: "La hora y la película de 24 h se manejan en SIMULACIÓN (reloj y eventos).", en: "The hour and the 24 h run are handled in SIMULATION (clock and events)." })) + '</p>' +
       '</div></div>' +
       '<div class="tb-f tb-sim" id="tb-sim"></div>';
     document.body.classList.toggle("m-ref", ref);
@@ -693,17 +699,17 @@
     if (!r) { el.innerHTML = '<div class="kpi"><span class="rot">' + esc(t(T.motorMal)) + '</span></div>'; return; }
     var s = r.resumen, s0 = R0 ? R0.resumen : null, m = ocMax(r), m0 = ocMax(R0);
     var ref = NOC.modo === "ref";
-    function k(rot, v, d, tit) {
-      return '<div class="kpi"' + (tit ? ' title="' + esc(tit) + '"' : '') + '><span class="rot">' + rot + '</span><span class="v">' + v + '</span>' + (ref ? "" : d) + '</div>';
+    function k(rot, v, d, tit, cls) {
+      return '<div class="kpi' + (cls ? " " + cls : "") + '"' + (tit ? ' title="' + esc(tit) + '"' : '') + '><span class="rot">' + rot + '</span><span class="v">' + v + '</span>' + (ref ? "" : d) + '</div>';
     }
     el.innerHTML =
       k(esc(t(T.kDl)), fmt(s.dl_total_gbps, 0) + ' <small>Gbit/s</small>', s0 ? delta(s.dl_total_gbps, s0.dl_total_gbps, 0, null) : "") +
       k(esc(t(T.kServ)), fmt(s.pct_servida, 2) + ' <small>%</small>', s0 ? delta(s.pct_servida, s0.pct_servida, 2, false, " pp") : "") +
-      k(esc(t(T.kOc)) + ' <span class="mono kpi-id">' + esc(m.id || "") + '</span>',
-        (m.o == null ? "—" : '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + fmt(m.o * 100, 1) + '</span>') + ' <small>%</small>',
-        s0 && m0.o != null && m.o != null ? delta(m.o * 100, m0.o * 100, 1, true, " pp") : "", m.id || "") +
-      k(esc(t(T.kAfect)), fmt(s.demandas_afectadas, 0) + ' <small>/ ' + fmt((r.demandas || []).length, 0) + '</small>', s0 ? delta(s.demandas_afectadas, s0.demandas_afectadas, 0, true) : "") +
-      k(esc(t({ es: "Enl. > 100 %", en: "Links > 100 %" })), '<span class="' + (m.sat ? "sev-crit" : "") + '">' + fmt(m.sat, 0) + '</span>', s0 ? delta(m.sat, m0.sat, 0, true) : "");
+      k(esc(t(T.kOc)) + ' <span class="mono kpi-id solo-experto">' + esc(m.id || "") + '</span><span class="kpi-id solo-simple">' + esc(corto(m.id || "")) + '</span>',
+        (m.o == null ? "—" : (NOC.icono ? '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + ico(NOC.sevOcupacion(m.o), 16) + '</span> ' : '') + '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + fmt(m.o * 100, 1) + '</span>') + ' <small>%</small>',
+        s0 && m0.o != null && m.o != null ? delta(m.o * 100, m0.o * 100, 1, true, " pp") : "", m.id ? m.id + " · " + corto(m.id) + " · " + (NOC.sevOcupacion(m.o) || "").toUpperCase() : "") +
+      k(esc(t(T.kAfect)), fmt(s.demandas_afectadas, 0) + ' <small>/ ' + fmt((r.demandas || []).length, 0) + '</small>', s0 ? delta(s.demandas_afectadas, s0.demandas_afectadas, 0, true) : "", "", "solo-experto") +
+      k(esc(t({ es: "Enl. > 100 %", en: "Links > 100 %" })), '<span class="' + (m.sat ? "sev-crit" : "") + '">' + fmt(m.sat, 0) + '</span>', s0 ? delta(m.sat, m0.sat, 0, true) : "", "", m.sat ? "" : "solo-experto");
   }
 
   // ---------- carril de capas ----------
@@ -915,94 +921,206 @@
     return '<section class="tj ' + cls + '"><h2 class="tj-tit">' + titulo + '</h2><div class="tj-cuerpo">' + cuerpo + '</div>' + (pie ? '<div class="tj-pie">' + pie + '</div>' : '') + '</section>';
   }
   function boton(acc, txt, extra, prim) { return '<button type="button" class="btn' + (prim ? " prim" : "") + '" ' + acc + (extra || "") + '>' + esc(txt) + '</button>'; }
+  // Revisión 11: INICIO visual. Miniatura de la red coloreada por estado, medidores (ocupación, servido, disponibilidad),
+  // semáforo por slice, barra de trazabilidad y tarjetas de espacio con icono. El detalle de texto queda en experto.
+  // Umbrales de ocupación de la leyenda del mapa (NOC.sevOcupacion): < 60 OK · 60–85 MIN · 85–100 MAJ · > 100 CRIT
+  var UMB_LEY = [{ hasta: 0.6, sev: "ok" }, { hasta: 0.85, sev: "min" }, { hasta: 1, sev: "maj" }, { hasta: Infinity, sev: "crit" }];
+  var ESP_CORTO = {
+    red: { es: "Mapa, planos y capas", en: "Map, diagrams and layers" },
+    simulacion: { es: "Película de 24 h con eventos", en: "24 h run with events" },
+    analisis: { es: "N-1, planificación y SLA", en: "N-1, planning and SLA" },
+    datos: { es: "De dónde sale cada cifra", en: "Where each figure comes from" },
+    guia: { es: "Cómo se usa", en: "How to use it" }
+  };
+  // Disponibilidad (Motor.disponibilidad ≈ 0,5 s): se calcula una vez por caso, en diferido, y se guarda
+  var DISP = { clave: null, res: null, estado: "nada", timer: null };
+  function claveDisp() { try { return NOC.modo + "|" + JSON.stringify(opcionesCaso()); } catch (e) { return NOC.modo; } }
+  function pedirDisp() {
+    if (typeof Motor.disponibilidad !== "function") { DISP.estado = "sin"; return; }
+    var k = claveDisp();
+    if (DISP.clave === k && DISP.estado !== "nada") return;
+    DISP.clave = k; DISP.estado = "calculando"; DISP.res = null;
+    clearTimeout(DISP.timer);
+    DISP.timer = setTimeout(function () {
+      if (DISP.clave !== k) return;
+      try { DISP.res = Motor.disponibilidad(RED, opcionesCaso()); DISP.estado = "ok"; }
+      catch (e) { DISP.estado = "error"; console.warn("Motor.disponibilidad", e); }
+      if (ESP === "inicio" && elInicio) pintarInicio();
+    }, 350);
+  }
+  NOC.disponibilidadCache = function () { return DISP.estado === "ok" && DISP.clave === claveDisp() ? DISP.res : null; };
+  function miniRed(r) {
+    var ns = (RED.nodos || []).filter(function (n) { return n.coord; });
+    if (!ns.length) return "";
+    var la0 = Infinity, la1 = -Infinity, lo0 = Infinity, lo1 = -Infinity;
+    ns.forEach(function (n) { la0 = Math.min(la0, n.coord[0]); la1 = Math.max(la1, n.coord[0]); lo0 = Math.min(lo0, n.coord[1]); lo1 = Math.max(lo1, n.coord[1]); });
+    var kx = Math.cos((la0 + la1) / 2 * Math.PI / 180), Wd = 440, H = 300, pad = 18;
+    var sx = (lo1 - lo0) * kx || 1, sy = (la1 - la0) || 1, k = Math.min((Wd - 2 * pad) / sx, (H - 2 * pad) / sy);
+    var ox = (Wd - sx * k) / 2, oy = (H - sy * k) / 2;
+    var P = {};
+    ns.forEach(function (n) { P[n.id] = [ox + (n.coord[1] - lo0) * kx * k, oy + (la1 - n.coord[0]) * k]; });
+    // nodos co-ubicados: pequeño abanico para que se vean
+    var vistos = {};
+    ns.forEach(function (n) {
+      var key = Math.round(P[n.id][0] / 6) + "," + Math.round(P[n.id][1] / 6);
+      var i = vistos[key] = (vistos[key] || 0) + 1;
+      if (i > 1) { var an = i * 2.1; P[n.id] = [P[n.id][0] + 9 * Math.cos(an), P[n.id][1] + 9 * Math.sin(an)]; }
+    });
+    var cnt = { ok: 0, min: 0, maj: 0, crit: 0, unk: 0, nd: 0 };
+    var lin = (RED.enlaces || []).map(function (e) {
+      if (!P[e.a] || !P[e.b]) return "";
+      var x = r && r.enlaces ? r.enlaces[e.id] : null, o = NOC.ocupacion(x), cd = x && x.caido, s = cd ? "unk" : o == null ? "nd" : NOC.sevOcupacion(o);
+      cnt[s]++;
+      var w = Math.max(1.2, Math.min(4.5, 0.6 + 0.9 * Math.log10(Math.max(1, e.capacidad_gbps || 1))));
+      return '<line x1="' + P[e.a][0].toFixed(1) + '" y1="' + P[e.a][1].toFixed(1) + '" x2="' + P[e.b][0].toFixed(1) + '" y2="' + P[e.b][1].toFixed(1) + '" style="stroke:var(--' + (s === "nd" ? "line3" : s) + ')" stroke-width="' + w.toFixed(1) + '"' +
+        (cd ? ' stroke-dasharray="4 3"' : e.tipo === "sat" ? ' stroke-dasharray="1.5 3"' : '') + ' class="mr-enl" data-accion="ir-elem" data-tipo="enlace" data-id="' + esc(e.id) + '" data-tip="' + esc(corto(e.id) + " · " + (cd ? "DOWN" : o == null ? t({ es: "sin tráfico", en: "no traffic" }) : fmt(o * 100, 1) + " % · " + SEV_TXT[s])) + '"/>';
+    }).join("");
+    var nod = ns.map(function (n) {
+      var x = r && r.nodos ? r.nodos[n.id] : null, cd = x && x.caido, s = cd ? "unk" : "";
+      var tam = { core: 11, metro: 11, edge: 9, ix: 10, agg: 7, site: 7 }[n.tipo] || 7;
+      var forma = NOC.formaNodo ? NOC.formaNodo(n.tipo, tam, cd ? "var(--bg2)" : "var(--tx1)", "#000") : '<svg width="' + tam + '" height="' + tam + '"><circle cx="' + tam / 2 + '" cy="' + tam / 2 + '" r="' + (tam / 2 - 1) + '" fill="#ececec"/></svg>';
+      return '<g transform="translate(' + (P[n.id][0] - tam / 2).toFixed(1) + ' ' + (P[n.id][1] - tam / 2).toFixed(1) + ')" class="mr-nodo" data-accion="ir-elem" data-tipo="nodo" data-id="' + esc(n.id) + '" data-tip="' + esc(corto(n.id) + (cd ? " · DOWN" : "")) + '">' +
+        forma + (cd ? '<path d="M0 0L' + tam + ' ' + tam + 'M' + tam + ' 0L0 ' + tam + '" style="stroke:var(--crit)" stroke-width="1.5"/>' : '') + '</g>' + (s ? "" : "");
+    }).join("");
+    var etq = ["MET-NORTE", "MET-ESTE", "MET-SUR", "MET-CENTRO"].filter(function (id) { return P[id]; }).map(function (id) {
+      return '<text x="' + (P[id][0] + 9).toFixed(1) + '" y="' + (P[id][1] - 6).toFixed(1) + '" class="mr-et">' + esc(corto(id)) + '</text>';
+    }).join("");
+    var resumen = ["ok", "min", "maj", "crit", "unk"].filter(function (s) { return cnt[s] || s === "ok"; }).map(function (s) {
+      return '<span class="mr-c">' + (NOC.textoEstado ? NOC.textoEstado(s) : NOC.insignia(s)) + '<b>' + cnt[s] + '</b></span>';
+    }).join("") + (cnt.nd ? '<span class="mr-c tx3" data-tip="' + esc(t({ es: "Enlaces sin tráfico en este caso (p. ej. satélite de respaldo inactivo).", en: "Links with no traffic in this case (e.g. idle backup satellite)." })) + '" tabindex="0">' + ico("enlace", 14) + esc(t({ es: "sin tráfico", en: "no traffic" })) + '<b>' + cnt.nd + '</b></span>' : '');
+    var aria = t({ es: "Miniatura de la red: ", en: "Network thumbnail: " }) + ["ok", "min", "maj", "crit", "unk"].map(function (s) { return cnt[s] + " " + SEV_TXT[s]; }).join(", ");
+    return '<figure class="mini-red"><svg viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="' + esc(aria) + '">' + lin + nod + etq + '</svg>' +
+      '<figcaption><span class="lbl">' + esc(t({ es: "Enlaces", en: "Links" })) + '</span>' + resumen + '</figcaption></figure>';
+  }
+  var SLICE_ICO = { eMBB: "embb", URLLC: "urllc", mMTC: "iot", "fijo-bng": "ftth" };
+  var SLICE_N = { eMBB: "eMBB", URLLC: "URLLC", mMTC: "mMTC", "fijo-bng": { es: "Fijo (BNG)", en: "Fixed (BNG)" } };
+  function semaforoSlices(r) {
+    var S = r && r.sla;
+    if (!S || !Object.keys(S).length) return '<p class="nota">' + esc(t({ es: "SLA no calculado en este caso.", en: "SLA not computed for this case." })) + '</p>';
+    return '<ul class="semaforo">' + Object.keys(S).map(function (k) {
+      var x = S[k], ok = !!x.cumple, sv = ok ? "ok" : (x.cumple_pct >= 95 ? "maj" : "crit");
+      var tip = (x.nombre || k) + " · " + fmt(x.cumple_gbps_pct, 1) + " % " + t({ es: "del tráfico cumple", en: "of traffic compliant" }) +
+        (x.objetivo_lat_ms ? " · " + t({ es: "objetivo ", en: "target " }) + fmt(x.objetivo_lat_ms, 0) + " ms" : "") + (x.peor && x.peor.id ? " · " + t({ es: "peor: ", en: "worst: " }) + corto(x.peor.id) : "");
+      return '<li class="sm-' + sv + '" data-tip="' + esc(tip) + '" tabindex="0"><span class="sm-luz" aria-hidden="true"></span>' + ico(SLICE_ICO[k] || "red", 18) +
+        '<span class="sm-n">' + esc(t(SLICE_N[k] || x.nombre || k)) + '</span>' + (NOC.textoEstado ? NOC.textoEstado(sv, ok ? "OK" : t({ es: "NO", en: "NO" })) : "") +
+        '<span class="sm-p mono solo-experto">' + fmt(x.cumple_gbps_pct, 1) + ' %</span></li>';
+    }).join("") + '</ul>';
+  }
+  function medidorDisp() {
+    if (!NOC.medidor) return "";
+    var et = { es: "Disponibilidad de la red", en: "Network availability" };
+    var inf = info({ es: "Motor.disponibilidad: minutos al año sin servicio por fallos de nodos y fibras (N-1, pares de vanos, SRLG y fallo común), ponderados por el tráfico perdido. Objetivo del núcleo 99,99 % (ARCO02).",
+      en: "Motor.disponibilidad: minutes per year without service from node and fibre failures (N-1, span pairs, SRLG and common failure), weighted by lost traffic. Core target 99.99 % (ARCO02)." });
+    if (DISP.estado === "sin") return "";
+    if (DISP.estado !== "ok" || !DISP.res || !DISP.res.red) {
+      return '<div class="ini-med"><span class="md-et">' + esc(t(et)) + '</span> ' + inf + '<div class="nota">' + esc(DISP.estado === "error" ? t({ es: "no se pudo calcular", en: "could not be computed" }) : t({ es: "calculando…", en: "computing…" })) + '</div></div>';
+    }
+    var d = DISP.res.red, obj = (DISP.res.objetivos && DISP.res.objetivos.nucleo_pct) || 99.99;
+    var sv = d.disponibilidad_pct >= obj ? "ok" : d.disponibilidad_pct >= 99.9 ? "maj" : "crit";
+    return '<div class="ini-med">' + NOC.medidor(d.disponibilidad_pct, { min: 99.9, max: 100, escala: 1, dec: 3, unidad: "%", etiqueta: et, objetivo: obj, estado: sv, umbrales: [] }) +
+      '<div class="ini-med-pie"><span class="tx2">≈ ' + fmt(d.indisp_min_anio, 0) + ' ' + esc(t({ es: "min/año sin servicio", en: "min/year down" })) + ' · ' + esc(t({ es: "objetivo", en: "target" })) + ' ' + fmt(obj, 2) + ' %</span>' + inf + '</div></div>';
+  }
+  function barraTraza() {
+    var L = NOC.linaje && NOC.linaje.cobertura ? NOC.linaje.cobertura("memoria") : null;
+    if (!L || !L.total || !L.total.total) return '<p class="nota">' + esc(t({ es: "Linaje no cargado.", en: "Lineage not loaded." })) + '</p>';
+    var T0 = L.total, p = function (a) { return a / T0.total * 100; };
+    var partes = [["trazado", "ok", { es: "Trazado", en: "Traced" }, T0.trazado || 0], ["hueco", "min", { es: "Hueco", en: "Gap" }, T0.hueco || 0], ["discrepa", "crit", { es: "Discrepa", en: "Mismatch" }, T0.discrepa || 0]];
+    return '<div class="traza" role="img" aria-label="' + esc(partes.map(function (x) { return t(x[2]) + " " + x[3]; }).join(", ")) + '"><div class="traza-b">' + partes.map(function (x) {
+      return x[3] ? '<i style="width:' + p(x[3]).toFixed(2) + '%;background:var(--' + x[1] + ')" data-tip="' + esc(t(x[2]) + ": " + x[3] + " (" + fmt(p(x[3]), 1) + " %)") + '"></i>' : "";
+    }).join("") + '</div><ul class="traza-ley">' + partes.map(function (x) {
+      return '<li>' + (NOC.textoEstado ? NOC.textoEstado(x[1], t(x[2])) : esc(t(x[2]))) + '<b>' + x[3] + '</b><span class="tx3">' + fmt(p(x[3]), 1) + ' %</span></li>';
+    }).join("") + '</ul></div>';
+  }
   function pintarInicio() {
     if (!elInicio) return;
     var r = NOC.resultado, ref = NOC.modo === "ref", c = cuentaSev(), m = ocMax(r);
-    // 1 · estado de la red
-    var kp = "";
-    function tile(rot, v, sub) { return '<div class="ti"><span class="rot">' + esc(rot) + '</span><span class="ti-v">' + v + '</span>' + (sub ? '<span class="ti-s">' + sub + '</span>' : '') + '</div>'; }
-    if (r) {
+    pedirDisp();
+    // 1 · estado de la red (gráfico)
+    var meds = "";
+    if (r && NOC.medidor) {
       var s0 = r.resumen;
-      kp = tile(t(T.kDl), fmt(s0.dl_total_gbps, 0) + ' <small>Gbit/s</small>') +
-        tile(t(T.kServ), fmt(s0.pct_servida, 2) + ' <small>%</small>') +
-        tile(t(T.kOc), (m.o == null ? "—" : '<span class="sev-' + NOC.sevOcupacion(m.o) + '">' + fmt(m.o * 100, 1) + '</span>') + ' <small>%</small>', m.id ? '<span class="mono">' + esc(m.id) + '</span>' : "") +
-        tile(t(T.kAfect), fmt(s0.demandas_afectadas, 0) + ' <small>/ ' + fmt((r.demandas || []).length, 0) + '</small>') +
-        tile(t({ es: "Enlaces > 100 %", en: "Links > 100 %" }), '<span class="' + (m.sat ? "sev-crit" : "") + '">' + fmt(m.sat, 0) + '</span>');
-    } else kp = '<p class="nota sev-crit">' + esc(t(T.motorMal)) + '</p>';
+      meds = '<div class="ini-med">' + NOC.medidor(m.o, { tipo: "arco", unidad: "%", estado: m.o == null ? undefined : NOC.sevOcupacion(m.o), umbrales: UMB_LEY, max: Math.max(1, m.o || 0), escala: 100, etiqueta: { es: "Enlace más cargado", en: "Busiest link" } }) +
+        (m.id ? '<button type="button" class="lnk ini-medid" data-accion="ir-elem" data-tipo="enlace" data-id="' + esc(m.id) + '" title="' + esc(m.id) + '">' + esc(corto(m.id)) + '</button>' : '') + '</div>' +
+        '<div class="ini-med">' + NOC.medidor(s0.pct_servida, { min: 0, max: 100, escala: 1, dec: 2, unidad: "%", etiqueta: { es: "Tráfico servido", en: "Traffic served" },
+          umbrales: [{ hasta: 95, sev: "crit" }, { hasta: 99, sev: "maj" }, { hasta: 99.9, sev: "min" }, { hasta: Infinity, sev: "ok" }] }) +
+        '<div class="ini-med-pie tx2">' + fmt(s0.dl_total_gbps, 0) + ' Gbit/s DL' + (s0.demandas_afectadas ? ' · ' + fmt(s0.demandas_afectadas, 0) + ' ' + esc(t({ es: "demandas afectadas", en: "affected demands" })) : '') + '</div></div>' +
+        medidorDisp();
+    } else if (!r) meds = '<p class="nota sev-crit">' + esc(t(T.motorMal)) + '</p>';
     var nz = ["crit", "maj", "min", "wrn"].filter(function (k) { return c[k] > 0; });
-    var sevs = nz.length ? nz.map(function (k) { return NOC.insignia(k, SEV_TXT[k] + " " + c[k]); }).join(" ") : NOC.insignia("ok", "OK");
     var peores = ALARMAS.filter(function (a) { return a.sev !== "ok"; }).slice(0, 3);
-    var lista = peores.length ? '<ul class="tj-lista">' + peores.map(function (a) {
+    var lista = peores.length ? '<ul class="tj-lista ini-alarmas">' + peores.map(function (a) {
       var tipo = IDX.enlaces[a.elem] ? "enlace" : IDX.nodos[a.elem] ? "nodo" : "";
-      return '<li>' + NOC.insignia(a.sev) + (tipo ? '<button type="button" class="lnk mono" data-accion="ir-elem" data-tipo="' + tipo + '" data-id="' + esc(a.elem) + '" title="' + esc(t({ es: "Ver en RED", en: "Show in NETWORK" })) + '">' + esc(a.elem) + '</button>' : '') +
-        '<span class="txt">' + esc(a.texto) + '</span></li>';
-    }).join("") + '</ul>' : '<p class="nota">' + esc(t({ es: "Sin alarmas: la red cursa el caso sin incidencias.", en: "No alarms: the network carries the case without incidents." })) + '</p>';
-    var tEstado = tarjeta("tj-estado", esc(t({ es: "Estado de la red", en: "Network status" })) + ' <span class="tj-hora mono">' + esc(horaTxt()) + '</span>',
-      '<div class="tis">' + kp + '</div><div class="tj-sub"><span class="lbl">' + esc(t({ es: "Alarmas principales", en: "Top alarms" })) + '</span> ' + sevs + '</div>' + lista,
-      boton('data-espacio="red"', t({ es: "Abrir RED", en: "Open NETWORK" }), "", true) + boton('data-accion="ver-alarmas"', t({ es: "Todas las alarmas", en: "All alarms" })));
-    // 2 · caso activo
+      return '<li>' + (NOC.textoEstado ? NOC.textoEstado(a.sev) : NOC.insignia(a.sev)) + (tipo ? '<button type="button" class="lnk" data-accion="ir-elem" data-tipo="' + tipo + '" data-id="' + esc(a.elem) + '" data-tip="' + esc(a.texto) + '">' + esc(corto(a.elem)) + '</button>' : '<span class="solo-simple" data-tip="' + esc(a.texto) + '" tabindex="0">' + esc(a.texto.length > 60 ? a.texto.slice(0, 58) + "…" : a.texto) + '</span>') +
+        '<span class="txt solo-experto">' + esc(a.texto) + '</span></li>';
+    }).join("") + '</ul>' : '<p class="nota">' + (NOC.textoEstado ? NOC.textoEstado("ok", t({ es: "Sin alarmas", en: "No alarms" })) : esc(t({ es: "Sin alarmas", en: "No alarms" }))) + '</p>';
+    var tEstado = tarjeta("tj-estado", ico("red", 16) + ' ' + esc(t({ es: "Estado de la red", en: "Network status" })) + ' <span class="tj-hora mono">' + esc(horaTxt()) + '</span>',
+      '<div class="ini-estado">' + miniRed(r) + '<div class="ini-meds">' + meds + '</div></div>',
+      boton('data-espacio="red"', t({ es: "Abrir RED", en: "Open NETWORK" }), "", true) + boton('data-accion="ver-alarmas"', t({ es: "Todas las alarmas", en: "All alarms" }) + (nz.length ? " · " + nz.map(function (k) { return SEV_TXT[k] + " " + c[k]; }).join(" · ") : "")));
+    var tSla = tarjeta("tj-sla", ico("ok", 16) + ' ' + esc(t({ es: "Slices: ¿cumplen su SLA?", en: "Slices: SLA met?" })) + ' ' + info({ es: "Un slice cumple si su tráfico se sirve (≥ 99 %) y la latencia P95 de transporte de cada demanda queda dentro de su presupuesto (ana.sla_objetivos). Pasa el ratón por cada fila para ver el peor caso.", en: "A slice meets its SLA if its traffic is served (≥ 99 %) and each demand's P95 transport latency is within its budget (ana.sla_objetivos). Hover each row for the worst case." }),
+      semaforoSlices(r) + '<h3 class="tj-h3">' + esc(t({ es: "Alarmas principales", en: "Top alarms" })) + '</h3>' + lista,
+      boton('data-espacio="analisis"', t({ es: "Abrir ANÁLISIS", en: "Open ANALYSIS" })));
+    // 2 · caso activo: fichas con icono
     var tr = itemPorId(EJES.trafico, ref ? "BH" : caso.trafico), ev = itemPorId(EJES.evento, ref ? EV_REF : caso.evento), mo = resumenModelo();
-    var filas = [
-      [t({ es: "Modo", en: "Mode" }), ref ? "REF · " + t(T.rotRef) : "LAB · " + t(T.rotLab)],
-      [t(T.trafico), tr ? nomItem(tr) : caso.trafico],
-      [t(T.dia) + " / " + t(T.anio), ref ? "— / 2031" : (((MT.tipos_dia || {})[caso.dia] || {})[NOC.lang === "en" ? "nombre_en" : "nombre_es"] || caso.dia) + " / " + caso.anio],
-      [t(T.hora), ref || traficoCargado() ? t(T.hcLargo) : String(caso.hora).padStart(2, "0") + ":00"],
-      [t(T.evento), ev && ev.id && ev.id !== "ninguno" ? nomItem(ev) : t(T.ninguno)],
-      [t(T.fallo), ref || !caso.fallos.length ? t(T.ninguno) : caso.fallos.join(", ")]
-    ];
-    if (!ref) filas.push([t({ es: "Eventos 24 h", en: "24 h events" }), (caso.eventos || []).length ? String(caso.eventos.length) : t(T.ninguno)]);
-    if (mo) filas.push([t({ es: "Modelo propio", en: "Own model" }), mo.nombre + " · " + mo.cambios + " " + t({ es: "cambios", en: "changes" }) + (mo.sigma ? " · σ " + fmt(mo.sigma, 2) : "") + (mo.replicas ? " · " + mo.replicas + " " + t({ es: "réplicas", en: "replicas" }) : "")]);
-    var tCaso = tarjeta("tj-caso", esc(t(T.casoAct)) + ' <b class="pas-modo">' + (ref ? "REF" : "LAB") + '</b>',
-      '<dl class="kv">' + filas.map(function (x) { return '<dt>' + esc(x[0]) + '</dt><dd class="txt">' + esc(x[1]) + '</dd>'; }).join("") + '</dl>' +
-      (ref ? '<p class="nota tj-nota">' + esc(t({ es: "La referencia reproduce la Entrega 2 (v7): hora cargada de 2031 con partido en el Metropolitano, sin fallos. Para cambiar el caso, pasa a LABORATORIO.", en: "The reference reproduces Deliverable 2 (v7): 2031 busy hour with a match at the Metropolitano, no faults. To change the case, switch to LABORATORY." })) + '</p>' : ''),
-      boton('data-accion="caso-panel"', t(T.cambiarCaso), "", true) + boton('data-espacio="simulacion"', t({ es: "Ver en SIMULACIÓN", en: "Show in SIMULATION" })) + boton('data-accion="ficha-caso"', t({ es: "Detalle del motor", en: "Engine detail" })));
-    // 3 · avisos (linaje)
-    var av = "";
-    var L = NOC.linaje && NOC.linaje.cobertura ? NOC.linaje.cobertura("memoria") : null;
+    var diaTxt = ref ? "2031" : (((MT.tipos_dia || {})[caso.dia] || {})[NOC.lang === "en" ? "nombre_en" : "nombre_es"] || caso.dia) + " " + caso.anio;
+    var evTxt = ev && ev.id && ev.id !== "ninguno" ? nomItem(ev) : t(T.ninguno);
+    var nf = ref ? 0 : caso.fallos.length;
+    function ch(k, txt, tip, cls) { return '<li class="cs' + (cls ? " " + cls : "") + '"' + (tip ? ' data-tip="' + esc(tip) + '" tabindex="0"' : '') + '>' + ico(k, 20) + '<span>' + esc(txt) + '</span></li>'; }
+    var chips = '<ul class="caso-chips">' +
+      ch("caso", tr ? nomItem(tr) : caso.trafico, t(T.trafico)) + ch("calendario", diaTxt, t(T.dia) + " / " + t(T.anio)) +
+      ch("reloj", ref || traficoCargado() ? t(T.hc) : String(caso.hora).padStart(2, "0") + ":00", ref || traficoCargado() ? t(T.hcLargo) : t(T.hora)) +
+      ch("evento", evTxt, t(T.evento)) +
+      ch(nf ? "fallo" : "ok", nf ? nf + " " + t({ es: nf === 1 ? "fallo" : "fallos", en: nf === 1 ? "fault" : "faults" }) : t({ es: "sin fallos", en: "no faults" }), nf ? caso.fallos.map(corto).join(", ") : "", nf ? "cs-fallo" : "") +
+      (!ref && (caso.eventos || []).length ? ch("simulacion", caso.eventos.length + " " + t({ es: "eventos 24 h", en: "24 h events" })) : "") +
+      (mo ? ch("ajustes", mo.nombre, t({ es: "Modelo propio", en: "Own model" }) + " · " + mo.cambios + " " + t({ es: "cambios", en: "changes" })) : "") + '</ul>';
+    var tCaso = tarjeta("tj-caso", ico("caso", 16) + ' ' + esc(t(T.casoAct)) + ' <b class="pas-modo">' + (ref ? "REF" : "LAB") + '</b>' +
+      (ref ? ' ' + info({ es: "La referencia reproduce la Entrega 2 (v7): hora cargada de 2031 con partido en el Metropolitano, sin fallos. Para cambiar el caso, pasa a LABORATORIO.", en: "The reference reproduces Deliverable 2 (v7): 2031 busy hour with a match at the Metropolitano, no faults. To change the case, switch to LABORATORY." }) : ''),
+      chips,
+      boton('data-accion="caso-panel"', t(T.cambiarCaso), "", true) + boton('data-espacio="simulacion"', t({ es: "Ver en SIMULACIÓN", en: "Show in SIMULATION" })) + '<span class="solo-experto">' + boton('data-accion="ficha-caso"', t({ es: "Detalle del motor", en: "Engine detail" })) + '</span>');
+    // 3 · trazabilidad (barra) y, en experto, discrepancias y huecos
+    var L = NOC.linaje && NOC.linaje.cobertura ? NOC.linaje.cobertura("memoria") : null, det = "";
     if (L && L.total && L.total.total) {
-      var tt = L.total, pct = function (a) { return tt.total ? a / tt.total * 100 : 0; };
-      av += '<div class="tj-sub"><span class="lbl">' + esc(t({ es: "Trazabilidad de la memoria", en: "Report lineage" })) + '</span> <span class="mono">' + fmt(pct(tt.trazado), 1) + ' % ' + esc(t({ es: "trazado", en: "traced" })) + ' · ' + tt.hueco + ' ' + esc(t({ es: "huecos", en: "gaps" })) + ' · ' + tt.discrepa + ' ' + esc(t({ es: "discrepancias", en: "mismatches" })) + '</span></div>';
       var dis = (L.discrepa || []).slice().sort(function (a, b) { return Math.abs(b.dif_rel || 0) - Math.abs(a.dif_rel || 0); }).slice(0, 3);
-      av += '<h3 class="tj-h3">' + esc(t({ es: "Discrepancias con la v7", en: "Mismatches with v7" })) + '</h3>' + (dis.length ? '<ul class="tj-lista">' + dis.map(function (v) {
+      det += '<h3 class="tj-h3">' + esc(t({ es: "Discrepancias con la v7", en: "Mismatches with v7" })) + '</h3>' + (dis.length ? '<ul class="tj-lista">' + dis.map(function (v) {
         var d = v.ref && esNum(v.ref.valor) && esNum(v.valor) ? (esNum(v.dif_rel) ? v.dif_rel * 100 : (v.ref.valor ? (v.valor - v.ref.valor) / Math.abs(v.ref.valor) * 100 : null)) : null;
         return '<li>' + NOC.insignia("crit", "Δ") + '<button type="button" class="lnk mono" data-accion="ir-linaje" data-id="' + esc(v.id) + '">' + esc(v.id) + '</button><span class="txt">' +
           esc((v.elemento ? v.elemento + (v.campo && v.campo !== "valor" ? " · " + v.campo : "") + " = " : "") + (esNum(v.valor) ? String(v.valor).replace(".", NOC.lang === "en" ? "." : ",") : String(v.valor == null ? "—" : v.valor)) + (v.unidad && v.unidad !== "—" ? " " + v.unidad : "")) +
           (d != null ? ' <span class="mono sev-crit">Δ ' + fmt(d, 2) + ' %</span>' : '') + (v.memoria ? ' <span class="tx3">· ' + esc(v.memoria) + '</span>' : '') + '</span></li>';
       }).join("") + '</ul>' : '<p class="nota">' + esc(t({ es: "Ninguna: lo recalculado coincide con la memoria.", en: "None: recomputed values match the report." })) + '</p>');
       var hu = (L.huecos || []).slice(0, 3);
-      av += '<h3 class="tj-h3">' + esc(t({ es: "Huecos principales (valores que bloquean)", en: "Main gaps (values they block)" })) + '</h3>' + (hu.length ? '<ul class="tj-lista">' + hu.map(function (x) {
+      det += '<h3 class="tj-h3">' + esc(t({ es: "Huecos principales (valores que bloquean)", en: "Main gaps (values they block)" })) + '</h3>' + (hu.length ? '<ul class="tj-lista">' + hu.map(function (x) {
         var v = NOC.linaje.valor(x.id) || {};
         return '<li><span class="sev sev-min">' + x.bloquea + '</span><button type="button" class="lnk mono" data-accion="ir-linaje" data-id="' + esc(x.id) + '">' + esc(x.id) + '</button><span class="txt">' +
           esc(v.elemento ? v.elemento + (v.campo && v.campo !== "valor" ? " · " + v.campo : "") : "") + (x.supuesto ? ' <span class="mono tx3">' + esc(x.supuesto) + '</span>' : '') + '</span></li>';
       }).join("") + '</ul>' : '<p class="nota">—</p>');
-    } else av += '<p class="nota">' + esc(t({ es: "Linaje no cargado (linaje_datos.js).", en: "Lineage not loaded (linaje_datos.js)." })) + '</p>';
+    }
     var nSup = (RED.supuestos || []).length, nPend = (RED.supuestos || []).filter(function (x) { return x.estado !== "validado"; }).length;
-    if (nSup) av += '<p class="nota tj-nota">' + esc(t({ es: nSup + " supuestos del simulador, " + nPend + " pendientes de validar.", en: nSup + " simulator assumptions, " + nPend + " pending validation." })) + '</p>';
-    var tAvisos = tarjeta("tj-avisos", esc(t({ es: "Avisos de los datos", en: "Data warnings" })), av,
+    var tAvisos = tarjeta("tj-avisos", ico("traza", 16) + ' ' + esc(t({ es: "Trazabilidad de la memoria", en: "Report lineage" })) + ' ' + info({ es: "Cada cifra de la memoria v7 se sigue hasta su fuente. Trazado: llega a una fuente. Hueco: falta un dato y se usa un supuesto. Discrepa: lo recalculado no coincide con la v7.", en: "Each figure of report v7 is traced back to its source. Traced: reaches a source. Gap: missing input, an assumption is used. Mismatch: recomputed value differs from v7." }),
+      barraTraza() + (nSup ? '<p class="ini-sup">' + ico("documento", 14) + '<span class="chip">' + nSup + ' ' + esc(t({ es: "supuestos", en: "assumptions" })) + '</span><span class="chip">' + nPend + ' ' + esc(t({ es: "por validar", en: "to validate" })) + '</span></p>' : '') +
+      '<div class="solo-experto">' + det + '</div>',
       boton('data-espacio="datos"', t({ es: "Abrir DATOS", en: "Open DATA" }), "", true));
-    // 4 · espacios
-    var tEsp = tarjeta("tj-esp", esc(t({ es: "Qué hay en cada espacio", en: "What each workspace holds" })),
-      '<ul class="tj-esps">' + ESPACIOS.filter(function (e) { return e.id !== "inicio"; }).map(function (e) {
-        var i = ESP_IDS.indexOf(e.id) + 1;
-        return '<li><div class="te-txt"><b>' + esc(t(e.n).toUpperCase()) + '</b> <kbd>' + i + '</kbd><span>' + esc(t(e.d)) + '</span></div>' +
-          (e.href ? '<a class="btn" href="' + e.href + '">' + esc(t({ es: "Abrir", en: "Open" })) + ' ↗</a>' : boton('data-espacio="' + e.id + '"', t({ es: "Abrir", en: "Open" }))) + '</li>';
-      }).join("") + '</ul>');
+    // 4 · espacios: icono grande + 1 línea
+    var tEsp = '<nav class="ini-esps" aria-label="' + esc(t(T.espacios)) + '">' + ESPACIOS.filter(function (e) { return e.id !== "inicio"; }).map(function (e) {
+      var i = ESP_IDS.indexOf(e.id) + 1, cuerpo = ico(e.id, 34) + '<b>' + esc(t(e.n)) + '</b><span>' + esc(t(ESP_CORTO[e.id] || e.d)) + '</span><kbd class="solo-experto">' + i + '</kbd>';
+      return e.href ? '<a class="ie" href="' + e.href + '" title="' + esc(t(e.d)) + '">' + cuerpo + '</a>' : '<button type="button" class="ie" data-espacio="' + e.id + '" title="' + esc(t(e.d)) + '">' + cuerpo + '</button>';
+    }).join("") + '</nav>';
     // 5 · accesos rápidos
     var pl = [];
     try { pl = NOC.operador && NOC.operador.plantillas ? NOC.operador.plantillas() : []; } catch (e) { pl = []; }
-    var acc = '<h3 class="tj-h3">' + esc(t({ es: "Plantillas de evento (película de 24 h)", en: "Event templates (24 h run)" })) + '</h3>' +
-      (pl.length ? '<div class="tj-botones">' + pl.slice(0, 6).map(function (p, i) {
-        return '<button type="button" class="btn" data-accion="plantilla" data-i="' + i + '" title="' + esc(p.desc ? t(p.desc) : "") + '">' + esc(t(p.nombre)) + '</button>';
-      }).join("") + '</div>' : '<p class="nota">—</p>') +
-      '<h3 class="tj-h3">' + esc(t({ es: "Documentos", en: "Documents" })) + '</h3><div class="tj-botones">' +
-      boton('data-accion="exportar"', t({ es: "Informe PDF y tablas CSV", en: "PDF report and CSV tables" })) +
-      '<a class="btn" href="guia.html">' + esc(t({ es: "Guía de uso", en: "User guide" })) + ' ↗</a>' +
-      '<a class="btn" href="demanda.html">' + esc(t({ es: "Modelo de demanda", en: "Demand model" })) + ' ↗</a></div>';
-    var tAcc = tarjeta("tj-acc", esc(t({ es: "Accesos rápidos", en: "Quick access" })), acc);
+    var acc = (pl.length ? '<div class="tj-botones">' + pl.slice(0, 6).map(function (p, i) {
+      return '<button type="button" class="btn" data-accion="plantilla" data-i="' + i + '" data-tip="' + esc(p.desc ? t(p.desc) : t(p.nombre)) + '">' + ico("play", 12) + esc(t(p.nombre)) + '</button>';
+    }).join("") + '</div>' : '') +
+      '<div class="tj-botones">' + '<button type="button" class="btn" data-accion="exportar">' + ico("exportar", 14) + esc(t({ es: "Informe y CSV", en: "Report and CSV" })) + '</button>' +
+      '<a class="btn" href="guia.html">' + ico("guia", 14) + esc(t({ es: "Guía", en: "Guide" })) + '</a>' +
+      '<a class="btn solo-experto" href="demanda.html">' + ico("ajustes", 14) + esc(t({ es: "Modelo de demanda", en: "Demand model" })) + '</a>' +
+      '<button type="button" class="btn" data-accion="tour">' + ico("tour", 14) + esc(t({ es: "Recorrido guiado", en: "Guided tour" })) + '</button></div>';
+    var tAcc = tarjeta("tj-acc", ico("play", 16) + ' ' + esc(t({ es: "Empezar rápido", en: "Quick start" })) + ' ' + info({ es: "Las plantillas cargan un día de ejemplo (partido, avería…) en LABORATORIO y abren SIMULACIÓN.", en: "Templates load a sample day (match, outage…) in LABORATORY and open SIMULATION." }), acc);
+    var sc = elInicio.scrollTop;
     elInicio.innerHTML = '<div class="inicio">' +
-      '<header class="ini-cab"><h1>RED-MAD 2031</h1><p>' + esc(t({ es: "Simulador de la red 5G + FTTH de Madrid en 2031 (Entrega 2, memoria v7). Elige un espacio arriba o con las teclas 1–6.",
-        en: "Simulator of Madrid's 5G + FTTH network in 2031 (Deliverable 2, report v7). Pick a workspace above or with keys 1–6." })) + '</p></header>' +
-      '<div class="ini-rejilla">' + tEstado + tCaso + tAvisos + tEsp + tAcc + '</div></div>';
+      '<header class="ini-cab"><h1>RED-MAD 2031</h1><span class="tx2">' + esc(t({ es: "Red 5G + FTTH de Madrid", en: "Madrid 5G + FTTH network" })) + '</span>' +
+        info({ es: "Simulador de la red 5G + FTTH de Madrid en 2031 (Entrega 2, memoria v7). Elige un espacio arriba o con las teclas 1–6. El interruptor SIMPLE / EXPERTO muestra u oculta tablas, ids y fórmulas.",
+          en: "Simulator of Madrid's 5G + FTTH network in 2031 (Deliverable 2, report v7). Pick a workspace above or with keys 1–6. The SIMPLE / EXPERT switch shows or hides tables, ids and formulas." }) + '</header>' +
+      tEsp + '<div class="ini-rejilla">' + tEstado + tSla + tCaso + tAvisos + tAcc + '</div></div>';
+    elInicio.scrollTop = sc;
   }
   NOC.registrarVista({ id: "inicio", grupo: "inicio", titulo: { es: "Inicio", en: "Home" },
     montar: function (el) { elInicio = el; }, activar: function () { pintarInicio(); } });
@@ -1049,18 +1167,19 @@
       [t(T.dia) + " / " + t(T.anio), ref ? "— / 2031" : (((MT.tipos_dia || {})[caso.dia] || {})[NOC.lang === "en" ? "nombre_en" : "nombre_es"] || caso.dia) + " / " + caso.anio],
       [t(T.hora), ref || traficoCargado() ? t(T.hcLargo) : String(caso.hora).padStart(2, "0") + ":00"],
       [t(T.evento), ev && ev.id && ev.id !== "ninguno" ? nomItem(ev) : t(T.ninguno)],
-      [t(T.fallo), ref || !caso.fallos.length ? t(T.ninguno) : caso.fallos.join(", ")],
+      [t(T.fallo), ref || !caso.fallos.length ? t(T.ninguno) : caso.fallos.map(corto).join(", ")],
     ];
     $("#ficha-cab").innerHTML = botonPlegarFicha() + '<div><h2>' + esc(t(T.casoAct).toUpperCase()) + '</h2><div class="sub">' + esc(t(T.sinSel)) + '</div></div>';
     $("#ficha-cuerpo").innerHTML = '<div class="ficha-sec"><h3>' + esc(t(T.casoAct)) + '</h3><dl class="kv">' + kv.map(function (x, i) {
       return '<dt>' + esc(x[0]) + '</dt><dd class="txt">' + esc(x[1]) + '</dd>';
     }).join("") + '</dl></div>' +
-      '<div class="ficha-sec"><h3>' + esc(t({ es: "Motor y modelo", en: "Engine and model" })) + '</h3>' + resumenMotorHTML() + '</div>' +
-      '<div class="ficha-sec"><h3>' + esc(t({ es: "Referencia", en: "Reference" })) + '</h3><p class="nota">' +
+      '<p class="fi-pista solo-simple">' + ico("mapa", 18) + '<span>' + esc(t({ es: "Toca un enlace o un nodo del mapa para ver su ficha.", en: "Tap a link or node on the map to see its card." })) + '</span></p>' +
+      '<div class="ficha-sec solo-experto"><h3>' + esc(t({ es: "Motor y modelo", en: "Engine and model" })) + '</h3>' + resumenMotorHTML() + '</div>' +
+      '<div class="ficha-sec solo-experto"><h3>' + esc(t({ es: "Referencia", en: "Reference" })) + '</h3><p class="nota">' +
       esc(t({ es: "La referencia reproduce la Entrega 2 (memoria conjunta v7, matriz A11): hora cargada coincidente de 2031 con partido en el Metropolitano, sin fallos. ",
         en: "The reference reproduces Deliverable 2 (joint report v7, A11 matrix): 2031 coincident busy hour with a match at the Metropolitano, no faults. " })) +
       '<span class="mono tx3">' + esc((RED.meta && RED.meta.referencia && RED.meta.referencia.doc) || "") + '</span></p></div>' +
-      '<div class="ficha-sec"><h3>' + esc(t({ es: "Tipos de dato", en: "Data types" })) + '</h3>' +
+      '<div class="ficha-sec solo-experto"><h3>' + esc(t({ es: "Tipos de dato", en: "Data types" })) + '</h3>' +
       '<div class="dato-doc nota">' + esc(t({ es: "documento (Entrega 2 o anterior)", en: "document (Deliverable 2 or earlier)" })) + '</div>' +
       '<div class="dato-sup nota" style="margin-top:3px">' + esc(t({ es: "supuesto del simulador", en: "simulator assumption" })) + '</div>' +
       '<div class="dato-calc nota" style="margin-top:3px">' + esc(t({ es: "calculado por el motor", en: "computed by the engine" })) + '</div>' +
@@ -1100,7 +1219,25 @@
     return '<dl class="kv">' + filas.map(function (x) { return '<dt>' + esc(x[0]) + '</dt><dd class="txt">' + esc(x[1]) + '</dd>'; }).join("") + '</dl>' +
       '<details class="det-json"><summary>' + esc(t({ es: "Opciones exactas del motor (JSON)", en: "Exact engine options (JSON)" })) + '</summary><pre>' + esc(JSON.stringify(op, null, 1)) + '</pre></details>';
   }
-  function sec(tit, cuerpo) { return '<div class="ficha-sec"><h3>' + esc(tit) + '</h3>' + cuerpo + '</div>'; }
+  function sec(tit, cuerpo, cls) { return '<div class="ficha-sec' + (cls ? " " + cls : "") + '"><h3>' + esc(tit) + '</h3>' + cuerpo + '</div>'; }
+  // Revisión 11: piezas gráficas de las fichas (medidor, donut por servicio, camino y curva de 24 h)
+  var SERV_N = { movil: { es: "Móvil", en: "Mobile" }, ftth: "FTTH", voz: { es: "Voz", en: "Voice" }, urllc: "URLLC", iot: "IoT",
+    empresa: { es: "Empresa", en: "Business" }, evento: { es: "Evento", en: "Event" }, ntn: "NTN" };
+  function medOcup(o, caido, pie) {
+    if (!caido && o != null && NOC.medidor) return '<div class="fi-med">' + NOC.medidor(o, { etiqueta: { es: "Ocupación", en: "Occupancy" }, unidad: "%", estado: NOC.sevOcupacion(o), umbrales: UMB_LEY, max: Math.max(1, o), escala: 100 }) +
+      (pie ? '<div class="fi-pie tx2">' + pie + '</div>' : '') + '</div>';
+    if (!NOC.medidor) return barraOc(o, caido);
+    return '<div class="fi-med">' + NOC.medidor(caido ? null : o, { etiqueta: { es: "Ocupación", en: "Occupancy" }, unidad: "%", estado: caido ? "unk" : undefined, estadoTexto: caido ? "DOWN" : undefined,
+      texto: caido ? "—" : undefined, umbrales: UMB_LEY, max: Math.max(1, o || 0), escala: 100 }) +
+      (pie ? '<div class="fi-pie tx2">' + pie + '</div>' : '') + '</div>';
+  }
+  function donutServicios(ps, dir) {
+    if (!ps || !NOC.donut) return "";
+    var partes = Object.keys(SERV_N).map(function (k) { var x = ps[k]; return { clave: k, etiqueta: SERV_N[k], valor: x ? (dir ? x[dir] : (x.ab || 0) + (x.ba || 0)) : 0 }; });
+    var tot = partes.reduce(function (a, p) { return a + (p.valor || 0); }, 0);
+    if (!(tot > 0)) return "";
+    return NOC.donut(partes, { centro: fmt(tot, tot >= 100 ? 0 : 1), sub: "Gbit/s", unidad: "Gbit/s", titulo: { es: "Tráfico por servicio", en: "Traffic by service" } });
+  }
   function kv(filas) {
     return '<dl class="kv">' + filas.filter(Boolean).map(function (f) {
       return '<dt>' + esc(f[0]) + '</dt><dd class="' + (f[2] || "") + '">' + f[1] + '</dd>';
@@ -1126,7 +1263,7 @@
     return sec(t(T.fuente), '<div class="' + NOC.claseDato(o) + '">' + NOC.marcaOrigen(o) +
       (f ? ' <span class="nota">' + esc(f) + '</span>' : ' <span class="nota">' + esc(t(T.noEsp)) + '</span>') + '</div>' +
       (o.nota ? '<p class="nota" style="margin-top:6px">' + esc(o.nota) + '</p>' : '') +
-      (o.supuesto && NOC.origenDe(o) !== "supuesto" ? '<p class="nota tx3" style="margin-top:4px">' + esc(t({ es: "Contiene valores marcados como supuesto en la fuente.", en: "Contains values flagged as assumptions in the source." })) + '</p>' : ''));
+      (o.supuesto && NOC.origenDe(o) !== "supuesto" ? '<p class="nota tx3" style="margin-top:4px">' + esc(t({ es: "Contiene valores marcados como supuesto en la fuente.", en: "Contains values flagged as assumptions in the source." })) + '</p>' : ''), "solo-experto");
   }
   function fichaNodo(id) {
     var n = IDX.nodos[id];
@@ -1134,10 +1271,11 @@
     var r = NOC.resultado && NOC.resultado.nodos ? NOC.resultado.nodos[id] : null;
     var caido = r ? r.caido : caso.fallos.indexOf(id) >= 0;
     var o = NOC.ocupacion(r), cd = NOC.claseDato(n);
-    var h = sec(t(T.estado), '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">' +
-      (caido ? NOC.insignia("unk", "DOWN") + ' <span>' + esc(t(T.caido)) + '</span>' : NOC.insignia(o == null ? "ok" : NOC.sevOcupacion(o), o == null ? "OK" : null) + ' <span>' + esc(t(T.servicio)) + '</span>') +
-      '<span class="tx3 mono">' + t({ es: "capa ", en: "layer " }) + NOC.capaNodo(n) + '</span></div>' + botonFallo(id, caido));
     var cap = n.capacidad_gbps;
+    var h = sec(t(T.estado), '<div class="fi-est">' + (NOC.icono ? NOC.icono(n.tipo, 28) : '') + '<div>' +
+      (caido ? (NOC.textoEstado ? NOC.textoEstado("unk", "DOWN") : NOC.insignia("unk", "DOWN")) + ' <span>' + esc(t(T.caido)) + '</span>' : (NOC.textoEstado ? NOC.textoEstado(o == null ? "ok" : NOC.sevOcupacion(o), o == null ? "OK" : null) : NOC.insignia(o == null ? "ok" : NOC.sevOcupacion(o))) + ' <span>' + esc(t(T.servicio)) + '</span>') +
+      '<div class="tx2">' + esc(t(TIPO_NODO[n.tipo] || { es: n.tipo })) + (esNum(cap) ? ' · ' + gb(cap) : '') + '<span class="tx3 mono solo-experto"> · ' + t({ es: "capa ", en: "layer " }) + NOC.capaNodo(n) + '</span></div></div></div>' +
+      (r && o != null ? medOcup(o, caido, gb(r.carga_gbps) + (esNum(cap) ? " / " + gb(cap) : "")) : '') + botonFallo(id, caido));
     h += sec(t(T.datos), kv([
       [t({ es: "Tipo", en: "Type" }), esc(t(TIPO_NODO[n.tipo] || { es: n.tipo })), "txt"],
       [t({ es: "Nombre", en: "Name" }), esc(n.nombre || id), "txt"],
@@ -1148,12 +1286,12 @@
       n.respaldo ? [t({ es: "Respaldo", en: "Backup" }), esc(Array.isArray(n.respaldo) ? n.respaldo.join(", ") : n.respaldo), cd] : null,
       n.respaldo_de ? [t({ es: "Respalda a", en: "Backs up" }), esc([].concat(n.respaldo_de).join(", ")), cd] : null,
       n.transito ? [t({ es: "Tránsito", en: "Transit" }), esc(String(n.transito)) + (n.nota_transito ? ' <span class="nota">' + esc(n.nota_transito) + '</span>' : ''), "txt"] : null
-    ]));
+    ]), "solo-experto");
     if (n.capacidad_detalle && typeof n.capacidad_detalle === "object") {
       h += sec(t({ es: "Detalle de capacidad", en: "Capacity detail" }), kv(Object.keys(n.capacidad_detalle).map(function (k) {
         var v = n.capacidad_detalle[k];
         return [k.replace(/_/g, " "), esc(typeof v === "object" ? JSON.stringify(v) : v), "txt " + cd];
-      })));
+      })), "solo-experto");
     }
     if (r) {
       h += sec(t(T.carga), kv([
@@ -1162,17 +1300,27 @@
         [t({ es: "Ocupación", en: "Occupancy" }), barraOc(o, caido), "dato-calc"],
         [t({ es: "Demandas", en: "Demands" }), fmt((r.demandas || []).length, 0), "dato-calc"],
         r.absorbe_de && r.absorbe_de.length ? [t({ es: "Absorbe de", en: "Absorbs from" }), esc(r.absorbe_de.join(", ")), "dato-calc"] : null
-      ]));
+      ]), "solo-experto");
     }
     var ady = (RED.enlaces || []).filter(function (e) { return e.a === id || e.b === id; });
     if (ady.length) {
-      h += sec(t(T.adyacentes), '<table class="tabla"><tbody>' + ady.map(function (e) {
-        var re = NOC.resultado ? NOC.resultado.enlaces[e.id] : null;
-        return '<tr data-id="' + esc(e.id) + '" data-tipo="enlace"><td class="id">' + esc(e.id) + '</td><td class="n">' + barraOc(NOC.ocupacion(re), re && re.caido) + '</td></tr>';
+      // tráfico por servicio sumado sobre sus enlaces (lo que entra y sale del nodo)
+      var psN = {};
+      ady.forEach(function (e) {
+        var re = NOC.resultado && NOC.resultado.enlaces ? NOC.resultado.enlaces[e.id] : null;
+        if (!re || !re.por_servicio) return;
+        Object.keys(re.por_servicio).forEach(function (k) { var x = re.por_servicio[k] || {}; psN[k] = psN[k] || { ab: 0, ba: 0 }; psN[k].ab += x.ab || 0; psN[k].ba += x.ba || 0; });
+      });
+      var dnN = donutServicios(psN, null);
+      if (dnN) h += sec(t({ es: "Tráfico por servicio", en: "Traffic by service" }), dnN + '<p class="nota solo-experto">' + esc(t({ es: "Suma de ambos sentidos en todos sus enlaces.", en: "Sum of both directions over all its links." })) + '</p>');
+      h += sec(t(T.adyacentes), '<table class="tabla fi-ady"><tbody>' + ady.map(function (e) {
+        var re = NOC.resultado ? NOC.resultado.enlaces[e.id] : null, otro = e.a === id ? e.b : e.a;
+        return '<tr data-id="' + esc(e.id) + '" data-tipo="enlace"><td>' + (NOC.icono ? NOC.icono((IDX.nodos[otro] || {}).tipo || "sitio", 14) + ' ' : '') + esc(corto(otro)) +
+          '<span class="nc-id mono solo-experto">' + esc(e.id) + '</span></td><td class="n">' + barraOc(NOC.ocupacion(re), re && re.caido) + '</td></tr>';
       }).join("") + '</tbody></table>');
     }
     h += fuenteHTML(n);
-    return { titulo: id, subtitulo: (n.nombre || "") + " · " + t(TIPO_NODO[n.tipo] || { es: n.tipo }), html: h };
+    return { titulo: corto(id), subtitulo: (corto(id) !== id ? id + " · " : "") + (n.nombre && n.nombre !== corto(id) ? n.nombre + " · " : "") + t(TIPO_NODO[n.tipo] || { es: n.tipo }), html: h };
   }
   function fichaEnlace(id) {
     var e = IDX.enlaces[id];
@@ -1180,9 +1328,15 @@
     var r = NOC.resultado && NOC.resultado.enlaces ? NOC.resultado.enlaces[id] : null;
     var caido = r ? r.caido : caso.fallos.indexOf(id) >= 0;
     var o = NOC.ocupacion(r), cd = NOC.claseDato(e), cap = e.capacidad_gbps;
-    var h = sec(t(T.estado), '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">' +
-      (caido ? NOC.insignia("unk", "DOWN") + ' <span>' + esc(t(T.caido)) + '</span>' : NOC.insignia(NOC.sevOcupacion(o), o == null ? "OK" : null) + ' <span>' + esc(t(T.servicio)) + '</span>') +
-      '<span class="tx3 mono">' + t({ es: "capa ", en: "layer " }) + NOC.capaEnlace(e) + '</span></div>' + botonFallo(id, caido));
+    var cmax = r ? Math.max(r.carga_ab || 0, r.carga_ba || 0) : null;
+    var h = sec(t(T.estado), medOcup(r ? o : null, caido, (r ? gb(cmax) : "—") + (esNum(cap) ? " / " + gb(cap) : "") +
+      '<span class="solo-experto tx3 mono"> · ' + t({ es: "capa ", en: "layer " }) + NOC.capaEnlace(e) + '</span>') +
+      (NOC.camino ? '<div class="fi-camino">' + NOC.camino([e.a, id, e.b], { resultado: NOC.resultado }) + '</div>' : '') + botonFallo(id, caido));
+    if (r && r.por_servicio) {
+      var dir = (r.carga_ab || 0) >= (r.carga_ba || 0) ? "ab" : "ba", dn = donutServicios(r.por_servicio, dir);
+      if (dn) h += sec(t({ es: "Tráfico por servicio", en: "Traffic by service" }), dn + '<p class="nota fi-dir">' + esc((dir === "ab" ? corto(e.a) + " → " + corto(e.b) : corto(e.b) + " → " + corto(e.a)) + " · " + t({ es: "sentido más cargado", en: "busiest direction" })) + '</p>');
+    }
+    // la curva de 24 h la añade reloj.js a la ficha (sección «24 h · ocupación»)
     function lnk(n) { return '<a href="#" data-sel="nodo" data-id="' + esc(n) + '" class="mono">' + esc(n) + '</a> <span class="nota">' + esc(nombre(n) !== n ? nombre(n) : "") + '</span>'; }
     h += sec(t(T.datos), kv([
       [t({ es: "Tipo", en: "Type" }), esc(t(TIPO_ENL[e.tipo] || { es: e.tipo })), "txt"],
@@ -1192,7 +1346,7 @@
       e.proteccion ? [t({ es: "Protección", en: "Protection" }), esc(e.proteccion).toUpperCase(), cd] : null,
       e.srlg ? ["SRLG", esc(e.srlg), cd] : null,
       e.acometida ? [t({ es: "Acometida", en: "Uplink" }), esc(e.acometida), cd] : null
-    ]));
+    ]), "solo-experto");
     if (r) {
       var form = esNum(cap) && cap > 0 ? '<div class="formula" data-tex="' + esc("\\rho = \\frac{\\max(C_{A\\to B},\\,C_{B\\to A})}{C} = \\frac{" +
         fmt(Math.max(r.carga_ab || 0, r.carga_ba || 0), 1).replace(",", "{,}") + "}{" + fmt(cap, 0).replace(",", "{,}") + "} = " +
@@ -1203,24 +1357,27 @@
         esNum(r.demanda_gbps) && r.demanda_gbps > (r.carga_gbps || 0) + 1e-6 ? [t({ es: "Ofrecida (máx.)", en: "Offered (max.)" }), gb(r.demanda_gbps), "dato-calc"] : null,
         [t({ es: "Ocupación", en: "Occupancy" }), barraOc(o, caido), "dato-calc"],
         [t({ es: "Demandas", en: "Demands" }), fmt((r.demandas || []).length, 0), "dato-calc"]
-      ]) + (form ? '<div style="margin-top:6px">' + form + '</div>' : ''));
+      ]) + (form ? '<div style="margin-top:6px">' + form + '</div>' : ''), "solo-experto");
     }
     h += fuenteHTML(e);
-    return { titulo: id, subtitulo: t(TIPO_ENL[e.tipo] || { es: e.tipo }) + " · " + nombre(e.a) + " – " + nombre(e.b), html: h };
+    return { titulo: corto(id), subtitulo: id + " · " + t(TIPO_ENL[e.tipo] || { es: e.tipo }), html: h };
   }
   function fichaZona(id) {
     var z = IDX.zonas[id];
     if (!z) return null;
     var r = NOC.resultado && NOC.resultado.zonas ? NOC.resultado.zonas[id] : null;
     var cd = NOC.claseDato(z);
-    var h = sec(t(T.datos), kv([
+    var h = r && NOC.medidor ? sec(t(T.estado), '<div class="fi-med">' + NOC.medidor(r.pct, { min: 0, max: 100, escala: 1, dec: 1, unidad: "%", etiqueta: { es: "Tráfico servido", en: "Traffic served" },
+      umbrales: [{ hasta: 95, sev: "crit" }, { hasta: 99, sev: "maj" }, { hasta: 99.9, sev: "min" }, { hasta: Infinity, sev: "ok" }] }) +
+      '<div class="fi-pie tx2">' + gb(r.servida_gbps) + ' / ' + gb(r.dl_gbps) + ' · ' + fmt(z.poblacion, 0) + ' ' + esc(t({ es: "hab.", en: "inhab." })) + '</div></div>') : "";
+    h += sec(t(T.datos), kv([
       [t({ es: "Municipios", en: "Municipalities" }), esc((z.municipios || []).join(", ")), "txt"],
       [t({ es: "Área metro", en: "Metro area" }), esc(z.area)],
       [t({ es: "Población 2031", en: "Population 2031" }), fmt(z.poblacion, 0), cd],
       [t({ es: "Abonados fijos", en: "Fixed subscribers" }), fmt(z.abonados_fijos, 0), cd],
       [t({ es: "Abonados móviles", en: "Mobile subscribers" }), fmt(z.abonados_moviles, 0), cd],
       ["AGG / Edge", esc(z.agg + " / " + z.edge)]
-    ]));
+    ]), "solo-experto");
     if (r) {
       h += sec(t(T.carga), kv([
         ["DL", gb(r.dl_gbps), "dato-calc"],
@@ -1230,10 +1387,10 @@
         Object.keys(r.necesidades || {}).map(function (k) {
           var x = r.necesidades[k], p = x.dl_gbps > 0 ? x.servida_gbps / x.dl_gbps * 100 : 100;
           return '<tr><td class="id">' + esc(k.replace(id + "/", "")) + '</td><td class="n">' + fmt(x.dl_gbps, 1) + '</td><td class="n">' + fmt(p, 1) + '</td></tr>';
-        }).join("") + '</tbody></table>');
+        }).join("") + '</tbody></table>', "solo-experto");
     }
     h += fuenteHTML(z);
-    return { titulo: id, subtitulo: z.nombre + " · " + t({ es: "zona de demanda (capa B)", en: "demand zone (layer B)" }), html: h };
+    return { titulo: corto(id), subtitulo: (corto(id) !== z.nombre ? z.nombre + " · " : "") + id + " · " + t({ es: "zona de demanda", en: "demand zone" }), html: h };
   }
   var FICHAS = { nodo: fichaNodo, enlace: fichaEnlace, zona: fichaZona };
   NOC.fichaElemento = function (tipo, id) {
@@ -1282,7 +1439,7 @@
   function cabTabla(tab, cols) {
     var o = orden[tab];
     return '<thead><tr>' + cols.map(function (c) {
-      var cls = (c.n ? "n " : "") + (o.k === c.k ? (o.d > 0 ? "asc" : "desc") : "");
+      var cls = (c.n ? "n " : "") + (c.cls ? c.cls + " " : "") + (o.k === c.k ? (o.d > 0 ? "asc" : "desc") : "");
       return '<th class="' + cls + '"' + (c.k ? ' data-orden="' + c.k + '" data-tab="' + tab + '"' : '') + '>' + esc(c.t) + '</th>';
     }).join("") + '</tr></thead>';
   }
@@ -1345,11 +1502,11 @@
     var hh = horaTxt();
     return '<table class="tabla">' + cabTabla("alarmas", [
       { k: "sev", t: t({ es: "Sev.", en: "Sev." }) }, { k: "elem", t: t({ es: "Elemento", en: "Element" }) },
-      { t: t({ es: "Hora", en: "Hour" }) }, { k: "texto", t: t({ es: "Texto", en: "Text" }) }, { k: "fuente", t: t({ es: "Origen", en: "Origin" }) }
+      { t: t({ es: "Hora", en: "Hour" }), cls: "solo-experto" }, { k: "texto", t: t({ es: "Texto", en: "Text" }) }, { k: "fuente", t: t({ es: "Origen", en: "Origin" }), cls: "solo-experto" }
     ]) + '<tbody>' + filas.map(function (f) {
       var tipo = IDX.enlaces[f.elem] ? "enlace" : IDX.nodos[f.elem] ? "nodo" : "";
-      return '<tr' + (tipo ? ' data-id="' + esc(f.elem) + '" data-tipo="' + tipo + '"' : '') + '><td>' + NOC.insignia(f.s) + '</td><td class="id">' + esc(f.elem || "—") +
-        '</td><td class="mono tx2">' + hh + '</td><td class="txt">' + esc(f.texto) + '</td><td class="tx3">' +
+      return '<tr' + (tipo ? ' data-id="' + esc(f.elem) + '" data-tipo="' + tipo + '"' : '') + '><td>' + (NOC.textoEstado ? NOC.textoEstado(f.s) : NOC.insignia(f.s)) + '</td><td class="id"><span class="solo-experto">' + esc(f.elem || "—") + '</span><span class="solo-simple">' + esc(f.elem ? corto(f.elem) : "—") + '</span>' +
+        '</td><td class="mono tx2 solo-experto">' + hh + '</td><td class="txt">' + esc(f.texto) + '</td><td class="tx3 solo-experto">' +
         esc(f.fuente === "umbral" ? t({ es: "umbral 85 %", en: "85 % threshold" }) : t({ es: "motor", en: "engine" })) + '</td></tr>';
     }).join("") + '</tbody></table>';
   }
@@ -1357,18 +1514,18 @@
     var r = NOC.resultado;
     var filas = (RED.enlaces || []).map(function (e) {
       var x = r ? r.enlaces[e.id] : null, o = NOC.ocupacion(x);
-      return { id: e.id, tramo: nombre(e.a) + " – " + nombre(e.b), tipo: e.tipo, capa: NOC.capaEnlace(e), cap: e.capacidad_gbps,
+      return { id: e.id, tramo: corto(e.id), tipo: e.tipo, capa: NOC.capaEnlace(e), cap: e.capacidad_gbps,
         ab: x ? x.carga_ab : null, ba: x ? x.carga_ba : null, oc: x && x.caido ? -1 : o, caido: x && x.caido, o: o, origen: NOC.origenDe(e) };
     }).filter(function (f) { return NOC.capaVisible(f.capa); });
     ordenar("enlaces", filas);
     return '<table class="tabla">' + cabTabla("enlaces", [
-      { k: "id", t: "ID" }, { k: "tramo", t: t({ es: "Tramo", en: "Span" }) }, { k: "capa", t: t({ es: "Capa", en: "Layer" }) },
-      { k: "cap", t: t({ es: "Capacidad", en: "Capacity" }), n: 1 }, { k: "ab", t: "A→B", n: 1 }, { k: "ba", t: "B→A", n: 1 },
-      { k: "oc", t: t({ es: "Ocupación", en: "Occupancy" }), n: 1 }, { k: "origen", t: t({ es: "Dato", en: "Data" }) }
+      { k: "id", t: "ID", cls: "solo-experto" }, { k: "tramo", t: t({ es: "Tramo", en: "Span" }) }, { k: "capa", t: t({ es: "Capa", en: "Layer" }), cls: "solo-experto" },
+      { k: "cap", t: t({ es: "Capacidad", en: "Capacity" }), n: 1 }, { k: "ab", t: "A→B", n: 1, cls: "solo-experto" }, { k: "ba", t: "B→A", n: 1, cls: "solo-experto" },
+      { k: "oc", t: t({ es: "Ocupación", en: "Occupancy" }), n: 1 }, { k: "origen", t: t({ es: "Dato", en: "Data" }), cls: "solo-experto" }
     ]) + '<tbody>' + filas.map(function (f) {
-      return '<tr data-id="' + esc(f.id) + '" data-tipo="enlace"><td class="id">' + esc(f.id) + '</td><td>' + esc(f.tramo) + '</td><td class="mono">' + f.capa +
-        '</td><td class="n">' + (esNum(f.cap) ? fmt(f.cap, f.cap < 10 ? 1 : 0) : "—") + '</td><td class="n">' + (esNum(f.ab) ? fmt(f.ab, 1) : "—") + '</td><td class="n">' + (esNum(f.ba) ? fmt(f.ba, 1) : "—") +
-        '</td><td class="n">' + (f.caido ? NOC.insignia("unk", "DOWN") : barraOc(f.o, false)) + '</td><td>' + NOC.marcaOrigen(IDX.enlaces[f.id]) + '</td></tr>';
+      return '<tr data-id="' + esc(f.id) + '" data-tipo="enlace"><td class="id solo-experto">' + esc(f.id) + '</td><td>' + ico(f.tipo, 14) + ' ' + esc(f.tramo) + '</td><td class="mono solo-experto">' + f.capa +
+        '</td><td class="n">' + (esNum(f.cap) ? fmt(f.cap, f.cap < 10 ? 1 : 0) : "—") + '</td><td class="n solo-experto">' + (esNum(f.ab) ? fmt(f.ab, 1) : "—") + '</td><td class="n solo-experto">' + (esNum(f.ba) ? fmt(f.ba, 1) : "—") +
+        '</td><td class="n">' + (f.caido ? (NOC.textoEstado ? NOC.textoEstado("unk", "DOWN") : NOC.insignia("unk", "DOWN")) : barraOc(f.o, false)) + '</td><td class="solo-experto">' + NOC.marcaOrigen(IDX.enlaces[f.id]) + '</td></tr>';
     }).join("") + '</tbody></table>';
   }
   function normalizarN1(res) {
@@ -1391,24 +1548,24 @@
   function tablaN1() {
     var hayMotor = typeof Motor.barridoN1 === "function";
     var barra = '<div class="barra-n1"><button type="button" class="btn prim" data-accion="n1"' + (hayMotor ? "" : " disabled") + '>' + esc(t(T.ejecutar)) + '</button>' +
-      '<span>' + esc(hayMotor ? t(T.n1Desc) : t(T.pendMotor)) + '</span>' +
+      '<span class="solo-experto">' + esc(hayMotor ? t(T.n1Desc) : t(T.pendMotor)) + '</span>' + (hayMotor ? '<span class="solo-simple">' + info(t(T.n1Desc)) + '</span>' : '<span>' + esc(t(T.pendMotor)) + '</span>') +
       (N1.estado === "ok" ? '<span class="tx3 mono">' + N1.filas.length + ' · ' + N1.ms + ' ms</span>' : '') + '</div>';
     if (N1.estado === "corriendo") return barra + '<div class="vacio">' + esc(t(T.ejecutando)) + '</div>';
     if (N1.estado === "error") return barra + '<div class="vacio sev-crit">' + esc(N1.err) + '</div>';
     if (N1.estado !== "ok") return barra;
     var filas = ordenar("n1", N1.filas.slice());
     return barra + '<table class="tabla">' + cabTabla("n1", [
-      { k: "rk", t: "#", n: 1 }, { k: "id", t: t({ es: "Elemento caído", en: "Failed element" }) }, { k: "clase", t: t({ es: "Clase", en: "Class" }) },
-      { k: "pct", t: t({ es: "% servido", en: "% served" }), n: 1 }, { k: "dpct", t: "Δ pp", n: 1 }, { k: "perd", t: t({ es: "No servido", en: "Unserved" }), n: 1 },
-      { k: "oc", t: t({ es: "Ocup. máx.", en: "Max. occ." }), n: 1 }, { k: "emax", t: t({ es: "Enlace máx.", en: "Max. link" }) },
-      { k: "afect", t: t({ es: "Dem. sin ruta", en: "Dropped dem." }), n: 1 }, { k: "graves", t: t({ es: "Alarmas graves", en: "Severe alarms" }), n: 1 }
+      { k: "rk", t: "#", n: 1 }, { k: "id", t: t({ es: "Elemento caído", en: "Failed element" }) }, { k: "clase", t: t({ es: "Clase", en: "Class" }), cls: "solo-experto" },
+      { k: "pct", t: t({ es: "% servido", en: "% served" }), n: 1 }, { k: "dpct", t: "Δ pp", n: 1 }, { k: "perd", t: t({ es: "No servido", en: "Unserved" }), n: 1, cls: "solo-experto" },
+      { k: "oc", t: t({ es: "Ocup. máx.", en: "Max. occ." }), n: 1 }, { k: "emax", t: t({ es: "Enlace máx.", en: "Max. link" }), cls: "solo-experto" },
+      { k: "afect", t: t({ es: "Dem. sin ruta", en: "Dropped dem." }), n: 1 }, { k: "graves", t: t({ es: "Alarmas graves", en: "Severe alarms" }), n: 1, cls: "solo-experto" }
     ]) + '<tbody>' + filas.map(function (f) {
       var sev = f.dpct == null ? "unk" : f.dpct < -5 ? "crit" : f.dpct < -1 ? "maj" : f.dpct < -0.01 ? "min" : "ok";
       return '<tr data-id="' + esc(f.id) + '" data-tipo="' + (f.clase === "enlace" ? "enlace" : "nodo") + '" title="' + esc(t({ es: "Doble clic: añadir como fallo al caso", en: "Double-click: add as fault to the case" })) + '">' +
-        '<td class="n">' + f.rk + '</td><td class="id">' + NOC.insignia(sev) + ' ' + esc(f.id) + '</td><td>' + esc(f.clase) + '</td>' +
+        '<td class="n">' + f.rk + '</td><td class="id">' + (NOC.textoEstado ? NOC.textoEstado(sev) : NOC.insignia(sev)) + ' <span class="solo-experto">' + esc(f.id) + '</span><span class="solo-simple">' + esc(corto(f.id)) + '</span></td><td class="solo-experto">' + esc(f.clase) + '</td>' +
         '<td class="n">' + (f.pct == null ? "—" : fmt(f.pct, 2)) + '</td><td class="n">' + (f.dpct == null ? "—" : (f.dpct >= 0 ? "+" : "−") + fmt(Math.abs(f.dpct), 2)) + '</td>' +
-        '<td class="n">' + (f.perd == null ? "—" : fmt(f.perd, 1)) + '</td><td class="n">' + (f.oc == null ? "—" : fmt(f.oc * 100, 1) + " %") + '</td>' +
-        '<td class="id">' + esc(f.emax) + '</td><td class="n">' + (f.afect == null ? "—" : fmt(f.afect, 0)) + '</td><td class="n">' + (f.graves == null ? "—" : fmt(f.graves, 0)) + '</td></tr>';
+        '<td class="n solo-experto">' + (f.perd == null ? "—" : fmt(f.perd, 1)) + '</td><td class="n">' + (f.oc == null ? "—" : fmt(f.oc * 100, 1) + " %") + '</td>' +
+        '<td class="id solo-experto">' + esc(f.emax) + '</td><td class="n">' + (f.afect == null ? "—" : fmt(f.afect, 0)) + '</td><td class="n solo-experto">' + (f.graves == null ? "—" : fmt(f.graves, 0)) + '</td></tr>';
     }).join("") + '</tbody></table>';
   }
   // Revisión 10: N-1 como vista propia en ANÁLISIS (antes, pestaña del dock)
@@ -1416,9 +1573,8 @@
   function pintarN1() {
     if (!elN1 || activa !== "n1") return;
     var sc = elN1.scrollTop;
-    elN1.innerHTML = '<div class="n1-vista"><div class="vista-cab"><h2>' + esc(t({ es: "Contingencia N-1", en: "N-1 contingency" })) + '</h2><p class="nota">' +
-      esc(t({ es: "Clic en una fila: ficha del elemento. Doble clic: añadirlo como fallo al caso (LAB).",
-        en: "Click a row: element details. Double-click: add it as a fault to the case (LAB)." })) + '</p></div>' + tablaN1() + '</div>';
+    elN1.innerHTML = '<div class="n1-vista"><div class="vista-cab"><h2>' + esc(t({ es: "Contingencia N-1", en: "N-1 contingency" })) + '</h2>' + info({ es: "Clic en una fila: ficha del elemento. Doble clic: añadirlo como fallo al caso (LAB).",
+        en: "Click a row: element details. Double-click: add it as a fault to the case (LAB)." }) + '</div>' + tablaN1() + '</div>';
     elN1.scrollTop = sc;
     marcarSeleccionTablas();
   }
@@ -1474,9 +1630,9 @@
       '<span>' + (r ? fmt(r.demandas.length, 0) : "—") + ' ' + esc(t(T.demandas)) + '</span>' +
       '<span>' + fmt(PCT_SUP, 0) + ' ' + esc(t(T.supuestos)) + '</span>' +
       '<span class="modo-sb ' + NOC.modo + '">' + (NOC.lang === "en" ? "MODE " : "MODO ") + (ref ? "REF" : "LAB") + '</span>' +
-      '<span class="opc">' + esc(t(EJES.fuente === "motor" ? T.casosMotor : T.casosLocal)) + '</span>' +
+      '<span class="opc solo-experto">' + esc(t(EJES.fuente === "motor" ? T.casosMotor : T.casosLocal)) + '</span>' +
       '<span class="msg" id="sb-msg"></span>' +
-      '<span class="atajos"><kbd>1</kbd>–<kbd>6</kbd> ' + esc(t({ es: "espacios", en: "workspaces" })) + ' · <kbd>F</kbd> <kbd>[</kbd> <kbd>]</kbd> <kbd>\\</kbd> <kbd>/</kbd> ' + esc(t(T.atajos)) + '</span>';
+      '<span class="atajos solo-experto"><kbd>1</kbd>–<kbd>6</kbd> ' + esc(t({ es: "espacios", en: "workspaces" })) + ' · <kbd>F</kbd> <kbd>[</kbd> <kbd>]</kbd> <kbd>\\</kbd> <kbd>/</kbd> ' + esc(t(T.atajos)) + '</span>';
   }
 
   // ---------- búsqueda ----------
@@ -1560,6 +1716,11 @@
     emitir("lang", l);
   }
   NOC.setLang = setLang;
+  // Revisión 11: al cambiar SIMPLE / EXPERTO se repintan las piezas que cambian de texto (lo demás lo oculta el CSS)
+  if (NOC.alNivel) NOC.alNivel(function (nv) {
+    try { pintarBarra(); pintarDock(); pintarEstado(); refrescarFicha(); if (ESP === "inicio") pintarInicio(); } catch (e) { console.error("nivel", e); }
+    emitir("nivel", nv);
+  });
 
   // ---------- eventos (delegación) ----------
   raiz.addEventListener("click", function (ev) {
@@ -1617,6 +1778,7 @@
         if (NOC.operador && NOC.operador.aplicarPlantilla) NOC.operador.aplicarPlantilla(Number(b.getAttribute("data-i")));
       }
       else if (a === "ficha-caso") abrirFichaCaso();
+      else if (a === "tour") { if (typeof NOC.tour === "function") NOC.tour(true); }
       else if (a === "ver-alarmas") { if (dockLista().indexOf("alarmas") < 0) setEspacio("red"); dock.tab = "alarmas"; guardar("noc.dock", "alarmas"); if (NOC.plegado("dock")) NOC.plegar("dock", false); else { pintarDock(); emitir("dock", dock); } }
       else if (a === "n1") ejecutarN1();
       else if (a === "exportar") { if (window.Exportar && Exportar.alternarPanel) Exportar.alternarPanel(); }

@@ -567,7 +567,14 @@
   var API = {
     capturar: capturar, cargar: cargar, guardar: guardar, lista: lista, codificar: codificar, decodificar: decodificar, enlace: enlace,
     descargar: descargar, opcionesEstudio: opcionesEstudio, comparar: function (a, b) { return comparar(a, b); }, comparacion: null,
-    defensa: defensa, salirDefensa: salirDefensa, alternarPanel: alternarPanel, resaltar: resaltar
+    defensa: defensa, salirDefensa: salirDefensa, alternarPanel: alternarPanel, resaltar: resaltar,
+    // Revisión 11 (diseñador de escenarios): guardar el caso actual con nombre y notas
+    guardarComo: function (nombre, notas) {
+      if (nombre != null) BOR.nombre = String(nombre);
+      if (notas != null) BOR.notas = String(notas);
+      guardarBorrador();
+      return guardar();
+    }
   };
   NOC.estudios = API;
 
