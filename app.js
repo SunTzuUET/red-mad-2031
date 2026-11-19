@@ -1123,9 +1123,11 @@
   }
   NOC.mensaje = mensaje;
   function pctSupuestos() {
-    var tot = 0, sup = 0;
-    (RED.nodos || []).concat(RED.enlaces || []).forEach(function (o) { tot++; if (NOC.origenDe(o) === "supuesto") sup++; });
-    return tot ? sup / tot * 100 : 0;
+    // Registro por campo (Revisión 3): número de supuestos S-### registrados.
+    if (RED.supuestos && RED.supuestos.length) return RED.supuestos.length;
+    var sup = 0;
+    (RED.nodos || []).concat(RED.enlaces || []).forEach(function (o) { if (NOC.origenDe(o) === "supuesto") sup++; });
+    return sup;
   }
   var PCT_SUP = pctSupuestos();
   function fechaES(f) { var m = String(f || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[3] + "-" + m[2] + "-" + m[1] : (f || "—"); }
@@ -1137,7 +1139,7 @@
       '<span>' + t({ es: "DATOS v7 ", en: "DATA v7 " }) + fechaES(RED.meta && RED.meta.fecha) + '</span>' +
       '<span class="' + (motorOK ? "ok" : "mal") + '">' + esc(t(motorOK ? T.motorOk : T.motorMal)) + ' · ' + motorMs + ' ms</span>' +
       '<span>' + (r ? fmt(r.demandas.length, 0) : "—") + ' ' + esc(t(T.demandas)) + '</span>' +
-      '<span>' + fmt(PCT_SUP, 0) + ' % ' + esc(t(T.supuestos)) + '</span>' +
+      '<span>' + fmt(PCT_SUP, 0) + ' ' + esc(t(T.supuestos)) + '</span>' +
       '<span class="modo-sb ' + NOC.modo + '">' + (NOC.lang === "en" ? "MODE " : "MODO ") + (ref ? "REF" : "LAB") + '</span>' +
       '<span class="opc">' + esc(t(EJES.fuente === "motor" ? T.casosMotor : T.casosLocal)) + '</span>' +
       '<span class="msg" id="sb-msg"></span>' +
