@@ -497,7 +497,7 @@
     Object.keys(r.enlaces || {}).forEach(function (id) {
       var e = r.enlaces[id], o = NOC.ocupacion(e);
       if (e.caido || o == null || o < 0.85 || o > 1.0001 || conAlarma[id]) return;
-      ALARMAS.push({ sev: "min", elem: id, fuente: "umbral",
+      ALARMAS.push({ sev: "maj", elem: id, fuente: "umbral",
         texto: t({ es: "Enlace " + id + " al " + fmt(o * 100, 1) + " % (umbral de operación 85 %)",
           en: "Link " + id + " at " + fmt(o * 100, 1) + " % (operating threshold 85 %)" }) });
     });
