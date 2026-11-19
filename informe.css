@@ -1,0 +1,129 @@
+/* informe.css — informe imprimible de EXPORTAR. Pantalla: paleta negra NOC. Impresión: blanco y negro sobrio, A4,
+   tablas anchas en A4 apaisado (página con nombre "ancha"), cabeceras repetidas y números de página. */
+:root {
+  color-scheme: dark;
+  --bg0: #000; --bg1: #0b0b0b; --bg2: #141414; --line: #222; --line2: #333; --line3: #555;
+  --tx1: #ececec; --tx2: #a6a6a6; --tx3: #707070; --steel: #f2f2f2;
+  --sup: #9085e9; --calc: #707070; --doc: #d9d9d9;
+  --rayado: repeating-linear-gradient(-45deg, rgba(144,133,233,.30) 0 2px, transparent 2px 6px);
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", sans-serif;
+  --code: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg0); color: var(--tx1); font: 13px/1.4 var(--sans); }
+.barra { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 12px; padding: 8px 16px;
+  background: var(--bg1); border-bottom: 1px solid var(--line2); }
+.barra-tit { font-weight: 600; letter-spacing: .04em; }
+.barra-estado { flex: 1; color: var(--tx3); font-size: 12px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn { height: 26px; padding: 0 12px; border: 1px solid var(--line2); background: var(--bg0); color: var(--tx1); font: 12px var(--sans); cursor: pointer; }
+.btn.prim { background: var(--steel); color: #000; border-color: #fff; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+main { max-width: 1400px; margin: 0 auto; padding: 16px; }
+.espera { color: var(--tx3); }
+.error { color: #e5484d; }
+
+/* portada */
+.portada { border: 1px solid var(--line2); padding: 28px 28px 22px; margin-bottom: 24px; }
+.portada .proy { font: 600 12px/1 var(--sans); letter-spacing: .14em; color: var(--tx2); text-transform: uppercase; }
+.portada h1 { font-size: 30px; margin: 10px 0 4px; font-weight: 650; letter-spacing: -.01em; }
+.portada .modo { display: inline-block; padding: 2px 8px; border: 1px solid var(--tx1); font-weight: 600; font-size: 12px; margin-right: 6px; }
+.portada .modo.lab { background: repeating-linear-gradient(-45deg, rgba(255,255,255,.25) 0 2px, transparent 2px 6px); }
+.portada dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; margin: 18px 0 0; }
+.portada dt { color: var(--tx3); }
+.portada dd { margin: 0; overflow-wrap: anywhere; }
+.kpi span { overflow-wrap: anywhere; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line2); border: 1px solid var(--line2); margin-top: 20px; }
+.kpi { background: var(--bg1); padding: 10px 12px; }
+.kpi b { display: block; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi span { color: var(--tx3); font-size: 11px; }
+.kpi small { display: block; color: var(--tx2); font-size: 11px; margin-top: 2px; }
+.indice { margin: 16px 0 0; padding: 0; list-style: none; columns: 2; color: var(--tx2); font-size: 12px; }
+.indice a { color: inherit; text-decoration: none; }
+.indice a:hover { color: var(--tx1); text-decoration: underline; }
+
+/* secciones y tablas */
+.sec { margin: 0 0 28px; }
+.sec h2 { font-size: 17px; margin: 0 0 4px; font-weight: 620; }
+.sec h2 .n { color: var(--tx3); font-weight: 400; font-size: 12px; margin-left: 6px; }
+.sec .desc { margin: 0 0 8px; color: var(--tx2); font-size: 12px; }
+.envol { overflow-x: auto; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+th, td { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+thead th { background: var(--bg2); color: var(--tx2); font-weight: 600; position: sticky; top: 0; white-space: nowrap; }
+thead th .u { color: var(--tx3); font-weight: 400; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.largo { min-width: 220px; max-width: 420px; }
+td.medio { min-width: 130px; max-width: 260px; }
+td.meta { color: var(--tx2); font-size: 10.5px; }
+td.meta.ids { font-family: var(--code); font-size: 10px; max-width: 260px; }
+th.meta { border-left: 1px solid var(--line2); }
+td.meta:first-of-type { border-left: 1px solid var(--line2); }
+/* procedencia de celda */
+td.t-supuesto { background: var(--rayado); box-shadow: inset 2px 0 0 var(--sup); }
+td.t-calculado { font-style: italic; color: var(--tx2); }
+td.t-anterior::after { content: "†"; color: var(--tx3); margin-left: 2px; font-style: normal; }
+sup.s { font: 600 8.5px/1 var(--code); color: var(--sup); margin-left: 3px; letter-spacing: 0; white-space: nowrap; }
+sup.s::before { content: "ˢ"; }
+
+/* registro de supuestos */
+.amb h3 { font-size: 14px; margin: 18px 0 6px; text-transform: capitalize; }
+.sup-ficha { border: 1px solid var(--line); border-left: 3px solid var(--sup); padding: 8px 10px; margin: 0 0 8px; font-size: 12px; }
+.sup-ficha .cab { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.sup-ficha .id { font: 600 12px var(--code); color: var(--sup); }
+.sup-ficha .campo { font-weight: 600; }
+.sup-ficha .valor { font-variant-numeric: tabular-nums; }
+.sup-ficha .estado { margin-left: auto; color: var(--tx3); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.sup-ficha dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 2px 10px; margin: 6px 0 0; }
+.sup-ficha dt { color: var(--tx3); }
+.sup-ficha dd { margin: 0; overflow-wrap: anywhere; }
+.sup-ficha .afecta { font-size: 11px; color: var(--tx2); }
+.sup-ficha.no-usado { opacity: .75; }
+.leyenda td:first-child { white-space: nowrap; width: 210px; }
+.muestra { display: inline-block; min-width: 70px; padding: 1px 6px; border: 1px solid var(--line2); }
+.aviso { border: 1px dashed var(--line3); padding: 8px 10px; color: var(--tx2); font-size: 12px; margin: 0 0 12px; }
+
+/* ===== impresión ===== */
+@page { size: A4; margin: 14mm 12mm 16mm;
+  @bottom-left { content: "RED-MAD 2031 · informe del simulador"; font: 7.5pt sans-serif; color: #555; }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt sans-serif; color: #555; } }
+@page ancha { size: A4 landscape; margin: 12mm 10mm 14mm;
+  @bottom-left { content: "RED-MAD 2031 · informe del simulador"; font: 7.5pt sans-serif; color: #555; }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt sans-serif; color: #555; } }
+@media print {
+  :root { color-scheme: light; --line: #bbb; --line2: #888; --line3: #666; --tx1: #000; --tx2: #333; --tx3: #555;
+    --sup: #000;
+    /* En papel, gris plano: el rayado (gradiente o mosaico SVG) se rasteriza celda a celda y el PDF de un informe
+       completo pasa de 7 a 18-38 MB. En pantalla sigue rayado. */
+    --rayado: #e4e4e4; }
+  html, body { background: #fff; color: #000; font-size: 9pt; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .no-imprimir { display: none !important; }
+  main { max-width: none; padding: 0; }
+  .portada { border: 0; padding: 0; margin: 0; break-after: page; }
+  .portada h1 { font-size: 24pt; }
+  .kpi { background: #fff; }
+  .kpis { background: #888; }
+  .sec { break-before: page; margin: 0; }
+  .sec.ancha { page: ancha; }
+  .envol { overflow: visible; border: 0; }
+  table { font-size: 7.4pt; width: 100%; }
+  .sec.ancha table { font-size: 6.9pt; }
+  th, td { padding: 1.5pt 3pt; border-bottom: .5pt solid #bbb; }
+  thead { display: table-header-group; }
+  thead th { position: static; background: #eee; color: #000; border-bottom: .8pt solid #000; white-space: normal; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  td.largo { min-width: 0; max-width: 60mm; }
+  td.medio { min-width: 0; max-width: 40mm; }
+  td.meta.ids { min-width: 30mm; max-width: 45mm; }
+  td.meta:not(.ids) { min-width: 24mm; }
+  td, th { overflow-wrap: break-word; }
+  td.t-supuesto { box-shadow: none; border-left: .6pt solid #000; }
+  td.num { overflow-wrap: normal; }
+  td.t-calculado { color: #000; }
+  sup.s { color: #000; font-size: 6pt; }
+  .sup-ficha { break-inside: avoid; border-color: #999; border-left: 2pt solid #000; padding: 4pt 6pt; font-size: 8.5pt; }
+  .amb h3 { break-after: avoid; }
+  h2 { break-after: avoid; }
+  a { color: #000; text-decoration: none; }
+}
+@media (max-width: 640px) { .barra { flex-wrap: wrap; padding: 8px 16px; } .barra-estado { flex-basis: 100%; order: 3; } .portada { padding: 16px; } .portada h1 { font-size: 22px; } .indice { columns: 1; } main { padding: 12px 16px; } }

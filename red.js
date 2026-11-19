@@ -196,7 +196,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.66 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.66 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-MADRID/empresa",
@@ -209,7 +240,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.34 del fijo; 297693 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.34 del fijo; 297693 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-MADRID/movil-ebb",
@@ -222,7 +284,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-MADRID/voz-ims",
@@ -236,7 +329,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-MADRID/voz-fija",
@@ -249,12 +378,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (CENTRO), no por municipio: el municipio recibe 100.0 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 73.323 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (3663025) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área CENTRO suma 164.688/93.752 Gbit/s DL/UL: evento Metropolitano 164,688/88,750 + IoT/cámaras Valdebebas 0/5,002). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (CENTRO), no por municipio: el municipio recibe 100.0 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 73.323 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (3663025) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área CENTRO suma 164.688/93.752 Gbit/s DL/UL: evento Metropolitano 164,688/88,750 + IoT/cámaras Valdebebas 0/5,002). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 2433.511,
+   "ul_gbps": 343.448
   },
   {
    "id": "Z-ALCOBENDAS",
@@ -292,7 +530,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.621 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.621 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCOBENDAS/empresa",
@@ -305,7 +574,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.379 del fijo; 10393 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.379 del fijo; 10393 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCOBENDAS/movil-ebb",
@@ -318,7 +618,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCOBENDAS/voz-ims",
@@ -332,7 +663,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-ALCOBENDAS/voz-fija",
@@ -345,12 +712,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 67.55 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 67.55 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 87.3963,
+   "ul_gbps": 12.3353
   },
   {
    "id": "Z-TRESCANTOS",
@@ -388,7 +864,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.685 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.685 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TRESCANTOS/empresa",
@@ -401,7 +908,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.315 del fijo; 3586 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.315 del fijo; 3586 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TRESCANTOS/movil-ebb",
@@ -414,7 +952,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TRESCANTOS/voz-ims",
@@ -428,7 +997,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-TRESCANTOS/voz-fija",
@@ -441,12 +1046,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 29.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 29.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 38.7203,
+   "ul_gbps": 5.4643
   },
   {
    "id": "Z-TALAMANCA",
@@ -487,7 +1201,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.755 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.755 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TALAMANCA/empresa",
@@ -500,7 +1245,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.245 del fijo; 230 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.245 del fijo; 230 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TALAMANCA/movil-ebb",
@@ -513,7 +1289,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TALAMANCA/voz-ims",
@@ -527,7 +1334,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-TALAMANCA/voz-fija",
@@ -540,12 +1383,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 2.53 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 2.53 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "aproximado",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 3.2672,
+   "ul_gbps": 0.4602
   },
   {
    "id": "Z-TORREJON",
@@ -583,7 +1535,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.768 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.768 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TORREJON/empresa",
@@ -596,7 +1579,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.232 del fijo; 6457 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.232 del fijo; 6457 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TORREJON/movil-ebb",
@@ -609,7 +1623,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-TORREJON/voz-ims",
@@ -623,7 +1668,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-TORREJON/voz-fija",
@@ -636,12 +1717,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 41.25 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 41.25 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 99.4896,
+   "ul_gbps": 14.0406
   },
   {
    "id": "Z-ALCALA",
@@ -679,7 +1869,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.761 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.761 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCALA/empresa",
@@ -692,7 +1913,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.239 del fijo; 9786 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.239 del fijo; 9786 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCALA/movil-ebb",
@@ -705,7 +1957,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCALA/voz-ims",
@@ -719,7 +2002,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-ALCALA/voz-fija",
@@ -732,12 +2051,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 57.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 57.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 139.7363,
+   "ul_gbps": 19.7193
   },
   {
    "id": "Z-LOSSANTOS",
@@ -778,7 +2206,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LOSSANTOS/empresa",
@@ -791,7 +2250,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 126 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 126 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LOSSANTOS/movil-ebb",
@@ -804,7 +2294,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LOSSANTOS/voz-ims",
@@ -818,7 +2339,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-LOSSANTOS/voz-fija",
@@ -831,12 +2388,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 0.82 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 0.82 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "aproximado",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 1.9775,
+   "ul_gbps": 0.2795
   },
   {
    "id": "Z-GETAFE",
@@ -874,7 +2540,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.764 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.764 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-GETAFE/empresa",
@@ -887,7 +2584,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.236 del fijo; 9655 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.236 del fijo; 9655 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-GETAFE/movil-ebb",
@@ -900,7 +2628,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-GETAFE/voz-ims",
@@ -914,7 +2673,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-GETAFE/voz-fija",
@@ -927,12 +2722,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.73 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.73 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 132.48,
+   "ul_gbps": 18.698
   },
   {
    "id": "Z-LEGANES",
@@ -970,7 +2874,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LEGANES/empresa",
@@ -983,7 +2918,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 9301 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 9301 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LEGANES/movil-ebb",
@@ -996,7 +2962,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-LEGANES/voz-ims",
@@ -1010,7 +3007,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-LEGANES/voz-fija",
@@ -1023,12 +3056,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.78 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.78 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 132.6947,
+   "ul_gbps": 18.7277
   },
   {
    "id": "Z-FUENLABRADA",
@@ -1066,7 +3208,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.736 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.736 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-FUENLABRADA/empresa",
@@ -1079,7 +3252,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.264 del fijo; 10090 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.264 del fijo; 10090 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-FUENLABRADA/movil-ebb",
@@ -1092,7 +3296,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-FUENLABRADA/voz-ims",
@@ -1106,7 +3341,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-FUENLABRADA/voz-fija",
@@ -1119,12 +3390,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 24.97 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 24.97 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 128.5424,
+   "ul_gbps": 18.1414
   },
   {
    "id": "Z-ALCORCON",
@@ -1162,7 +3542,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.76 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.76 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCORCON/empresa",
@@ -1175,7 +3586,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.24 del fijo; 8883 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.24 del fijo; 8883 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCORCON/movil-ebb",
@@ -1188,7 +3630,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-ALCORCON/voz-ims",
@@ -1202,7 +3675,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-ALCORCON/voz-fija",
@@ -1215,12 +3724,119 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 23.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 23.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil).",
+   "proc": {
+    "poblacion": {
+     "t": "v7",
+     "f": "v7 §6.1.1 (180 228 hab., FTTH Alcorcón); coincide con el reparto"
+    },
+    "abonados_fijos": {
+     "t": "v7",
+     "f": "v7 §6.1.1 (22 353 accesos)"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "casco urbano",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 119.7327,
+   "ul_gbps": 16.8977
   },
   {
    "id": "Z-BATRES",
@@ -1261,7 +3877,38 @@ var RED = {
      "prioridad": 5,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8 y A4/A6 (Internet fijo BNG, reparto 90/10, +25 %)",
      "supuesto": true,
-     "nota": "Parte residencial del Internet fijo del municipio (0.633 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+     "nota": "Parte residencial del Internet fijo del municipio (0.633 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 5",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-BATRES/empresa",
@@ -1274,7 +3921,38 @@ var RED = {
      "prioridad": 3,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4/8, A1 (1,5 líneas por empresa), DIRCE 2025 en Semana 1/3.2 Población y tráfico (nosotros)/Caracterizacion poblacion 2025.md T4",
      "supuesto": true,
-     "nota": "Parte empresa del Internet fijo (0.367 del fijo; 170 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+     "nota": "Parte empresa del Internet fijo (0.367 del fijo; 170 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
+       "s": "S-029"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 3",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-BATRES/movil-ebb",
@@ -1287,7 +3965,38 @@ var RED = {
      "dnn": "internet",
      "prioridad": 4,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4, Tabla 8, A4/A6 (Internet móvil UPF central, reparto 85/15, +25 %); slice/DNN: Asignación S-NSSAI eMBB (1, 000001) DNN internet",
-     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 4",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      }
+     }
     },
     {
      "id": "Z-BATRES/voz-ims",
@@ -1301,7 +4010,43 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 4 (VoNR 0,04 Mbit/s por extremo y sentido, 0,3 Erl) y Tabla 8 (VoNR por zona, +25 %)",
-     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada).",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     },
     {
      "id": "Z-BATRES/voz-fija",
@@ -1314,12 +4059,121 @@ var RED = {
      "prioridad": 2,
      "latencia_max_ms": 20,
      "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · A11 (voz fija RTP 35,985952 Gbit/s/sentido repartida por peso de Internet DL); Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx · H-E7; Semana 6/Cierre 3.2 (2026-11-02)/G32_3.2-E_completo_v02-11.docx · Tabla A11.1",
-     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas.",
+     "proc": {
+      "cuota": {
+       "t": "supuesto",
+       "f": "cuota del municipio en su zona Metro (población 2025)",
+       "s": "S-028"
+      },
+      "dl_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "ul_gbps": {
+       "t": "calculado",
+       "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
+       "s": "S-028"
+      },
+      "prioridad": {
+       "t": "supuesto",
+       "f": "prioridad 2",
+       "s": "S-027"
+      },
+      "destino": {
+       "t": "v7",
+       "f": "v7 §3.3: el Internet fijo termina en el BNG; móvil y VoNR en la UPF central; voz en el IMS"
+      },
+      "perfil": {
+       "t": "supuesto",
+       "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
+       "s": "S-026"
+      },
+      "latencia_max_ms": {
+       "t": "supuesto",
+       "f": "20 ms de transporte/core",
+       "s": "S-022"
+      }
+     }
     }
    ],
    "fuente": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx §3.1.1 y §3.4.1; Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx · Tabla 1 (penetraciones CNMC 2025), A6 y Tabla 8 (reparto por zona Metro, mismas cifras que v7 §3.4.1)",
    "supuesto": true,
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 0.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 0.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa).",
+   "proc": {
+    "poblacion": {
+     "t": "calculado",
+     "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
+     "s": "S-028"
+    },
+    "abonados_fijos": {
+     "t": "calculado",
+     "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "abonados_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "lineas_datos_moviles": {
+     "t": "calculado",
+     "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
+     "s": "S-028"
+    },
+    "poblacion_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogar_medio": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "empresas_2025": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios)"
+    },
+    "hogares_2025": {
+     "t": "calculado",
+     "f": "población 2025 / hogar medio (v7 §3.1.1)"
+    },
+    "cuota_area": {
+     "t": "calculado",
+     "f": "población 2025 del municipio / población 2025 de su zona Metro",
+     "s": "S-028"
+    },
+    "dl_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "ul_gbps": {
+     "t": "calculado",
+     "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
+     "s": "S-028"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "aproximado",
+     "s": "S-020"
+    },
+    "area": {
+     "t": "v7",
+     "f": "v7 §3.1.1 / §3.1.2 (municipios de cada zona Metro)"
+    },
+    "agg": {
+     "t": "supuesto",
+     "f": "nodo de agregación abstracto",
+     "s": "S-001"
+    },
+    "edge": {
+     "t": "v7",
+     "f": "v7 §3.1.2 (Edge en Centro, Este y Sur; Norte sin Edge)"
+    }
+   },
+   "dl_gbps": 1.3379,
+   "ul_gbps": 0.1889
   }
  ],
  "nodos": [
@@ -1364,7 +4218,32 @@ var RED = {
    "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
    "origen": "entrega2",
    "fuente_e2": "v7 §3.1.2, §6.10.1, §6.7.4; contradicción resuelta 1 y 3",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 5GC SA + Nokia CNCS (IMS) sobre OpenShift; BNG Nokia 7750 SR-2se; servidores Dell R760",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-009"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §3.1.2, §6.10.1, §6.7.4; contradicción resuelta 1 y 3"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (tabla de equipos)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "CORE-2",
@@ -1406,7 +4285,32 @@ var RED = {
    "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
    "origen": "entrega2",
    "fuente_e2": "v7 §3.1.2, §6.10.1",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 5GC SA + Nokia CNCS (IMS) sobre OpenShift; BNG Nokia 7750 SR-2se; servidores Dell R760",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-009"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §3.1.2, §6.10.1"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (tabla de equipos)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "CORE-3",
@@ -1448,7 +4352,32 @@ var RED = {
    "nota_transito": "No se permite tránsito por los DC (UPF2 §5.4): el motor no debe usar este nodo como salto intermedio.",
    "origen": "entrega2",
    "fuente_e2": "v7 §3.1.2, §6.10.1",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 5GC SA + Nokia CNCS (IMS) sobre OpenShift; BNG Nokia 7750 SR-2se; servidores Dell R760",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-009"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §3.1.2, §6.10.1"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (tabla de equipos)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "MET-CENTRO",
@@ -1472,7 +4401,32 @@ var RED = {
    "nota": "Un router de agregación por nodo [HYP]. Nodo crítico: 74,6 % de la demanda (2.571,81 de 3.448,22 Gbit/s DL). Duplicarlo (MET-CENTRO-B) es una propuesta sin resolver en la v7 (contradicción 5), por eso no está en la red de referencia.",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.4.1, §6.4.2, §6.4.3",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 7750 SR (IP/MPLS) + Nokia 1830 PSS (WDM/OTN)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-011"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.4.1: un router por nodo; MET-CENTRO-B no está en la red de referencia"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 y §6.4.1"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "20 µs por salto (3.1 respuesta 27/10)"
+    }
+   }
   },
   {
    "id": "MET-NORTE",
@@ -1496,7 +4450,32 @@ var RED = {
    "nota": "Emplazamiento plausible: polígono industrial de Alcobendas, junto a DC-Norte. Un solo PE (sin doble PE).",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.4.1",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 7750 SR (IP/MPLS) + Nokia 1830 PSS (WDM/OTN)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-011"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.4.1: un router por nodo; MET-CENTRO-B no está en la red de referencia"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 y §6.4.1"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "20 µs por salto (3.1 respuesta 27/10)"
+    }
+   }
   },
   {
    "id": "MET-ESTE",
@@ -1520,7 +4499,32 @@ var RED = {
    "nota": "Emplazamiento plausible: polígono Las Monjas (Torrejón de Ardoz), junto a la A-2 y cerca de Barajas, junto a Edge-Este. Un solo PE. Este no tiene DC.",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.4.1",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 7750 SR (IP/MPLS) + Nokia 1830 PSS (WDM/OTN)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-011"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.4.1: un router por nodo; MET-CENTRO-B no está en la red de referencia"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 y §6.4.1"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "20 µs por salto (3.1 respuesta 27/10)"
+    }
+   }
   },
   {
    "id": "MET-SUR",
@@ -1544,7 +4548,32 @@ var RED = {
    "nota": "Emplazamiento plausible: polígono Los Ángeles (Getafe), junto a DC-Sur y Edge-Sur. Un solo PE.",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.4.1",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Nokia 7750 SR (IP/MPLS) + Nokia 1830 PSS (WDM/OTN)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-011"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.4.1: un router por nodo; MET-CENTRO-B no está en la red de referencia"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 y §6.4.1"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "20 µs por salto (3.1 respuesta 27/10)"
+    }
+   }
   },
   {
    "id": "EDGE-CENTRO",
@@ -1582,7 +4611,31 @@ var RED = {
    "nota": "24 Dell R760xa (4 L40S). Capacidad = NIC de 2 UPF públicas × 200G = 400 Gbit/s instalados frente a 406,12 requeridos (cota conservadora; carga normal 71,07 % de esas NIC). Respaldo: Edge-Este (60 % del estadio, 100 % grabación y 30 % analítica de cámaras).",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.7.2, §6.7.5",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Dell R760xa (4 × L40S)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-010"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.7.2, §6.7.5"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (respaldo entre Edges)"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §6.7.2 (24 / 7 / 3 servidores)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "EDGE-ESTE",
@@ -1612,7 +4665,32 @@ var RED = {
    "nota": "7 Dell R760xa, dimensionado como receptor de Edge-Centro (NIC requerida 192,08 Gbit/s al recibirlo). La v7 no da la NIC instalada: el simulador no la limita.",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.7.2, §6.7.5",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Dell R760xa (4 × L40S)",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-010"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (respaldo entre Edges)"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §6.7.2 (24 / 7 / 3 servidores)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "EDGE-SUR",
@@ -1641,7 +4719,32 @@ var RED = {
    "nota": "3 Dell R760 (hospital + red privada industria-sur). NIC requerida 2,18 Gbit/s. La v7 no da la NIC instalada: el simulador no la limita. Respaldo: Edge-Centro.",
    "origen": "entrega2",
    "fuente_e2": "v7 §6.7.2, §6.7.5",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "modelo": "Dell R760",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-010"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (respaldo entre Edges)"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §6.7.2 (24 / 7 / 3 servidores)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "UPF 0,2 ms (3.1-S5 §4.3)"
+    }
+   }
   },
   {
    "id": "AGG-MADRID",
@@ -1662,7 +4765,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-ALCOBENDAS",
@@ -1683,7 +4811,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-TRESCANTOS",
@@ -1704,7 +4857,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-TALAMANCA",
@@ -1726,7 +4904,32 @@ var RED = {
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Municipio añadido en F2.0c (v7 §3.1.1 y §2.5: municipio pequeño de referencia de la zona NORTE, rural n28). La v7 no define nodos de agregación: el nodo y su coordenada (aproximada) son del simulador.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-TORREJON",
@@ -1747,7 +4950,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-ALCALA",
@@ -1768,7 +4996,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-LOSSANTOS",
@@ -1790,7 +5043,32 @@ var RED = {
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Municipio añadido en F2.0c (v7 §3.1.1 y §2.5: municipio pequeño de referencia de la zona ESTE, rural n28). La v7 no define nodos de agregación: el nodo y su coordenada (aproximada) son del simulador.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-GETAFE",
@@ -1811,7 +5089,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-LEGANES",
@@ -1832,7 +5135,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-FUENLABRADA",
@@ -1853,7 +5181,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-ALCORCON",
@@ -1874,7 +5227,32 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (acceso de cada site a su nodo metro con ≤20 km y 4 saltos -> 0,08 ms); coordenada = centro de la zona en Simulador red/datos/zonas.json",
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Alcorcón tiene dos centrales FTTH (A y B, 50/50) sin ubicación fijada (Semana 6/Teams (descargado 2026-11-02)/Diseno_FTTH_Alcorcon_Grupo_2_1_cerrado.docx §5); aquí se agregan en un nodo. Dos centrales no equivalen a protección 1+1.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "AGG-BATRES",
@@ -1896,7 +5274,32 @@ var RED = {
    "supuesto": true,
    "nota": "Nodo de agregación abstracto (central del casco urbano). Coordenada tomada del centro de la zona para coherencia con zonas.json. Municipio añadido en F2.0c (v7 §3.1.1 y §2.5: municipio pequeño de referencia de la zona SUR, rural n28). La v7 no define nodos de agregación: el nodo y su coordenada (aproximada) son del simulador.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "modelo": "Nokia Lightspan MF-14 (OLT XGS-PON/25G-PON) + agregación RAN",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "centro de la zona en zonas.json",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "v7",
+     "f": "v7 §7.1.3 FAL-06: si cae el Metro la zona de acceso queda aislada"
+    },
+    "modelo": {
+     "t": "v7",
+     "f": "v7 §5.1 (FTTH)"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "acceso ≤20 km y 4 saltos (2.1-S5d §3)"
+    }
+   }
   },
   {
    "id": "IX-INTERNET",
@@ -1919,7 +5322,31 @@ var RED = {
    "nota": "Ningún documento fija el punto de peering. Se usa el carrier hotel de C/ Albasanz (San Blas), donde están presentes Espanix y DE-CIX Madrid. Un solo nodo lógico: la diversidad de puntos de peering no está diseñada.",
    "transito": false,
    "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-012"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "anterior",
+     "f": "punto externo único: la diversidad de peering no está diseñada (HW §4.1)"
+    },
+    "modelo": {
+     "t": "anterior",
+     "f": "externo, sin equipo propio: Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (salida a…"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "red_fisica.json"
+    }
+   }
   },
   {
    "id": "IX-IMS",
@@ -1941,7 +5368,31 @@ var RED = {
    "nota": "Punto físico de interconexión no definido (3.1 R7 'por confirmar con 2.1'; 3.1 v1.1 §9 #6 'abierto'). Se supone en el mismo carrier hotel que IX-INTERNET. No hay interconexión CS: decisión docente del 13/10 (el enunciado ARCO04 pedía un operador CS).",
    "transito": false,
    "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-012"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "anterior",
+     "f": "punto externo único: la diversidad de peering no está diseñada (HW §4.1)"
+    },
+    "modelo": {
+     "t": "anterior",
+     "f": "externo, sin equipo propio: Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx Tabla 1 (interconexión 100 % IMS, sin CS); Semana 7/Teams…"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "red_fisica.json"
+    }
+   }
   },
   {
    "id": "IX-ONEWEB",
@@ -1963,7 +5414,31 @@ var RED = {
    "nota": "Coordenada aproximada de Arganda del Rey (polígono industrial); el catálogo solo dice 'hub en Arganda'. Solo servicios prioritarios; no sustituye al anillo.",
    "transito": false,
    "nota_transito": "Punto externo: no es camino de tránsito entre nodos propios.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-012"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "anterior",
+     "f": "punto externo único: la diversidad de peering no está diseñada (HW §4.1)"
+    },
+    "modelo": {
+     "t": "anterior",
+     "f": "externo, sin equipo propio: Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (OneWeb, hub en Arganda…"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "red_fisica.json"
+    }
+   }
   },
   {
    "id": "SITE-L2VPN-SUR",
@@ -1982,7 +5457,35 @@ var RED = {
    "capacidad_acceso_gbps": 10,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona)",
    "supuesto": true,
-   "nota": "Sede Sur de la L2VPN (solo aparece como destino en servicios.json). Coordenadas aproximadas del campus; acceso 10 GbE a MET-SUR como las demás sedes."
+   "nota": "Sede Sur de la L2VPN (solo aparece como destino en servicios.json). Coordenadas aproximadas del campus; acceso 10 GbE a MET-SUR como las demás sedes.",
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-METROPOLITANO",
@@ -1996,7 +5499,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (tabla del 60 %, prioridad 1: 0 / 1,00 Gbit/s con +25 %) y §2 (5QI 71, ARP 5)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-VALDEBEBAS",
@@ -2010,7 +5541,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5, A8 (5 000 × 0,8 Mbit/s ×1,25 = 5,00 Gbit/s UL), Tabla 10; Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3",
-   "supuesto": false
+   "supuesto": false,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-A2-V2X",
@@ -2024,7 +5583,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (1 000 vehículos × 300 B × 10 Hz ×1,5 = 0,036 → 0,045 Gbit/s con +25 %); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf ficha 2 (tramo 34 km, 5,5 ms de ida); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2, §4.3 y §5.5",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-HOSPITAL-GETAFE",
@@ -2038,7 +5625,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (DL 100×4 = 0,400; UL 0,400 + 100×0,02 = 0,402 Gbit/s; ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §3 y §5 (5QI 2 y 82, ARP 1); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §4.3-4.4",
-   "supuesto": false
+   "supuesto": false,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-INDUSTRIA-SUR",
@@ -2052,7 +5667,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (AGV 0,2 Mbit/s de control UL y 0,2 DL por AGV, ×10 ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §5; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3 (AGV 3,5 ms)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-L2VPN-CENTRO",
@@ -2066,7 +5709,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-L2VPN-NORTE",
@@ -2080,7 +5751,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-L2VPN-ESTE",
@@ -2094,7 +5793,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   },
   {
    "id": "SITE-NTN-ARGANDA",
@@ -2108,7 +5835,35 @@ var RED = {
    "capacidad_gbps": null,
    "funciones": [],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (100 / 20 Mbit/s por terminal; 5 transportables: hospital, estadio, Edge-Este y 2 de reserva; terminal → satélite → hub de Arganda → VRF hasta el DC más cercano; conmutación 60 s); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf (OneWeb, hub en Arganda)",
-   "supuesto": true
+   "supuesto": true,
+   "origen": "anterior",
+   "proc": {
+    "coord": {
+     "t": "supuesto",
+     "f": "coordenada elegida por el simulador",
+     "s": "S-008"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "sin capacidad en los documentos: null = sin límite",
+     "s": "S-006"
+    },
+    "respaldo": {
+     "t": "supuesto",
+     "f": "acceso único",
+     "s": "S-017"
+    },
+    "modelo": {
+     "t": "supuesto",
+     "f": "extremo lógico del servicio",
+     "s": "S-019"
+    },
+    "latencia_ms": {
+     "t": "supuesto",
+     "f": "valor por defecto del motor",
+     "s": "S-015"
+    }
+   }
   }
  ],
  "enlaces": [
@@ -2126,7 +5881,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.1, §6.4.3, §6.4.4; A11.5",
    "origen": "entrega2",
    "nota": "Acometida Metro-Centro – DC-Centro, LAG 6×400G. Peor caso v7: 2.139 Gbit/s en pico P2 = 89,13 % (0,87 puntos hasta el 90 %). Bypass C–N–DCC. km sin medir (v7: la acometida cuenta como salto sin longitud).",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4; A11.5"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4; A11.5"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4; A11.5"
+    }
+   }
   },
   {
    "id": "L-CORE1-METN",
@@ -2142,7 +5916,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4; A11.5",
    "origen": "entrega2",
    "nota": "Acometida Metro-Norte – DC-Centro, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de C–DC-Centro. Bypass N–C–DCC.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    }
+   }
   },
   {
    "id": "L-CORE2-METN",
@@ -2158,7 +5951,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4; A11.5",
    "origen": "entrega2",
    "nota": "Acometida Metro-Norte – DC-Norte, LAG 6×400G. Peor caso v7: 1.859,38 Gbit/s en P2 (77,47 %). Bypass N–E–DCN.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.5"
+    }
+   }
   },
   {
    "id": "L-CORE2-METE",
@@ -2174,7 +5986,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
    "origen": "entrega2",
    "nota": "Acometida Metro-Este – DC-Norte, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de N–DC-Norte. Bypass E–N–DCN.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    }
+   }
   },
   {
    "id": "L-CORE3-METS",
@@ -2190,7 +6021,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
    "origen": "entrega2",
    "nota": "Acometida Metro-Sur – DC-Sur, LAG 4×400G. Peor caso v7: 1.222,66 Gbit/s (76,42 %) con caída de C–DC-Sur. Bypass S–C–DCS.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    }
+   }
   },
   {
    "id": "L-EDGECENTRO-METC",
@@ -2203,7 +6053,27 @@ var RED = {
    "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
    "origen": "entrega2",
    "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita. Un corte deja el Edge activo pero inalcanzable (escenario D, activación del respaldo sin validar).",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.7.2, §6.4.5 (escenario D)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad no especificada en la v7: sin límite",
+     "s": "S-006"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-EDGEESTE-METE",
@@ -2216,7 +6086,27 @@ var RED = {
    "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
    "origen": "entrega2",
    "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.7.2, §6.4.5 (escenario D)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad no especificada en la v7: sin límite",
+     "s": "S-006"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-EDGESUR-METS",
@@ -2229,7 +6119,27 @@ var RED = {
    "fuente_e2": "v7 §6.7.2, §6.4.5 (escenario D)",
    "origen": "entrega2",
    "nota": "Acometida local única. Capacidad NO especificada en la v7: el simulador no la limita.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.7.2, §6.4.5 (escenario D)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad no especificada en la v7: sin límite",
+     "s": "S-006"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-AGGMADRID-METC",
@@ -2243,7 +6153,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 2433.5 Gbit/s. km = 1,3 x línea recta (estimado). Doble pertenencia a los dos PE de Metro-Centro (3.1 S5 F2: 'acceso y DC conectados a los dos'); cada enlace dimensionado para el total.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGALCOBENDAS-METN",
@@ -2257,7 +6189,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 87.4 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGTRESCANTOS-METN",
@@ -2271,7 +6225,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 38.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGTALAMANCA-METN",
@@ -2286,7 +6262,27 @@ var RED = {
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 3.3 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada'). Municipio añadido en F2.0c (v7 §3.1.1); cuelga del nodo Metro de su zona (MET-NORTE, v7 §3.1.2: C/N/E/S). Supera los ≤20 km de fibra de S5d §3 (32.9 km estimados): pendiente de validar.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-AGGTORREJON-METE",
@@ -2300,7 +6296,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 99.5 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGALCALA-METE",
@@ -2314,7 +6332,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 139.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGLOSSANTOS-METE",
@@ -2329,7 +6369,27 @@ var RED = {
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 2.0 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada'). Municipio añadido en F2.0c (v7 §3.1.1); cuelga del nodo Metro de su zona (MET-ESTE, v7 §3.1.2: C/N/E/S). Supera los ≤20 km de fibra de S5d §3 (25.8 km estimados): pendiente de validar.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-AGGGETAFE-METS",
@@ -2343,7 +6403,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 132.5 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGLEGANES-METS",
@@ -2357,7 +6439,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 132.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGFUENLABRADA-METS",
@@ -2371,7 +6475,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 128.5 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGALCORCON-METS",
@@ -2385,7 +6511,29 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §3 (≤20 km de fibra hasta el nodo metro); demanda DL de Simulador red/datos/zonas.json; criterio de capacidad de Semana 6/Cierre 3.2 (2026-11-02)/G32_Cierre_3.2_capacidad_enlaces.docx H-E8",
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 119.7 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada').",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "n × 100GE por la demanda DL del municipio",
+     "s": "S-003"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-AGGBATRES-METS",
@@ -2400,7 +6548,27 @@ var RED = {
    "supuesto": true,
    "nota": "Capacidad supuesta: n x 100GE con n = techo(max(DL·1,10/0,70; 2·DL·1,10/0,90)/100), DL = 1.3 Gbit/s. km = 1,3 x línea recta (estimado). Una sola conexión: el diseño no define acceso alternativo si cae el nodo metro o este enlace (UPF2 §5.4: 'la zona queda aislada'). Municipio añadido en F2.0c (v7 §3.1.1); cuelga del nodo Metro de su zona (MET-SUR, v7 §3.1.2: C/N/E/S). Supera los ≤20 km de fibra de S5d §3 (28.7 km estimados): pendiente de validar.",
    "origen": "entrega2",
-   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §3.1.2: el municipio cuelga del Metro de su zona; extremo AGG abstracto",
+     "s": "S-001"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'."
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.7.2: acometida local única, sin SRLG asignado"
+    }
+   }
   },
   {
    "id": "L-CORE1-IXINTERNET",
@@ -2414,7 +6582,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
    "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "igual a las acometidas del DC",
+     "s": "S-005"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-CORE1-IXIMS",
@@ -2428,7 +6617,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
    "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "1 × 100GE",
+     "s": "S-004"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-CORE2-IXINTERNET",
@@ -2442,7 +6652,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
    "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "igual a las acometidas del DC",
+     "s": "S-005"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-CORE2-IXIMS",
@@ -2456,7 +6687,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
    "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "1 × 100GE",
+     "s": "S-004"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-CORE3-IXINTERNET",
@@ -2470,7 +6722,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §4.1",
    "supuesto": true,
    "nota": "Capacidad no dimensionada en ningún documento: se supone igual a la suma de las dos acometidas del DC (10 x 400G) para no ser cuello de botella. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4.1 (routers de borde en los 3 DC); Semana 7/Teams…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "igual a las acometidas del DC",
+     "s": "S-005"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-CORE3-IXIMS",
@@ -2484,7 +6757,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana 7/G32_Semana5_Transporte_Completo_UPF2.docx §2.2 (medios IMS 186,95 Gbit/s por sentido para 2·A legs)",
    "supuesto": true,
    "nota": "Capacidad supuesta 1 x 100GE: interconexión = 60 % de los legs -> ~112 Gbit/s por sentido en total; si cae un DC, 1/2 por DC (~56) x 1,25 / 0,90 ≈ 78 Gbit/s. km = 1,3 x línea recta.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §6 (13 instancias SBC por DC); Semana…"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "1 × 100GE",
+     "s": "S-004"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-IXONEWEB-CORE1",
@@ -2498,7 +6792,28 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (VRF del operador hasta el DC más cercano [HYP])",
    "supuesto": true,
    "nota": "DC más cercano al hub de Arganda en este modelo: DC-Centro (≈22 km en línea recta frente a ≈23 km de DC-Sur). Capacidad supuesta 1 Gbit/s (5 terminales x ≥100 Mbit/s).",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (VRF del operador hasta el DC más cercano [HYP])"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "5 terminales × 100 Mbit/s",
+     "s": "S-007"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SAT-AGGGETAFE",
@@ -2514,7 +6829,31 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
    "nota": "Terminal OneWeb del hospital de Getafe. Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "supuesto",
+     "f": "terminal OneWeb en el AGG/Edge más próximo",
+     "s": "S-016"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.11 (≥100 Mbit/s por terminal OneWeb)"
+    },
+    "km": {
+     "t": "anterior",
+     "f": "sin km: latencia fija = RTT medio 75 ms / 2 (D5 §5.7)"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "RTT OneWeb 50–100 ms → 75/2 (D5 §5.7)"
+    }
+   }
   },
   {
    "id": "L-SAT-AGGMADRID",
@@ -2530,7 +6869,31 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
    "nota": "Terminal OneWeb del estadio (centro de control). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "supuesto",
+     "f": "terminal OneWeb en el AGG/Edge más próximo",
+     "s": "S-016"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.11 (≥100 Mbit/s por terminal OneWeb)"
+    },
+    "km": {
+     "t": "anterior",
+     "f": "sin km: latencia fija = RTT medio 75 ms / 2 (D5 §5.7)"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "RTT OneWeb 50–100 ms → 75/2 (D5 §5.7)"
+    }
+   }
   },
   {
    "id": "L-SAT-EDGEESTE",
@@ -2546,7 +6909,31 @@ var RED = {
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP]; ≥100 Mbit/s DL y ≥20 Mbit/s UL; RTT IP 50-100 ms)",
    "supuesto": true,
    "nota": "Terminal OneWeb del Edge-Este (centro de control de la A-2). Se activa solo si cae la red terrestre (≤60 s, despliegue ≤30 min). latencia = RTT medio 75 ms / 2. El extremo real es el sitio del servicio (SITE-* de servicios.json); aquí se cuelga de su nodo de agregación/Edge.",
-   "origen": "anterior"
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "supuesto",
+     "f": "terminal OneWeb en el AGG/Edge más próximo",
+     "s": "S-016"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.11 (≥100 Mbit/s por terminal OneWeb)"
+    },
+    "km": {
+     "t": "anterior",
+     "f": "sin km: latencia fija = RTT medio 75 ms / 2 (D5 §5.7)"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    },
+    "latencia_ms": {
+     "t": "anterior",
+     "f": "RTT OneWeb 50–100 ms → 75/2 (D5 §5.7)"
+    }
+   }
   },
   {
    "id": "L-ANILLO-CN",
@@ -2563,7 +6950,25 @@ var RED = {
    "fuente_e2": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km",
    "origen": "entrega2",
    "nota": "LAG 400GE de 6 λ (referencia provisional 6/4/4/6). Mínimo calculado 6. Peor caso v7: 1.894,72 Gbit/s (78,95 %) con caída de la acometida C–DC-Centro. Plan óptico: 2 enlaces × 7 λ por vano.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km"
+    },
+    "km": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.1, §6.4.3, §6.4.4 (LAG 6×400G); vano 20 km"
+    }
+   }
   },
   {
    "id": "L-ANILLO-NE",
@@ -2580,7 +6985,25 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km",
    "origen": "entrega2",
    "nota": "LAG 4×400G. Mínimo calculado 3. Peor caso v7: 992,27 Gbit/s (62,02 %) con corte C–N.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km"
+    },
+    "km": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 28 km"
+    }
+   }
   },
   {
    "id": "L-ANILLO-ES",
@@ -2597,7 +7020,25 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km",
    "origen": "entrega2",
    "nota": "LAG 4×400G. Mínimo calculado 4. Peor caso v7: 1.111,93 Gbit/s (69,50 %) con Metro-Norte caído. P2 + corte C–N daría 2.174,45 (135,90 %), fuera de garantía (7.1.2).",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km"
+    },
+    "km": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 4×400G); vano 38 km"
+    }
+   }
   },
   {
    "id": "L-ANILLO-SC",
@@ -2614,7 +7055,25 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km",
    "origen": "entrega2",
    "nota": "LAG 6×400G. Mínimo calculado 3 (alternativa 6/3/4/3 en evaluación). Peor caso v7: 947,93 Gbit/s (39,50 %) con caída de la acometida C–DC-Sur.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km"
+    },
+    "km": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4 (LAG 6×400G); vano 16 km"
+    }
+   }
   },
   {
    "id": "L-CORE3-METC",
@@ -2630,7 +7089,26 @@ var RED = {
    "fuente_e2": "v7 §6.4.3, §6.4.4; A11.6",
    "origen": "entrega2",
    "nota": "Acometida Metro-Centro – DC-Sur, LAG 6×400G. Peor caso v7: 1.859,38 Gbit/s en P2 (77,47 %). Bypass C–S–DCS. Es el camino del BNG de Centro si cae DC-Centro.",
-   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx"
+   "doc_e2": "Semana 8/Entrega 2 (definitivos 2026-11-18)/Memoria_conjunta_Entrega2_v7_EN_actualizado.docx",
+   "proc": {
+    "a/b": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "capacidad_gbps": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "acometida sin longitud en la v7",
+     "s": "S-013"
+    },
+    "srlg": {
+     "t": "v7",
+     "f": "v7 §6.4.3, §6.4.4; A11.6"
+    }
+   }
   },
   {
    "id": "L-SITEMETROPOLITANO-METCENTRO",
@@ -2642,7 +7120,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (tabla del 60 %, prioridad 1: 0 / 1,00 Gbit/s con +25 %) y §2 (5QI 71, ARP 5)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (tabla del 60 %, prioridad 1: 0 / 1,00 Gbit/s con +25 %) y §2 (5QI 71, ARP 5)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEVALDEBEBAS-METCENTRO",
@@ -2654,7 +7154,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5, A8 (5 000 × 0,8 Mbit/s ×1,25 = 5,00 Gbit/s UL), Tabla 10; Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3"
+   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5, A8 (5 000 × 0,8 Mbit/s ×1,25 = 5,00 Gbit/s UL), Tabla 10; Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEA2V2X-METESTE",
@@ -2666,7 +7188,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (1 000 vehículos × 300 B × 10 Hz ×1,5 = 0,036 → 0,045 Gbit/s con +25 %); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf ficha 2 (tramo 34 km, 5,5 ms de ida); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2, §4.3 y §5.5"
+   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (1 000 vehículos × 300 B × 10 Hz ×1,5 = 0,036 → 0,045 Gbit/s con +25 %); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf ficha 2 (tramo 34 km, 5,5 ms de ida); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2, §4.3 y §5.5",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEHOSPITALGETAFE-METSUR",
@@ -2678,7 +7222,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (DL 100×4 = 0,400; UL 0,400 + 100×0,02 = 0,402 Gbit/s; ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §3 y §5 (5QI 2 y 82, ARP 1); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §4.3-4.4"
+   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (DL 100×4 = 0,400; UL 0,400 + 100×0,02 = 0,402 Gbit/s; ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §3 y §5 (5QI 2 y 82, ARP 1); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §4.3-4.4",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEINDUSTRIASUR-METSUR",
@@ -2690,7 +7256,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (AGV 0,2 Mbit/s de control UL y 0,2 DL por AGV, ×10 ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §5; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3 (AGV 3,5 ms)"
+   "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (AGV 0,2 Mbit/s de control UL y 0,2 DL por AGV, ×10 ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §5; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3 (AGV 3,5 ms)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEL2VPNCENTRO-METCENTRO",
@@ -2702,7 +7290,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEL2VPNNORTE-METNORTE",
@@ -2714,7 +7324,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEL2VPNESTE-METESTE",
@@ -2726,7 +7358,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITENTNARGANDA-METESTE",
@@ -2738,7 +7392,30 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Acceso del sitio creado en la integración: capacidad = capacidad_acceso_gbps del servicio, km = 1,3 × línea recta.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (100 / 20 Mbit/s por terminal; 5 transportables: hospital, estadio, Edge-Este y 2 de reserva; terminal → satélite → hub de Arganda → VRF hasta el DC más cercano; conmutación 60 s); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf (OneWeb, hub en Arganda)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (100 / 20 Mbit/s por terminal; 5 transportables: hospital, estadio, Edge-Este y 2 de reserva; terminal → satélite → hub de Arganda → VRF hasta el DC más cercano; conmutación 60 s); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf (OneWeb, hub en Arganda)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "supuesto",
+     "f": "hub de Arganda al Metro más próximo",
+     "s": "S-036"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   },
   {
    "id": "L-SITEL2VPNSUR-METSUR",
@@ -2750,7 +7427,29 @@ var RED = {
    "proteccion": null,
    "supuesto": true,
    "nota": "Sede Sur de la L2VPN (solo aparece como destino en servicios.json). Coordenadas aproximadas del campus; acceso 10 GbE a MET-SUR como las demás sedes.",
-   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona)"
+   "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona)",
+   "origen": "anterior",
+   "proc": {
+    "a/b": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (≤20 km, 4 saltos; 2.1-S5d §2)"
+    },
+    "capacidad_gbps": {
+     "t": "supuesto",
+     "f": "capacidad_acceso_gbps del servicio",
+     "s": "S-002"
+    },
+    "km": {
+     "t": "supuesto",
+     "f": "1,3 × línea recta",
+     "s": "S-014"
+    },
+    "srlg": {
+     "t": "supuesto",
+     "f": "sin estudio de diversidad física",
+     "s": "S-018"
+    }
+   }
   }
  ],
  "servicios": [
@@ -2786,7 +7485,44 @@ var RED = {
    "qi5": 71,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (tabla del 60 %, prioridad 1: 0 / 1,00 Gbit/s con +25 %) y §2 (5QI 71, ARP 5)",
    "supuesto": true,
-   "nota": "El perfil de prensa (50 × 20 Mbit/s UL) es [HYP] de 3.1. Se separa del resto porque tiene ARP 5 y GBR: en respaldo entra al 100 %. capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "El perfil de prensa (50 × 20 Mbit/s UL) es [HYP] de 3.1. Se separa del resto porque tiene ARP 5 y GBR: en respaldo entra al 100 %. capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP 5, 5QI 71)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-ESTADIO-LIGERO",
@@ -2819,7 +7555,44 @@ var RED = {
    "arp": 9,
    "qi5": 9,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (31,25+1,88+0,31+6,25 / 6,25+0,94+0,31+3,13 Gbit/s con +25 %); total estadio Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A7",
-   "nota": "Mezcla del G32 Semana 2 que usa 3.1; en respaldo (Edge-Este) entra al 100 %. Prioridad 4 > vídeo para que el recorte del 60 % caiga sobre el vídeo, como propone 3.1. capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "Mezcla del G32 Semana 2 que usa 3.1; en respaldo (Edge-Este) entra al 100 %. Prioridad 4 > vídeo para que el recorte del 60 % caiga sobre el vídeo, como propone 3.1. capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 4 (ARP 9, 5QI 9)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-ESTADIO-VIDEO",
@@ -2852,7 +7625,44 @@ var RED = {
    "arp": 9,
    "qi5": 9,
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.4 (125,00 / 77,13 Gbit/s con +25 %); total estadio 164,69 / 88,75 en Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A7",
-   "nota": "En respaldo baja al 47 % DL / 54 % UL (720p) para que el estadio quede en el 60 % (98,81 / 53,25 Gbit/s, Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A7 control). capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "En respaldo baja al 47 % DL / 54 % UL (720p) para que el estadio quede en el 60 % (98,81 / 53,25 Gbit/s, Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A7 control). capacidad_acceso_gbps 400 = una lambda 400G para el sitio (supuesto: ningún documento dimensiona la acometida del estadio; la NIC de Edge-Centro en normal pide 258,8 Gbit/s, 3.2 §6.2). conecta_a MET-CENTRO: el acceso de cada site llega a su nodo metro (≤20 km, 4 saltos, 2.1-S5d §2). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto prensa/ligero/vídeo de 3.1-S5 §5.4 del total v7 §3.3 (164,6875 / 88,75 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 5 (ARP 9, 5QI 9)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-VALDEBEBAS-CAMARAS",
@@ -2885,7 +7695,44 @@ var RED = {
    "latencia_kpi_ms": 10,
    "latencia_max_ms": 3.9,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5, A8 (5 000 × 0,8 Mbit/s ×1,25 = 5,00 Gbit/s UL), Tabla 10; Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3",
-   "nota": "Valdebebas está en Hortaleza, zona Centro [I13] (3.2 Tabla 5). Coordenada: Parque Central de Valdebebas (aprox.). capacidad_acceso_gbps 10 = supuesto (5 Gbit/s UL ×1,10/0,70 = 7,9 Gbit/s; ~40 sitios n78, KPIs v5). Si cae Edge-Centro, Edge-Este recibe el 100 % de streams y grabación y analiza el 30 % (Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "Valdebebas está en Hortaleza, zona Centro [I13] (3.2 Tabla 5). Coordenada: Parque Central de Valdebebas (aprox.). capacidad_acceso_gbps 10 = supuesto (5 Gbit/s UL ×1,10/0,70 = 7,9 Gbit/s; ~40 sitios n78, KPIs v5). Si cae Edge-Centro, Edge-Este recibe el 100 % de streams y grabación y analiza el 30 % (Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 (cámaras 0 / 5,000; sensores 0 / 0,002142 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 (cámaras 0 / 5,000; sensores 0 / 0,002142 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 4 (ARP 7, 5QI 72)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "entrega2"
   },
   {
    "id": "S-VALDEBEBAS-SENSORES",
@@ -2916,7 +7763,36 @@ var RED = {
    "qi5": 9,
    "latencia_max_ms": null,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 10 y A8 (1,25 × 1,5 × 1 142 222 bit/s = 0,0021 Gbit/s UL); Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §3 (UPF central)",
-   "nota": "Valdebebas está en Hortaleza, zona Centro [I13] (3.2 Tabla 5). Coordenada: Parque Central de Valdebebas (aprox.). capacidad_acceso_gbps 10 = supuesto (5 Gbit/s UL ×1,10/0,70 = 7,9 Gbit/s; ~40 sitios n78, KPIs v5). destino 'internet' = UPF central del DC (DNN iot-ciudad, sin MEC). En mMTC dimensiona el número de dispositivos, no los Gbit/s. Sin objetivo de latencia: la alarma pide 99,9 % en ≤10 s. DL despreciable (4 % del DL de n28, 3.1-S5 §3): 0."
+   "nota": "Valdebebas está en Hortaleza, zona Centro [I13] (3.2 Tabla 5). Coordenada: Parque Central de Valdebebas (aprox.). capacidad_acceso_gbps 10 = supuesto (5 Gbit/s UL ×1,10/0,70 = 7,9 Gbit/s; ~40 sitios n78, KPIs v5). destino 'internet' = UPF central del DC (DNN iot-ciudad, sin MEC). En mMTC dimensiona el número de dispositivos, no los Gbit/s. Sin objetivo de latencia: la alarma pide 99,9 % en ≤10 s. DL despreciable (4 % del DL de n28, 3.1-S5 §3): 0.",
+   "proc": {
+    "dl_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 (cámaras 0 / 5,000; sensores 0 / 0,002142 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 (cámaras 0 / 5,000; sensores 0 / 0,002142 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 5 (ARP 10, 5QI 9)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §3.3 (sensores en la UPF central)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "entrega2"
   },
   {
    "id": "S-V2X-A2",
@@ -2981,7 +7857,49 @@ var RED = {
    ],
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (1 000 vehículos × 300 B × 10 Hz ×1,5 = 0,036 → 0,045 Gbit/s con +25 %); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf ficha 2 (tramo 34 km, 5,5 ms de ida); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2, §4.3 y §5.5",
    "supuesto": true,
-   "nota": "Un único flujo: los documentos solo definen avisos de seguridad (5QI 83, ARP 2); no hay infoentretenimiento en el diseño, así que no se inventa. Sitio = punto medio del corredor (Torrejón, km ~21) y 'trazado' = puntos aproximados de la A-2 (supuesto sobre mapa). zona Z-TORREJON por ser el tramo central (el corredor cruza Madrid, Coslada/San Fernando, Torrejón y Alcalá). capacidad_acceso 10 = supuesto. Respaldo en Edge-Centro: 5,8 ms de ida P95 (Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "Un único flujo: los documentos solo definen avisos de seguridad (5QI 83, ARP 2); no hay infoentretenimiento en el diseño, así que no se inventa. Sitio = punto medio del corredor (Torrejón, km ~21) y 'trazado' = puntos aproximados de la A-2 (supuesto sobre mapa). zona Z-TORREJON por ser el tramo central (el corredor cruza Madrid, Coslada/San Fernando, Torrejón y Alcalá). capacidad_acceso 10 = supuesto. Respaldo en Edge-Centro: 5,8 ms de ida P95 (Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6). latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,045 / 0,045 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,045 / 0,045 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 1 (ARP 2, 5QI 83)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "trazado": {
+     "t": "supuesto",
+     "f": "puntos aproximados de la A-2",
+     "s": "S-038"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "entrega2"
   },
   {
    "id": "S-HOSPITAL-CRITICO",
@@ -3016,7 +7934,44 @@ var RED = {
    "latencia_max_ms": 2.4,
    "latencia_max_respaldo_ms": 12.4,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8 (DL 100×4 = 0,400; UL 0,400 + 100×0,02 = 0,402 Gbit/s; ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §3 y §5 (5QI 2 y 82, ARP 1); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §4.3-4.4",
-   "nota": "H. U. de Getafe, Ctra. de Toledo km 12,5 (KPIs v5 §4); coordenada aproximada. Acceso: 3.1 supone dos accesos de fibra de 10 Gbit/s (SCOM01) por conductos distintos [HYP]; nadie diseña aún la segunda acometida (Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.3; Semana 7/Teams (descargado 2026-11-08)/Reunion_03-11_suposiciones_y_cambios_Diego.pdf punto 4). En respaldo (Edge-Centro) el PASS es 20 ms de ida y lo esperado 7,5 ms (7,9 con corte). Videoconsulta (5QI 2) y sensores (5QI 82) comparten slice, DNN, ARP y objetivo de 10 ms: un solo servicio. perfil 'empresa' (consultas en horario diurno): supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "H. U. de Getafe, Ctra. de Toledo km 12,5 (KPIs v5 §4); coordenada aproximada. Acceso: 3.1 supone dos accesos de fibra de 10 Gbit/s (SCOM01) por conductos distintos [HYP]; nadie diseña aún la segunda acometida (Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.3; Semana 7/Teams (descargado 2026-11-08)/Reunion_03-11_suposiciones_y_cambios_Diego.pdf punto 4). En respaldo (Edge-Centro) el PASS es 20 ms de ida y lo esperado 7,5 ms (7,9 con corte). Videoconsulta (5QI 2) y sensores (5QI 82) comparten slice, DNN, ARP y objetivo de 10 ms: un solo servicio. perfil 'empresa' (consultas en horario diurno): supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,500 / 0,6025 total; cámaras 0,100 UL)"
+    },
+    "ul_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,500 / 0,6025 total; cámaras 0,100 UL)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 1 (ARP 1, 5QI 2)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "entrega2"
   },
   {
    "id": "S-HOSPITAL-CAMARAS",
@@ -3051,7 +8006,45 @@ var RED = {
    "latencia_max_ms": 6.3,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A8 (40 × 2 Mbit/s ×1,25 = 0,100 Gbit/s; 'cámaras por fibra') y §7; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 (5QI 72, ARP 1) y §5.3",
    "supuesto": true,
-   "nota": "H. U. de Getafe, Ctra. de Toledo km 12,5 (KPIs v5 §4); coordenada aproximada. Acceso: 3.1 supone dos accesos de fibra de 10 Gbit/s (SCOM01) por conductos distintos [HYP]; nadie diseña aún la segunda acometida (Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.3; Semana 7/Teams (descargado 2026-11-08)/Reunion_03-11_suposiciones_y_cambios_Diego.pdf punto 4). En respaldo (Edge-Centro) el PASS es 20 ms de ida y lo esperado 7,5 ms (7,9 con corte). Cámaras por la fibra del hospital (suposición más realista de 3.1): sin radio en el presupuesto, latencia_max = 10 - UPF 0,2 - app 3,0 - reserva 0,5 (supuesto; 5QI 72 tiene PDB de 300 ms)."
+   "nota": "H. U. de Getafe, Ctra. de Toledo km 12,5 (KPIs v5 §4); coordenada aproximada. Acceso: 3.1 supone dos accesos de fibra de 10 Gbit/s (SCOM01) por conductos distintos [HYP]; nadie diseña aún la segunda acometida (Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.3; Semana 7/Teams (descargado 2026-11-08)/Reunion_03-11_suposiciones_y_cambios_Diego.pdf punto 4). En respaldo (Edge-Centro) el PASS es 20 ms de ida y lo esperado 7,5 ms (7,9 con corte). Cámaras por la fibra del hospital (suposición más realista de 3.1): sin radio en el presupuesto, latencia_max = 10 - UPF 0,2 - app 3,0 - reserva 0,5 (supuesto; 5QI 72 tiene PDB de 300 ms).",
+   "proc": {
+    "dl_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,500 / 0,6025 total; cámaras 0,100 UL)"
+    },
+    "ul_gbps": {
+     "t": "v7",
+     "f": "v7 §3.3 y A8 (0,500 / 0,6025 total; cámaras 0,100 UL)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 1 (ARP 1, 5QI 72)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "supuesto",
+     "f": "presupuesto sin radio",
+     "s": "S-034"
+    }
+   },
+   "origen": "entrega2"
   },
   {
    "id": "S-INDUSTRIA-AGV",
@@ -3085,7 +8078,44 @@ var RED = {
    "latencia_max_ms": 6.3,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (AGV 0,2 Mbit/s de control UL y 0,2 DL por AGV, ×10 ×1,25); Semana 7/Teams (descargado 2026-11-08)/Asignacion_S_NSSAI_DNN_4_slices_PNI_NPN_tipo_A_final_02-11 (1).docx §5; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 y §4.3 (AGV 3,5 ms)",
    "supuesto": true,
-   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 2 (ARP 3, 5QI 82)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-INDUSTRIA-CAMARAS",
@@ -3119,7 +8149,44 @@ var RED = {
    "latencia_max_ms": 4.4,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (20 × 5 Mbit/s ×1,25 = 0,125 Gbit/s); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 (5QI 71, ARP 6) y §4.3 (cámaras privadas 5,4 ms)",
    "supuesto": true,
-   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo."
+   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. latencia_max_ms = presupuesto de TRANSPORTE (lo que mide el motor): 10 ms ida P95 (D-04) - radio - UPF 0,2 - aplicación - reserva 0,5, con los valores de 3.1-S5 §4.3. latencia_kpi_ms = KPI extremo a extremo.",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP 6, 5QI 71)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    },
+    "latencia_max_ms": {
+     "t": "calculado",
+     "f": "10 ms ida P95 − radio − UPF 0,2 − aplicación − 0,5 (3.1-S5 §4.3; v7 §6.7.3)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-INDUSTRIA-GENERAL",
@@ -3152,7 +8219,40 @@ var RED = {
    "latencia_max_ms": null,
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A9 (DL 100·0,30·2 + 10·0,8 = 68 Mbit/s; UL 30 + 10 + 18 = 58 Mbit/s; ×1,25); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §2 (5QI 9, ARP 8)",
    "supuesto": true,
-   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. Resto del piloto sin objetivo de latencia propio. Suma de los tres servicios = 0,0875 / 0,200 Gbit/s (3.2 Tabla 5)."
+   "nota": "Piloto de 330 equipos (100 personal, 200 sensores, 20 cámaras, 10 AGV), decisión del equipo pendiente de ratificar por Dirección. Emplazamiento NO definido en los documentos (solo 'empresas del Sur: Getafe, Leganés, Fuenlabrada...'): se sitúa en un polígono industrial de Getafe (Los Ángeles), supuesto. UPF privada en Edge-Sur, VRF propia y sin salida a Internet; respaldo con UPF privada en Edge-Centro (3,6 ms de ida P95). capacidad_acceso 10 = supuesto. Resto del piloto sin objetivo de latencia propio. Suma de los tres servicios = 0,0875 / 0,200 Gbit/s (3.2 Tabla 5).",
+   "proc": {
+    "dl_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "ul_gbps": {
+     "t": "anterior",
+     "f": "reparto AGV/cámaras/resto de 3.2 A9 del total v7 §3.3 (0,0875 / 0,200 Gbit/s)"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 4 (ARP 8, 5QI 9)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.7.3 (Edge primario y de respaldo de cada servicio)"
+    },
+    "respaldo_edge": {
+     "t": "v7",
+     "f": "v7 §6.7.3"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-CN",
@@ -3180,7 +8280,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = NORTE→CENTRO, ul = CENTRO→NORTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = NORTE→CENTRO, ul = CENTRO→NORTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-CE",
@@ -3208,7 +8344,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = ESTE→CENTRO, ul = CENTRO→ESTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = ESTE→CENTRO, ul = CENTRO→ESTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-CS",
@@ -3236,7 +8408,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→CENTRO, ul = CENTRO→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→CENTRO, ul = CENTRO→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-NE",
@@ -3264,7 +8472,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = ESTE→NORTE, ul = NORTE→ESTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = ESTE→NORTE, ul = NORTE→ESTE. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-NS",
@@ -3292,7 +8536,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→NORTE, ul = NORTE→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→NORTE, ul = NORTE→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-L2VPN-ES",
@@ -3320,7 +8600,43 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/2.1-S5d_Transporte_Metro_y_L2VPN def.pdf §8.1 (sedes, una por zona) y §8.3 (10 GbE por UNI como cota alta, 40 Gbit/s en total, TC2)",
    "supuesto": true,
-   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→ESTE, ul = ESTE→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas."
+   "nota": "destino 'nodo' (extensión del esquema): tráfico sede a sede, se encamina hasta destino_nodo; dl = SUR→ESTE, ul = ESTE→SUR. Reparto de los 10 GbE de cada sede a partes iguales entre las otras 3 (3,33 Gbit/s por par y sentido; 6 pares × 2 sentidos = 40 Gbit/s) = supuesto sobre la cota alta de 2.1. Sedes de Norte y Centro pendientes de confirmar por Dirección. Sin slice 5G (servicio fijo IP/MPLS). Prioridad 3 por la clase TC2 garantizada de §8.3 (la tabla de clases de §6 la pone en TC3: discrepancia). Coordenadas aproximadas.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "10 GbE de cada sede a partes iguales entre las otras 3",
+     "s": "S-033"
+    },
+    "cabecera": {
+     "t": "supuesto",
+     "f": "sin cabecera 1,10",
+     "s": "S-032"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 3 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "v7",
+     "f": "v7 §6.9 (EVPN E-LAN entre las 4 sedes)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "anterior",
+     "f": "acceso del sitio a su nodo Metro (2.1-S5d §2)"
+    }
+   },
+   "origen": "anterior"
   },
   {
    "id": "S-NTN-EMERGENCIA",
@@ -3353,7 +8669,39 @@ var RED = {
    ],
    "fuente": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.7 (100 / 20 Mbit/s por terminal; 5 transportables: hospital, estadio, Edge-Este y 2 de reserva; terminal → satélite → hub de Arganda → VRF hasta el DC más cercano; conmutación 60 s); Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf (OneWeb, hub en Arganda)",
    "supuesto": true,
-   "nota": "Solo existe en incidentes: inactivo_por_defecto = true y factor 0 en todos los escenarios salvo los de NTN. Carga = 3 terminales desplegados × 100/20 Mbit/s. Lleva VoNR (5QI 1), mensajería, telemetría del hospital y gestión; 10 Mbit/s por terminal reservados a voz/control. RTT satélite 50–100 ms: fuera del presupuesto de 10 ms, sin latencia_max. Arganda del Rey no es una de las 9 zonas (zona null); conecta_a MET-ESTE por proximidad = supuesto (el documento dice 'DC más cercano'). Coordenada de Arganda aproximada."
+   "nota": "Solo existe en incidentes: inactivo_por_defecto = true y factor 0 en todos los escenarios salvo los de NTN. Carga = 3 terminales desplegados × 100/20 Mbit/s. Lleva VoNR (5QI 1), mensajería, telemetría del hospital y gestión; 10 Mbit/s por terminal reservados a voz/control. RTT satélite 50–100 ms: fuera del presupuesto de 10 ms, sin latencia_max. Arganda del Rey no es una de las 9 zonas (zona null); conecta_a MET-ESTE por proximidad = supuesto (el documento dice 'DC más cercano'). Coordenada de Arganda aproximada.",
+   "proc": {
+    "dl_gbps": {
+     "t": "supuesto",
+     "f": "3 terminales × 100/20 Mbit/s",
+     "s": "S-035"
+    },
+    "ul_gbps": {
+     "t": "supuesto",
+     "f": "3 terminales × 100/20 Mbit/s",
+     "s": "S-035"
+    },
+    "prioridad": {
+     "t": "supuesto",
+     "f": "prioridad 2 (ARP None, 5QI None)",
+     "s": "S-037"
+    },
+    "destino": {
+     "t": "anterior",
+     "f": "D5 §5.7 (VRF hasta el DC)"
+    },
+    "coord": {
+     "t": "supuesto",
+     "f": "posición aproximada del sitio",
+     "s": "S-008"
+    },
+    "conecta_a": {
+     "t": "supuesto",
+     "f": "Metro más próximo",
+     "s": "S-036"
+    }
+   },
+   "origen": "anterior"
   }
  ],
  "slices": [
@@ -3452,7 +8800,13 @@ var RED = {
     "S-ESTADIO-LIGERO": 0,
     "S-ESTADIO-VIDEO": 0
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §4.2 Tabla 6 (caso B: sin evento) y Tabla 1 (hora cargada)"
+    }
+   }
   },
   {
    "id": "E-EVENTO",
@@ -3466,7 +8820,13 @@ var RED = {
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §4.2 Tabla 6 (caso A) y Tabla 8"
+    }
+   }
   },
   {
    "id": "E-EVENTO-ESTRES",
@@ -3485,7 +8845,13 @@ var RED = {
     "S-INDUSTRIA-CAMARAS": 2.07,
     "S-INDUSTRIA-GENERAL": 2.07
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §4.3 Tabla 7"
+    }
+   }
   },
   {
    "id": "E-PUNTA-A2",
@@ -3502,7 +8868,14 @@ var RED = {
     "S-ESTADIO-VIDEO": 0,
     "S-V2X-A2": 1
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "La hora (8) la marca el perfil 'movilidad'; los documentos no fijan la hora punta de la A-2.",
+     "s": "S-048"
+    }
+   }
   },
   {
    "id": "E-PICO-P2",
@@ -3521,7 +8894,14 @@ var RED = {
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las claves tipo:* dependen de los tipos de necesidad del agente A (PLAN.md). Dirección aún no ha elegido entre P2 y PM.",
+     "s": "S-046"
+    }
+   }
   },
   {
    "id": "E-PICO-PM",
@@ -3538,7 +8918,14 @@ var RED = {
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Clave tipo:movil-ebb según PLAN.md.",
+     "s": "S-047"
+    }
+   }
   },
   {
    "id": "E-ALARMA-VALDEBEBAS",
@@ -3552,7 +8939,14 @@ var RED = {
     "S-NTN-EMERGENCIA": 0,
     "S-VALDEBEBAS-SENSORES": 9.0
    },
-   "fallos": []
+   "fallos": [],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Factor 9,0 = 0,019 / 0,0021 Gbit/s (redondeado).",
+     "s": "S-040"
+    }
+   }
   },
   {
    "id": "E-CORTE-CN",
@@ -3573,7 +8967,13 @@ var RED = {
    "critico_carga": true,
    "fallos_originales": [
     "L-METCENTRO-METNORTE"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11.2 (Corte C-N); Semana 7/Teams (descargado…"
+    }
+   }
   },
   {
    "id": "E-CORTE-NE",
@@ -3593,7 +8993,13 @@ var RED = {
    },
    "fallos_originales": [
     "L-METNORTE-METESTE"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11.2 (Corte N-E); Semana 7/Teams (descargado…"
+    }
+   }
   },
   {
    "id": "E-CORTE-ES",
@@ -3613,7 +9019,13 @@ var RED = {
    },
    "fallos_originales": [
     "L-METESTE-METSUR"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11.2 (Corte E-S); Semana 7/Teams (descargado…"
+    }
+   }
   },
   {
    "id": "E-CORTE-SC",
@@ -3634,7 +9046,13 @@ var RED = {
    "critico": true,
    "fallos_originales": [
     "L-METSUR-METCENTRO"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11.2 (Corte S-C); Semana 7/Teams (descargado…"
+    }
+   }
   },
   {
    "id": "E-CAIDA-MET-CENTRO",
@@ -3651,6 +9069,12 @@ var RED = {
     "S-ESTADIO-PRENSA": 1,
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11 (Cae Metro C); Semana 7/Teams (descargado…"
+    }
    }
   },
   {
@@ -3673,7 +9097,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METCENTRO-CORE1"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-ACOMETIDA-N-CORE-1",
@@ -3695,7 +9126,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METNORTE-CORE1"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-ACOMETIDA-N-CORE-2",
@@ -3717,7 +9155,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METNORTE-CORE2"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-ACOMETIDA-E-CORE-2",
@@ -3739,7 +9184,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METESTE-CORE2"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-ACOMETIDA-S-CORE-3",
@@ -3761,7 +9213,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METSUR-CORE3"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-ACOMETIDA-C-CORE-3",
@@ -3783,7 +9242,14 @@ var RED = {
    },
    "fallos_originales": [
     "L-METCENTRO-CORE3"
-   ]
+   ],
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver…",
+     "s": "S-039"
+    }
+   }
   },
   {
    "id": "E-CAIDA-EDGE-SUR",
@@ -3799,6 +9265,13 @@ var RED = {
    "nota": "Hora 11 (y no la cargada de 21) para que hospital e industria (perfil empresa) estén en carga; supuesto.",
    "factores": {
     "S-NTN-EMERGENCIA": 0
+   },
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Hora 11 (y no la cargada de 21) para que hospital e industria (perfil empresa) estén en carga; supuesto.",
+     "s": "S-042"
+    }
    }
   },
   {
@@ -3816,6 +9289,12 @@ var RED = {
     "S-ESTADIO-PRENSA": 1,
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla R1, §6.1 y A7; Semana 7/Teams (descargado…"
+    }
    }
   },
   {
@@ -3832,6 +9311,13 @@ var RED = {
    "nota": "Hora 8 (punta de la A-2) en lugar de la cargada; supuesto.",
    "factores": {
     "S-NTN-EMERGENCIA": 0
+   },
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Hora 8 (punta de la A-2) en lugar de la cargada; supuesto.",
+     "s": "S-041"
+    }
    }
   },
   {
@@ -3850,7 +9336,13 @@ var RED = {
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
    },
-   "critico": true
+   "critico": true,
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §2.2, §5.4 y A11 (Cae DC); Semana 7/Teams (descargado…"
+    }
+   }
   },
   {
    "id": "E-CAIDA-CORE-2",
@@ -3867,6 +9359,12 @@ var RED = {
     "S-ESTADIO-PRENSA": 1,
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §2.2, §5.4 y A11 (Cae DN); Semana 7/Teams (descargado…"
+    }
    }
   },
   {
@@ -3884,6 +9382,12 @@ var RED = {
     "S-ESTADIO-PRENSA": 1,
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "anterior",
+     "f": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §2.2, §5.4 y A11 (Cae DS); Semana 7/Teams (descargado…"
+    }
    }
   },
   {
@@ -3903,6 +9407,13 @@ var RED = {
     "S-ESTADIO-PRENSA": 1,
     "S-ESTADIO-LIGERO": 1,
     "S-ESTADIO-VIDEO": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "NTN al 0,33 = solo el terminal del estadio (1 de 3).",
+     "s": "S-044"
+    }
    }
   },
   {
@@ -3919,6 +9430,13 @@ var RED = {
    "nota": "Hora 11 para que el hospital esté en carga.",
    "factores": {
     "S-NTN-EMERGENCIA": 0
+   },
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Hora 11 para que el hospital esté en carga.",
+     "s": "S-043"
+    }
    }
   },
   {
@@ -3936,6 +9454,13 @@ var RED = {
    "nota": "El incidente concreto (caída de Metro-Sur) lo elige este fichero; los documentos hablan de 'caída de la red terrestre en una sede' o 'incidente grave'.",
    "factores": {
     "S-NTN-EMERGENCIA": 1
+   },
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "El incidente concreto (caída de Metro-Sur) lo elige este fichero; los documentos hablan de 'caída de la red terrestre en una sede' o 'incidente grave'.",
+     "s": "S-045"
+    }
    }
   },
   {
@@ -3947,7 +9472,14 @@ var RED = {
    "factores": {},
    "fallos": [],
    "supuesto": true,
-   "nota": "Escenario de comprobación añadido en la integración: sirve para contrastar el simulador con las tablas de dimensionado."
+   "nota": "Escenario de comprobación añadido en la integración: sirve para contrastar el simulador con las tablas de dimensionado.",
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Escenario de comprobación añadido en la integración: sirve para contrastar el simulador con las tablas de dimensionado.",
+     "s": "S-049"
+    }
+   }
   },
   {
    "id": "E-TABLA8-CERCANO",
@@ -3959,7 +9491,14 @@ var RED = {
    "factores": {},
    "fallos": [],
    "supuesto": true,
-   "nota": "Escenario de comparación añadido en la integración."
+   "nota": "Escenario de comparación añadido en la integración.",
+   "proc": {
+    "definicion": {
+     "t": "supuesto",
+     "f": "Escenario de comparación añadido en la integración.",
+     "s": "S-050"
+    }
+   }
   }
  ],
  "modelos_trafico": {
@@ -3975,7 +9514,13 @@ var RED = {
     "desc_en": "All zones and services at their busy hour at the same time. The team's sizing case: upper bound.",
     "fuente": "Memoria conjunta v7 §2.7.2 y A4 (R = N·V·8·0,10/(30·3600))",
     "hora_cargada": true,
-    "factores_tipo": {}
+    "factores_tipo": {},
+    "proc": {
+     "definicion": {
+      "t": "v7",
+      "f": "v7 §2.7.2 (hora cargada, pico P2; PM como sensibilidad)"
+     }
+    }
    },
    {
     "id": "P2",
@@ -3991,6 +9536,12 @@ var RED = {
      "residencial-fijo": 2,
      "empresa": 2,
      "movil-ebb": 2
+    },
+    "proc": {
+     "definicion": {
+      "t": "v7",
+      "f": "v7 §2.7.2 (hora cargada, pico P2; PM como sensibilidad)"
+     }
     }
    },
    {
@@ -4005,6 +9556,12 @@ var RED = {
     "hora_cargada": true,
     "factores_tipo": {
      "movil-ebb": 2
+    },
+    "proc": {
+     "definicion": {
+      "t": "v7",
+      "f": "v7 §2.7.2 (hora cargada, pico P2; PM como sensibilidad)"
+     }
     }
    },
    {
@@ -4017,7 +9574,14 @@ var RED = {
     "desc_en": "Each demand follows its 24 h profile by zone type: residential peaks at night, business and mobile in office areas in the morning. Peaks no longer add up.",
     "fuente": "Supuesto del simulador: los documentos no dan perfiles horarios (hueco F0).",
     "hora_cargada": false,
-    "factores_tipo": {}
+    "factores_tipo": {},
+    "proc": {
+     "definicion": {
+      "t": "supuesto",
+      "f": "modelo del simulador",
+      "s": "S-023"
+     }
+    }
    },
    {
     "id": "PEND",
@@ -4030,7 +9594,14 @@ var RED = {
     "fuente": "Supuesto del simulador. Fuente candidata para el equipo (no consultada): Encuesta Domiciliaria de Movilidad del Consorcio Regional de Transportes de Madrid.",
     "hora_cargada": false,
     "factores_tipo": {},
-    "pendular": true
+    "pendular": true,
+    "proc": {
+     "definicion": {
+      "t": "supuesto",
+      "f": "modelo del simulador",
+      "s": "S-024"
+     }
+    }
    }
   ],
   "tipos_zona": {
@@ -4232,7 +9803,1876 @@ var RED = {
    "anio_max": 2031,
    "anio_defecto": 2031
   }
- }
+ },
+ "supuestos": [
+  {
+   "id": "S-001",
+   "clave": "top.agg_abstracto",
+   "ambito": "topologia",
+   "elementos": [
+    "AGG-ALCALA",
+    "AGG-ALCOBENDAS",
+    "AGG-ALCORCON",
+    "AGG-BATRES",
+    "AGG-FUENLABRADA",
+    "AGG-GETAFE",
+    "AGG-LEGANES",
+    "AGG-LOSSANTOS",
+    "AGG-MADRID",
+    "AGG-TALAMANCA",
+    "AGG-TORREJON",
+    "AGG-TRESCANTOS",
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGBATRES-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGLOSSANTOS-METE",
+    "L-AGGMADRID-METC",
+    "L-AGGTALAMANCA-METN",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN",
+    "OLT",
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS",
+    "gNB"
+   ],
+   "campo": "nodo AGG-* y su coordenada",
+   "valor": "un nodo de agregación por municipio, en el centro de la zona",
+   "unidad": "",
+   "motivo": "La v7 no define nodos de agregación: el simulador agrupa OLT y backhaul de cada municipio en un nodo abstracto.",
+   "fuente_parcial": "v7 §3.1.2 (cada municipio cuelga del Metro de su zona); 2.1-S5d §3 (≤20 km y 4 saltos de acceso)",
+   "alternativa": "Modelar las centrales reales (p. ej. las dos de Alcorcón) cuando 2.1 las fije.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-002",
+   "clave": "top.cap_acceso_sitio",
+   "ambito": "topologia",
+   "elementos": [
+    "L-SITEA2V2X-METESTE",
+    "L-SITEHOSPITALGETAFE-METSUR",
+    "L-SITEINDUSTRIASUR-METSUR",
+    "L-SITEL2VPNCENTRO-METCENTRO",
+    "L-SITEL2VPNESTE-METESTE",
+    "L-SITEL2VPNNORTE-METNORTE",
+    "L-SITEL2VPNSUR-METSUR",
+    "L-SITEMETROPOLITANO-METCENTRO",
+    "L-SITENTNARGANDA-METESTE",
+    "L-SITEVALDEBEBAS-METCENTRO"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": "400 (estadio) / 10 (resto) / 1 (NTN)",
+   "unidad": "Gbit/s",
+   "motivo": "Ningún documento dimensiona la acometida de los sitios de servicio: una λ 400G para el estadio, 10 GbE para el resto (hospital: 10 Gbit/s de SCOM01 [HYP 3.1]).",
+   "fuente_parcial": "3.1-S5 §5.3 (hospital, dos accesos de 10 Gbit/s [HYP]); v7 §6.9 (10 GbE por UNI L2VPN)",
+   "alternativa": "Acometida dimensionada por 2.1 para cada sitio.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-003",
+   "clave": "top.cap_agg_formula",
+   "ambito": "topologia",
+   "elementos": [
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGMADRID-METC",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": "n × 100GE, n = ⌈max(DL·1,10/0,70; 2·DL·1,10/0,90)/100⌉",
+   "unidad": "Gbit/s",
+   "motivo": "Ningún documento dimensiona el enlace municipio–Metro; se aplica el criterio de ocupación común a la demanda DL del municipio.",
+   "fuente_parcial": "v7 §2.7.2 (70 %/90 %, cabecera 1,10); 3.2 H-E8; 2.2 §4.5 (uplinks 100GE de la OLT)",
+   "alternativa": "Dimensionar con la matriz de acceso de 2.1 cuando exista.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-004",
+   "clave": "top.cap_ix_ims",
+   "ambito": "topologia",
+   "elementos": [
+    "L-CORE1-IXIMS",
+    "L-CORE2-IXIMS",
+    "L-CORE3-IXIMS"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": 100,
+   "unidad": "Gbit/s",
+   "motivo": "1 × 100GE por DC hacia la interconexión IMS (≈78 Gbit/s necesarios si cae un DC).",
+   "fuente_parcial": "UPF2 §2.2 (medios IMS 186,95 Gbit/s); HW §6 (SBC por DC)",
+   "alternativa": "2 × 100GE si se quiere margen N-1 al 70 %.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-005",
+   "clave": "top.cap_ix_internet",
+   "ambito": "topologia",
+   "elementos": [
+    "L-CORE1-IXINTERNET",
+    "L-CORE2-IXINTERNET",
+    "L-CORE3-IXINTERNET"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": 4000,
+   "unidad": "Gbit/s",
+   "motivo": "Capacidad de salida a Internet no dimensionada: se iguala a la suma de las acometidas del DC para que no sea cuello de botella.",
+   "fuente_parcial": "HW §4.1 (routers de borde en los 3 DC)",
+   "alternativa": "Dimensionar peering/tránsito con la demanda Internet por DC.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-006",
+   "clave": "top.cap_null_sin_limite",
+   "ambito": "topologia",
+   "elementos": [
+    "AGG-ALCALA",
+    "AGG-ALCOBENDAS",
+    "AGG-ALCORCON",
+    "AGG-BATRES",
+    "AGG-FUENLABRADA",
+    "AGG-GETAFE",
+    "AGG-LEGANES",
+    "AGG-LOSSANTOS",
+    "AGG-MADRID",
+    "AGG-TALAMANCA",
+    "AGG-TORREJON",
+    "AGG-TRESCANTOS",
+    "CORE-1",
+    "CORE-2",
+    "CORE-3",
+    "EDGE-ESTE",
+    "EDGE-SUR",
+    "IX-IMS",
+    "IX-INTERNET",
+    "IX-ONEWEB",
+    "L-EDGECENTRO-METC",
+    "L-EDGEESTE-METE",
+    "L-EDGESUR-METS",
+    "MET-CENTRO",
+    "MET-ESTE",
+    "MET-NORTE",
+    "MET-SUR",
+    "SITE-A2-V2X",
+    "SITE-HOSPITAL-GETAFE",
+    "SITE-INDUSTRIA-SUR",
+    "SITE-L2VPN-CENTRO",
+    "SITE-L2VPN-ESTE",
+    "SITE-L2VPN-NORTE",
+    "SITE-L2VPN-SUR",
+    "SITE-METROPOLITANO",
+    "SITE-NTN-ARGANDA",
+    "SITE-VALDEBEBAS"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": "null = sin límite",
+   "unidad": "Gbit/s",
+   "motivo": "La v7 no da capacidad de conmutación/proceso de estos nodos ni la NIC instalada de Edge-Este/Sur y las acometidas de Edge: el simulador no los limita.",
+   "fuente_parcial": "v7 §6.7.2/§6.7.5 (NIC requeridas: Edge-Este 192,08, Edge-Sur 2,18 Gbit/s); v7 §6.10.1 (DC al 50 % de la carga)",
+   "alternativa": "Poner la NIC requerida de la v7 como capacidad para ver su ocupación.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-007",
+   "clave": "top.cap_oneweb",
+   "ambito": "topologia",
+   "elementos": [
+    "L-IXONEWEB-CORE1"
+   ],
+   "campo": "capacidad_gbps",
+   "valor": 1,
+   "unidad": "Gbit/s",
+   "motivo": "Enlace hub OneWeb–DC-Centro: 5 terminales × ≥100 Mbit/s redondeado a 1 Gbit/s.",
+   "fuente_parcial": "v7 §6.11 (≥100/20 Mbit/s por terminal); D5 §5.7",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-008",
+   "clave": "top.coord_sitios",
+   "ambito": "topologia",
+   "elementos": [
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS",
+    "S-NTN-EMERGENCIA",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS",
+    "S-VALDEBEBAS-SENSORES",
+    "SITE-A2-V2X",
+    "SITE-HOSPITAL-GETAFE",
+    "SITE-INDUSTRIA-SUR",
+    "SITE-L2VPN-CENTRO",
+    "SITE-L2VPN-ESTE",
+    "SITE-L2VPN-NORTE",
+    "SITE-L2VPN-SUR",
+    "SITE-METROPOLITANO",
+    "SITE-NTN-ARGANDA",
+    "SITE-VALDEBEBAS"
+   ],
+   "campo": "coord",
+   "valor": "posición aproximada de cada sitio de servicio (estadio, Valdebebas, A-2, hospital, polígono, sedes L2VPN, Arganda)",
+   "unidad": "lat/lon",
+   "motivo": "Los documentos nombran el lugar pero no dan coordenadas; las sedes L2VPN y el polígono industrial están por confirmar.",
+   "fuente_parcial": "v7 §3.3 (servicios y lugares), §6.9 (una sede por zona)",
+   "alternativa": "Coordenadas exactas cuando Dirección confirme sedes y polígono.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-009",
+   "clave": "top.emplazamiento_dc",
+   "ambito": "topologia",
+   "elementos": [
+    "CORE-1",
+    "CORE-2",
+    "CORE-3"
+   ],
+   "campo": "coord",
+   "valor": "polígonos con CPD en San Blas, Alcobendas y Getafe",
+   "unidad": "lat/lon",
+   "motivo": "Los documentos solo dicen que cada DC está junto a su nodo Metro; la parcela concreta la elige el simulador.",
+   "fuente_parcial": "v7 §3.1.2 y §6.4.1 (DC en Centro, Norte y Sur, junto a su Metro)",
+   "alternativa": "Otra parcela de la misma zona: solo cambian km y latencia de acceso.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-010",
+   "clave": "top.emplazamiento_edge",
+   "ambito": "topologia",
+   "elementos": [
+    "EDGE-CENTRO",
+    "EDGE-ESTE",
+    "EDGE-SUR"
+   ],
+   "campo": "coord",
+   "valor": "coordenada del nodo Metro de su zona",
+   "unidad": "lat/lon",
+   "motivo": "Edge 'junto a su nodo metro': se dibuja en el mismo punto.",
+   "fuente_parcial": "v7 §6.7.2; 2.1-S5d §1",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-011",
+   "clave": "top.emplazamiento_metro",
+   "ambito": "topologia",
+   "elementos": [
+    "MET-CENTRO",
+    "MET-ESTE",
+    "MET-NORTE",
+    "MET-SUR"
+   ],
+   "campo": "coord",
+   "valor": "mismo polígono que el DC/Edge de la zona (Torrejón para Este)",
+   "unidad": "lat/lon",
+   "motivo": "La v7 fija los cuatro nodos Metro (C/N/E/S) pero no su edificio.",
+   "fuente_parcial": "v7 §6.4.1",
+   "alternativa": "Cualquier edificio de la zona con acceso a la planta del anillo.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-012",
+   "clave": "top.ix_ubicacion",
+   "ambito": "topologia",
+   "elementos": [
+    "IX-IMS",
+    "IX-INTERNET",
+    "IX-ONEWEB"
+   ],
+   "campo": "coord",
+   "valor": "carrier hotel de C/ Albasanz (Internet e IMS); polígono de Arganda (OneWeb)",
+   "unidad": "lat/lon",
+   "motivo": "Ningún documento fija el punto de peering ni el de interconexión IMS; del hub OneWeb solo se dice 'Arganda'.",
+   "fuente_parcial": "HW §4.1 (salida por los routers de borde de los DC); v7 §6.11 (hub OneWeb en Arganda)",
+   "alternativa": "Otro IXP de Madrid: cambia solo km de los enlaces IX.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-013",
+   "clave": "top.km_acometida",
+   "ambito": "topologia",
+   "elementos": [
+    "L-AGGBATRES-METS",
+    "L-AGGLOSSANTOS-METE",
+    "L-AGGTALAMANCA-METN",
+    "L-CORE1-METC",
+    "L-CORE1-METN",
+    "L-CORE2-METE",
+    "L-CORE2-METN",
+    "L-CORE3-METC",
+    "L-CORE3-METS",
+    "L-EDGECENTRO-METC",
+    "L-EDGEESTE-METE",
+    "L-EDGESUR-METS"
+   ],
+   "campo": "km",
+   "valor": 0.3,
+   "unidad": "km",
+   "motivo": "La v7 cuenta la acometida DC/Edge–Metro como un salto sin longitud; 0,3 km es un relleno para la latencia.",
+   "fuente_parcial": "v7 §6.4.1 (DC y Edge junto a su nodo Metro)",
+   "alternativa": "0 km (mismo edificio).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-014",
+   "clave": "top.km_recta_x13",
+   "ambito": "topologia",
+   "elementos": [
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGMADRID-METC",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN",
+    "L-CORE1-IXIMS",
+    "L-CORE1-IXINTERNET",
+    "L-CORE2-IXIMS",
+    "L-CORE2-IXINTERNET",
+    "L-CORE3-IXIMS",
+    "L-CORE3-IXINTERNET",
+    "L-IXONEWEB-CORE1",
+    "L-SITEA2V2X-METESTE",
+    "L-SITEHOSPITALGETAFE-METSUR",
+    "L-SITEINDUSTRIASUR-METSUR",
+    "L-SITEL2VPNCENTRO-METCENTRO",
+    "L-SITEL2VPNESTE-METESTE",
+    "L-SITEL2VPNNORTE-METNORTE",
+    "L-SITEL2VPNSUR-METSUR",
+    "L-SITEMETROPOLITANO-METCENTRO",
+    "L-SITENTNARGANDA-METESTE",
+    "L-SITEVALDEBEBAS-METCENTRO"
+   ],
+   "campo": "km",
+   "valor": "1,3 × distancia en línea recta",
+   "unidad": "km",
+   "motivo": "Sin trazado de fibra en los documentos fuera del anillo: se estima la ruta como 1,3 × línea recta.",
+   "fuente_parcial": "3.1 respuesta 27/10 (anillo sobre mapa × 1,4)",
+   "alternativa": "Longitudes reales de planta cuando 2.1 las dé.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-015",
+   "clave": "top.lat_nodo_defecto",
+   "ambito": "topologia",
+   "elementos": [
+    "SITE-A2-V2X",
+    "SITE-HOSPITAL-GETAFE",
+    "SITE-INDUSTRIA-SUR",
+    "SITE-L2VPN-CENTRO",
+    "SITE-L2VPN-ESTE",
+    "SITE-L2VPN-NORTE",
+    "SITE-L2VPN-SUR",
+    "SITE-METROPOLITANO",
+    "SITE-NTN-ARGANDA",
+    "SITE-VALDEBEBAS"
+   ],
+   "campo": "latencia_ms",
+   "valor": 0.05,
+   "unidad": "ms",
+   "motivo": "Los SITE-* no tienen retardo de nodo en los datos: el motor usa 0,05 ms por defecto.",
+   "fuente_parcial": "—",
+   "alternativa": "0 ms.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-016",
+   "clave": "top.sat_extremo",
+   "ambito": "topologia",
+   "elementos": [
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE"
+   ],
+   "campo": "a/b",
+   "valor": "terminal OneWeb colgado del AGG o Edge más próximo al sitio",
+   "unidad": "",
+   "motivo": "El terminal está en el sitio (hospital, estadio, Edge-Este) pero se conecta al nodo de agregación/Edge para no duplicar sitios.",
+   "fuente_parcial": "D5 §5.7 (terminales transportables en hospital, estadio y Edge-Este [HYP])",
+   "alternativa": "Colgar el terminal directamente del SITE-*.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-017",
+   "clave": "top.sin_respaldo_acceso",
+   "ambito": "topologia",
+   "elementos": [
+    "SITE-A2-V2X",
+    "SITE-HOSPITAL-GETAFE",
+    "SITE-INDUSTRIA-SUR",
+    "SITE-L2VPN-CENTRO",
+    "SITE-L2VPN-ESTE",
+    "SITE-L2VPN-NORTE",
+    "SITE-L2VPN-SUR",
+    "SITE-METROPOLITANO",
+    "SITE-NTN-ARGANDA",
+    "SITE-VALDEBEBAS"
+   ],
+   "campo": "respaldo",
+   "valor": "acceso único",
+   "unidad": "",
+   "motivo": "Los sitios de servicio tienen un solo acceso: la segunda acometida (p. ej. la del hospital) no está diseñada.",
+   "fuente_parcial": "3.1-S5 §5.3 (dos accesos [HYP]); Reunión 03-11 punto 4",
+   "alternativa": "Añadir el segundo acceso cuando esté diseñado.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-018",
+   "clave": "top.sin_srlg",
+   "ambito": "topologia",
+   "elementos": [
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGMADRID-METC",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN",
+    "L-CORE1-IXIMS",
+    "L-CORE1-IXINTERNET",
+    "L-CORE2-IXIMS",
+    "L-CORE2-IXINTERNET",
+    "L-CORE3-IXIMS",
+    "L-CORE3-IXINTERNET",
+    "L-IXONEWEB-CORE1",
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE",
+    "L-SITEA2V2X-METESTE",
+    "L-SITEHOSPITALGETAFE-METSUR",
+    "L-SITEINDUSTRIASUR-METSUR",
+    "L-SITEL2VPNCENTRO-METCENTRO",
+    "L-SITEL2VPNESTE-METESTE",
+    "L-SITEL2VPNNORTE-METNORTE",
+    "L-SITEL2VPNSUR-METSUR",
+    "L-SITEMETROPOLITANO-METCENTRO",
+    "L-SITENTNARGANDA-METESTE",
+    "L-SITEVALDEBEBAS-METCENTRO"
+   ],
+   "campo": "srlg",
+   "valor": "sin SRLG",
+   "unidad": "",
+   "motivo": "Fuera del anillo y las acometidas de DC no hay estudio de diversidad física: el simulador no agrupa cortes comunes.",
+   "fuente_parcial": "v7 §5.1 (2.1 aún tiene que validar SRLG y diversidad física)",
+   "alternativa": "Asignar SRLG cuando 2.1 entregue la planta.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-019",
+   "clave": "top.site_abstracto",
+   "ambito": "topologia",
+   "elementos": [
+    "SITE-A2-V2X",
+    "SITE-HOSPITAL-GETAFE",
+    "SITE-INDUSTRIA-SUR",
+    "SITE-L2VPN-CENTRO",
+    "SITE-L2VPN-ESTE",
+    "SITE-L2VPN-NORTE",
+    "SITE-L2VPN-SUR",
+    "SITE-METROPOLITANO",
+    "SITE-NTN-ARGANDA",
+    "SITE-VALDEBEBAS"
+   ],
+   "campo": "modelo",
+   "valor": "sitio sin equipo modelado",
+   "unidad": "",
+   "motivo": "El sitio del servicio es un extremo lógico: su equipo (gNB, CPE, terminal) no se modela.",
+   "fuente_parcial": "—",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-020",
+   "clave": "dem.centro_municipio",
+   "ambito": "demanda",
+   "elementos": [
+    "R-A2-n28-01",
+    "R-A2-n28-02",
+    "R-A2-n28-03",
+    "R-A2-n28-04",
+    "R-A2-n28-05",
+    "R-A2-n28-06",
+    "R-A2-n28-07",
+    "R-A2-n28-08",
+    "R-A2-n28-09",
+    "R-A2-n28-10",
+    "R-ALCORCON-CELDA-n28",
+    "R-ALCORCON-CELDA-n78",
+    "R-ESTADIO-n258",
+    "R-ESTADIO-n78",
+    "R-HOSPITAL-n78",
+    "R-PRIVADA-n28",
+    "R-PRIVADA-n78",
+    "R-VALDEBEBAS-n28",
+    "R-VALDEBEBAS-n78",
+    "R-Z-ALCALA-n28",
+    "R-Z-ALCALA-n78",
+    "R-Z-ALCOBENDAS-n28",
+    "R-Z-ALCOBENDAS-n78",
+    "R-Z-ALCORCON-n28",
+    "R-Z-ALCORCON-n78",
+    "R-Z-BATRES-n28",
+    "R-Z-BATRES-n78",
+    "R-Z-FUENLABRADA-n28",
+    "R-Z-FUENLABRADA-n78",
+    "R-Z-GETAFE-n28",
+    "R-Z-GETAFE-n78",
+    "R-Z-LEGANES-n28",
+    "R-Z-LEGANES-n78",
+    "R-Z-LOSSANTOS-n28",
+    "R-Z-LOSSANTOS-n78",
+    "R-Z-MADRID-n28",
+    "R-Z-MADRID-n78",
+    "R-Z-TALAMANCA-n28",
+    "R-Z-TALAMANCA-n78",
+    "R-Z-TORREJON-n28",
+    "R-Z-TORREJON-n78",
+    "R-Z-TRESCANTOS-n28",
+    "R-Z-TRESCANTOS-n78",
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "centro",
+   "valor": "casco urbano (aproximado en Talamanca, Los Santos y Batres)",
+   "unidad": "lat/lon",
+   "motivo": "Coordenada de dibujo del municipio elegida por el simulador.",
+   "fuente_parcial": "v7 §3.1.1 (lista de municipios)",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-021",
+   "clave": "dem.crecimiento_servicios",
+   "ambito": "demanda",
+   "elementos": [
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS",
+    "S-NTN-EMERGENCIA",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS",
+    "S-VALDEBEBAS-SENSORES"
+   ],
+   "campo": "crecimiento",
+   "valor": "servicios especiales constantes 2025-2031",
+   "unidad": "",
+   "motivo": "El 3.2 proyecta población y volumen; los servicios especiales no tienen proyección y se dejan constantes.",
+   "fuente_parcial": "3.2 (proyección lineal de población, geométrica de volumen)",
+   "alternativa": "Escalar servicios con la población.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-022",
+   "clave": "dem.latencia_voz",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA/voz-fija",
+    "Z-ALCALA/voz-ims",
+    "Z-ALCOBENDAS/voz-fija",
+    "Z-ALCOBENDAS/voz-ims",
+    "Z-ALCORCON/voz-fija",
+    "Z-ALCORCON/voz-ims",
+    "Z-BATRES/voz-fija",
+    "Z-BATRES/voz-ims",
+    "Z-FUENLABRADA/voz-fija",
+    "Z-FUENLABRADA/voz-ims",
+    "Z-GETAFE/voz-fija",
+    "Z-GETAFE/voz-ims",
+    "Z-LEGANES/voz-fija",
+    "Z-LEGANES/voz-ims",
+    "Z-LOSSANTOS/voz-fija",
+    "Z-LOSSANTOS/voz-ims",
+    "Z-MADRID/voz-fija",
+    "Z-MADRID/voz-ims",
+    "Z-TALAMANCA/voz-fija",
+    "Z-TALAMANCA/voz-ims",
+    "Z-TORREJON/voz-fija",
+    "Z-TORREJON/voz-ims",
+    "Z-TRESCANTOS/voz-fija",
+    "Z-TRESCANTOS/voz-ims"
+   ],
+   "campo": "latencia_max_ms",
+   "valor": 20,
+   "unidad": "ms",
+   "motivo": "Presupuesto de transporte/core para la voz: los documentos no fijan latencia de voz.",
+   "fuente_parcial": "—",
+   "alternativa": "Sin límite de latencia para la voz.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-023",
+   "clave": "dem.modelo_nc",
+   "ambito": "demanda",
+   "elementos": [
+    "NC"
+   ],
+   "campo": "modelo de tráfico",
+   "valor": "NC",
+   "unidad": "",
+   "motivo": "Hora cargada no coincidente (sin fuente en los documentos).",
+   "fuente_parcial": "v7 §2.7.2 (solo hora cargada coincidente y pico P2/PM)",
+   "alternativa": "Modelos BH, P2 o PM.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-024",
+   "clave": "dem.modelo_pend",
+   "ambito": "demanda",
+   "elementos": [
+    "PEND"
+   ],
+   "campo": "modelo de tráfico",
+   "valor": "PEND",
+   "unidad": "",
+   "motivo": "Movilidad pendular (sin fuente en los documentos).",
+   "fuente_parcial": "v7 §2.7.2 (solo hora cargada coincidente y pico P2/PM)",
+   "alternativa": "Modelos BH, P2 o PM.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-025",
+   "clave": "dem.pendular",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "pendular",
+   "valor": "fracción de usuarios móviles de cada zona que trabaja en Madrid",
+   "unidad": "",
+   "motivo": "Movilidad pendular inventada para el modelo PEND; ningún documento la cuantifica.",
+   "fuente_parcial": "—",
+   "alternativa": "Sin movilidad pendular.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-026",
+   "clave": "dem.perfiles_horarios",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA/empresa",
+    "Z-ALCALA/movil-ebb",
+    "Z-ALCALA/residencial-fijo",
+    "Z-ALCALA/voz-fija",
+    "Z-ALCALA/voz-ims",
+    "Z-ALCOBENDAS/empresa",
+    "Z-ALCOBENDAS/movil-ebb",
+    "Z-ALCOBENDAS/residencial-fijo",
+    "Z-ALCOBENDAS/voz-fija",
+    "Z-ALCOBENDAS/voz-ims",
+    "Z-ALCORCON/empresa",
+    "Z-ALCORCON/movil-ebb",
+    "Z-ALCORCON/residencial-fijo",
+    "Z-ALCORCON/voz-fija",
+    "Z-ALCORCON/voz-ims",
+    "Z-BATRES/empresa",
+    "Z-BATRES/movil-ebb",
+    "Z-BATRES/residencial-fijo",
+    "Z-BATRES/voz-fija",
+    "Z-BATRES/voz-ims",
+    "Z-FUENLABRADA/empresa",
+    "Z-FUENLABRADA/movil-ebb",
+    "Z-FUENLABRADA/residencial-fijo",
+    "Z-FUENLABRADA/voz-fija",
+    "Z-FUENLABRADA/voz-ims",
+    "Z-GETAFE/empresa",
+    "Z-GETAFE/movil-ebb",
+    "Z-GETAFE/residencial-fijo",
+    "Z-GETAFE/voz-fija",
+    "Z-GETAFE/voz-ims",
+    "Z-LEGANES/empresa",
+    "Z-LEGANES/movil-ebb",
+    "Z-LEGANES/residencial-fijo",
+    "Z-LEGANES/voz-fija",
+    "Z-LEGANES/voz-ims",
+    "Z-LOSSANTOS/empresa",
+    "Z-LOSSANTOS/movil-ebb",
+    "Z-LOSSANTOS/residencial-fijo",
+    "Z-LOSSANTOS/voz-fija",
+    "Z-LOSSANTOS/voz-ims",
+    "Z-MADRID/empresa",
+    "Z-MADRID/movil-ebb",
+    "Z-MADRID/residencial-fijo",
+    "Z-MADRID/voz-fija",
+    "Z-MADRID/voz-ims",
+    "Z-TALAMANCA/empresa",
+    "Z-TALAMANCA/movil-ebb",
+    "Z-TALAMANCA/residencial-fijo",
+    "Z-TALAMANCA/voz-fija",
+    "Z-TALAMANCA/voz-ims",
+    "Z-TORREJON/empresa",
+    "Z-TORREJON/movil-ebb",
+    "Z-TORREJON/residencial-fijo",
+    "Z-TORREJON/voz-fija",
+    "Z-TORREJON/voz-ims",
+    "Z-TRESCANTOS/empresa",
+    "Z-TRESCANTOS/movil-ebb",
+    "Z-TRESCANTOS/residencial-fijo",
+    "Z-TRESCANTOS/voz-fija",
+    "Z-TRESCANTOS/voz-ims"
+   ],
+   "campo": "perfil",
+   "valor": "perfiles residencial/empresa/evento/movilidad de 24 h",
+   "unidad": "",
+   "motivo": "Los documentos solo usan una hora cargada coincidente; la forma horaria es del simulador (iot sí está documentado).",
+   "fuente_parcial": "v7 §2.7.2 y A4 (hora cargada)",
+   "alternativa": "Hora cargada para todo (modelo BH).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-027",
+   "clave": "dem.prioridad_necesidad",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA/empresa",
+    "Z-ALCALA/movil-ebb",
+    "Z-ALCALA/residencial-fijo",
+    "Z-ALCALA/voz-fija",
+    "Z-ALCALA/voz-ims",
+    "Z-ALCOBENDAS/empresa",
+    "Z-ALCOBENDAS/movil-ebb",
+    "Z-ALCOBENDAS/residencial-fijo",
+    "Z-ALCOBENDAS/voz-fija",
+    "Z-ALCOBENDAS/voz-ims",
+    "Z-ALCORCON/empresa",
+    "Z-ALCORCON/movil-ebb",
+    "Z-ALCORCON/residencial-fijo",
+    "Z-ALCORCON/voz-fija",
+    "Z-ALCORCON/voz-ims",
+    "Z-BATRES/empresa",
+    "Z-BATRES/movil-ebb",
+    "Z-BATRES/residencial-fijo",
+    "Z-BATRES/voz-fija",
+    "Z-BATRES/voz-ims",
+    "Z-FUENLABRADA/empresa",
+    "Z-FUENLABRADA/movil-ebb",
+    "Z-FUENLABRADA/residencial-fijo",
+    "Z-FUENLABRADA/voz-fija",
+    "Z-FUENLABRADA/voz-ims",
+    "Z-GETAFE/empresa",
+    "Z-GETAFE/movil-ebb",
+    "Z-GETAFE/residencial-fijo",
+    "Z-GETAFE/voz-fija",
+    "Z-GETAFE/voz-ims",
+    "Z-LEGANES/empresa",
+    "Z-LEGANES/movil-ebb",
+    "Z-LEGANES/residencial-fijo",
+    "Z-LEGANES/voz-fija",
+    "Z-LEGANES/voz-ims",
+    "Z-LOSSANTOS/empresa",
+    "Z-LOSSANTOS/movil-ebb",
+    "Z-LOSSANTOS/residencial-fijo",
+    "Z-LOSSANTOS/voz-fija",
+    "Z-LOSSANTOS/voz-ims",
+    "Z-MADRID/empresa",
+    "Z-MADRID/movil-ebb",
+    "Z-MADRID/residencial-fijo",
+    "Z-MADRID/voz-fija",
+    "Z-MADRID/voz-ims",
+    "Z-TALAMANCA/empresa",
+    "Z-TALAMANCA/movil-ebb",
+    "Z-TALAMANCA/residencial-fijo",
+    "Z-TALAMANCA/voz-fija",
+    "Z-TALAMANCA/voz-ims",
+    "Z-TORREJON/empresa",
+    "Z-TORREJON/movil-ebb",
+    "Z-TORREJON/residencial-fijo",
+    "Z-TORREJON/voz-fija",
+    "Z-TORREJON/voz-ims",
+    "Z-TRESCANTOS/empresa",
+    "Z-TRESCANTOS/movil-ebb",
+    "Z-TRESCANTOS/residencial-fijo",
+    "Z-TRESCANTOS/voz-fija",
+    "Z-TRESCANTOS/voz-ims"
+   ],
+   "campo": "prioridad",
+   "valor": "residencial 5 · empresa 3 · móvil 4 · voz 2",
+   "unidad": "1 = más alta",
+   "motivo": "El motor necesita un orden para recortar en congestión; los documentos solo dan 5QI/ARP de los servicios avanzados.",
+   "fuente_parcial": "v7 §4 (5QI 1 para voz, ARP)",
+   "alternativa": "Misma prioridad para todo el tráfico territorial.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-028",
+   "clave": "dem.reparto_municipal",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCALA/empresa",
+    "Z-ALCALA/movil-ebb",
+    "Z-ALCALA/residencial-fijo",
+    "Z-ALCALA/voz-fija",
+    "Z-ALCALA/voz-ims",
+    "Z-ALCOBENDAS",
+    "Z-ALCOBENDAS/empresa",
+    "Z-ALCOBENDAS/movil-ebb",
+    "Z-ALCOBENDAS/residencial-fijo",
+    "Z-ALCOBENDAS/voz-fija",
+    "Z-ALCOBENDAS/voz-ims",
+    "Z-ALCORCON",
+    "Z-ALCORCON/empresa",
+    "Z-ALCORCON/movil-ebb",
+    "Z-ALCORCON/residencial-fijo",
+    "Z-ALCORCON/voz-fija",
+    "Z-ALCORCON/voz-ims",
+    "Z-BATRES",
+    "Z-BATRES/empresa",
+    "Z-BATRES/movil-ebb",
+    "Z-BATRES/residencial-fijo",
+    "Z-BATRES/voz-fija",
+    "Z-BATRES/voz-ims",
+    "Z-FUENLABRADA",
+    "Z-FUENLABRADA/empresa",
+    "Z-FUENLABRADA/movil-ebb",
+    "Z-FUENLABRADA/residencial-fijo",
+    "Z-FUENLABRADA/voz-fija",
+    "Z-FUENLABRADA/voz-ims",
+    "Z-GETAFE",
+    "Z-GETAFE/empresa",
+    "Z-GETAFE/movil-ebb",
+    "Z-GETAFE/residencial-fijo",
+    "Z-GETAFE/voz-fija",
+    "Z-GETAFE/voz-ims",
+    "Z-LEGANES",
+    "Z-LEGANES/empresa",
+    "Z-LEGANES/movil-ebb",
+    "Z-LEGANES/residencial-fijo",
+    "Z-LEGANES/voz-fija",
+    "Z-LEGANES/voz-ims",
+    "Z-LOSSANTOS",
+    "Z-LOSSANTOS/empresa",
+    "Z-LOSSANTOS/movil-ebb",
+    "Z-LOSSANTOS/residencial-fijo",
+    "Z-LOSSANTOS/voz-fija",
+    "Z-LOSSANTOS/voz-ims",
+    "Z-MADRID",
+    "Z-MADRID/empresa",
+    "Z-MADRID/movil-ebb",
+    "Z-MADRID/residencial-fijo",
+    "Z-MADRID/voz-fija",
+    "Z-MADRID/voz-ims",
+    "Z-TALAMANCA",
+    "Z-TALAMANCA/empresa",
+    "Z-TALAMANCA/movil-ebb",
+    "Z-TALAMANCA/residencial-fijo",
+    "Z-TALAMANCA/voz-fija",
+    "Z-TALAMANCA/voz-ims",
+    "Z-TORREJON",
+    "Z-TORREJON/empresa",
+    "Z-TORREJON/movil-ebb",
+    "Z-TORREJON/residencial-fijo",
+    "Z-TORREJON/voz-fija",
+    "Z-TORREJON/voz-ims",
+    "Z-TRESCANTOS",
+    "Z-TRESCANTOS/empresa",
+    "Z-TRESCANTOS/movil-ebb",
+    "Z-TRESCANTOS/residencial-fijo",
+    "Z-TRESCANTOS/voz-fija",
+    "Z-TRESCANTOS/voz-ims"
+   ],
+   "campo": "poblacion, cuota, demanda por municipio",
+   "valor": "cuota del municipio = población 2025 / población 2025 de su zona Metro",
+   "unidad": "",
+   "motivo": "La v7 da población 2031 y demanda por zona Metro, no por municipio (salvo Alcorcón): el simulador reparte por la población 2025.",
+   "fuente_parcial": "v7 §3.1.1 ('hogares, empresas y líneas proporcionales a la población de zona'), §3.4.1, §2.5",
+   "alternativa": "Reparto por líneas reales de cada municipio si 3.2 las publica.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-029",
+   "clave": "dem.reparto_res_empresa",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA/empresa",
+    "Z-ALCALA/residencial-fijo",
+    "Z-ALCOBENDAS/empresa",
+    "Z-ALCOBENDAS/residencial-fijo",
+    "Z-ALCORCON/empresa",
+    "Z-ALCORCON/residencial-fijo",
+    "Z-BATRES/empresa",
+    "Z-BATRES/residencial-fijo",
+    "Z-FUENLABRADA/empresa",
+    "Z-FUENLABRADA/residencial-fijo",
+    "Z-GETAFE/empresa",
+    "Z-GETAFE/residencial-fijo",
+    "Z-LEGANES/empresa",
+    "Z-LEGANES/residencial-fijo",
+    "Z-LOSSANTOS/empresa",
+    "Z-LOSSANTOS/residencial-fijo",
+    "Z-MADRID/empresa",
+    "Z-MADRID/residencial-fijo",
+    "Z-TALAMANCA/empresa",
+    "Z-TALAMANCA/residencial-fijo",
+    "Z-TORREJON/empresa",
+    "Z-TORREJON/residencial-fijo",
+    "Z-TRESCANTOS/empresa",
+    "Z-TRESCANTOS/residencial-fijo"
+   ],
+   "campo": "dl_gbps/ul_gbps (residencial-fijo, empresa)",
+   "valor": "peso de líneas fijas 0,622·hogares vs 1,5·empresas",
+   "unidad": "",
+   "motivo": "Los documentos no separan el Internet fijo de empresa: se reparte con el peso de líneas fijas de A1.",
+   "fuente_parcial": "v7 §3.1.1 (62,2 % de hogares con fijo; 1,5 líneas por empresa)",
+   "alternativa": "Todo el fijo como residencial.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-030",
+   "clave": "dem.tipos_dia",
+   "ambito": "demanda",
+   "elementos": [
+    "agosto",
+    "fin_de_semana",
+    "laborable",
+    "partido"
+   ],
+   "campo": "tipos_dia",
+   "valor": "multiplicadores por tipo de día (estadio solo en día de partido)",
+   "unidad": "",
+   "motivo": "Variación por tipo de día: supuesto del simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Día laborable con estadio activo.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-031",
+   "clave": "dem.tipos_zona",
+   "ambito": "demanda",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-MADRID",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "tipos_zona, perfiles_extra",
+   "valor": "tipo de zona (mixto/oficinas/residencial) y perfil móvil por tipo",
+   "unidad": "",
+   "motivo": "Perfil horario del móvil y la voz por tipo de zona: supuesto del simulador.",
+   "fuente_parcial": "—",
+   "alternativa": "Mismo perfil en todas las zonas.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-032",
+   "clave": "srv.cabecera_l2vpn",
+   "ambito": "servicios",
+   "elementos": [
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS"
+   ],
+   "campo": "cabecera",
+   "valor": 1.0,
+   "unidad": "×",
+   "motivo": "L2VPN sin cabecera 1,10: la v7 aplica 1,10 a la matriz A11, que no incluye la L2VPN; la cota de 10 GbE ya es velocidad de línea.",
+   "fuente_parcial": "v7 §2.7.2, §6.4.3, §6.9",
+   "alternativa": "Aplicar 1,10 también a la L2VPN.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-033",
+   "clave": "srv.l2vpn_reparto",
+   "ambito": "servicios",
+   "elementos": [
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS"
+   ],
+   "campo": "dl_gbps/ul_gbps",
+   "valor": 3.33,
+   "unidad": "Gbit/s por par y sentido",
+   "motivo": "Los 10 GbE de cada sede se reparten a partes iguales entre las otras 3 (6 pares × 2 sentidos = 40 Gbit/s).",
+   "fuente_parcial": "v7 §6.9 (10 GbE por UNI como cota y 40 Gbit/s en total)",
+   "alternativa": "Matriz de tráfico real entre sedes.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-034",
+   "clave": "srv.latencia_camaras_hospital",
+   "ambito": "servicios",
+   "elementos": [
+    "S-HOSPITAL-CAMARAS"
+   ],
+   "campo": "latencia_max_ms",
+   "valor": "10 − UPF 0,2 − app 3,0 − reserva 0,5",
+   "unidad": "ms",
+   "motivo": "Cámaras del hospital por fibra, sin radio en el presupuesto (5QI 72 tiene PDB de 300 ms).",
+   "fuente_parcial": "3.1-S5 §4.3",
+   "alternativa": "PDB del 5QI 72 (300 ms).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-035",
+   "clave": "srv.ntn_carga",
+   "ambito": "servicios",
+   "elementos": [
+    "S-NTN-EMERGENCIA"
+   ],
+   "campo": "dl_gbps/ul_gbps",
+   "valor": "3 terminales × 100/20 Mbit/s",
+   "unidad": "Gbit/s",
+   "motivo": "Número de terminales desplegados a la vez en un incidente: 3 de los 5.",
+   "fuente_parcial": "v7 §6.11 (≥100/20 Mbit/s por terminal); D5 §5.7 (5 transportables)",
+   "alternativa": "5 terminales.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-036",
+   "clave": "srv.ntn_conecta",
+   "ambito": "servicios",
+   "elementos": [
+    "L-SITENTNARGANDA-METESTE",
+    "S-NTN-EMERGENCIA"
+   ],
+   "campo": "conecta_a",
+   "valor": "MET-ESTE",
+   "unidad": "",
+   "motivo": "El hub de Arganda entra por el Metro más próximo; el documento dice 'VRF hasta el DC más cercano'.",
+   "fuente_parcial": "D5 §5.7",
+   "alternativa": "Conectar a DC-Centro (L-IXONEWEB-CORE1).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-037",
+   "clave": "srv.prioridad_motor",
+   "ambito": "servicios",
+   "elementos": [
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS",
+    "S-NTN-EMERGENCIA",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS",
+    "S-VALDEBEBAS-SENSORES"
+   ],
+   "campo": "prioridad",
+   "valor": "1–5 a partir de ARP/5QI/clase TC",
+   "unidad": "1 = más alta",
+   "motivo": "El motor ordena el recorte con una prioridad numérica; la correspondencia con ARP/5QI es del simulador.",
+   "fuente_parcial": "v7 §4 (5QI/ARP por servicio); 2.1-S5d §8.3 (L2VPN TC2)",
+   "alternativa": "Prioridad = ARP directamente.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-038",
+   "clave": "srv.v2x_trazado",
+   "ambito": "servicios",
+   "elementos": [
+    "S-V2X-A2"
+   ],
+   "campo": "trazado",
+   "valor": "puntos aproximados de la A-2 sobre mapa",
+   "unidad": "lat/lon",
+   "motivo": "La v7 da longitud y número de sitios del corredor, no su trazado.",
+   "fuente_parcial": "v7 §6.2 (A-2, 34 km)",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-039",
+   "clave": "esc.acometidas",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-ACOMETIDA-C-CORE-1",
+    "E-ACOMETIDA-C-CORE-3",
+    "E-ACOMETIDA-E-CORE-2",
+    "E-ACOMETIDA-N-CORE-1",
+    "E-ACOMETIDA-N-CORE-2",
+    "E-ACOMETIDA-S-CORE-3"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-ACOMETIDA-C-CORE-1: hora 21, fallos L-CORE1-METC; E-ACOMETIDA-N-CORE-1: hora 21, fallos L-CORE1-METN; E-ACOMETIDA-N-CORE-2: hora 21, fallos L-CORE2-METN; E-ACOMETIDA-E-CORE-2: hora 21, fallos L-CORE2-METE; E-ACOMETIDA-S-CORE-3: hora 21, fallos L-CORE3-METS; E-ACOMETIDA-C-CORE-3: hora 21, fallos L-CORE3-METC",
+   "unidad": "",
+   "motivo": "Las seis acometidas son las del G32 Completo v08-11 (propuesta, diversidad física sin acreditar); 2.1-S5d y el 3.2-E final v08-11 proponen otras (ver meta.discrepancias).",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 y A11.2 (Pérdida C-DC)",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-040",
+   "clave": "esc.alarma-valdebebas",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-ALARMA-VALDEBEBAS"
+   ],
+   "campo": "hora, factores",
+   "valor": "E-ALARMA-VALDEBEBAS: hora 21",
+   "unidad": "",
+   "motivo": "Factor 9,0 = 0,019 / 0,0021 Gbit/s (redondeado).",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx A8 (alarma, Dirección 27/10); Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §6.1",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-041",
+   "clave": "esc.caida-edge-este",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-CAIDA-EDGE-ESTE"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-CAIDA-EDGE-ESTE: hora 8, fallos EDGE-ESTE",
+   "unidad": "",
+   "motivo": "Hora 8 (punta de la A-2) en lugar de la cargada; supuesto.",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla R1; Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F7",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-042",
+   "clave": "esc.caida-edge-sur",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-CAIDA-EDGE-SUR"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-CAIDA-EDGE-SUR: hora 11, fallos EDGE-SUR",
+   "unidad": "",
+   "motivo": "Hora 11 (y no la cargada de 21) para que hospital e industria (perfil empresa) estén en carga; supuesto.",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla R1 y §6.1; Semana 7/Teams (descargado 2026-11-08)/ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §6; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F6",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-043",
+   "clave": "esc.corte-acometida-hospital",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-CORTE-ACOMETIDA-HOSPITAL"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-CORTE-ACOMETIDA-HOSPITAL: hora 11, fallos L-SITEHOSPITALGETAFE-METSUR",
+   "unidad": "",
+   "motivo": "Hora 11 para que el hospital esté en carga.",
+   "fuente_parcial": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.3 y §5.6 F14; Semana 7/Teams (descargado 2026-11-08)/Reunion_03-11_suposiciones_y_cambios_Diego.pdf punto 4; Semana 6/Teams (descargado 2026-11-02)/KPIs_Proyecto2_2026-10-27_v5.pdf §7",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-044",
+   "clave": "esc.corte-estadio",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-CORTE-ESTADIO"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-CORTE-ESTADIO: hora 21, fallos L-SITEMETROPOLITANO-METCENTRO",
+   "unidad": "",
+   "motivo": "NTN al 0,33 = solo el terminal del estadio (1 de 3).",
+   "fuente_parcial": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F13 y §5.7",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-045",
+   "clave": "esc.incidente-ntn",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-INCIDENTE-NTN"
+   ],
+   "campo": "hora, factores, fallos",
+   "valor": "E-INCIDENTE-NTN: hora 11, fallos MET-SUR+L-SITEHOSPITALGETAFE-METSUR",
+   "unidad": "",
+   "motivo": "El incidente concreto (caída de Metro-Sur) lo elige este fichero; los documentos hablan de 'caída de la red terrestre en una sede' o 'incidente grave'.",
+   "fuente_parcial": "Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F15 y §5.7; Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf (satélite de emergencia)",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-046",
+   "clave": "esc.pico-p2",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-PICO-P2"
+   ],
+   "campo": "hora, factores",
+   "valor": "E-PICO-P2: hora 21",
+   "unidad": "",
+   "motivo": "Las claves tipo:* dependen de los tipos de necesidad del agente A (PLAN.md). Dirección aún no ha elegido entre P2 y PM.",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 (P2) y Tabla R2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F10",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-047",
+   "clave": "esc.pico-pm",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-PICO-PM"
+   ],
+   "campo": "hora, factores",
+   "valor": "E-PICO-PM: hora 21",
+   "unidad": "",
+   "motivo": "Clave tipo:movil-ebb según PLAN.md.",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 (PM)",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-048",
+   "clave": "esc.punta-a2",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-PUNTA-A2"
+   ],
+   "campo": "hora, factores",
+   "valor": "E-PUNTA-A2: hora 8",
+   "unidad": "",
+   "motivo": "La hora (8) la marca el perfil 'movilidad'; los documentos no fijan la hora punta de la A-2.",
+   "fuente_parcial": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx Tabla 5 y A8; Semana 6/Teams (descargado 2026-11-02)/Servicios_5Play_y_avanzados_2026-10-27.pdf ficha 2",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-049",
+   "clave": "esc.tabla8",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-TABLA8"
+   ],
+   "campo": "hora",
+   "valor": "E-TABLA8: hora 21",
+   "unidad": "",
+   "motivo": "Escenario de comprobación añadido en la integración: sirve para contrastar el simulador con las tablas de dimensionado.",
+   "fuente_parcial": "",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-050",
+   "clave": "esc.tabla8-cercano",
+   "ambito": "escenarios",
+   "elementos": [
+    "E-TABLA8-CERCANO"
+   ],
+   "campo": "hora",
+   "valor": "E-TABLA8-CERCANO: hora 21",
+   "unidad": "",
+   "motivo": "Escenario de comparación añadido en la integración.",
+   "fuente_parcial": "",
+   "alternativa": "Ajustar al caso que fije Dirección.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-051",
+   "clave": "mot.clasificacion_servicio",
+   "ambito": "motor",
+   "elementos": [
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS",
+    "S-NTN-EMERGENCIA",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS",
+    "S-VALDEBEBAS-SENSORES",
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "clase_servicio",
+   "valor": "8 clases (movil, ftth, voz, urllc, iot, empresa, evento, ntn)",
+   "unidad": "",
+   "motivo": "Reglas para agrupar demandas por clase de servicio en la vista y en por_servicio.",
+   "fuente_parcial": "CONTRATO_UI Revisión 2 §4",
+   "alternativa": "Clase explícita en los datos.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-052",
+   "clave": "mot.edge_sin_respaldo",
+   "ambito": "motor",
+   "elementos": [
+    "EDGE-CENTRO",
+    "EDGE-ESTE",
+    "EDGE-SUR",
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS"
+   ],
+   "campo": "destino (Edge y su respaldo caídos, o zona sin Edge)",
+   "valor": "DC más cercano al 100 %",
+   "unidad": "",
+   "motivo": "La v7 supone la pérdida de un solo Edge: si cae también el de respaldo (o la zona no tiene Edge) el servicio va al DC más cercano.",
+   "fuente_parcial": "v7 §6.7.3 (hipótesis N−1; el DC no reserva cómputo MEC)",
+   "alternativa": "Dejar el servicio sin ruta.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-053",
+   "clave": "mot.frr_n2",
+   "ambito": "motor",
+   "elementos": [
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC"
+   ],
+   "campo": "rutas (dos cortes)",
+   "valor": "reoptimización por mínimos saltos",
+   "unidad": "",
+   "motivo": "Si el arco FRR opuesto tampoco existe (N-2) el motor reoptimiza; la v7 solo trata N-1.",
+   "fuente_parcial": "v7 §6.4.4 (FRR facility backup), §7.1.2 ('N−2 is not declared')",
+   "alternativa": "Dejar sin ruta lo que el FRR no protege.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-054",
+   "clave": "mot.respaldo_camaras",
+   "ambito": "motor",
+   "elementos": [
+    "EDGE-CENTRO",
+    "S-VALDEBEBAS-CAMARAS"
+   ],
+   "campo": "respaldo_mec (cámaras)",
+   "valor": "100 % de los flujos transportados",
+   "unidad": "",
+   "motivo": "En respaldo se transporta el 100 % de flujos y grabación; el 30 % de analítica se interpreta como cómputo en el Edge, no como transporte.",
+   "fuente_parcial": "v7 §6.7.3 y FAL-03 (100 % de streams y grabación; 30 % de analítica)",
+   "alternativa": "Transportar solo el 30 %.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-055",
+   "clave": "mot.rutas_dijkstra",
+   "ambito": "motor",
+   "elementos": [
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGBATRES-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGLOSSANTOS-METE",
+    "L-AGGMADRID-METC",
+    "L-AGGTALAMANCA-METN",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN",
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC",
+    "L-CORE1-IXIMS",
+    "L-CORE1-IXINTERNET",
+    "L-CORE1-METC",
+    "L-CORE1-METN",
+    "L-CORE2-IXIMS",
+    "L-CORE2-IXINTERNET",
+    "L-CORE2-METE",
+    "L-CORE2-METN",
+    "L-CORE3-IXIMS",
+    "L-CORE3-IXINTERNET",
+    "L-CORE3-METC",
+    "L-CORE3-METS",
+    "L-EDGECENTRO-METC",
+    "L-EDGEESTE-METE",
+    "L-EDGESUR-METS",
+    "L-IXONEWEB-CORE1",
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE",
+    "L-SITEA2V2X-METESTE",
+    "L-SITEHOSPITALGETAFE-METSUR",
+    "L-SITEINDUSTRIASUR-METSUR",
+    "L-SITEL2VPNCENTRO-METCENTRO",
+    "L-SITEL2VPNESTE-METESTE",
+    "L-SITEL2VPNNORTE-METNORTE",
+    "L-SITEL2VPNSUR-METSUR",
+    "L-SITEMETROPOLITANO-METCENTRO",
+    "L-SITENTNARGANDA-METESTE",
+    "L-SITEVALDEBEBAS-METCENTRO"
+   ],
+   "campo": "rutas",
+   "valor": "latencia mínima, un camino (modo LAB 'dijkstra')",
+   "unidad": "",
+   "motivo": "Alternativa a las reglas v7 de mínimo de saltos con reparto; no está en los documentos.",
+   "fuente_parcial": "—",
+   "alternativa": "Reglas v7 (modo por defecto).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-056",
+   "clave": "mot.umbral_degradado",
+   "ambito": "motor",
+   "elementos": [
+    "S-ESTADIO-LIGERO",
+    "S-ESTADIO-PRENSA",
+    "S-ESTADIO-VIDEO",
+    "S-HOSPITAL-CAMARAS",
+    "S-HOSPITAL-CRITICO",
+    "S-INDUSTRIA-AGV",
+    "S-INDUSTRIA-CAMARAS",
+    "S-INDUSTRIA-GENERAL",
+    "S-L2VPN-CE",
+    "S-L2VPN-CN",
+    "S-L2VPN-CS",
+    "S-L2VPN-ES",
+    "S-L2VPN-NE",
+    "S-L2VPN-NS",
+    "S-NTN-EMERGENCIA",
+    "S-V2X-A2",
+    "S-VALDEBEBAS-CAMARAS",
+    "S-VALDEBEBAS-SENSORES",
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "estado",
+   "valor": "degradado si servida < 99 % o ruta para < 99 %",
+   "unidad": "",
+   "motivo": "Umbral del simulador para marcar una demanda como degradada.",
+   "fuente_parcial": "—",
+   "alternativa": "Cualquier recorte > 0.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-057",
+   "clave": "mot.voraz_prioridad",
+   "ambito": "motor",
+   "elementos": [
+    "L-AGGALCALA-METE",
+    "L-AGGALCOBENDAS-METN",
+    "L-AGGALCORCON-METS",
+    "L-AGGBATRES-METS",
+    "L-AGGFUENLABRADA-METS",
+    "L-AGGGETAFE-METS",
+    "L-AGGLEGANES-METS",
+    "L-AGGLOSSANTOS-METE",
+    "L-AGGMADRID-METC",
+    "L-AGGTALAMANCA-METN",
+    "L-AGGTORREJON-METE",
+    "L-AGGTRESCANTOS-METN",
+    "L-ANILLO-CN",
+    "L-ANILLO-ES",
+    "L-ANILLO-NE",
+    "L-ANILLO-SC",
+    "L-CORE1-IXIMS",
+    "L-CORE1-IXINTERNET",
+    "L-CORE1-METC",
+    "L-CORE1-METN",
+    "L-CORE2-IXIMS",
+    "L-CORE2-IXINTERNET",
+    "L-CORE2-METE",
+    "L-CORE2-METN",
+    "L-CORE3-IXIMS",
+    "L-CORE3-IXINTERNET",
+    "L-CORE3-METC",
+    "L-CORE3-METS",
+    "L-IXONEWEB-CORE1",
+    "L-SAT-AGGGETAFE",
+    "L-SAT-AGGMADRID",
+    "L-SAT-EDGEESTE",
+    "L-SITEA2V2X-METESTE",
+    "L-SITEHOSPITALGETAFE-METSUR",
+    "L-SITEINDUSTRIASUR-METSUR",
+    "L-SITEL2VPNCENTRO-METCENTRO",
+    "L-SITEL2VPNESTE-METESTE",
+    "L-SITEL2VPNNORTE-METNORTE",
+    "L-SITEL2VPNSUR-METSUR",
+    "L-SITEMETROPOLITANO-METCENTRO",
+    "L-SITENTNARGANDA-METESTE",
+    "L-SITEVALDEBEBAS-METCENTRO"
+   ],
+   "campo": "servida_gbps",
+   "valor": "asignación voraz por prioridad (empate: menor demanda)",
+   "unidad": "",
+   "motivo": "Cuando un enlace no da para todo, se sirve antes la prioridad más alta; la v7 no describe el recorte.",
+   "fuente_parcial": "v7 §4 (ARP 1-3 pueden expropiar)",
+   "alternativa": "Recorte proporcional.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-058",
+   "clave": "rad.a2_posiciones",
+   "ambito": "radio",
+   "elementos": [
+    "R-A2-n28-01",
+    "R-A2-n28-02",
+    "R-A2-n28-03",
+    "R-A2-n28-04",
+    "R-A2-n28-05",
+    "R-A2-n28-06",
+    "R-A2-n28-07",
+    "R-A2-n28-08",
+    "R-A2-n28-09",
+    "R-A2-n28-10"
+   ],
+   "campo": "centro",
+   "valor": "10 sitios equidistantes sobre el trazado del simulador",
+   "unidad": "",
+   "motivo": "La v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "fuente_parcial": "v7 §6.2 (A-2)",
+   "alternativa": "Posiciones reales de los emplazamientos.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-059",
+   "clave": "rad.alcorcon_circulo",
+   "ambito": "radio",
+   "elementos": [
+    "R-Z-ALCORCON-n28",
+    "R-Z-ALCORCON-n78"
+   ],
+   "campo": "radio_m",
+   "valor": "círculo de igual área que ≈12 km²",
+   "unidad": "m",
+   "motivo": "Forma y centro del área de Alcorcón los pone el simulador.",
+   "fuente_parcial": "v7 §6.2.7 (≈12 km² poblados [HYP])",
+   "alternativa": "Polígono urbano real.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-060",
+   "clave": "rad.atajo_municipal",
+   "ambito": "radio",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "sitios",
+   "valor": "población 2031 / 4 600 por municipio",
+   "unidad": "sitios",
+   "motivo": "La v7 da sectores por zona Metro; aplicar el atajo urbano a cada municipio es del simulador.",
+   "fuente_parcial": "v7 §6.2.7, A4–A5",
+   "alternativa": "Solo el total por zona.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-061",
+   "clave": "rad.celda_escala",
+   "ambito": "radio",
+   "elementos": [
+    "R-ALCORCON-CELDA-n28",
+    "R-ALCORCON-CELDA-n78",
+    "R-VALDEBEBAS-n78"
+   ],
+   "campo": "radio_m",
+   "valor": "una celda dibujada en el centro para dar la escala",
+   "unidad": "m",
+   "motivo": "Las posiciones de los sitios (39 en Alcorcón, ≈40 en Valdebebas) no están en la v7.",
+   "fuente_parcial": "v7 §6.2.7, §6.3",
+   "alternativa": "Dibujar todos los sitios cuando haya posiciones.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-062",
+   "clave": "rad.circulo_zona",
+   "ambito": "radio",
+   "elementos": [
+    "R-Z-ALCALA-n28",
+    "R-Z-ALCALA-n78",
+    "R-Z-ALCOBENDAS-n28",
+    "R-Z-ALCOBENDAS-n78",
+    "R-Z-FUENLABRADA-n28",
+    "R-Z-FUENLABRADA-n78",
+    "R-Z-GETAFE-n28",
+    "R-Z-GETAFE-n78",
+    "R-Z-LEGANES-n28",
+    "R-Z-LEGANES-n78",
+    "R-Z-MADRID-n28",
+    "R-Z-MADRID-n78",
+    "R-Z-TORREJON-n28",
+    "R-Z-TORREJON-n78",
+    "R-Z-TRESCANTOS-n28",
+    "R-Z-TRESCANTOS-n78"
+   ],
+   "campo": "radio_m",
+   "valor": "√población × 2,6 m",
+   "unidad": "m",
+   "motivo": "Área de dibujo de la zona, no cobertura calculada: la v7 no da el contorno desplegado.",
+   "fuente_parcial": "v7 §6.2.7 (sectores por zona)",
+   "alternativa": "Contorno municipal real.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-063",
+   "clave": "rad.estadio_n258",
+   "ambito": "radio",
+   "elementos": [
+    "R-ESTADIO-n258"
+   ],
+   "campo": "radio_m",
+   "valor": "≈37 m a ±45°, dibujado una vez",
+   "unidad": "m",
+   "motivo": "Geometría de haces y número físico de small cells n258 sin especificar.",
+   "fuente_parcial": "v7 §6.3 (cota de planificación)",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-064",
+   "clave": "rad.privada_n28",
+   "ambito": "radio",
+   "elementos": [
+    "R-PRIVADA-n28"
+   ],
+   "campo": "radio_m",
+   "valor": 600,
+   "unidad": "m",
+   "motivo": "Círculo de la distancia máxima al macro n28 centrado en la nave; la posición del macro no está en la v7.",
+   "fuente_parcial": "v7 §6.3.5",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-065",
+   "clave": "rad.privada_nave",
+   "ambito": "radio",
+   "elementos": [
+    "R-PRIVADA-n78"
+   ],
+   "campo": "forma",
+   "valor": "nave de 200 × 100 m orientada este-oeste",
+   "unidad": "m",
+   "motivo": "Nave tipo de la v7 dibujada en el emplazamiento del servicio.",
+   "fuente_parcial": "v7 §6.3.5 (nave tipo [HYP])",
+   "alternativa": "Plano real de la nave.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-066",
+   "clave": "rad.rural_tipo_batres",
+   "ambito": "radio",
+   "elementos": [
+    "R-Z-LOSSANTOS-n28",
+    "R-Z-LOSSANTOS-n78",
+    "R-Z-TALAMANCA-n28",
+    "R-Z-TALAMANCA-n78"
+   ],
+   "campo": "radio_m",
+   "valor": "caso rural tipo de Batres",
+   "unidad": "m",
+   "motivo": "Se aplica el caso rural de Batres a Talamanca y Los Santos: la v7 no los calcula por separado.",
+   "fuente_parcial": "v7 §2.5, §6.2.5",
+   "alternativa": "Cálculo propio de cada municipio.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-067",
+   "clave": "rad.valdebebas_n28",
+   "ambito": "radio",
+   "elementos": [
+    "R-VALDEBEBAS-n28"
+   ],
+   "campo": "radio_m",
+   "valor": "radio de planificación en el emplazamiento del servicio",
+   "unidad": "m",
+   "motivo": "Polígono real y sitios de Valdebebas sin especificar.",
+   "fuente_parcial": "v7 §6.3",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-068",
+   "clave": "arq.flujo_inferido",
+   "ambito": "arquitectura",
+   "elementos": [
+    "ims-otro-operador"
+   ],
+   "campo": "flujo",
+   "valor": "secuencia de saltos deducida",
+   "unidad": "",
+   "motivo": "Recorrido de un flujo que los documentos no dibujan salto a salto.",
+   "fuente_parcial": "v7 §4.4",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-069",
+   "clave": "arq.hueco",
+   "ambito": "arquitectura",
+   "elementos": [
+    "HSS-IMS",
+    "HUECO-C",
+    "HUECO-SYNC",
+    "ONT-HGW",
+    "RAD-BBU",
+    "ROUTER-BORDE",
+    "SEG-PERIMETRO",
+    "UDM"
+   ],
+   "campo": "elemento/equipo",
+   "valor": "se muestra como hueco",
+   "unidad": "",
+   "motivo": "Elemento que la arquitectura necesita y la v7 nombra sin diseñarlo (sin modelo, cantidad o ubicación).",
+   "fuente_parcial": "v7 §5, §7.1.1",
+   "alternativa": "Completar con 2.2.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-070",
+   "clave": "arq.interfaz_inferida",
+   "ambito": "arquitectura",
+   "elementos": [
+    "N11",
+    "N2",
+    "N3",
+    "N4",
+    "Npcf_PolicyAuthorization",
+    "Uu"
+   ],
+   "campo": "interfaz",
+   "valor": "nombre normativo 3GPP/IETF añadido",
+   "unidad": "",
+   "motivo": "Los documentos dan la relación pero no el nombre de la interfaz.",
+   "fuente_parcial": "v7 §5.2",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-071",
+   "clave": "arq.qod_latencia",
+   "ambito": "arquitectura",
+   "elementos": [
+    "opengw-qod"
+   ],
+   "campo": "flujo",
+   "valor": "sin latencia de transporte",
+   "unidad": "",
+   "motivo": "Flujo de control QoD dentro del core: la v7 no da su latencia de transporte.",
+   "fuente_parcial": "v7 §4.4",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-072",
+   "clave": "arq.vonr_lado_b",
+   "ambito": "arquitectura",
+   "elementos": [
+    "vonr-rtp"
+   ],
+   "campo": "flujo",
+   "valor": "lado B en la misma zona y DC que el lado A",
+   "unidad": "",
+   "motivo": "Lado B de la llamada VoNR en la misma zona y el mismo DC que el lado A, para poder recorrerlo.",
+   "fuente_parcial": "v7 §4.4",
+   "alternativa": "—",
+   "estado": "pendiente"
+  }
+ ]
 };
 if (typeof window !== 'undefined') window.RED = RED;
 if (typeof module !== 'undefined' && module.exports) module.exports = RED;

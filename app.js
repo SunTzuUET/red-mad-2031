@@ -517,6 +517,7 @@
         '</div>' +
         '<div class="kpis" id="kpis"></div>' +
         '<span class="buscar">' + ICO.lupa + '<input type="search" id="buscar" list="noc-lista" placeholder="' + esc(t(T.buscar)) + '" aria-label="' + esc(t(T.buscar)) + '"></span>' +
+        '<button type="button" class="btn" data-accion="exportar" aria-pressed="false" title="' + esc(t({ es: "Exportar tablas CSV (.zip) o informe PDF", en: "Export CSV tables (.zip) or PDF report" })) + '">' + esc(t({ es: "Exportar", en: "Export" })) + '</button>' +
         '<div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="' + (NOC.lang === "es") + '">ES</button><button type="button" data-lang="en" aria-pressed="' + (NOC.lang === "en") + '">EN</button></div>' +
       '</div>' +
       '<div class="tb-f">' +
@@ -1272,6 +1273,7 @@
       else if (a === "plegar") NOC.plegar("dock");
       else if (a === "ver-alarmas") { dock.tab = "alarmas"; guardar("noc.dock", "alarmas"); if (NOC.plegado("dock")) NOC.plegar("dock", false); else { pintarDock(); emitir("dock", dock); } }
       else if (a === "n1") ejecutarN1();
+      else if (a === "exportar") { if (window.Exportar && Exportar.alternarPanel) Exportar.alternarPanel(); }
       else if (a === "play") play();
       else if (a === "rail") NOC.plegar("carril");
       else if (a === "rail-movil") $("#rail").classList.toggle("visible");

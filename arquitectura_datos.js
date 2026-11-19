@@ -239,7 +239,13 @@ var ARQ = {
      "en": "Which PDU sessions does a terminal in the stadium hold at once, and why?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3, §6.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3, §6.2"
   },
   {
    "id": "gNB",
@@ -346,7 +352,15 @@ var ARQ = {
     "Sectores equivalentes",
     "Capacidad por sector",
     "Ocupación máxima"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.1; 6.2.7, §6.2.1; 6.5.3, §6.2.4, §6.2.6",
+    "s": "S-001"
+   },
+   "t": "v7",
+   "f": "v7 §3.1; 6.2.7, §6.2.1; 6.5.3, §6.2.4, §6.2.6",
+   "s": "S-001"
   },
   {
    "id": "gNB-indoor-hospital",
@@ -402,7 +416,13 @@ var ARQ = {
      "en": "If the cameras go over radio instead of fibre, what changes in the number of RRHs?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.3.2"
+   },
+   "t": "v7",
+   "f": "v7 §6.3.2"
   },
   {
    "id": "ng-eNB",
@@ -458,7 +478,13 @@ var ARQ = {
      "en": "Why do the sensors go to the central UPF and not to the Edge?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.3.1, §6.3.4"
+   },
+   "t": "v7",
+   "f": "v7 §3.3.1, §6.3.4"
   },
   {
    "id": "TERM-SAT",
@@ -514,7 +540,13 @@ var ARQ = {
      "en": "What is still undefined about the Arganda hub before it can be relied on in a failure?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.11"
+   },
+   "t": "v7",
+   "f": "v7 §6.11"
   },
   {
    "id": "ONT-HGW",
@@ -560,7 +592,13 @@ var ARQ = {
      "en": "What margin is left in the optical budget against the N2 31 dB limit?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §10.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §10.1"
   },
   {
    "id": "ODN",
@@ -613,7 +651,13 @@ var ARQ = {
    ],
    "reglas": [
     "PON"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.1.1"
+   },
+   "t": "v7",
+   "f": "v7 §6.1.1"
   },
   {
    "id": "OLT",
@@ -698,7 +742,15 @@ var ARQ = {
    ],
    "reglas": [
     "PON"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §2.5, §6.1.1",
+    "s": "S-001"
+   },
+   "t": "v7",
+   "f": "v7 §2.5, §6.1.1",
+   "s": "S-001"
   },
   {
    "id": "NODO-METRO",
@@ -775,7 +827,13 @@ var ARQ = {
     "Canales 400G",
     "Rutas",
     "Latencia de transporte"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.4.1, §6.4.2; 6.4.3"
+   },
+   "t": "v7",
+   "f": "v7 §6.4.1, §6.4.2; 6.4.3"
   },
   {
    "id": "ROUTER-AGG-METRO",
@@ -863,7 +921,13 @@ var ARQ = {
    "reglas": [
     "Canales 400G",
     "LAG"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.4.2, §6.4.4"
+   },
+   "t": "v7",
+   "f": "v7 §6.4.2, §6.4.4"
   },
   {
    "id": "ROUTER-AGG-METRO-CENTRO-B",
@@ -913,7 +977,13 @@ var ARQ = {
      "en": "Which other decisions (L2VPN, feeds) change if it is approved?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.4.2; 6.4.3; C.2"
+   },
+   "t": "v7",
+   "f": "v7 §6.4.2; 6.4.3; C.2"
   },
   {
    "id": "WDM-OTN",
@@ -1013,7 +1083,13 @@ var ARQ = {
    "reglas": [
     "Canales 400G",
     "LAG"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.4.1, §6.4.3, §6.4.3; 7.1.2"
+   },
+   "t": "v7",
+   "f": "v7 §6.4.1, §6.4.3, §6.4.3; 7.1.2"
   },
   {
    "id": "DC",
@@ -1138,7 +1214,13 @@ var ARQ = {
     "Reparto entre DC",
     "Un fallo a la vez (N−1)",
     "Disponibilidad core"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §2.7.2; 6.4.1, §3.1.2; 6.4.1, §6.4.1; 6.4.3, §6.4.4; A11.5–A11.6, §7.1.1; A.2 A5, §7.6, §A11.7"
+   },
+   "t": "v7",
+   "f": "v7 §2.7.2; 6.4.1, §3.1.2; 6.4.1, §6.4.1; 6.4.3, §6.4.4; A11.5–A11.6, §7.1.1; A.2 A5, §7.6, §A11.7"
   },
   {
    "id": "AMF",
@@ -1182,7 +1264,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "SMF",
@@ -1226,7 +1314,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "PCF",
@@ -1269,7 +1363,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "UDM",
@@ -1317,7 +1417,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2; A3"
   },
   {
    "id": "AUSF",
@@ -1359,7 +1465,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "NRF",
@@ -1401,7 +1513,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "NSSF",
@@ -1443,7 +1561,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "NEF",
@@ -1485,7 +1609,13 @@ var ARQ = {
      "en": "Which operator data does each API expose, and how is it protected?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §5.4; §7.2"
   },
   {
    "id": "BSF",
@@ -1527,7 +1657,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2 (OG-1)"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2 (OG-1)"
   },
   {
    "id": "NWDAF",
@@ -1569,7 +1705,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
   },
   {
    "id": "SMF-PRIV",
@@ -1616,7 +1758,13 @@ var ARQ = {
      "en": "Why does v7 keep HSS and UDM separate rather than unified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
   },
   {
    "id": "UPF-CENTRAL",
@@ -1712,7 +1860,13 @@ var ARQ = {
    "reglas": [
     "UPF CPU",
     "Cabeceras de transporte"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.4.1; 6.7.2, §6.7.4, §6.7.4; A10"
+   },
+   "t": "v7",
+   "f": "v7 §3.4.1; 6.7.2, §6.7.4, §6.7.4; A10"
   },
   {
    "id": "P-CSCF",
@@ -1777,7 +1931,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "I-CSCF",
@@ -1842,7 +2002,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "S-CSCF",
@@ -1907,7 +2073,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "TAS",
@@ -1972,7 +2144,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "HSS",
@@ -2026,7 +2204,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2; A3"
   },
   {
    "id": "MRFC",
@@ -2089,7 +2273,13 @@ var ARQ = {
      "en": "With one DC down IMS reaches 90 %: what margin is left for an event?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "MRFP",
@@ -2152,7 +2342,13 @@ var ARQ = {
      "en": "With one DC down IMS reaches 90 %: what margin is left for an event?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A3"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A3"
   },
   {
    "id": "BNG",
@@ -2267,7 +2463,13 @@ var ARQ = {
    "reglas": [
     "Reserva de demanda",
     "Ocupación máxima"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.4.1, §6.10.1"
+   },
+   "t": "v7",
+   "f": "v7 §3.4.1, §6.10.1"
   },
   {
    "id": "CORE-IPMPLS",
@@ -2310,7 +2512,13 @@ var ARQ = {
      "en": "What happens to active sessions if a DC fails while state replication is unverified?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
   },
   {
    "id": "ROUTER-BORDE",
@@ -2374,7 +2582,13 @@ var ARQ = {
      "en": "What happens to Internet traffic if one DC's border router fails?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.3.1, §5.1.1; 5.2"
+   },
+   "t": "v7",
+   "f": "v7 §3.3.1, §5.1.1; 5.2"
   },
   {
    "id": "IBCF",
@@ -2440,7 +2654,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A2"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A2"
   },
   {
    "id": "TrGW",
@@ -2511,7 +2731,13 @@ var ARQ = {
    ],
    "reglas": [
     "IMS"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.6.2, §6.6.2; A2"
+   },
+   "t": "v7",
+   "f": "v7 §6.6.2, §6.6.2; A2"
   },
   {
    "id": "CAMARA-GW",
@@ -2561,7 +2787,13 @@ var ARQ = {
      "en": "Which operator data does each API expose, and how is it protected?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.8"
+   },
+   "t": "v7",
+   "f": "v7 §6.8"
   },
   {
    "id": "EDGE",
@@ -2653,7 +2885,13 @@ var ARQ = {
    ],
    "reglas": [
     "Servidores Edge"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.1.2, §6.7.2; 6.7.3; 6.7.4; 6.7.5, §6.7.2; 6.7.5; A10, §6.7.2; 6.7.5; A11.7, §6.7.3, §6.7.5"
+   },
+   "t": "v7",
+   "f": "v7 §3.1.2, §6.7.2; 6.7.3; 6.7.4; 6.7.5, §6.7.2; 6.7.5; A10, §6.7.2; 6.7.5; A11.7, §6.7.3, §6.7.5"
   },
   {
    "id": "UPF-LOCAL",
@@ -2735,7 +2973,13 @@ var ARQ = {
    "reglas": [
     "UPF CPU",
     "Servidores Edge"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.7.4, §6.7.5"
+   },
+   "t": "v7",
+   "f": "v7 §6.7.4, §6.7.5"
   },
   {
    "id": "UPF-PRIV",
@@ -2805,7 +3049,13 @@ var ARQ = {
    ],
    "reglas": [
     "UPF CPU"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.3.5"
+   },
+   "t": "v7",
+   "f": "v7 §6.3.5"
   },
   {
    "id": "MEC-APP",
@@ -2911,7 +3161,13 @@ var ARQ = {
    ],
    "reglas": [
     "Servidores Edge"
-   ]
+   ],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §3.3.1; 4.2; 4.3; 6.2.7; 6.3.1; A6; A7; A9, §3.3.1; 4.3; 6.2.7; 6.3.2; A8, §3.3.1; 4.3; 6.3.3; A.2 A3–A4, §3.3.1; 4.3; 6.3.5; 6.5.3; A9, §3.3.1; 6.2.7; 6.3.4; 6.5.3; 6.7.5; A8, §6.7.3"
+   },
+   "t": "v7",
+   "f": "v7 §3.3.1; 4.2; 4.3; 6.2.7; 6.3.1; A6; A7; A9, §3.3.1; 4.3; 6.2.7; 6.3.2; A8, §3.3.1; 4.3; 6.3.3; A.2 A3–A4, §3.3.1; 4.3; 6.3.5; 6.5.3; A9, §3.3.1; 6.2.7; 6.3.4; 6.5.3; 6.7.5; A8, §6.7.3"
   },
   {
    "id": "DN-INDUSTRIAL",
@@ -2950,7 +3206,13 @@ var ARQ = {
      "en": "Which destinations must the industrial network reach, and which never?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
   },
   {
    "id": "PE-L2VPN",
@@ -3018,7 +3280,13 @@ var ARQ = {
      "en": "With a single PE per site, what happens if that PE fails?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.9"
+   },
+   "t": "v7",
+   "f": "v7 §6.9"
   },
   {
    "id": "HUB-SAT",
@@ -3079,7 +3347,13 @@ var ARQ = {
      "en": "What is still undefined about the Arganda hub before it can be relied on in a failure?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §6.11"
+   },
+   "t": "v7",
+   "f": "v7 §6.11"
   },
   {
    "id": "SECGW",
@@ -3126,7 +3400,13 @@ var ARQ = {
      "en": "Which attack does N6 anti-DDoS cover, and which not?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §5.1.2; 6.13"
+   },
+   "t": "v7",
+   "f": "v7 §5.1.2; 6.13"
   },
   {
    "id": "PKI",
@@ -3167,7 +3447,13 @@ var ARQ = {
      "en": "Which attack does N6 anti-DDoS cover, and which not?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
   },
   {
    "id": "SIEM",
@@ -3208,7 +3494,13 @@ var ARQ = {
      "en": "Which attack does N6 anti-DDoS cover, and which not?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
   },
   {
    "id": "FW-ANTIDDOS",
@@ -3249,7 +3541,13 @@ var ARQ = {
      "en": "Which attack does N6 anti-DDoS cover, and which not?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.1 tabla 18"
   },
   {
    "id": "OSS-BSS",
@@ -3302,7 +3600,13 @@ var ARQ = {
      "en": "Which part of management should run on a separate network, and why?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 §7.2"
+   },
+   "t": "v7",
+   "f": "v7 §7.2"
   },
   {
    "id": "CDN-TV",
@@ -3333,7 +3637,13 @@ var ARQ = {
      "en": "Where would you place IPTV/CDN heads, and how much ring traffic would that save?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "anterior",
+    "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
+   },
+   "t": "anterior",
+   "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
   },
   {
    "id": "EXT-INTERNET",
@@ -3375,7 +3685,13 @@ var ARQ = {
      "en": "What happens to Internet traffic if one DC's border router fails?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.1; 5.2"
+   },
+   "t": "v7",
+   "f": "v7 5.1.1; 5.2"
   },
   {
    "id": "EXT-IMS",
@@ -3417,7 +3733,13 @@ var ARQ = {
      "en": "How would you go from 973.72 CAPS to media Gbit/s towards the other operator?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.6.1"
+   },
+   "t": "v7",
+   "f": "v7 6.6.1"
   },
   {
    "id": "EXT-APPS",
@@ -3452,7 +3774,13 @@ var ARQ = {
      "en": "Which operator data does each API expose, and how is it protected?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.8"
+   },
+   "t": "v7",
+   "f": "v7 6.8"
   },
   {
    "id": "EXT-SEDES",
@@ -3493,7 +3821,13 @@ var ARQ = {
      "en": "With a single PE per site, what happens if that PE fails?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.9"
+   },
+   "t": "v7",
+   "f": "v7 6.9"
   },
   {
    "id": "HUECO-C",
@@ -3533,7 +3867,15 @@ var ARQ = {
      "en": "Which critical gNBs or OLTs should be dual-homed to two Metro nodes?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "supuesto",
+    "f": "nombrado en la v7 sin diseñar",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "nombrado en la v7 sin diseñar",
+   "s": "S-069"
   },
   {
    "id": "HUECO-SYNC",
@@ -3573,7 +3915,15 @@ var ARQ = {
      "en": "Which network elements would need PTP or SyncE, and which not?"
     }
    ],
-   "reglas": []
+   "reglas": [],
+   "proc": {
+    "t": "supuesto",
+    "f": "nombrado en la v7 sin diseñar",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "nombrado en la v7 sin diseñar",
+   "s": "S-069"
   }
  ],
  "equipos": {
@@ -3658,7 +4008,13 @@ var ARQ = {
     "estado": "parcial",
     "texto": "La v7 elige Nokia macro para n28; el modelo AHPB 4T4R de 2.2 no figura en la v7.",
     "seccion": "5.1.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2 (parcial)"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2 (parcial)"
   },
   "RAD-N78": {
    "id": "RAD-N78",
@@ -3733,7 +4089,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Nokia macro 64T64R MAA: EIRP 77,5 dBm, Rx 24,5 dBi, NF 5 dB; SKU exacto pendiente (Habrok no aparece).",
     "seccion": "5.1.2; 6.2.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2; 6.2.2"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2; 6.2.2"
   },
   "RAD-N258": {
    "id": "RAD-N258",
@@ -3813,7 +4175,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "mmWave Shikra para n258; 265 sectores eq. a 400 MHz en el estadio.",
     "seccion": "5.1.2; 6.3.1"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2; 6.3.1"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2; 6.3.1"
   },
   "RAD-INDOOR-HOSP": {
    "id": "RAD-INDOOR-HOSP",
@@ -3871,7 +4239,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Nokia ASiR pRRH AWHQA en 2 cadenas A/B × 10 = 20 pico-RRH (24 si las cámaras van por radio).",
     "seccion": "6.3.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.3.2"
+   },
+   "t": "v7",
+   "f": "v7 6.3.2"
   },
   "RAD-BBU": {
    "id": "RAD-BBU",
@@ -3907,7 +4281,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "Banda base del gNB sin modelo; sin split RAN ni fronthaul.",
     "seccion": "5.1.2; 6.7.3"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   },
   "OLT-MF14": {
    "id": "OLT-MF14",
@@ -4011,7 +4393,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "MF-14 solo en Alcorcón: 4 chasis, 40 LT, 624 PON, 2 centrales lógicas. Las tarjetas LTIO-B/FGLT-B no figuran en la v7.",
     "seccion": "6.1.1; 5.1.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.1.1; 5.1.2"
+   },
+   "t": "v7",
+   "f": "v7 6.1.1; 5.1.2"
   },
   "ODN-SPLIT": {
    "id": "ODN-SPLIT",
@@ -4060,7 +4448,13 @@ var ARQ = {
     "estado": "parcial",
     "texto": "La v7 solo da límites N2 (20 km / 31 dB) y 148 Mbit/s por PON; el presupuesto ODN de 29,5 dB no figura.",
     "seccion": "6.1.1"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.1.1 (parcial)"
+   },
+   "t": "v7",
+   "f": "v7 6.1.1 (parcial)"
   },
   "ONT-HGW": {
    "id": "ONT-HGW",
@@ -4099,7 +4493,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "ONT/HGW sin fabricante ni modelo.",
     "seccion": "5.1.2"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   },
   "PE-METRO-7750": {
    "id": "PE-METRO-7750",
@@ -4214,7 +4616,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Nokia 7750 SR, un router de agregación por nodo Metro [HYP]; duplicar Metro-Centro es propuesta. Alternativa: Juniper MX.",
     "seccion": "6.4.1; 6.4.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.4.1; 6.4.2"
+   },
+   "t": "v7",
+   "f": "v7 6.4.1; 6.4.2"
   },
   "WDM-1830PSS": {
    "id": "WDM-1830PSS",
@@ -4299,7 +4707,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Nokia 1830 PSS, opción B punto a punto por vano; alternativa Ciena Waveserver. OSNR y modo de línea pendientes.",
     "seccion": "6.4.1"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.4.1"
+   },
+   "t": "v7",
+   "f": "v7 6.4.1"
   },
   "BNG-7750-SR2SE": {
    "id": "BNG-7750-SR2SE",
@@ -4406,7 +4820,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "10 chasis 7750 SR-2se, respaldo georredundante 1:1 (DC-C 3+2, DC-N 1+0, DC-S 1+3).",
     "seccion": "6.10.1; 5.1.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.10.1; 5.1.2"
+   },
+   "t": "v7",
+   "f": "v7 6.10.1; 5.1.2"
   },
   "BNG-CP-MAGC": {
    "id": "BNG-CP-MAGC",
@@ -4439,7 +4859,13 @@ var ARQ = {
     "estado": "no_v7",
     "texto": "CUPS/MAG-c no figura en la v7.",
     "seccion": "—"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4 párrafo inicial y §4.1"
+   },
+   "t": "anterior",
+   "f": "Informe_Tecnico_Verificacion_Hardware_2.2_v2_ACTUALIZADO.docx §4 párrafo inicial y §4.1"
   },
   "IMS-CNCS": {
    "id": "IMS-CNCS",
@@ -4551,7 +4977,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "CNCS elegido en la comparativa de candidatos por subsistema.",
     "seccion": "5.1.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2"
   },
   "HSS-IMS": {
    "id": "HSS-IMS",
@@ -4602,7 +5034,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "HSS sin modelo; solo dimensionado.",
     "seccion": "6.6.2"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   },
   "SBC-IBCF-TRGW": {
    "id": "SBC-IBCF-TRGW",
@@ -4688,7 +5128,13 @@ var ARQ = {
     "estado": "abierto",
     "texto": "Sin modelo único: 5.1.2 'SBC carrier-grade, Ribbon candidato'; 6.13 'Ribbon SBC SWe'; 13 instancias/DC.",
     "seccion": "5.1.2; 6.6.2; 6.13"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "01_Informe_Tecnico_Seleccion_2_2.docx §2.1 y §3.1 Tabla 4"
+   },
+   "t": "anterior",
+   "f": "01_Informe_Tecnico_Seleccion_2_2.docx §2.1 y §3.1 Tabla 4"
   },
   "5GC-NOKIA": {
    "id": "5GC-NOKIA",
@@ -4759,7 +5205,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "5GC Nokia elegido en la comparativa por subsistema.",
     "seccion": "5.1.2"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2"
   },
   "UDM": {
    "id": "UDM",
@@ -4810,7 +5262,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "UDM sin modelo; solo dimensionado.",
     "seccion": "6.6.2"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   },
   "UPF-CENTRAL": {
    "id": "UPF-CENTRAL",
@@ -4894,7 +5354,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "3 Dell R760 por DC (2 útiles por RAM + 1 de reserva), 2 instancias públicas.",
     "seccion": "6.7.4"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.7.4"
+   },
+   "t": "v7",
+   "f": "v7 6.7.4"
   },
   "NEP-CAMARA": {
    "id": "NEP-CAMARA",
@@ -4961,7 +5427,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Nokia NEP planificado, modelo por fijar.",
     "seccion": "6.8"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.8"
+   },
+   "t": "v7",
+   "f": "v7 6.8"
   },
   "CAAS-OPENSHIFT": {
    "id": "CAAS-OPENSHIFT",
@@ -5014,7 +5486,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Decisión CNF sobre OpenShift.",
     "seccion": "5.1.2; 6.12"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 5.1.2; 6.12"
+   },
+   "t": "v7",
+   "f": "v7 5.1.2; 6.12"
   },
   "SRV-R760XA": {
    "id": "SRV-R760XA",
@@ -5093,7 +5571,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "Parque fijado por Dirección el 14/11: 24 R760xa en Edge-Centro y 7 en Edge-Este (4 L40S).",
     "seccion": "2.5; 6.7.5"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 2.5; 6.7.5"
+   },
+   "t": "v7",
+   "f": "v7 2.5; 6.7.5"
   },
   "SRV-R760": {
    "id": "SRV-R760",
@@ -5176,7 +5660,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "3 R760 en Edge-Sur y 3 R760 de UPF por DC.",
     "seccion": "2.5; 6.7.5"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 2.5; 6.7.5"
+   },
+   "t": "v7",
+   "f": "v7 2.5; 6.7.5"
   },
   "UPF-EDGE": {
    "id": "UPF-EDGE",
@@ -5236,7 +5726,13 @@ var ARQ = {
     "estado": "v7",
     "texto": "UPF Nokia CNF en los Edge: 2 públicas por Edge, 2 privadas en Sur y 2 en reserva caliente en Centro.",
     "seccion": "6.7.4; 6.7.5"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.7.4; 6.7.5"
+   },
+   "t": "v7",
+   "f": "v7 6.7.4; 6.7.5"
   },
   "CDN-TV": {
    "id": "CDN-TV",
@@ -5268,7 +5764,13 @@ var ARQ = {
     "estado": "no_v7",
     "texto": "Broadpeak no figura en la v7; IPTV/CDN sin dimensionar.",
     "seccion": "6.10.2"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
+   },
+   "t": "anterior",
+   "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
   },
   "SAT-LEO": {
    "id": "SAT-LEO",
@@ -5300,7 +5802,13 @@ var ARQ = {
     "estado": "parcial",
     "texto": "OneWeb LEO con hub en Arganda; OneWeb/Hughes como fabricante no figura.",
     "seccion": "6.11"
-   }
+   },
+   "proc": {
+    "t": "v7",
+    "f": "v7 6.11 (parcial)"
+   },
+   "t": "v7",
+   "f": "v7 6.11 (parcial)"
   },
   "GESTION-NMS": {
    "id": "GESTION-NMS",
@@ -5332,7 +5840,13 @@ var ARQ = {
     "estado": "no_v7",
     "texto": "Altiplano/NSP no figuran en la v7; la v7 da un modelo OSS/BSS por funciones.",
     "seccion": "7.2"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
+   },
+   "t": "anterior",
+   "f": "01_Informe_Tecnico_Seleccion_2_2.docx §7.2 Tabla 12"
   },
   "SEG-PERIMETRO": {
    "id": "SEG-PERIMETRO",
@@ -5364,7 +5878,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "SecGW, cortafuegos y SIEM sin modelo; solo como funciones.",
     "seccion": "5.1.2; 6.13"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   },
   "ROUTER-BORDE": {
    "id": "ROUTER-BORDE",
@@ -5398,7 +5920,15 @@ var ARQ = {
     "estado": "hueco",
     "texto": "Routers de borde sin modelo; salida a Internet sin dimensionar.",
     "seccion": "5.1.1; 5.2"
-   }
+   },
+   "proc": {
+    "t": "supuesto",
+    "f": "equipo sin modelo en la v7",
+    "s": "S-069"
+   },
+   "t": "supuesto",
+   "f": "equipo sin modelo en la v7",
+   "s": "S-069"
   }
  },
  "interfaces": [
@@ -5429,7 +5959,15 @@ var ARQ = {
      "seccion": "diap. 16",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Nombre normativo añadido; los documentos solo dan bandas.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Nombre normativo añadido; los documentos solo dan bandas.",
+   "s": "S-070"
   },
   {
    "id": "N1",
@@ -5459,7 +5997,13 @@ var ARQ = {
      "seccion": "§11.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §2"
+   },
+   "t": "anterior",
+   "f": "ARCO11_MEC_Local_Breakout_S5a_DEFINITIVO_CORREGIDO_02-11-2026.docx §2"
   },
   {
    "id": "N2",
@@ -5493,7 +6037,15 @@ var ARQ = {
      "seccion": "§5.5, §11.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+   "s": "S-070"
   },
   {
    "id": "N3",
@@ -5531,7 +6083,15 @@ var ARQ = {
      "seccion": "§6.3, §11.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+   "s": "S-070"
   },
   {
    "id": "N4",
@@ -5569,7 +6129,15 @@ var ARQ = {
      "seccion": "diap. 10",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+   "s": "S-070"
   },
   {
    "id": "N6",
@@ -5606,7 +6174,13 @@ var ARQ = {
      "seccion": "§4.2 tabla 4; §11.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4; §11.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4; §11.1"
   },
   {
    "id": "N5",
@@ -5631,7 +6205,13 @@ var ARQ = {
      "seccion": "§4.2 tabla 4",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
   },
   {
    "id": "N11",
@@ -5660,7 +6240,15 @@ var ARQ = {
      "seccion": "diap. 10",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+   "s": "S-070"
   },
   {
    "id": "SBI",
@@ -5713,7 +6301,13 @@ var ARQ = {
      "seccion": "§5.4; §8.5 tabla 13; §11.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.4; §8.5 tabla 13; §11.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.4; §8.5 tabla 13; §11.1"
   },
   {
    "id": "Gm",
@@ -5742,7 +6336,13 @@ var ARQ = {
      "seccion": "§4.2 tabla 4",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
   },
   {
    "id": "Ix",
@@ -5767,7 +6367,13 @@ var ARQ = {
      "seccion": "§4.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
   },
   {
    "id": "Ici",
@@ -5792,7 +6398,13 @@ var ARQ = {
      "seccion": "§4.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
   },
   {
    "id": "Izi",
@@ -5817,7 +6429,13 @@ var ARQ = {
      "seccion": "§4.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
   },
   {
    "id": "Nnef_AFsessionWithQoS",
@@ -5842,7 +6460,13 @@ var ARQ = {
      "seccion": "§7.2",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2"
   },
   {
    "id": "Npcf_PolicyAuthorization",
@@ -5871,7 +6495,15 @@ var ARQ = {
      "seccion": "§7.2",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "supuesto",
+    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+    "s": "S-070"
+   },
+   "t": "supuesto",
+   "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
+   "s": "S-070"
   },
   {
    "id": "CAMARA-API",
@@ -5896,7 +6528,13 @@ var ARQ = {
      "seccion": "§7.2",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §7.2"
   },
   {
    "id": "PON",
@@ -5925,7 +6563,13 @@ var ARQ = {
      "seccion": "§10.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.1"
   },
   {
    "id": "OLT-BNG",
@@ -5950,7 +6594,13 @@ var ARQ = {
      "seccion": "§4.1, §4.2 tabla 4",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §4.2 tabla 4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §4.2 tabla 4"
   },
   {
    "id": "ANILLO",
@@ -5975,7 +6625,13 @@ var ARQ = {
      "seccion": "§8.5, §9.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.5, §9.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.5, §9.1"
   },
   {
    "id": "ACOMETIDA-DC",
@@ -6000,7 +6656,13 @@ var ARQ = {
      "seccion": "§8.3, §8.4 tabla 12",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.3, §8.4 tabla 12"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.3, §8.4 tabla 12"
   },
   {
    "id": "ACOMETIDA-EDGE",
@@ -6025,7 +6687,13 @@ var ARQ = {
      "seccion": "§8.2 tabla 11; §9.2 tabla 14",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.2 tabla 11; §9.2 tabla 14"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §8.2 tabla 11; §9.2 tabla 14"
   },
   {
    "id": "BGP-PEERING",
@@ -6050,7 +6718,13 @@ var ARQ = {
      "seccion": "§4.1",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1"
   },
   {
    "id": "EVPN",
@@ -6075,7 +6749,13 @@ var ARQ = {
      "seccion": "§10.2",
      "v7": false
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2"
   }
  ],
  "interconexiones": [
@@ -6124,7 +6804,15 @@ var ARQ = {
      "es": "¿Qué pasa con el tráfico de Internet si cae el router de borde de un DC?",
      "en": "What happens to Internet traffic if one DC's border router fails?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §4.2 tabla 4; §11.1",
+    "s": "S-012"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §4.2 tabla 4; §11.1",
+   "s": "S-012"
   },
   {
    "id": "IX-IMS",
@@ -6177,7 +6865,15 @@ var ARQ = {
      "es": "¿Cómo pasaríais de 973,72 CAPS a Gbit/s de media hacia el otro operador?",
      "en": "How would you go from 973.72 CAPS to media Gbit/s towards the other operator?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §11.1",
+    "s": "S-012"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §11.1",
+   "s": "S-012"
   },
   {
    "id": "IX-CS",
@@ -6219,7 +6915,13 @@ var ARQ = {
      "es": "¿Qué servicios quedan sin cubrir al excluirla?",
      "en": "Which services are left uncovered by excluding it?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §4.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §4.2"
   },
   {
    "id": "IX-L2VPN",
@@ -6275,7 +6977,13 @@ var ARQ = {
      "es": "Con un solo PE por sede, ¿qué pasa si cae ese PE?",
      "en": "With a single PE per site, what happens if that PE fails?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2 tabla 17"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2 tabla 17"
   },
   {
    "id": "IX-SAT",
@@ -6331,7 +7039,13 @@ var ARQ = {
      "es": "¿Qué falta por definir del hub de Arganda para poder contar con él en un fallo?",
      "en": "What is still undefined about the Arganda hub before it can be relied on in a failure?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §4.2 tabla 4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1; §4.2 tabla 4"
   },
   {
    "id": "IX-ROAMING",
@@ -6373,7 +7087,13 @@ var ARQ = {
      "es": "¿Qué servicios quedan sin cubrir al excluirla?",
      "en": "Which services are left uncovered by excluding it?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §11.2"
   },
   {
    "id": "IX-PRIV",
@@ -6429,7 +7149,13 @@ var ARQ = {
      "es": "¿Qué le pasa a un AGV durante los segundos de conmutación a Edge-Centro?",
      "en": "What happens to an AGV during the seconds of switchover to Edge-Centre?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3, §6.4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3, §6.4"
   },
   {
    "id": "IX-OPENGW",
@@ -6471,7 +7197,13 @@ var ARQ = {
      "es": "¿Qué datos del operador expone cada API y cómo se protegen?",
      "en": "Which operator data does each API expose, and how is it protected?"
     }
-   ]
+   ],
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §7"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §7"
   }
  ],
  "flujos": [
@@ -6568,7 +7300,13 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §8.5"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §8.5"
   },
   {
    "id": "voz-fija",
@@ -6650,7 +7388,13 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.2 tabla 4"
   },
   {
    "id": "internet-movil",
@@ -6726,7 +7470,13 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §6.3 tabla 7"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §4.1, §6.3 tabla 7"
   },
   {
    "id": "vonr-sip",
@@ -6810,7 +7560,13 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §4.2 tabla 4; §5.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §2.2 tabla 1; §4.2 tabla 4; §5.2"
   },
   {
    "id": "vonr-rtp",
@@ -6900,7 +7656,15 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "supuesto",
+    "f": "Lado B en la misma zona y el mismo DC que el lado A (supuesto del simulador para poder recorrerlo).",
+    "s": "S-072"
+   },
+   "t": "supuesto",
+   "f": "Lado B en la misma zona y el mismo DC que el lado A (supuesto del simulador para poder recorrerlo).",
+   "s": "S-072"
   },
   {
    "id": "ims-otro-operador",
@@ -6990,7 +7754,15 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "supuesto",
+    "f": "recorrido deducido",
+    "s": "S-068"
+   },
+   "t": "supuesto",
+   "f": "recorrido deducido",
+   "s": "S-068"
   },
   {
    "id": "estadio",
@@ -7060,7 +7832,13 @@ var ARQ = {
    "objetivo": {
     "texto": "Latencia usuario–Edge ≤10 ms P95 (D-04); esperado 3,5–7,4 ms normal, ≤7,9 ms respaldo. Respaldo Edge-Este al 60 %: P95 4,1 ms.",
     "seccion": "2.6; 6.7.3"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4, §7.1"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4, §7.1"
   },
   {
    "id": "camaras-valdebebas",
@@ -7130,7 +7908,13 @@ var ARQ = {
    "objetivo": {
     "texto": "Respaldo en Edge-Este: P95 6,2 ms (peor radio 9,7 ms).",
     "seccion": "6.7.3"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.5, §6.3"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.5, §6.3"
   },
   {
    "id": "sensores-valdebebas",
@@ -7191,7 +7975,13 @@ var ARQ = {
    "objetivo": {
     "texto": "≥99,9 % de 9.500 informes en ≤10 s y ≤10 intentos.",
     "seccion": "4.4"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.5"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.5"
   },
   {
    "id": "v2x-a2",
@@ -7266,7 +8056,13 @@ var ARQ = {
    "objetivo": {
     "texto": "≥99,999 % de mensajes en ≤10 ms; respaldo Edge-Centro P95 5,8 ms.",
     "seccion": "2.6; 6.7.3"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4"
   },
   {
    "id": "hospital-getafe",
@@ -7336,7 +8132,13 @@ var ARQ = {
    "objetivo": {
     "texto": "≤10 ms; respaldo Edge-Centro 7,5 ms (app 3 ms) / 9,5 ms (app 5 ms); la v7 da también 9,4 y 9,9 ms (contradicción interna 13).",
     "seccion": "4.4; 6.7.3; 6.13"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §6.3, §6.4"
   },
   {
    "id": "privada-industrial",
@@ -7412,7 +8214,13 @@ var ARQ = {
    "objetivo": {
     "texto": "Crítico +≤1 ms con eMBB saturado; respaldo Edge-Centro P95 3,6 ms.",
     "seccion": "4.4; 6.7.3"
-   }
+   },
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §5.3"
   },
   {
    "id": "l2vpn",
@@ -7469,7 +8277,13 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "anterior",
+    "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2"
+   },
+   "t": "anterior",
+   "f": "Memoria_tecnica_Grupo_2_1v2.docx §10.2"
   },
   {
    "id": "opengw-qod",
@@ -7552,29 +8366,69 @@ var ARQ = {
      "v7": false
     }
    ],
-   "objetivo": null
+   "objetivo": null,
+   "proc": {
+    "t": "supuesto",
+    "f": "Flujo de control dentro del core: la v7 no da su latencia de transporte.",
+    "s": "S-071"
+   },
+   "t": "supuesto",
+   "f": "Flujo de control dentro del core: la v7 no da su latencia de transporte.",
+   "s": "S-071"
   }
  ],
  "sedes_l2vpn": [
   {
    "metro": "C",
    "nombre": "UPM, Ciudad Universitaria (por confirmar)",
-   "red": "SITE-L2VPN-CENTRO"
+   "red": "SITE-L2VPN-CENTRO",
+   "proc": {
+    "t": "supuesto",
+    "f": "sede por confirmar",
+    "s": "S-008"
+   },
+   "t": "supuesto",
+   "f": "sede por confirmar",
+   "s": "S-008"
   },
   {
    "metro": "N",
    "nombre": "Ayto. Alcobendas (por confirmar)",
-   "red": "SITE-L2VPN-NORTE"
+   "red": "SITE-L2VPN-NORTE",
+   "proc": {
+    "t": "supuesto",
+    "f": "sede por confirmar",
+    "s": "S-008"
+   },
+   "t": "supuesto",
+   "f": "sede por confirmar",
+   "s": "S-008"
   },
   {
    "metro": "E",
    "nombre": "Universidad de Alcalá",
-   "red": "SITE-L2VPN-ESTE"
+   "red": "SITE-L2VPN-ESTE",
+   "proc": {
+    "t": "supuesto",
+    "f": "sede por confirmar",
+    "s": "S-008"
+   },
+   "t": "supuesto",
+   "f": "sede por confirmar",
+   "s": "S-008"
   },
   {
    "metro": "S",
    "nombre": "URJC, Alcorcón",
-   "red": "SITE-L2VPN-SUR"
+   "red": "SITE-L2VPN-SUR",
+   "proc": {
+    "t": "supuesto",
+    "f": "sede por confirmar",
+    "s": "S-008"
+   },
+   "t": "supuesto",
+   "f": "sede por confirmar",
+   "s": "S-008"
   }
  ],
  "transporte": {

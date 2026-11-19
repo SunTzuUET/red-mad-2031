@@ -1,0 +1,30 @@
+/* exportar.css — panel EXPORTAR (CONTRATO_UI Revisión 3). Solo tokens y clases de noc.css. */
+.exp { position: fixed; top: 72px; right: 8px; z-index: 1100; width: 400px; max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 90px); overflow: auto; background: var(--bg1); border: 1px solid var(--line2);
+  box-shadow: 0 12px 32px rgba(0,0,0,.7); font: 12px/1.35 var(--sans); color: var(--tx1); }
+.exp[hidden] { display: none; }
+.exp-cab { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  background: var(--bg1); border-bottom: 1px solid var(--line2); }
+.exp-caso { flex: 1; min-width: 0; color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+.exp-x { border: 1px solid transparent; background: none; color: var(--tx2); font: 16px/1 var(--sans); width: 22px; height: 22px; cursor: pointer; }
+.exp-x:hover { color: var(--tx1); border-color: var(--line2); }
+.exp-sec { border-bottom: 1px solid var(--line); }
+.exp-sec-cab { width: 100%; justify-content: flex-start; border: 0; background: none; font: 600 11px/1 var(--sans);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); padding: 8px 10px; height: auto; cursor: pointer; }
+.exp-sec-cuerpo { padding: 2px 10px 10px; }
+.exp-sec.plegado .exp-sec-cuerpo { display: none; }
+.exp-acc { display: flex; gap: 6px; margin-bottom: 6px; }
+.exp-rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+.exp-chk { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; padding: 3px 0; cursor: pointer; color: var(--tx1); }
+.exp-chk input { accent-color: var(--steel); margin: 0; transform: translateY(1px); }
+.exp-chk small { flex-basis: 100%; padding-left: 19px; color: var(--tx3); font-size: 10.5px; }
+.exp-chk.dis { color: var(--tx3); cursor: not-allowed; }
+.exp-chk:hover:not(.dis) span { color: var(--steel); }
+.exp-botones { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.exp-una { display: flex; gap: 6px; }
+.exp-una .sel { flex: 1; min-width: 0; }
+.exp-nota { margin: 8px 0 0; color: var(--tx3); font-size: 11px; }
+.exp-estado { margin: 6px 0 0; min-height: 15px; color: var(--tx2); font: 11px/1.35 var(--code); word-break: break-word; }
+.exp-estado.mal { color: var(--crit); }
+.btn[data-accion="exportar"].activo { border-color: var(--tx2); background: var(--hatch-suave); }
+@media (max-width: 520px) { .exp { left: 8px; right: 8px !important; width: auto; } .exp-rejilla { grid-template-columns: 1fr; } }

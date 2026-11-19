@@ -33,7 +33,9 @@ var RADIO = {
    "perdida_cuerpo_db": 3,
    "latencia_p95_ms": 2.0,
    "tdd": null,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1 (capas), §6.2.2 (RF), §6.7.3 (P95 radio de ida por banda)"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1 (capas), §6.2.2 (RF), §6.7.3 (P95 radio de ida por banda)",
+   "t": "v7",
+   "f": "v7 §6.2 (bandas y balance de enlace)"
   },
   {
    "id": "n78",
@@ -56,7 +58,9 @@ var RADIO = {
    "perdida_cuerpo_db": 3,
    "latencia_p95_ms": 3.9,
    "tdd": "70/30 DL/UL (decisión de 3.1); con DDDSU (~20 % UL) bajaría de ~60 a ~40 Mbit/s UL por sector (§6.2.6)",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1, §6.2.2, §6.2.6 (TDD), §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1, §6.2.2, §6.2.6 (TDD), §6.7.3",
+   "t": "v7",
+   "f": "v7 §6.2 (bandas y balance de enlace)"
   },
   {
    "id": "n258",
@@ -80,7 +84,9 @@ var RADIO = {
    "latencia_p95_ms": 2.3,
    "tdd": null,
    "nota": "No se usa como capa territorial (§6.2.4; en Batres ≈0,13 km, §6.2.5). Evolución a 800 MHz (8×100 MHz) supeditada a terminales (§6.3.1).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1, §6.2.2, §6.3.1, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.1, §6.2.2, §6.3.1, §6.7.3",
+   "t": "v7",
+   "f": "v7 §6.2 (bandas y balance de enlace)"
   }
  ],
  "zonas": [
@@ -96,7 +102,9 @@ var RADIO = {
     "Z-MADRID"
    ],
    "limita": "UL",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)",
+   "t": "v7",
+   "f": "v7 §6.2.7"
   },
   {
    "id": "NORTE",
@@ -112,7 +120,9 @@ var RADIO = {
     "Z-TALAMANCA"
    ],
    "limita": "UL",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)",
+   "t": "v7",
+   "f": "v7 §6.2.7"
   },
   {
    "id": "ESTE",
@@ -128,7 +138,9 @@ var RADIO = {
     "Z-LOSSANTOS"
    ],
    "limita": "UL",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)",
+   "t": "v7",
+   "f": "v7 §6.2.7"
   },
   {
    "id": "SUR",
@@ -146,7 +158,9 @@ var RADIO = {
     "Z-BATRES"
    ],
    "limita": "UL",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7 (Centre 141,14 Gbit/s UL / 60 Mbit/s = 2 353 sectores n78; North 125; East 234; South 498)",
+   "t": "v7",
+   "f": "v7 §6.2.7"
   }
  ],
  "territorial": {
@@ -168,7 +182,15 @@ var RADIO = {
    "sectores_n78": 2353,
    "origen_sitios": "calculado",
    "nota": "La zona Centro es solo Madrid: sus 2 353 sectores n78 son los del municipio. Sitios = ⌈2 353/3⌉ (tri-sector), cálculo del simulador; la v7 solo da el total de 1 071 sitios.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "⌈2 353 sectores n78 / 3⌉ (v7 §6.2.7)"
+    }
+   },
+   "t": "calculado",
+   "f": "⌈2 353 sectores n78 / 3⌉ (v7 §6.2.7)"
   },
   "Z-ALCOBENDAS": {
    "zona_v7": "NORTE",
@@ -178,7 +200,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-TRESCANTOS": {
    "zona_v7": "NORTE",
@@ -188,7 +220,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-TALAMANCA": {
    "zona_v7": "NORTE",
@@ -198,7 +240,15 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": null,
    "nota": "Sitios y sectores del municipio no especificado en v7. La v7 usa Batres como caso rural tipo (§2.5, §6.2.5).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "v7",
+     "f": "sin valor: la v7 no calcula este municipio por separado (§2.5)"
+    }
+   },
+   "t": "v7",
+   "f": "sin valor: la v7 no calcula este municipio por separado (§2.5)"
   },
   "Z-TORREJON": {
    "zona_v7": "ESTE",
@@ -208,7 +258,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-ALCALA": {
    "zona_v7": "ESTE",
@@ -218,7 +278,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-LOSSANTOS": {
    "zona_v7": "ESTE",
@@ -228,7 +298,15 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": null,
    "nota": "Sitios y sectores del municipio no especificado en v7. La v7 usa Batres como caso rural tipo (§2.5, §6.2.5).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "v7",
+     "f": "sin valor: la v7 no calcula este municipio por separado (§2.5)"
+    }
+   },
+   "t": "v7",
+   "f": "sin valor: la v7 no calcula este municipio por separado (§2.5)"
   },
   "Z-GETAFE": {
    "zona_v7": "SUR",
@@ -238,7 +316,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-LEGANES": {
    "zona_v7": "SUR",
@@ -248,7 +336,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-FUENLABRADA": {
    "zona_v7": "SUR",
@@ -258,7 +356,17 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "calculado",
    "nota": "Reparto por municipio no especificado en v7 (solo el total de la zona). Sitios ≈ población 2031 / 4 600: atajo urbano de la v7 §6.2.7, aplicado por el simulador.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7",
+   "proc": {
+    "sitios": {
+     "t": "calculado",
+     "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+     "s": "S-060"
+    }
+   },
+   "t": "calculado",
+   "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
+   "s": "S-060"
   },
   "Z-ALCORCON": {
    "zona_v7": "SUR",
@@ -268,7 +376,15 @@ var RADIO = {
    "sectores_n78": 116,
    "origen_sitios": "documento",
    "nota": "39 sitios tri-sector (39 por capacidad frente a 38 por cobertura sobre ≈12 km² poblados [HYP v7]).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.2.4"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.2.4",
+   "proc": {
+    "sitios": {
+     "t": "v7",
+     "f": "39 sitios tri-sector (39 por capacidad frente a 38 por cobertura sobre ≈12 km² poblados [HYP v7])."
+    }
+   },
+   "t": "v7",
+   "f": "39 sitios tri-sector (39 por capacidad frente a 38 por cobertura sobre ≈12 km² poblados [HYP v7])."
   },
   "Z-BATRES": {
    "zona_v7": "SUR",
@@ -278,7 +394,15 @@ var RADIO = {
    "sectores_n78": null,
    "origen_sitios": "documento",
    "nota": "1 sitio n28 + n78.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.2.5",
+   "proc": {
+    "sitios": {
+     "t": "v7",
+     "f": "1 sitio n28 + n78."
+    }
+   },
+   "t": "v7",
+   "f": "1 sitio n28 + n78."
   }
  },
  "areas": [
@@ -307,7 +431,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 77.79,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-MADRID-n78",
@@ -334,7 +473,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 77.79,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-ALCOBENDAS-n28",
@@ -361,7 +515,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 2.79,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-ALCOBENDAS-n78",
@@ -388,7 +557,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 2.79,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-TRESCANTOS-n28",
@@ -415,7 +599,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 1.24,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-TRESCANTOS-n78",
@@ -442,7 +641,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 1.24,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-TALAMANCA-n28",
@@ -465,7 +679,22 @@ var RADIO = {
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "sitios": null,
    "lectura": "Orden de magnitud defendible ≈4 km; 8 km no demostrado. Un hexágono ideal de R≈3,89 km supera los 21,6 km² de Batres, pero no valida un único sitio (faltan terreno, clutter y huecos).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
+     "s": "S-066"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
+   "s": "S-066"
   },
   {
    "id": "R-Z-TALAMANCA-n78",
@@ -487,7 +716,22 @@ var RADIO = {
    "radio_dl_km": null,
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "lectura": "Refuerzo de capacidad, no capa rural principal.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
+     "s": "S-066"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
+   "s": "S-066"
   },
   {
    "id": "R-Z-TORREJON-n28",
@@ -514,7 +758,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 3.18,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
+   "s": "S-062"
   },
   {
    "id": "R-Z-TORREJON-n78",
@@ -541,7 +800,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 3.18,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
+   "s": "S-062"
   },
   {
    "id": "R-Z-ALCALA-n28",
@@ -568,7 +842,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 4.46,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
+   "s": "S-062"
   },
   {
    "id": "R-Z-ALCALA-n78",
@@ -595,7 +884,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 4.46,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
+   "s": "S-062"
   },
   {
    "id": "R-Z-LOSSANTOS-n28",
@@ -618,7 +922,22 @@ var RADIO = {
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "sitios": null,
    "lectura": "Orden de magnitud defendible ≈4 km; 8 km no demostrado. Un hexágono ideal de R≈3,89 km supera los 21,6 km² de Batres, pero no valida un único sitio (faltan terreno, clutter y huecos).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
+     "s": "S-066"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
+   "s": "S-066"
   },
   {
    "id": "R-Z-LOSSANTOS-n78",
@@ -640,7 +959,22 @@ var RADIO = {
    "radio_dl_km": null,
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "lectura": "Refuerzo de capacidad, no capa rural principal.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
+     "s": "S-066"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
+   "s": "S-066"
   },
   {
    "id": "R-Z-GETAFE-n28",
@@ -667,7 +1001,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 4.23,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-GETAFE-n78",
@@ -694,7 +1043,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 4.23,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-LEGANES-n28",
@@ -721,7 +1085,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 4.24,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-LEGANES-n78",
@@ -748,7 +1127,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 4.24,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-FUENLABRADA-n28",
@@ -775,7 +1169,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 4.11,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-FUENLABRADA-n78",
@@ -802,7 +1211,22 @@ var RADIO = {
    "origen_sitios": "calculado",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 4.11,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
+     "s": "S-062"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
+   "s": "S-062"
   },
   {
    "id": "R-Z-ALCORCON-n28",
@@ -829,7 +1253,22 @@ var RADIO = {
    "origen_sitios": "documento",
    "lectura": "Capa de alcance (UL limita): continuidad y movilidad bajo la capa n78.",
    "area_km2": 11.99,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
+     "s": "S-059"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
+   "s": "S-059"
   },
   {
    "id": "R-Z-ALCORCON-n78",
@@ -856,7 +1295,22 @@ var RADIO = {
    "origen_sitios": "documento",
    "lectura": "Capa de capacidad urbana; los sectores son mínimos de capacidad, no radios físicas.",
    "area_km2": 11.99,
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.7",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
+     "s": "S-059"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
+   "s": "S-059"
   },
   {
    "id": "R-ALCORCON-CELDA-n28",
@@ -879,7 +1333,22 @@ var RADIO = {
    "mapl_dl_ul": "169,05 / 142,55 dB",
    "modelo": "3GPP TR 38.901 UMa NLOS; M_I = 3 dB; TDD 70/30 [HYP]",
    "lectura": "El UL limita; capa de alcance.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.6"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.6",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
+     "s": "S-061"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
+   "s": "S-061"
   },
   {
    "id": "R-ALCORCON-CELDA-n78",
@@ -902,7 +1371,22 @@ var RADIO = {
    "mapl_dl_ul": "145,53 / 123,45 dB",
    "modelo": "3GPP TR 38.901 UMa NLOS; M_I = 3 dB; TDD 70/30 [HYP]",
    "lectura": "El UL limita. n78 50/10 Mbit/s en el borde de celda; M_I 0/1/3/6 dB → 0,41/0,38/0,34/0,29 km (§6.2.6).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.6"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.4, §6.2.6",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
+     "s": "S-061"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
+   "s": "S-061"
   },
   {
    "id": "R-Z-BATRES-n28",
@@ -925,7 +1409,20 @@ var RADIO = {
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "sitios": 1,
    "lectura": "Orden de magnitud defendible ≈4 km; 8 km no demostrado. Un hexágono ideal de R≈3,89 km supera los 21,6 km² de Batres, pero no valida un único sitio (faltan terreno, clutter y huecos).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "v7",
+     "f": "Entrega 2 · memoria conjunta v7 §6.2.5"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "v7",
+   "f": "Entrega 2 · memoria conjunta v7 §6.2.5"
   },
   {
    "id": "R-Z-BATRES-n78",
@@ -947,7 +1444,20 @@ var RADIO = {
    "radio_dl_km": null,
    "modelo": "3GPP TR 38.901 RMa NLOS",
    "lectura": "Refuerzo de capacidad, no capa rural principal.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.5",
+   "proc": {
+    "radio_m": {
+     "t": "v7",
+     "f": "Entrega 2 · memoria conjunta v7 §6.2.5"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "v7",
+   "f": "Entrega 2 · memoria conjunta v7 §6.2.5"
   },
   {
    "id": "R-ESTADIO-n258",
@@ -979,7 +1489,22 @@ var RADIO = {
     "normal": 3.8,
     "respaldo": 4.1
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.1, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.1, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Radio UL ≈37 m a ±45° (cota de planificación de la v7) dibujado una vez en el estadio: la geometría de haces y el número físico de small cells están no…",
+     "s": "S-063"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Radio UL ≈37 m a ±45° (cota de planificación de la v7) dibujado una vez en el estadio: la geometría de haces y el número físico de small cells están no…",
+   "s": "S-063"
   },
   {
    "id": "R-ESTADIO-n78",
@@ -998,7 +1523,20 @@ var RADIO = {
    "radio_m": null,
    "origen": "documento",
    "lectura": "La v7 reutiliza fibra, salas y la capa sub-6 compatible y añade n258 en los puntos calientes; radio y sectores de la capa n78 del recinto no especificado en v7.",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.1"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.1",
+   "proc": {
+    "radio_m": {
+     "t": "v7",
+     "f": "Entrega 2 · memoria conjunta v7 §6.3.1"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "v7",
+   "f": "Entrega 2 · memoria conjunta v7 §6.3.1"
   },
   {
    "id": "R-HOSPITAL-n78",
@@ -1029,7 +1567,20 @@ var RADIO = {
     "normal": 7.4,
     "respaldo": 7.5
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.2, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.2, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "v7",
+     "f": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.2, §6.7.3"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "v7",
+   "f": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.2, §6.7.3"
   },
   {
    "id": "R-A2-n28-01",
@@ -1061,7 +1612,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-02",
@@ -1093,7 +1659,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-03",
@@ -1125,7 +1706,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-04",
@@ -1157,7 +1753,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-05",
@@ -1189,7 +1800,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-06",
@@ -1221,7 +1847,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-07",
@@ -1253,7 +1894,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-08",
@@ -1285,7 +1941,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-09",
@@ -1317,7 +1988,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-A2-n28-10",
@@ -1349,7 +2035,22 @@ var RADIO = {
     "normal": 5.5,
     "respaldo": 5.8
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.3, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+     "s": "S-058"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
+   "s": "S-058"
   },
   {
    "id": "R-VALDEBEBAS-n28",
@@ -1370,7 +2071,22 @@ var RADIO = {
    "radio_ul_km": 2.4,
    "modelo": "proxy n28 [HYP/CALC] para NB-IoT/LTE-M",
    "lectura": "mMTC, DNN iot-ciudad, UPF central. Informes de ≤64 B: 7 portadoras NB-IoT repartidas en ≥3 sectores (≈2,3 por sector, 29 % del máximo de 8).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.4"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.4",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Radio de planificación de la v7 dibujado en el emplazamiento del servicio; el polígono real y los sitios no especificado en v7.",
+     "s": "S-067"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Radio de planificación de la v7 dibujado en el emplazamiento del servicio; el polígono real y los sitios no especificado en v7.",
+   "s": "S-067"
   },
   {
    "id": "R-VALDEBEBAS-n78",
@@ -1402,7 +2118,22 @@ var RADIO = {
     "normal": 5.9,
     "respaldo": 6.2
    },
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.4, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.6, §6.2.7, §6.3.4, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Una celda de radio ≈0,34 km dibujada en el emplazamiento para dar la escala; las posiciones de los ≈40 sitios no especificado en v7.",
+     "s": "S-061"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Una celda de radio ≈0,34 km dibujada en el emplazamiento para dar la escala; las posiciones de los ≈40 sitios no especificado en v7.",
+   "s": "S-061"
   },
   {
    "id": "R-PRIVADA-n78",
@@ -1437,7 +2168,22 @@ var RADIO = {
     "respaldo": 3.6
    },
    "latencia_nota": "P95 del control de AGV por n28 (§6.7.3).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.5, §6.7.3"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.2.7, §6.3.5, §6.7.3",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Nave tipo de 200 × 100 m [HYP v7] dibujada en el emplazamiento del servicio y orientada este-oeste por el simulador.",
+     "s": "S-065"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Nave tipo de 200 × 100 m [HYP v7] dibujada en el emplazamiento del servicio y orientada este-oeste por el simulador.",
+   "s": "S-065"
   },
   {
    "id": "R-PRIVADA-n28",
@@ -1457,7 +2203,22 @@ var RADIO = {
    "supuesto": "Círculo de 0,6 km (distancia máxima al macro n28 según la v7) centrado en la nave; la posición del macro no especificado en v7.",
    "radio_ul_km": 0.6,
    "lectura": "Control de AGV (0,2 Mbit/s UL por AGV, 5QI 82) por el macro n28 a ≤0,6 km; cuota crítica n28 ≈24 % (25 %).",
-   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.5"
+   "fuente": "Entrega 2 · memoria conjunta v7 §6.3.5",
+   "proc": {
+    "radio_m": {
+     "t": "supuesto",
+     "f": "Círculo de 0,6 km (distancia máxima al macro n28 según la v7) centrado en la nave; la posición del macro no especificado en v7.",
+     "s": "S-064"
+    },
+    "centro": {
+     "t": "supuesto",
+     "f": "centro del municipio",
+     "s": "S-020"
+    }
+   },
+   "t": "supuesto",
+   "f": "Círculo de 0,6 km (distancia máxima al macro n28 según la v7) centrado en la nave; la posición del macro no especificado en v7.",
+   "s": "S-064"
   }
  ]
 };

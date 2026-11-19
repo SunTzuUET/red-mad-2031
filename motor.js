@@ -223,6 +223,8 @@ var Motor = (function () {
   //     [Supuesto] si cae también el Edge de respaldo, el servicio va al DC más cercano al 100 % (la v7 no lo
   //     trata: la hipótesis es N−1). Lo que no se transporta queda como demanda no servida (estado degradado).
   var RESPALDO_MEC_V7 = { "S-ESTADIO-PRENSA": 0.6, "S-ESTADIO-LIGERO": 0.6, "S-ESTADIO-VIDEO": 0.6 };
+  // [Supuesto mot.respaldo_camaras] cámaras al 100 % en respaldo (el 30 % de analítica es cómputo, no transporte)
+  var RESPALDO_CAMARAS = { "S-VALDEBEBAS-CAMARAS": 1 };
   var MAX_CAMINOS = 64;
 
   // BFS por saltos con todos los predecesores de mínimo coste. soloAnillo: solo tramos metro–metro.
@@ -311,6 +313,8 @@ var Motor = (function () {
       return out;
     }
     function reparto(lista, w) { return lista.map(function (id) { return [id, w / lista.length]; }); }
+    var reglas = null;   // claves de supuestos de regla activadas por la demanda en curso
+    function regla(k) { if (reglas && reglas.indexOf(k) < 0) reglas.push(k); }
     // Destinos de la demanda con su peso
     function destinos(d, b) {
       var cores = d.destino === "ims" ? G.coresIms : G.cores;
@@ -325,7 +329,11 @@ var Motor = (function () {
       if (d.destino === "edge") {
         if (ok(b, d.edge)) return [[d.edge, 1]];
         var e = G.nodos[d.edge];
-        if (e && ok(b, e.respaldo)) return [[e.respaldo, num(d.respaldo_mec, 1)]];
+        if (e && ok(b, e.respaldo)) {
+          if (RESPALDO_CAMARAS[d.padre || d.id]) regla("mot.respaldo_camaras");
+          return [[e.respaldo, num(d.respaldo_mec, 1)]];
+        }
+        regla("mot.edge_sin_respaldo");
         return reparto(masCercanos(b, G.cores), 1);
       }
       return reparto(masCercanos(b, cores), 1);   // modo "cercano": DC(s) a menos saltos, empate a partes iguales
@@ -344,11 +352,14 @@ var Motor = (function () {
     return demandas.map(function (d) {
       var b = bfsDe(hayCortes ? cachePre : cacheFull, d.origen, hayCortes ? cLpre : cL);
       if (!b) return null;
+      reglas = [];
       var cams = construir(d, b, hayCortes);
       if (cams === null) {   // [Supuesto] FRR imposible (N−2): se reoptimiza sobre la red con todos los fallos
+        reglas = ["mot.frr_n2"];
         b = bfsDe(cacheFull, d.origen, cL);
         cams = b ? construir(d, b, false) : [];
       }
+      var rg = reglas; reglas = null;
       if (!cams.length) return null;
       var caminos = cams.map(function (x) {
         return { peso: x.peso, destino: x.destino,
@@ -358,7 +369,7 @@ var Motor = (function () {
       });
       var main = caminos[0], lat = 0;
       caminos.forEach(function (c) { if (c.peso > main.peso + EPS) main = c; lat = Math.max(lat, c.latencia); });
-      return { destino: main.destino, ruta: main.ruta, enlaces: main.enlaces, latencia: lat, caminos: caminos };
+      return { destino: main.destino, ruta: main.ruta, enlaces: main.enlaces, latencia: lat, caminos: caminos, reglas: rg };
     });
   }
 
@@ -560,7 +571,7 @@ var Motor = (function () {
     var cargada = !!(opciones.hora_cargada || (esc && esc.hora_cargada));
     var reparto = opciones.reparto_core || (esc && esc.reparto_core) ||
       (RED.meta && RED.meta.reparto_core) || "equitativo";
-    var factores = [esc && esc.factores, opciones.factores], perfiles = null, avisoModelo = null;
+    var factores = [esc && esc.factores, opciones.factores], perfiles = null, avisoModelo = null, modeloInfo = null;
     // Modelo de tráfico (modelos.js, PLAN_v2 §4): añade factores (año, pico, día, pendular) y perfiles por demanda
     if (opciones.modelo) {
       var Mo = typeof Modelos !== "undefined" ? Modelos :
@@ -571,11 +582,38 @@ var Motor = (function () {
         perfiles = aj.perfiles;
         if (aj.cargada) cargada = true; else if (aj.hora !== undefined && aj.hora !== null) hora = aj.hora;
         avisoModelo = aj.aviso || null;
+        modeloInfo = { id: opciones.modelo.id || "BH", anio: opciones.modelo.anio || null, dia: opciones.modelo.dia || "laborable",
+          def: aj.def || null, cargada: !!aj.cargada };
       } else avisoModelo = "modelos.js no cargado: se ignora el modelo de tráfico";
     }
     return { esc: esc, escId: opciones.escenario || null, hora: hora, fallos: fallos, rutas: modoRutas(RED, opciones),
-      factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo };
+      factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo, modelo: modeloInfo };
   }
+
+  // ---------- procedencia: supuestos de los que depende cada resultado (CONTRATO_UI Revisión 3) ----------
+  // RED.supuestos (fusionar.py) trae {id: "S-xxx", clave: "ámbito.tema", …}. El motor recoge los `s` de los `proc`
+  // de los datos que usa cada demanda y añade las claves de las reglas que se activan en ese caso.
+  var SUP_CONDICIONAL = { "dem.perfiles_horarios": 1 };   // solo cuentan si se usa la forma horaria
+  function mapaSupuestos(RED) {
+    var lista = RED.supuestos;
+    if (!lista || !lista.length) return { porClave: {}, ids: {} };
+    if (lista.__mapa) return lista.__mapa;
+    var m = { porClave: {}, ids: {} };
+    lista.forEach(function (x) { if (x && x.id) { m.ids[x.id] = x.clave || x.id; if (x.clave) m.porClave[x.clave] = x.id; } });
+    try { Object.defineProperty(lista, "__mapa", { value: m, enumerable: false }); } catch (e) { /* objeto congelado */ }
+    return m;
+  }
+  // S-ids de los proc de un objeto de datos (sin los condicionales)
+  function supsDeProc(o, M, out) {
+    var p = o && o.proc;
+    if (!p) return out;
+    for (var k in p) {
+      var s = p[k] && p[k].s;
+      if (s && M.ids[s] && out.indexOf(s) < 0 && !SUP_CONDICIONAL[M.ids[s]]) out.push(s);
+    }
+    return out;
+  }
+  function anadir(lista, ids) { for (var i = 0; i < ids.length; i++) if (ids[i] && lista.indexOf(ids[i]) < 0) lista.push(ids[i]); }
 
   // ---------- cálculo principal ----------
   function calcular(RED, opciones) {
@@ -706,6 +744,63 @@ var Motor = (function () {
       else if (d.latencia_max_ms !== null && d.latencia_max_ms !== undefined && d.latencia_ms > d.latencia_max_ms) d.estado = "latencia";
       else d.estado = "ok";
     });
+
+    // ---- Procedencia: supuestos de los que depende cada demanda y cada enlace ----
+    var M = mapaSupuestos(RED), usados = [];
+    function ids(claves) { var o = []; claves.forEach(function (k) { if (M.porClave[k]) o.push(M.porClave[k]); }); return o; }
+    var fuenteDem = {};
+    (RED.zonas || []).forEach(function (z) { (z.necesidades || []).forEach(function (n) { fuenteDem[n.id] = n; }); });
+    (RED.servicios || []).forEach(function (sv) { fuenteDem[sv.id] = sv; });
+    // Globales del caso: rutas LAB, forma horaria, modelo de tráfico, escenario
+    var glob = [], globZona = [], globServ = [];
+    if (op.rutas === "dijkstra") glob.push("mot.rutas_dijkstra");
+    var usaHora = !op.cargada && op.hora !== null && op.hora !== undefined;
+    var mo = op.modelo;
+    if (mo) {
+      glob.push("dem.modelo_" + String(mo.id).toLowerCase());
+      if (mo.def && mo.def.pendular) glob.push("dem.pendular");
+      var MT = RED.modelos_trafico || {}, td = (MT.tipos_dia || {})[mo.dia] || {};
+      if (Object.keys(td.servicios || {}).length || Object.keys(td.perfil || {}).length) glob.push("dem.tipos_dia");
+      if (!mo.cargada) globZona.push("dem.tipos_zona");
+      if (mo.anio && mo.anio !== 2031) globServ.push("dem.crecimiento_servicios");
+    }
+    var escS = op.esc && op.esc.proc && op.esc.proc.definicion && op.esc.proc.definicion.s;
+    var escF = op.esc && op.esc.factores ? Object.keys(op.esc.factores) : [];
+    var gIds = ids(glob), gZ = ids(globZona), gS = ids(globServ);
+    dem.forEach(function (d, i) {
+      var src = fuenteDem[d.padre || d.id], dep = supsDeProc(src, M, []), r = rutas[i];
+      if (d.clase === "necesidad" && M.porClave["top.agg_abstracto"]) anadir(dep, [M.porClave["top.agg_abstracto"]]);
+      if (usaHora && src && src.proc && src.proc.perfil && M.ids[src.proc.perfil.s]) anadir(dep, [src.proc.perfil.s]);
+      if (r && r.reglas && r.reglas.length) anadir(dep, ids(r.reglas));
+      var rec = [];
+      if (d.servida_gbps < d.dl_gbps - 1e-6 || (d.servida_ul_gbps !== undefined && d.servida_ul_gbps < d.ul_gbps - 1e-6)) rec.push("mot.voraz_prioridad");
+      if (d.estado === "degradado") rec.push("mot.umbral_degradado");
+      anadir(dep, ids(rec));
+      anadir(dep, gIds);
+      anadir(dep, d.clase === "necesidad" ? gZ : gS);
+      if (escS && (!escF.length || escF.some(function (k) {
+        return k === d.zona || k === (d.padre || d.id) || k === "tipo:" + d.tipo || k === "slice:" + d.slice; }))) anadir(dep, [escS]);
+      dep.sort();
+      d.depende = dep;
+      anadir(usados, dep);
+    });
+    G.enlaces.forEach(function (l) {
+      var e = enlacesOut[l.id], dep = [];
+      var pc = l.proc && l.proc.capacidad_gbps;
+      if (pc && M.ids[pc.s]) dep.push(pc.s);
+      e.depende = dep;
+    });
+    dem.forEach(function (d) {
+      if (!d.depende.length) return;
+      var vistosL = {};
+      d.caminos.forEach(function (c) {
+        c.enlaces.forEach(function (id) { if (!vistosL[id]) { vistosL[id] = 1; anadir(enlacesOut[id].depende, d.depende); } });
+      });
+    });
+    G.enlaces.forEach(function (l) { var dp = enlacesOut[l.id].depende; dp.sort(); anadir(usados, dp); });
+    if (M.porClave["mot.clasificacion_servicio"]) anadir(usados, [M.porClave["mot.clasificacion_servicio"]]);
+    if (escS) anadir(usados, [escS]);
+    usados.sort();
 
     // Ocupaciones
     var saturados = [], maxOc = 0, enlaceMax = null;
@@ -845,6 +940,7 @@ var Motor = (function () {
         enlaces_saturados: saturados, demandas_afectadas: afectadas,
         max_ocupacion: maxOc, enlace_max: enlaceMax,
         por_servicio: porServ,
+        supuestos_usados: usados,
         alertas: alertas
       }
     };
@@ -1006,8 +1102,12 @@ var Motor = (function () {
       rutas: (RED.meta && RED.meta.referencia) ? "v7" : "dijkstra" };
   }
 
+  // Registro de supuestos (RED.supuestos de fusionar.py; [] si la red no lo trae)
+  function supuestos(RED) { return (RED && RED.supuestos) || []; }
+
   return {
     calcular: calcular,
+    supuestos: supuestos,
     barridoN1: barridoN1,
     casos: casos,
     demandasBase: demandasBase,
