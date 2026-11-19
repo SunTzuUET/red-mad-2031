@@ -374,6 +374,20 @@
     emitir("resultado", NOC.resultado);
   }
   function aplicarCaso() { calcular(opcionesCaso()); }
+  // Revisión 4 (reloj.js): pinta un resultado ya calculado (un paso de la serie de 24 h) sin llamar al motor.
+  // meta.reloj = true marca el evento "resultado" para que el reloj no lo tome como cambio de caso.
+  NOC.mostrarResultado = function (r, op, meta) {
+    if (!r) return;
+    NOC.resultado = r;
+    if (op) NOC.opciones = op;
+    NOC.resultadoMeta = meta || null;
+    motorOK = true; motorErr = "";
+    construirAlarmas();
+    pintarKPI(); pintarDock(); pintarEstado(); pintarContador();
+    refrescarFicha();
+    emitir("resultado", NOC.resultado);
+    NOC.resultadoMeta = null;
+  };
   NOC.recalcular = function (parcial) {
     if (NOC.modo === "ref") {
       if (parcial && Object.keys(parcial).length) mensaje(t(T.bloqueado));
@@ -547,6 +561,7 @@
     document.body.classList.toggle("m-ref", ref);
     document.body.classList.toggle("m-lab", !ref);
     pintarKPI(); pintarContador();
+    emitir("barra", $("#tb"));   // Revisión 4: reloj.js sustituye aquí el control HORA
   }
   // Una línea con el caso para cuando la barra del caso está plegada
   function resumenCaso() {
@@ -976,6 +991,15 @@
   var dock = { tab: leer("noc.dock") || "alarmas", plegado: NOC.plegado("dock") };
   var orden = { alarmas: { k: "sev", d: 1 }, enlaces: { k: "oc", d: -1 }, n1: { k: "rk", d: 1 } };
   var N1 = { estado: "nada", filas: [], err: "" };
+  // Revisión 4: pestañas extra del dock. NOC.registrarPestanaDock({id, titulo:{es,en}, cnt(), pintar(el)}).
+  // pintar(el) recibe un contenedor propio que se conserva mientras la pestaña siga activa (puede actualizar en sitio).
+  var PEST_DOCK = [];
+  NOC.registrarPestanaDock = function (p) {
+    if (!p || !p.id || PEST_DOCK.some(function (x) { return x.id === p.id; })) return;
+    PEST_DOCK.push(p);
+    pintarDock();
+  };
+  NOC.dockTab = function () { return dock.plegado ? null : dock.tab; };
   function cabTabla(tab, cols) {
     var o = orden[tab];
     return '<thead><tr>' + cols.map(function (c) {
@@ -997,11 +1021,24 @@
     var d = $("#dock");
     d.classList.toggle("plegado", dock.plegado);
     var c = cuentaSev(), nEnl = (RED.enlaces || []).length;
-    $("#dock-cab").innerHTML = [["alarmas", T.alarmas, ALARMAS.filter(function (a) { return a.sev !== "ok"; }).length], ["enlaces", T.enlaces, nEnl], ["n1", T.n1, N1.filas.length || ""]].map(function (x) {
+    var pestanas = [["alarmas", T.alarmas, ALARMAS.filter(function (a) { return a.sev !== "ok"; }).length], ["enlaces", T.enlaces, nEnl], ["n1", T.n1, N1.filas.length || ""]];
+    PEST_DOCK.forEach(function (p) { var n = ""; try { n = p.cnt ? p.cnt() : ""; } catch (e) { /* nada */ } pestanas.push([p.id, p.titulo, n == null ? "" : n]); });
+    var propia = PEST_DOCK.filter(function (p) { return p.id === dock.tab; })[0];
+    $("#dock-cab").innerHTML = pestanas.map(function (x) {
       return '<button type="button" class="tab" data-dock="' + x[0] + '" aria-selected="' + (dock.tab === x[0]) + '">' + esc(t(x[1])) + ' <span class="cnt">' + x[2] + '</span></button>';
     }).join("") + '<div class="ctl">' + (c.crit ? NOC.insignia("crit", "CRIT " + c.crit) : "") +
       '<button type="button" class="plg" data-plegar="dock" aria-expanded="' + !dock.plegado + '" title="' + esc(t(T.plegarDock)) + '"><span class="ind">' + (dock.plegado ? "▸" : "▾") + '</span>' + esc(t(dock.plegado ? T.desplegar : T.plegar)) + '</button></div>';
     if (dock.plegado) { $("#dock-cuerpo").innerHTML = ""; return; }
+    if (propia) {
+      var cp = $("#dock-cuerpo"), elp = cp.firstElementChild;
+      if (!elp || elp.getAttribute("data-pest") !== propia.id || cp.children.length !== 1) {
+        cp.innerHTML = ""; cp.scrollTop = 0;
+        elp = document.createElement("div"); elp.className = "dock-pest dock-pest-" + propia.id; elp.setAttribute("data-pest", propia.id);
+        cp.appendChild(elp);
+      }
+      try { propia.pintar(elp); } catch (e) { console.error("pestaña de dock " + propia.id, e); }
+      return;
+    }
     var h = "";
     if (dock.tab === "alarmas") h = tablaAlarmas();
     else if (dock.tab === "enlaces") h = tablaEnlaces();
@@ -1013,6 +1050,7 @@
   }
   function horaTxt() {
     var op = NOC.opciones || {};
+    if (NOC.resultado && NOC.resultado.paso_reloj) return NOC.resultado.paso_reloj.etiqueta;   // paso del reloj (reloj.js)
     if (NOC.modo === "ref" || traficoCargado()) return t(T.hc);
     var h = NOC.resultado ? NOC.resultado.resumen.hora : caso.hora;
     return esNum(h) ? String(h).padStart(2, "0") + ":00" : t(T.hc);

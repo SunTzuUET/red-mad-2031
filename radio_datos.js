@@ -205,12 +205,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-TRESCANTOS": {
    "zona_v7": "NORTE",
@@ -225,12 +225,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-TALAMANCA": {
    "zona_v7": "NORTE",
@@ -263,12 +263,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-ALCALA": {
    "zona_v7": "ESTE",
@@ -283,12 +283,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-LOSSANTOS": {
    "zona_v7": "ESTE",
@@ -321,12 +321,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-LEGANES": {
    "zona_v7": "SUR",
@@ -341,12 +341,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-FUENLABRADA": {
    "zona_v7": "SUR",
@@ -361,12 +361,12 @@ var RADIO = {
     "sitios": {
      "t": "calculado",
      "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-     "s": "S-060"
+     "s": "S-062"
     }
    },
    "t": "calculado",
    "f": "población 2031 / 4 600 (atajo urbano v7 A4–A5)",
-   "s": "S-060"
+   "s": "S-062"
   },
   "Z-ALCORCON": {
    "zona_v7": "SUR",
@@ -436,7 +436,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -446,7 +446,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-MADRID-n78",
@@ -478,7 +478,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -488,7 +488,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Madrid.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-ALCOBENDAS-n28",
@@ -520,7 +520,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -530,7 +530,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-ALCOBENDAS-n78",
@@ -562,7 +562,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -572,7 +572,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcobendas.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-TRESCANTOS-n28",
@@ -604,7 +604,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -614,7 +614,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-TRESCANTOS-n78",
@@ -646,7 +646,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -656,7 +656,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Tres Cantos.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-TALAMANCA-n28",
@@ -684,7 +684,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
-     "s": "S-066"
+     "s": "S-068"
     },
     "centro": {
      "t": "supuesto",
@@ -694,7 +694,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
-   "s": "S-066"
+   "s": "S-068"
   },
   {
    "id": "R-Z-TALAMANCA-n78",
@@ -721,7 +721,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
-     "s": "S-066"
+     "s": "S-068"
     },
     "centro": {
      "t": "supuesto",
@@ -731,7 +731,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Talamanca de Jarama; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el centro…",
-   "s": "S-066"
+   "s": "S-068"
   },
   {
    "id": "R-Z-TORREJON-n28",
@@ -763,7 +763,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -773,7 +773,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-TORREJON-n78",
@@ -805,7 +805,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -815,7 +815,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Torrejón de…",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-ALCALA-n28",
@@ -847,7 +847,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -857,7 +857,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-ALCALA-n78",
@@ -889,7 +889,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -899,7 +899,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Alcalá de…",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-LOSSANTOS-n28",
@@ -927,7 +927,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
-     "s": "S-066"
+     "s": "S-068"
     },
     "centro": {
      "t": "supuesto",
@@ -937,7 +937,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
-   "s": "S-066"
+   "s": "S-068"
   },
   {
    "id": "R-Z-LOSSANTOS-n78",
@@ -964,7 +964,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
-     "s": "S-066"
+     "s": "S-068"
     },
     "centro": {
      "t": "supuesto",
@@ -974,7 +974,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Se aplica el caso rural tipo de Batres (§6.2.5) a Los Santos de la Humosa; la v7 no calcula este municipio por separado (§2.5). Sitio único dibujado en el…",
-   "s": "S-066"
+   "s": "S-068"
   },
   {
    "id": "R-Z-GETAFE-n28",
@@ -1006,7 +1006,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1016,7 +1016,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-GETAFE-n78",
@@ -1048,7 +1048,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1058,7 +1058,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Getafe.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-LEGANES-n28",
@@ -1090,7 +1090,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1100,7 +1100,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-LEGANES-n78",
@@ -1132,7 +1132,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1142,7 +1142,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Leganés.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-FUENLABRADA-n28",
@@ -1174,7 +1174,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1184,7 +1184,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-FUENLABRADA-n78",
@@ -1216,7 +1216,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
-     "s": "S-062"
+     "s": "S-064"
     },
     "centro": {
      "t": "supuesto",
@@ -1226,7 +1226,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Área de dibujo de la zona (mismo círculo que la capa B, √población × 2,6 m), no área de cobertura calculada: la v7 no da el contorno desplegado de Fuenlabrada.",
-   "s": "S-062"
+   "s": "S-064"
   },
   {
    "id": "R-Z-ALCORCON-n28",
@@ -1258,7 +1258,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
-     "s": "S-059"
+     "s": "S-061"
     },
     "centro": {
      "t": "supuesto",
@@ -1268,7 +1268,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
-   "s": "S-059"
+   "s": "S-061"
   },
   {
    "id": "R-Z-ALCORCON-n78",
@@ -1300,7 +1300,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
-     "s": "S-059"
+     "s": "S-061"
     },
     "centro": {
      "t": "supuesto",
@@ -1310,7 +1310,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Círculo de igual área que los ≈12 km² poblados de Alcorcón [HYP v7 §6.2.7]; la forma y el centro los pone el simulador.",
-   "s": "S-059"
+   "s": "S-061"
   },
   {
    "id": "R-ALCORCON-CELDA-n28",
@@ -1338,7 +1338,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
-     "s": "S-061"
+     "s": "S-063"
     },
     "centro": {
      "t": "supuesto",
@@ -1348,7 +1348,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
-   "s": "S-061"
+   "s": "S-063"
   },
   {
    "id": "R-ALCORCON-CELDA-n78",
@@ -1376,7 +1376,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
-     "s": "S-061"
+     "s": "S-063"
     },
     "centro": {
      "t": "supuesto",
@@ -1386,7 +1386,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Una celda de radio UL dibujada en el centro del municipio para dar la escala; las posiciones de los 39 sitios no especificado en v7.",
-   "s": "S-061"
+   "s": "S-063"
   },
   {
    "id": "R-Z-BATRES-n28",
@@ -1494,7 +1494,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Radio UL ≈37 m a ±45° (cota de planificación de la v7) dibujado una vez en el estadio: la geometría de haces y el número físico de small cells están no…",
-     "s": "S-063"
+     "s": "S-065"
     },
     "centro": {
      "t": "supuesto",
@@ -1504,7 +1504,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Radio UL ≈37 m a ±45° (cota de planificación de la v7) dibujado una vez en el estadio: la geometría de haces y el número físico de small cells están no…",
-   "s": "S-063"
+   "s": "S-065"
   },
   {
    "id": "R-ESTADIO-n78",
@@ -1617,7 +1617,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1627,7 +1627,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-02",
@@ -1664,7 +1664,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1674,7 +1674,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-03",
@@ -1711,7 +1711,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1721,7 +1721,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-04",
@@ -1758,7 +1758,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1768,7 +1768,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-05",
@@ -1805,7 +1805,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1815,7 +1815,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-06",
@@ -1852,7 +1852,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1862,7 +1862,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-07",
@@ -1899,7 +1899,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1909,7 +1909,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-08",
@@ -1946,7 +1946,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -1956,7 +1956,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-09",
@@ -1993,7 +1993,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -2003,7 +2003,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-A2-n28-10",
@@ -2040,7 +2040,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-     "s": "S-058"
+     "s": "S-060"
     },
     "centro": {
      "t": "supuesto",
@@ -2050,7 +2050,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Los 10 sitios se reparten a distancias iguales sobre el trazado del simulador (≈31.4 km); la v7 da el número y el espaciado medio (≈3,78 km), no las posiciones.",
-   "s": "S-058"
+   "s": "S-060"
   },
   {
    "id": "R-VALDEBEBAS-n28",
@@ -2076,7 +2076,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Radio de planificación de la v7 dibujado en el emplazamiento del servicio; el polígono real y los sitios no especificado en v7.",
-     "s": "S-067"
+     "s": "S-069"
     },
     "centro": {
      "t": "supuesto",
@@ -2086,7 +2086,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Radio de planificación de la v7 dibujado en el emplazamiento del servicio; el polígono real y los sitios no especificado en v7.",
-   "s": "S-067"
+   "s": "S-069"
   },
   {
    "id": "R-VALDEBEBAS-n78",
@@ -2123,7 +2123,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Una celda de radio ≈0,34 km dibujada en el emplazamiento para dar la escala; las posiciones de los ≈40 sitios no especificado en v7.",
-     "s": "S-061"
+     "s": "S-063"
     },
     "centro": {
      "t": "supuesto",
@@ -2133,7 +2133,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Una celda de radio ≈0,34 km dibujada en el emplazamiento para dar la escala; las posiciones de los ≈40 sitios no especificado en v7.",
-   "s": "S-061"
+   "s": "S-063"
   },
   {
    "id": "R-PRIVADA-n78",
@@ -2173,7 +2173,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Nave tipo de 200 × 100 m [HYP v7] dibujada en el emplazamiento del servicio y orientada este-oeste por el simulador.",
-     "s": "S-065"
+     "s": "S-067"
     },
     "centro": {
      "t": "supuesto",
@@ -2183,7 +2183,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Nave tipo de 200 × 100 m [HYP v7] dibujada en el emplazamiento del servicio y orientada este-oeste por el simulador.",
-   "s": "S-065"
+   "s": "S-067"
   },
   {
    "id": "R-PRIVADA-n28",
@@ -2208,7 +2208,7 @@ var RADIO = {
     "radio_m": {
      "t": "supuesto",
      "f": "Círculo de 0,6 km (distancia máxima al macro n28 según la v7) centrado en la nave; la posición del macro no especificado en v7.",
-     "s": "S-064"
+     "s": "S-066"
     },
     "centro": {
      "t": "supuesto",
@@ -2218,7 +2218,7 @@ var RADIO = {
    },
    "t": "supuesto",
    "f": "Círculo de 0,6 km (distancia máxima al macro n28 según la v7) centrado en la nave; la posición del macro no especificado en v7.",
-   "s": "S-064"
+   "s": "S-066"
   }
  ]
 };

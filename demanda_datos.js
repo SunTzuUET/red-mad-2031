@@ -5210,22 +5210,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5234,7 +5234,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5248,22 +5248,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5272,7 +5272,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5286,22 +5286,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5310,7 +5310,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5324,22 +5324,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5348,12 +5348,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -5367,22 +5367,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5391,12 +5391,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -5406,22 +5406,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -5442,17 +5442,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -5498,22 +5498,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5522,7 +5522,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5536,22 +5536,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5560,7 +5560,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5574,22 +5574,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5598,7 +5598,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5612,22 +5612,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5636,12 +5636,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -5655,22 +5655,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5679,12 +5679,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -5694,22 +5694,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -5730,17 +5730,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -5786,22 +5786,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5810,7 +5810,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5824,22 +5824,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5848,7 +5848,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5862,22 +5862,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5886,7 +5886,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -5900,22 +5900,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5924,12 +5924,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -5943,22 +5943,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -5967,12 +5967,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -5982,22 +5982,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -6018,17 +6018,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -6074,22 +6074,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6098,7 +6098,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6112,22 +6112,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6136,7 +6136,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6150,22 +6150,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6174,7 +6174,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6188,22 +6188,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6212,12 +6212,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -6231,22 +6231,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6255,12 +6255,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -6270,22 +6270,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -6306,17 +6306,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -6362,22 +6362,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6386,7 +6386,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6400,22 +6400,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6424,7 +6424,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6438,22 +6438,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6462,7 +6462,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6476,22 +6476,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6500,12 +6500,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -6519,22 +6519,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6543,12 +6543,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -6558,22 +6558,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -6594,17 +6594,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -6650,22 +6650,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6674,7 +6674,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6688,22 +6688,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6712,7 +6712,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6726,22 +6726,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6750,7 +6750,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6764,22 +6764,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6788,12 +6788,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -6807,22 +6807,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6831,12 +6831,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -6846,22 +6846,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -6882,17 +6882,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -6938,22 +6938,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -6962,7 +6962,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -6976,22 +6976,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7000,7 +7000,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7014,22 +7014,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7038,7 +7038,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7052,22 +7052,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7076,12 +7076,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -7095,22 +7095,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7119,12 +7119,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -7134,22 +7134,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -7170,17 +7170,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -7226,22 +7226,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7250,7 +7250,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7264,22 +7264,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7288,7 +7288,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7302,22 +7302,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7326,7 +7326,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7340,22 +7340,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7364,12 +7364,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -7383,22 +7383,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7407,12 +7407,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -7422,22 +7422,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -7458,17 +7458,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -7514,22 +7514,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7538,7 +7538,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7552,22 +7552,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7576,7 +7576,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7590,22 +7590,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7614,7 +7614,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7628,22 +7628,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7652,12 +7652,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -7671,22 +7671,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7695,12 +7695,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -7710,22 +7710,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -7746,17 +7746,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -7802,22 +7802,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7826,7 +7826,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7840,22 +7840,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7864,7 +7864,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7878,22 +7878,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7902,7 +7902,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -7916,22 +7916,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7940,12 +7940,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -7959,22 +7959,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -7983,12 +7983,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -7998,22 +7998,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -8034,17 +8034,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -8090,22 +8090,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8114,7 +8114,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8128,22 +8128,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8152,7 +8152,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8166,22 +8166,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8190,7 +8190,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8204,22 +8204,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8228,12 +8228,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -8247,22 +8247,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8271,12 +8271,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -8294,12 +8294,12 @@ var DEMANDA = {
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -8320,17 +8320,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",
@@ -8376,22 +8376,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 5",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8400,7 +8400,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8414,22 +8414,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet fijo BNG de la zona (v7 §3.4.1, 90/10, +25 %) × cuota × peso residencial/empresa",
-       "s": "S-029"
+       "s": "S-030"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 3",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8438,7 +8438,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'empresa' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8452,22 +8452,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "Internet móvil UPF de la zona (v7 §3.4.1, 85/15, +25 %) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 4",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8476,7 +8476,7 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       }
      }
     },
@@ -8490,22 +8490,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "VoNR por sentido de la zona (v7 §3.4.1) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8514,12 +8514,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     },
@@ -8533,22 +8533,22 @@ var DEMANDA = {
       "cuota": {
        "t": "supuesto",
        "f": "cuota del municipio en su zona Metro (población 2025)",
-       "s": "S-028"
+       "s": "S-029"
       },
       "dl_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "ul_gbps": {
        "t": "calculado",
        "f": "35,985952 Gbit/s por sentido repartidos por Internet DL (v7 §3.4.1, A11) × cuota",
-       "s": "S-028"
+       "s": "S-029"
       },
       "prioridad": {
        "t": "supuesto",
        "f": "prioridad 2",
-       "s": "S-027"
+       "s": "S-028"
       },
       "destino": {
        "t": "v7",
@@ -8557,12 +8557,12 @@ var DEMANDA = {
       "perfil": {
        "t": "supuesto",
        "f": "perfil horario 'residencial' (solo fuera de la hora cargada)",
-       "s": "S-026"
+       "s": "S-027"
       },
       "latencia_max_ms": {
        "t": "supuesto",
        "f": "20 ms de transporte/core",
-       "s": "S-022"
+       "s": "S-023"
       }
      }
     }
@@ -8572,22 +8572,22 @@ var DEMANDA = {
     "poblacion": {
      "t": "calculado",
      "f": "población 2031 de la zona Metro (v7 §3.1.1) × cuota 2025 del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_fijos": {
      "t": "calculado",
      "f": "población 2031 × 0,404 × 0,307 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "abonados_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,307 × 0,258 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "lineas_datos_moviles": {
      "t": "calculado",
      "f": "población 2031 × 1,184 × 0,247 (v7 §3.1.1)",
-     "s": "S-028"
+     "s": "S-029"
     },
     "poblacion_2025": {
      "t": "v7",
@@ -8608,17 +8608,17 @@ var DEMANDA = {
     "cuota_area": {
      "t": "calculado",
      "f": "población 2025 del municipio / población 2025 de su zona Metro",
-     "s": "S-028"
+     "s": "S-029"
     },
     "dl_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "ul_gbps": {
      "t": "calculado",
      "f": "suma de necesidades: demanda v7 §3.4.1 de la zona Metro × cuota del municipio",
-     "s": "S-028"
+     "s": "S-029"
     },
     "centro": {
      "t": "supuesto",

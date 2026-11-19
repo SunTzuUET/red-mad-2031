@@ -1,5 +1,8 @@
 // modelos.js — modelos de tráfico (PLAN_v2 §4) traducidos a opciones del motor.
-//   Modelos.ajustar(RED, modelo, hora, conEscenario) -> { cargada, hora, factores: {id|tipo:x: f}, perfiles: {id: [24]}, def }
+//   Modelos.ajustar(RED, modelo, hora, conEscenario, opc) -> { cargada, hora, factores: {id|tipo:x: f}, perfiles: {id: [24]}, def, forzada }
+//   hora puede ser fraccionaria (19.5 = 19:30): interpolación lineal entre horas enteras (supuesto dem.interpolacion_horaria).
+//   opc.forzar_horaria (lo usa Motor.serie): un modelo de hora cargada (BH/P2/PM) devuelve también perfiles horarios,
+//   con sus factores (año, P2/PM, tipo de día); la "película" de 24 h es una extensión del simulador (dem.serie_hora_cargada).
 //   modelo = { id: "BH"|"P2"|"PM"|"NC"|"PEND", anio: 2025..2031, dia: "laborable"|"fin_de_semana"|"agosto"|"partido" }
 // Definiciones en RED.modelos_trafico (datos/modelos_trafico.json, lo copia fusionar.py).
 // Crecimiento por año con ModeloDemanda (modelo_demanda.js): factor = demanda(año)/demanda(2031) por zona y tipo.
@@ -42,11 +45,20 @@ var Modelos = (function () {
     return null;
   }
 
+  function valorPerfil(p, hora, defecto) {
+    if (!p) return defecto;
+    var h = ((hora % 24) + 24) % 24, i = Math.floor(h), fr = h - i;
+    var a = typeof p[i] === "number" ? p[i] : defecto;
+    if (fr < 1e-9) return a;
+    var b = typeof p[(i + 1) % 24] === "number" ? p[(i + 1) % 24] : defecto;
+    return a + (b - a) * fr;
+  }
+
   function perfilBase(RED, MT, nombre) {
     return (MT.perfiles_extra && MT.perfiles_extra[nombre]) || (RED.perfiles && RED.perfiles[nombre]) || null;
   }
 
-  function ajustar(RED, modelo, hora, conEscenario) {
+  function ajustar(RED, modelo, hora, conEscenario, opc) {
     modelo = modelo || {};
     var MT = RED.modelos_trafico || {};
     var def = definicion(RED, modelo.id || "BH");
@@ -70,7 +82,8 @@ var Modelos = (function () {
     // 3. servicios según tipo de día (solo si no manda un escenario)
     if (!conEscenario) Object.keys(dia.servicios || {}).forEach(function (s) { mult(s, dia.servicios[s]); });
 
-    var cargada = !!def.hora_cargada;
+    var cargada = !!def.hora_cargada, forzada = false;
+    if (cargada && opc && opc.forzar_horaria) { cargada = false; forzada = true; }
     if (cargada) return { cargada: true, hora: hora, factores: factores, perfiles: perfiles, def: def };
 
     // 4. modelos horarios: perfil por tipo de zona para móvil y voz, multiplicadores del tipo de día
@@ -93,7 +106,7 @@ var Modelos = (function () {
     var pe = MT.pendular;
     if (def.pendular && pe && !dia.sin_pendular) {
       var pf = typeof dia.pendular_factor === "number" ? dia.pendular_factor : 1;
-      var pres = (pe.presencia || [])[((hora % 24) + 24) % 24] || 0;
+      var pres = valorPerfil(pe.presencia || [], hora, 0) || 0;
       var zonas = {};
       (RED.zonas || []).forEach(function (z) { zonas[z.id] = z; });
       var dest = zonas[pe.destino];
@@ -109,20 +122,20 @@ var Modelos = (function () {
             if (!n) return;
             var s = pe.fraccion[zid] * pf * pres;
             var g = cr && cr[AREA[z.area]] ? cr[AREA[z.area]][tipo] : 1;
-            var d = (n.dl_gbps || 0) * (perfilDe[n.id] ? perfilDe[n.id][hora] : 1) * g;
+            var d = (n.dl_gbps || 0) * (perfilDe[n.id] ? valorPerfil(perfilDe[n.id], hora, 1) : 1) * g;
             movido += s * d;
             mult(n.id, 1 - s);
           });
           var gd = cr && cr[AREA[dest.area]] ? cr[AREA[dest.area]][tipo] : 1;
-          var dM = (nd.dl_gbps || 0) * (perfilDe[nd.id] ? perfilDe[nd.id][hora] : 1) * gd;
+          var dM = (nd.dl_gbps || 0) * (perfilDe[nd.id] ? valorPerfil(perfilDe[nd.id], hora, 1) : 1) * gd;
           if (dM > 0) mult(nd.id, 1 + movido / dM);
         });
       }
     }
-    return { cargada: false, hora: hora, factores: factores, perfiles: perfiles, def: def };
+    return { cargada: false, hora: hora, factores: factores, perfiles: perfiles, def: def, forzada: forzada };
   }
 
-  return { ajustar: ajustar, crecimiento: crecimiento, definicion: definicion };
+  return { ajustar: ajustar, crecimiento: crecimiento, definicion: definicion, valorPerfil: valorPerfil };
 })();
 
 if (typeof module !== "undefined" && module.exports) module.exports = Modelos; else window.Modelos = Modelos;

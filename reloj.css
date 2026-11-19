@@ -1,0 +1,66 @@
+/* reloj.css — reloj de 24 h, pestaña TIEMPO y mini gráfica de ficha (CONTRATO_UI Revisión 4). Solo tokens de noc.css. */
+
+/* ---------- barra del reloj (fila del caso) ---------- */
+.reloj { display: inline-flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.reloj .rot { margin-right: 2px; }
+.reloj .rl-b { width: 24px; padding: 0; justify-content: center; }
+.reloj .rl-b[data-rl="hc"] { width: auto; padding: 0 6px; }
+.reloj .rl-hora { font: 600 12px var(--sans); font-variant-numeric: tabular-nums; min-width: 40px; text-align: center; color: var(--tx1); }
+.reloj .rl-hora .hc { font: 600 9.5px var(--sans); letter-spacing: .08em; color: var(--tx3); margin-right: 3px; }
+.reloj .rl-barra { display: inline-flex; height: 22px; border: 1px solid var(--line2); cursor: pointer; touch-action: none; }
+.reloj .rl-barra:hover { border-color: var(--tx3); }
+.reloj.sin-serie .rl-barra { cursor: default; }
+.reloj .rl-sel { width: auto; max-width: 74px; }
+.reloj.en-hc .rl-hora { color: var(--tx2); }
+.rl-spark { display: block; }
+.rl-spark .rl-pico { fill: var(--tx1); }
+.rl-est { font-size: 10.5px; color: var(--tx3); white-space: nowrap; }
+.rl-est.mal { color: var(--crit); }
+.rl-aviso { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border: 1px solid var(--line3);
+  font: 600 10px var(--sans); color: var(--tx2); cursor: help; flex: none; }
+.rl-aviso:hover, .rl-aviso:focus { color: var(--tx1); border-color: var(--tx2); }
+
+/* ---------- SVG comunes ---------- */
+.rl-g { display: block; touch-action: none; overflow: visible; }
+.rl-g .rl-hit { cursor: crosshair; }
+.rl-rej { stroke: var(--line); stroke-width: 1; }
+.rl-eje { stroke: var(--line3); stroke-width: 1; }
+.rl-tx, .rl-ty { font: 9.5px var(--sans); fill: var(--tx3); font-variant-numeric: tabular-nums; }
+.rl-ty { text-anchor: end; }
+.rl-cursor { stroke: var(--steel); stroke-width: 1.5; pointer-events: none; }
+.rl-cursor.hc { stroke-dasharray: 3 2; stroke: var(--tx2); }
+.rl-hover { stroke: var(--tx3); stroke-width: 1; pointer-events: none; }
+
+/* ---------- pestaña TIEMPO ---------- */
+.dock-pest-tiempo { position: relative; padding: 0 8px 4px; min-height: 100%; }
+.rl-cab { display: flex; align-items: center; gap: 12px; height: 24px; border-bottom: 1px solid var(--line); margin: 0 -8px 4px; padding: 0 8px; white-space: nowrap; overflow: hidden; }
+.rl-ley { display: inline-flex; gap: 10px; flex-wrap: nowrap; overflow: hidden; min-width: 0; flex: 1; }
+.rl-ley-i { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--tx2); }
+.rl-ley-i i, .rl-tip td i { display: inline-block; width: 8px; height: 8px; flex: none; }
+.rl-meta { font-size: 10px; display: inline-flex; align-items: center; gap: 6px; }
+.rl-ps { display: flex; gap: 10px; }
+.rl-p { flex: none; min-width: 0; }
+.rl-pt { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; height: 16px; }
+.rl-pt .lbl { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rl-v { font-size: 11px; color: var(--tx1); white-space: nowrap; }
+.rl-vacio { padding: 10px 2px; color: var(--tx2); font-size: 11.5px; max-width: 900px; line-height: 1.5; }
+.rl-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--bg1); border: 1px solid var(--line3); padding: 5px 7px; font-size: 11px; min-width: 170px; }
+.rl-tip table { border-collapse: collapse; margin-top: 3px; width: 100%; }
+.rl-tip td { padding: 1px 0; color: var(--tx2); white-space: nowrap; }
+.rl-tip td i { margin-right: 5px; vertical-align: 0; }
+.rl-tip td.n { text-align: right; color: var(--tx1); padding-left: 12px; font-variant-numeric: tabular-nums; }
+.rl-tip tr.tot td { border-top: 1px solid var(--line2); padding-top: 3px; }
+.rl-tip .sev { padding: 0 3px; font-size: 9px; }
+
+/* ---------- ficha ---------- */
+.rl-ficha .rl-mini { margin-top: 2px; }
+.rl-mini-pie { display: flex; align-items: center; gap: 6px; font-size: 10.5px; margin-top: 2px; }
+
+@media (max-width: 1440px) {
+  .reloj .rl-barra svg { width: 170px; }
+}
+@media (max-width: 899px) {
+  .reloj { flex-wrap: wrap; }
+  .rl-ps { flex-wrap: wrap; }
+}
+@media print { .reloj { display: none; } }

@@ -1,7 +1,8 @@
 // Motor de cálculo del simulador de red (Proyecto 2 Madrid, SCOM + ARCO).
 // Sin dependencias ni build. Funciona en navegador (window.Motor) y en node (module.exports).
 // Contrato y reglas del modelo: ver PLAN.md.
-// API: calcular(RED, opciones) · barridoN1(RED, opciones) · casos(RED) · serieDiaria · puntosUnicosFallo · demandasBase.
+// API: calcular(RED, opciones) · barridoN1(RED, opciones) · casos(RED) · serieDiaria · puntosUnicosFallo · demandasBase
+//   · serie(RED, caso, {paso_min, desde, hasta, fallos, eventos}) · serieAsync (Web Worker serie_worker.js) — CONTRATO_UI Revisión 4.
 // opciones: escenario, hora, fallos[], factores, modelo{id,anio,dia}, reparto_core, hora_cargada,
 //   rutas ("v7" por defecto si RED.meta.referencia; si no "dijkstra"), caso {trafico, evento, fallo[]}.
 // Cada demanda trae caminos[{peso, destino, ruta, enlaces, latencia_ms}] (reparto en empates/respaldos) y
@@ -517,11 +518,23 @@ var Motor = (function () {
     return d.ruta[k + 1] === l.a ? "ab" : "ba";
   }
 
+  // Valor de un perfil de 24 valores horarios a la hora `hora` (puede ser fraccionaria: 19.5 = 19:30).
+  // Entre horas enteras, interpolación lineal (supuesto dem.interpolacion_horaria); 23:xx interpola hacia las 00:00.
+  function valorPerfil(p, hora, defecto) {
+    if (!p) return defecto;
+    var h = ((hora % 24) + 24) % 24, i = Math.floor(h), fr = h - i;
+    var a = num(p[i], defecto);
+    if (fr < 1e-9) return a;
+    var b = num(p[(i + 1) % 24], defecto);
+    return a + (b - a) * fr;
+  }
+  function horaFraccionaria(h) { return typeof h === "number" && Math.abs(h - Math.round(h)) > 1e-9; }
+
   function perfilDe(RED, perfil, hora) {
     if (hora === null || hora === undefined) return 1;
     var p = RED.perfiles && RED.perfiles[perfil];
     if (!p) return 1;
-    return num(p[((hora % 24) + 24) % 24], 1);
+    return valorPerfil(p, hora, 1);
   }
 
   // Modo de rutas: "v7" por defecto con red de referencia (RED.meta.referencia), si no "dijkstra".
@@ -567,8 +580,14 @@ var Motor = (function () {
     var hora = typeof opciones.hora === "number" ? opciones.hora :
       (esc && typeof esc.hora === "number" ? esc.hora : null);
     var fallos = [].concat((esc && esc.fallos) || [], opciones.fallos || []);
+    // fallos_exactos (uso interno de serie(): fallos del caso ± eventos ya resueltos) sustituye a la lista
+    if (Array.isArray(opciones.fallos_exactos)) fallos = opciones.fallos_exactos.slice();
     // hora_cargada: todas las demandas en su hora cargada a la vez (reproduce las tablas de dimensionado)
     var cargada = !!(opciones.hora_cargada || (esc && esc.hora_cargada));
+    // perfil_horario (uso de serie()): un caso de hora cargada se recorre con los perfiles horarios
+    // (supuesto dem.serie_hora_cargada). Sin esta opción la hora cargada no cambia.
+    var forzarHoraria = !!opciones.perfil_horario, forzada = false;
+    if (forzarHoraria && cargada) { cargada = false; forzada = true; }
     var reparto = opciones.reparto_core || (esc && esc.reparto_core) ||
       (RED.meta && RED.meta.reparto_core) || "equitativo";
     var factores = [esc && esc.factores, opciones.factores], perfiles = null, avisoModelo = null, modeloInfo = null;
@@ -577,17 +596,20 @@ var Motor = (function () {
       var Mo = typeof Modelos !== "undefined" ? Modelos :
         (typeof require !== "undefined" ? require("./modelos.js") : null);
       if (Mo) {
-        var aj = Mo.ajustar(RED, opciones.modelo, hora, !!esc);
+        var aj = Mo.ajustar(RED, opciones.modelo, hora, !!esc, forzarHoraria ? { forzar_horaria: true } : null);
         factores.push(aj.factores);
         perfiles = aj.perfiles;
+        if (aj.forzada) forzada = true;
         if (aj.cargada) cargada = true; else if (aj.hora !== undefined && aj.hora !== null) hora = aj.hora;
         avisoModelo = aj.aviso || null;
         modeloInfo = { id: opciones.modelo.id || "BH", anio: opciones.modelo.anio || null, dia: opciones.modelo.dia || "laborable",
           def: aj.def || null, cargada: !!aj.cargada };
       } else avisoModelo = "modelos.js no cargado: se ignora el modelo de tráfico";
     }
+    if (forzada && (hora === null || hora === undefined)) hora = 21;
     return { esc: esc, escId: opciones.escenario || null, hora: hora, fallos: fallos, rutas: modoRutas(RED, opciones),
-      factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo, modelo: modeloInfo };
+      factores: factores, cargada: cargada, reparto: reparto, perfiles: perfiles, avisoModelo: avisoModelo, modelo: modeloInfo,
+      forzada: forzada, cache: opciones._cache || null };
   }
 
   // ---------- procedencia: supuestos de los que depende cada resultado (CONTRATO_UI Revisión 3) ----------
@@ -618,8 +640,11 @@ var Motor = (function () {
   // ---------- cálculo principal ----------
   function calcular(RED, opciones) {
     var op = resolverOpciones(RED, opciones);
-    var G = construirGrafo(RED);
-    var base = expandirCores(G, demandasBase(RED), op.reparto);
+    // _cache (uso interno de serie()): grafo, demandas base y rutas no dependen de la hora; se reutilizan entre pasos
+    var C = op.cache, ck = op.reparto + "|" + op.rutas, CE = null;
+    if (C) { CE = C[ck] || (C[ck] = { G: construirGrafo(RED), base: null, rutas: {} }); }
+    var G = CE ? CE.G : construirGrafo(RED);
+    var base = CE ? (CE.base || (CE.base = expandirCores(G, demandasBase(RED), op.reparto))) : expandirCores(G, demandasBase(RED), op.reparto);
     var alertas = [];
 
     if (op.escId && !op.esc) alertas.push({ nivel: "aviso", texto: "Escenario desconocido: " + op.escId });
@@ -635,8 +660,12 @@ var Motor = (function () {
     });
 
     // Rutas sin fallos y con fallos
-    var rutasBase = enrutar(G, base, {}, {}, op.rutas);
-    var rutas = hayFallos ? enrutar(G, base, caidosN, caidosL, op.rutas) : rutasBase;
+    function rutasDe(cN, cL, clave) {
+      if (!CE) return enrutar(G, base, cN, cL, op.rutas);
+      return CE.rutas[clave] || (CE.rutas[clave] = enrutar(G, base, cN, cL, op.rutas));
+    }
+    var rutasBase = rutasDe({}, {}, "");
+    var rutas = hayFallos ? rutasDe(caidosN, caidosL, Object.keys(caidosN).sort().join(",") + "|" + Object.keys(caidosL).sort().join(",")) : rutasBase;
 
     // Estructuras de salida
     var enlacesOut = {}, nodosOut = {}, residualL = {}, residualN = {}, ofertaL = {}, ofertaN = {};
@@ -661,7 +690,7 @@ var Motor = (function () {
     var dem = base.map(function (b, i) {
       var r = rutas[i], rb = rutasBase[i];
       var pp = op.perfiles && op.perfiles[b.padre || b.id];
-      var ph = op.cargada ? 1 : (pp ? num(pp[((op.hora % 24) + 24) % 24], 1) : perfilDe(RED, b.perfil, op.hora));
+      var ph = op.cargada ? 1 : (pp ? valorPerfil(pp, op.hora, 1) : perfilDe(RED, b.perfil, op.hora));
       var f = ph * factorDe(b, op.factores) * (b.reparto || 1);
       var dl = b.dl_gbps * f;
       var via = "principal";
@@ -755,6 +784,8 @@ var Motor = (function () {
     var glob = [], globZona = [], globServ = [];
     if (op.rutas === "dijkstra") glob.push("mot.rutas_dijkstra");
     var usaHora = !op.cargada && op.hora !== null && op.hora !== undefined;
+    if (usaHora && horaFraccionaria(op.hora)) glob.push("dem.interpolacion_horaria");
+    if (op.forzada) glob.push("dem.serie_hora_cargada");
     var mo = op.modelo;
     if (mo) {
       glob.push("dem.modelo_" + String(mo.id).toLowerCase());
@@ -962,6 +993,182 @@ var Motor = (function () {
     return out;
   }
 
+  // ---------- serie temporal: "película" de 24 h (CONTRATO_UI Revisión 4, PLAN_v3 §3) ----------
+  // Motor.serie(RED, caso, {paso_min: 60|15|5, desde: 0, hasta: 24, fallos: [], eventos: [{t_min, tipo, id}]})
+  //   caso: lo mismo que se pasa a calcular ({caso: {trafico, evento, fallo}} u opciones sueltas) o el propio
+  //   {trafico, evento, fallo|fallos, dia, anio}. La hora del caso se ignora: manda la de cada paso.
+  //   Cada paso = calcular() a la hora t_min/60 (fraccionaria: perfiles interpolados linealmente).
+  //   Casos de hora cargada (BH/P2/PM o escenario hora_cargada): se recorren con los perfiles horarios
+  //   (supuesto dem.serie_hora_cargada) y se avisa en serie.aviso.
+  function ahoraMs() {
+    return (typeof performance !== "undefined" && performance && performance.now) ? performance.now() : Date.now();
+  }
+  function opcionesDeCaso(caso) {
+    var o = {}, k;
+    caso = caso || {};
+    var suelto = !caso.caso && ("trafico" in caso || "evento" in caso || "fallo" in caso) &&
+      !("modelo" in caso || "escenario" in caso);
+    if (!suelto) { for (k in caso) o[k] = caso[k]; return o; }
+    // Forma del NOC ({trafico: "NC", dia, anio, hora, evento, fallos}) o del constructor ({trafico, evento, fallo})
+    var c = {}, t = caso.trafico;
+    if (typeof t === "string" && (caso.dia || caso.anio)) {
+      t = { id: t };
+      if (caso.dia) t.dia = caso.dia;
+      if (caso.anio) t.anio = caso.anio;
+    }
+    if (t) c.trafico = t;
+    c.evento = caso.evento || "ninguno";
+    c.fallo = [].concat(caso.fallo || [], caso.fallos || []);
+    o.caso = c;
+    return o;
+  }
+  function horaTexto(tm) {
+    var m = Math.round(tm), h = Math.floor(m / 60), mm = m - h * 60;
+    return (h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm;
+  }
+  // Fallos activos en el instante t: los del caso + eventos con t_min <= t aplicados en orden
+  // ("fallo" tumba el elemento, "reparacion" lo levanta, aunque viniera del caso).
+  function fallosEn(baseF, eventos, t) {
+    var act = {}, orden = [];
+    baseF.forEach(function (id) { if (!act[id]) { act[id] = 1; orden.push(id); } });
+    for (var i = 0; i < eventos.length; i++) {
+      var e = eventos[i];
+      if (e.t_min > t + 1e-9) break;
+      if (e.tipo === "fallo") { if (!act[e.id]) { act[e.id] = 1; orden.push(e.id); } }
+      else if (e.tipo === "reparacion" && act[e.id]) { delete act[e.id]; }
+    }
+    return orden.filter(function (id) { return act[id]; });
+  }
+
+  function serie(RED, caso, opciones) {
+    var t0 = ahoraMs();
+    opciones = opciones || {};
+    var paso = num(opciones.paso_min, 60);
+    if (!(paso > 0)) throw new Error("serie: paso_min no válido: " + opciones.paso_min);
+    var desde = num(opciones.desde, 0), hasta = num(opciones.hasta, 24);
+    if (!(hasta > desde)) throw new Error("serie: hasta debe ser mayor que desde");
+    var base = opcionesDeCaso(caso);
+    delete base.hora;
+    if (base.caso && base.caso.trafico && typeof base.caso.trafico === "object") {
+      var tc = {}, k;
+      for (k in base.caso.trafico) if (k !== "hora") tc[k] = base.caso.trafico[k];
+      base.caso = { trafico: tc, evento: base.caso.evento, fallo: base.caso.fallo };
+    }
+    if (opciones.fallos && opciones.fallos.length) base.fallos = [].concat(base.fallos || [], opciones.fallos);
+
+    // ¿Es un caso de hora cargada? Entonces la película usa los perfiles horarios (supuesto) y se avisa.
+    var op0 = resolverOpciones(RED, base);
+    var cargada = !!op0.cargada, aviso = null;
+    if (cargada) {
+      base.perfil_horario = true;
+      aviso = "Caso de hora cargada" + (op0.modelo ? " (" + op0.modelo.id + ")" : "") + ": la v7 solo define la foto " +
+        "con todas las demandas en su hora cargada a la vez. La película de 24 h es una extensión del simulador " +
+        "(supuesto): cada demanda alcanza su valor v7 en el pico de su perfil horario (residencial y móvil residencial " +
+        "21:00, empresa 10:00, oficinas 09:00, V2X 07:00/18:00, estadio 20:00–21:00), no todas a la vez, así que ningún " +
+        "paso reproduce la hora cargada coincidente (tampoco el de las 21:00). Para la foto v7 use el cálculo de hora cargada.";
+    }
+    var baseF = op0.fallos.slice();
+    var eventos = (opciones.eventos || []).filter(function (e) {
+      return e && typeof e.t_min === "number" && (e.tipo === "fallo" || e.tipo === "reparacion") && e.id;
+    }).map(function (e, i) { return { t_min: e.t_min, tipo: e.tipo, id: e.id, _i: i }; });
+    eventos.sort(function (a, b) { return (a.t_min - b.t_min) || (a._i - b._i); });
+    eventos.forEach(function (e) { delete e._i; });
+
+    var ts = [];
+    for (var t = desde * 60; t < hasta * 60 - 1e-9; t += paso) ts.push(t);
+    var n = ts.length;
+    var G = construirGrafo(RED);
+    var enl = {}, nod = {};
+    G.enlaces.forEach(function (l) { enl[l.id] = { ocup: new Float32Array(n), carga: new Float32Array(n) }; });
+    G.ordenNodos.forEach(function (id) { nod[id] = { carga: new Float32Array(n), ocup: new Float32Array(n) }; });
+    var cache = {}, pasos = [], usados = [], pico = null;
+    ts.forEach(function (tm, i) {
+      var o = {}, k;
+      for (k in base) o[k] = base[k];
+      o.hora = tm / 60;
+      o.fallos_exactos = fallosEn(baseF, eventos, tm);
+      o._cache = cache;
+      var r = calcular(RED, o), R = r.resumen;
+      var nAl = 0, nGr = 0;
+      R.alertas.forEach(function (a) { if (a.nivel !== "info") nAl++; if (a.nivel === "grave") nGr++; });
+      var ps = {};
+      CLASES_SERVICIO.forEach(function (c) { ps[c] = R.por_servicio[c].dl_gbps; });
+      var ocMax = R.max_ocupacion * 100;
+      pasos.push({ t_min: tm, hora: tm / 60, etiqueta: horaTexto(tm),
+        resumen: { dl_total_gbps: R.dl_total_gbps, servida_gbps: R.servida_gbps, servido_pct: R.pct_servida,
+          ocup_max_pct: ocMax, ocup_max_id: R.enlace_max, n_alarmas: nAl, n_graves: nGr,
+          demandas_afectadas: R.demandas_afectadas, por_servicio: ps },
+        fallos: o.fallos_exactos.slice() });
+      Object.keys(r.enlaces).forEach(function (id) {
+        var e = r.enlaces[id], s = enl[id];
+        if (!s) return;
+        s.ocup[i] = e.ocupacion * 100; s.carga[i] = e.carga_gbps;
+      });
+      Object.keys(r.nodos).forEach(function (id) {
+        var x = r.nodos[id], s = nod[id];
+        if (!s) return;
+        s.carga[i] = x.carga_gbps; s.ocup[i] = x.ocupacion * 100;
+      });
+      anadir(usados, R.supuestos_usados);
+      if (!pico || ocMax > pico.ocup_max_pct + 1e-9) pico = { t_min: tm, ocup_max_pct: ocMax, id: R.enlace_max };
+    });
+    usados.sort();
+    return { pasos: pasos, enlaces: enl, nodos: nod, pico: pico, supuestos_usados: usados,
+      ms: ahoraMs() - t0, n: n, paso_min: paso, desde: desde, hasta: hasta,
+      hora_cargada: cargada, aviso: aviso, eventos: eventos, fallos_base: baseF };
+  }
+
+  // Buffers de los Float32Array de una serie (para postMessage con transferencia)
+  function transferiblesSerie(s) {
+    var out = [];
+    ["enlaces", "nodos"].forEach(function (g) {
+      Object.keys(s[g] || {}).forEach(function (id) {
+        var x = s[g][id];
+        Object.keys(x).forEach(function (k) { if (x[k] && x[k].buffer) out.push(x[k].buffer); });
+      });
+    });
+    return out;
+  }
+
+  // Motor.serieAsync(RED, caso, opciones) -> Promise<serie>. Usa serie_worker.js si hay Worker (http/https);
+  // si no (file://, node, error del worker) calcula en el hilo principal. opciones.worker === false fuerza síncrono.
+  var trab = null, trabRoto = false, trabSeq = 0, trabPend = {};
+  function sincrono(RED, caso, opciones) {
+    return new Promise(function (res, rej) {
+      try { var s = serie(RED, caso, opciones); s.via = "sincrono"; res(s); } catch (e) { rej(e); }
+    });
+  }
+  function caerASincrono() {
+    trabRoto = true;
+    try { if (trab) trab.terminate(); } catch (e) { /* nada */ }
+    trab = null;
+    var p = trabPend; trabPend = {};
+    Object.keys(p).forEach(function (id) { sincrono(p[id].RED, p[id].caso, p[id].opciones).then(p[id].res, p[id].rej); });
+  }
+  function trabajador() {
+    if (trab || trabRoto) return trab;
+    if (typeof Worker === "undefined" || typeof location === "undefined" || !/^https?:$/.test(location.protocol)) { trabRoto = true; return null; }
+    try { trab = new Worker(serieAsync.url || "serie_worker.js"); } catch (e) { trabRoto = true; return null; }
+    trab.onmessage = function (ev) {
+      var m = ev.data || {}, p = trabPend[m.id];
+      if (!p) return;
+      delete trabPend[m.id];
+      if (m.ok) { m.serie.via = "worker"; p.res(m.serie); } else p.rej(new Error(m.error || "serie_worker: error"));
+    };
+    trab.onerror = function (ev) { if (ev && ev.preventDefault) ev.preventDefault(); caerASincrono(); };
+    return trab;
+  }
+  function serieAsync(RED, caso, opciones) {
+    var w = (opciones && opciones.worker === false) ? null : trabajador();
+    if (!w) return sincrono(RED, caso, opciones);
+    return new Promise(function (res, rej) {
+      var id = ++trabSeq;
+      trabPend[id] = { res: res, rej: rej, RED: RED, caso: caso, opciones: opciones };
+      try { w.postMessage({ tipo: "serie", id: id, red: RED, caso: caso, opciones: opciones }); }
+      catch (e) { delete trabPend[id]; sincrono(RED, caso, opciones).then(res, rej); }
+    });
+  }
+
   // ---------- puntos únicos de fallo ----------
   // Solo enrutamiento (sin congestión). Un elemento que no está en ninguna ruta sin fallos no puede
   // dejar demandas sin ruta, así que se descarta sin recalcular.
@@ -1112,6 +1319,10 @@ var Motor = (function () {
     casos: casos,
     demandasBase: demandasBase,
     serieDiaria: serieDiaria,
+    serie: serie,
+    serieAsync: serieAsync,
+    transferiblesSerie: transferiblesSerie,
+    valorPerfil: valorPerfil,
     puntosUnicosFallo: puntosUnicosFallo,
     CLASES_SERVICIO: CLASES_SERVICIO.slice(),
     claseServicio: claseServicio,

@@ -38,6 +38,7 @@
     { id: "radio", n: { es: "Radio (bandas y áreas)", en: "Radio (bands and areas)" } },
     { id: "alarmas", n: { es: "Alarmas", en: "Alarms" } },
     { id: "n1", n: { es: "Barrido N-1", en: "N-1 sweep" }, lento: true },
+    { id: "serie", n: { es: "Serie temporal 24 h (reloj)", en: "24 h time series (clock)" } },
     { id: "supuestos", n: { es: "Registro de supuestos", en: "Assumption register" } },
     { id: "valores_detallados", n: { es: "Valores detallados", en: "Detailed values" } }
   ];
@@ -596,6 +597,38 @@
       });
     }
 
+    // ---- serie temporal (Revisión 4, reloj.js): KPI por paso y enlaces en formato largo. Solo si hay serie calculada.
+    var SER = ctx.serie;
+    if (quiere.serie && SER && SER.pasos && SER.pasos.length) {
+      var CLS = Motor.CLASES_SERVICIO || ["movil", "ftth", "voz", "urllc", "iot", "empresa", "evento", "ntn"];
+      var depSer = arr(SER.supuestos_usados);
+      var tsk = poner(nuevaTabla("serie_kpi", { es: "Serie temporal · KPI", en: "Time series · KPIs" },
+        { es: "Un paso por fila (Motor.serie, paso " + (SER.paso_min || "") + " min)." + (SER.aviso ? " " + SER.aviso : ""), en: "One step per row (Motor.serie, step " + (SER.paso_min || "") + " min)." + (SER.aviso ? " " + SER.aviso : "") },
+        [K("paso", "paso", "step", { dec: 0 }), C("hora", "hora", "time", { rol: "id" }), K("dl_total_gbps", "dl_total", "total_dl", { u: "Gbit/s", dec: 2 }),
+          K("servido_pct", "servido", "served", { u: "pct", dec: 2 }), K("ocup_max_pct", "ocupacion_max", "max_occupancy", { u: "pct", dec: 1 }), K("ocup_max_id", "enlace_max", "max_link"),
+          K("n_alarmas", "alarmas", "alarms", { dec: 0 }), K("demandas_afectadas", "demandas_afectadas", "affected_demands", { dec: 0 })].concat(
+          CLS.map(function (c) { return K("sv_" + c, "dl_" + c, "dl_" + c, { u: "Gbit/s", dec: 2 }); }))));
+      SER.pasos.forEach(function (p, i) {
+        var r = p.resumen || {}, v = { paso: i, hora: p.etiqueta || (pad(Math.floor(p.t_min / 60)) + ":" + pad(p.t_min % 60)), dl_total_gbps: r.dl_total_gbps, servido_pct: r.servido_pct,
+          ocup_max_pct: r.ocup_max_pct, ocup_max_id: r.ocup_max_id || "", n_alarmas: r.n_alarmas, demandas_afectadas: r.demandas_afectadas };
+        CLS.forEach(function (c) { var x = r.por_servicio && r.por_servicio[c]; v["sv_" + c] = esNum(x) ? x : x && esNum(x.dl_gbps) ? x.dl_gbps : null; });
+        anadir(tsk, null, v, { dep: depSer, clave: "t" + i });
+      });
+      var tse = poner(nuevaTabla("serie_enlaces", { es: "Serie temporal · enlaces", en: "Time series · links" },
+        { es: "Formato largo: un enlace y un paso por fila.", en: "Long format: one link and one step per row." },
+        [K("paso", "paso", "step", { dec: 0 }), C("hora", "hora", "time"), C("enlace", "enlace", "link", { rol: "id" }), C("capa", "capa", "layer"),
+          K("carga_gbps", "carga", "load", { u: "Gbit/s", dec: 2 }), K("ocupacion_pct", "ocupacion", "occupancy", { u: "pct", dec: 1 })]));
+      tse.larga = true;
+      (RED.enlaces || []).forEach(function (e) {
+        var x = SER.enlaces && SER.enlaces[e.id], capa = CP.enlace(e);
+        if (!x || !capaOk(capa)) return;
+        SER.pasos.forEach(function (p, i) {
+          anadir(tse, null, { paso: i, hora: p.etiqueta || (pad(Math.floor(p.t_min / 60)) + ":" + pad(p.t_min % 60)), enlace: e.id, capa: capa,
+            carga_gbps: x.carga ? x.carga[i] : null, ocupacion_pct: x.ocup ? x.ocup[i] : null }, { dep: [], clave: e.id + "@" + i });
+        });
+      });
+    }
+
     // ---- filtros finales: solo filas con supuestos
     if (sel.solo) tablas.forEach(function (t) { t.filas = t.filas.filter(tieneSup); });
 
@@ -1048,6 +1081,7 @@
       caso: { texto: cap ? cap.textContent : "", trafico: NOC.caso && NOC.caso.trafico, evento: NOC.caso && NOC.caso.evento,
         fallos: NOC.modo === "lab" && NOC.caso ? (NOC.caso.fallos || []).slice() : [], anio: NOC.caso && NOC.caso.anio, dia: NOC.caso && NOC.caso.dia, hora: NOC.caso && NOC.caso.hora },
       alarmas: NOC.alarmas ? NOC.alarmas() : null,
+      serie: NOC.reloj && NOC.reloj.serie ? NOC.reloj.serie() : null,
       capas: NOC.capas, servicios: NOC.sv ? NOC.sv.activos : null,
       capaNodo: NOC.capaNodo, capaEnlace: NOC.capaEnlace, fecha: new Date()
     };

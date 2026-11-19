@@ -3871,11 +3871,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "nombrado en la v7 sin diseñar",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "nombrado en la v7 sin diseñar",
-   "s": "S-069"
+   "s": "S-071"
   },
   {
    "id": "HUECO-SYNC",
@@ -3919,11 +3919,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "nombrado en la v7 sin diseñar",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "nombrado en la v7 sin diseñar",
-   "s": "S-069"
+   "s": "S-071"
   }
  ],
  "equipos": {
@@ -4285,11 +4285,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   },
   "OLT-MF14": {
    "id": "OLT-MF14",
@@ -4497,11 +4497,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   },
   "PE-METRO-7750": {
    "id": "PE-METRO-7750",
@@ -5038,11 +5038,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   },
   "SBC-IBCF-TRGW": {
    "id": "SBC-IBCF-TRGW",
@@ -5266,11 +5266,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   },
   "UPF-CENTRAL": {
    "id": "UPF-CENTRAL",
@@ -5882,11 +5882,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   },
   "ROUTER-BORDE": {
    "id": "ROUTER-BORDE",
@@ -5924,11 +5924,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "equipo sin modelo en la v7",
-    "s": "S-069"
+    "s": "S-071"
    },
    "t": "supuesto",
    "f": "equipo sin modelo en la v7",
-   "s": "S-069"
+   "s": "S-071"
   }
  },
  "interfaces": [
@@ -5963,11 +5963,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Nombre normativo añadido; los documentos solo dan bandas.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Nombre normativo añadido; los documentos solo dan bandas.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "N1",
@@ -6041,11 +6041,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "N3",
@@ -6087,11 +6087,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "N4",
@@ -6133,11 +6133,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "N6",
@@ -6244,11 +6244,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "SBI",
@@ -6499,11 +6499,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-    "s": "S-070"
+    "s": "S-072"
    },
    "t": "supuesto",
    "f": "Protocolo normativo 3GPP añadido; los documentos nombran la interfaz pero no el protocolo.",
-   "s": "S-070"
+   "s": "S-072"
   },
   {
    "id": "CAMARA-API",
@@ -7660,11 +7660,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Lado B en la misma zona y el mismo DC que el lado A (supuesto del simulador para poder recorrerlo).",
-    "s": "S-072"
+    "s": "S-074"
    },
    "t": "supuesto",
    "f": "Lado B en la misma zona y el mismo DC que el lado A (supuesto del simulador para poder recorrerlo).",
-   "s": "S-072"
+   "s": "S-074"
   },
   {
    "id": "ims-otro-operador",
@@ -7758,11 +7758,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "recorrido deducido",
-    "s": "S-068"
+    "s": "S-070"
    },
    "t": "supuesto",
    "f": "recorrido deducido",
-   "s": "S-068"
+   "s": "S-070"
   },
   {
    "id": "estadio",
@@ -8370,11 +8370,11 @@ var ARQ = {
    "proc": {
     "t": "supuesto",
     "f": "Flujo de control dentro del core: la v7 no da su latencia de transporte.",
-    "s": "S-071"
+    "s": "S-073"
    },
    "t": "supuesto",
    "f": "Flujo de control dentro del core: la v7 no da su latencia de transporte.",
-   "s": "S-071"
+   "s": "S-073"
   }
  ],
  "sedes_l2vpn": [
