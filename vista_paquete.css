@@ -11,7 +11,7 @@
   background: var(--bg1); border: 1px solid var(--line); border-radius: 0; color: var(--tx1); text-align: left; cursor: pointer; }
 .vp-salto.dato-doc, .vp-salto.dato-sup, .vp-salto.dato-calc { border-left-width: 2px; padding-left: 7px; }
 .vp-salto.vp-ne { border-left: 2px dashed var(--unk); }
-.vp-salto:hover { border-color: var(--acc); }
+.vp-salto:hover { border-color: var(--tx2); }
 .vp-salto:focus-visible { outline: 1px solid var(--acc); outline-offset: 1px; }
 .vp-n { font: 600 9px var(--mono); color: var(--tx3); }
 .vp-el { font: 600 11px var(--mono); line-height: 1.25; word-break: break-word; }

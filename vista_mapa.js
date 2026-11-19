@@ -1,6 +1,8 @@
 // vista_mapa.js — vista MAPA del NOC (CONTRATO_UI.md). Leaflet 1.9.4 con teselas oscuras sin etiquetas.
 // Nodos con icono por tipo, enlaces coloreados por ocupación y con grosor por capacidad, zonas de demanda (capa B).
 // Clic = NOC.seleccionar + ficha; clic derecho = añadir/quitar fallo (en LAB); tooltip corto al pasar.
+// Revisión 2: vista por tipo de servicio (NOC.sv, ver carril_servicios.js) y capa de radio n28/n78/n258
+// (radio_datos.js, v7 §6.2) bajo los enlaces. El mapa Leaflet queda en NOC.mapa.
 (function () {
   "use strict";
   var NOC = window.NOC;
@@ -18,6 +20,8 @@
   var C = {};
   function leerTokens() {
     ["--bg0", "--bg1", "--bg2", "--line", "--tx1", "--tx2", "--tx3", "--acc", "--crit", "--maj", "--min", "--wrn", "--ok", "--unk", "--sup"].forEach(function (k) { C[k.slice(2)] = tok(k); });
+    CLASES.forEach(function (c) { CS[c] = getComputedStyle(document.documentElement).getPropertyValue("--sv-" + c).trim() || RESERVA[c]; });
+    BANDAS.forEach(function (b) { CS[b] = getComputedStyle(document.documentElement).getPropertyValue("--band-" + b).trim() || RESERVA[b]; });
   }
 
   var IDX = NOC.idx;
@@ -25,7 +29,35 @@
   var TAM = { core: 16, metro: 15, edge: 13, ix: 14, agg: 11, site: 11 };
   var CON_ETIQUETA = { core: 1, metro: 1, edge: 1, ix: 1 };
 
-  var mapa = null, el = null, grupos = {}, disp = {};
+  // ---------- estado de servicios y radio (mismo bloque en carril_servicios.js) ----------
+  var CLASES = (window.Motor && window.Motor.CLASES_SERVICIO) || ["movil", "ftth", "voz", "urllc", "iot", "empresa", "evento", "ntn"];
+  var BANDAS = ["n28", "n78", "n258"];
+  function estadoSV() {
+    if (NOC.sv) return NOC.sv;
+    var g = {};
+    try { g = JSON.parse(localStorage.getItem("noc.servicios") || "{}") || {}; } catch (e) { g = {}; }
+    var sv = NOC.sv = { activos: {}, dominante: !!g.dominante, bandas: {}, _f: [],
+      on: function (fn) { this._f.push(fn); },
+      modoMapa: function () { var s = this; return s.dominante || CLASES.some(function (c) { return !s.activos[c]; }); },
+      cambio: function () {
+        try { localStorage.setItem("noc.servicios", JSON.stringify({ activos: this.activos, dominante: this.dominante, bandas: this.bandas })); } catch (e) { /* sin almacenamiento */ }
+        this._f.forEach(function (fn) { try { fn(); } catch (e) { console.error("NOC.sv", e); } });
+      } };
+    CLASES.forEach(function (c) { sv.activos[c] = !(g.activos && g.activos[c] === false); });
+    BANDAS.forEach(function (b) { sv.bandas[b] = !!(g.bandas && g.bandas[b]); });
+    return sv;
+  }
+  var SV = estadoSV();
+  var RESERVA = { movil: "#3987e5", ftth: "#d95926", voz: "#199e70", urllc: "#c98500", iot: "#d55181",
+    empresa: "#0ca30c", evento: "#9085e9", ntn: "#e66767", n28: "#8a7ff0", n78: "#20a8a0", n258: "#c08a1e" };
+  var CS = {};
+  function colorSV(k) { return CS[k] || RESERVA[k] || "#888"; }
+  var NOMBRE_SV = {
+    movil: { es: "Móvil eMBB", en: "Mobile eMBB" }, ftth: { es: "FTTH fijo", en: "Fixed FTTH" }, voz: { es: "Voz", en: "Voice" },
+    urllc: { es: "URLLC / V2X", en: "URLLC / V2X" }, iot: { es: "IoT / mMTC", en: "IoT / mMTC" }, empresa: { es: "Empresa", en: "Enterprise" },
+    evento: { es: "Evento", en: "Event" }, ntn: { es: "Satélite NTN", en: "NTN satellite" } };
+
+  var mapa = null, el = null, grupos = {}, disp = {}, radioL = {};
   var nodosL = {}, etiqL = {}, enlL = {}, golpeL = {}, zonasL = {}, halo = null;
   var montado = false;
 
@@ -75,9 +107,31 @@
     if (typeof cap !== "number" || !isFinite(cap)) return 1.5;
     return Math.max(1, Math.min(6, 1 + 1.25 * Math.log10(Math.max(1, cap))));
   }
+  // Carga de los tipos activos en el enlace: {g: Gbit/s del sentido más cargado, dom: tipo dominante, total}
+  function cargaSV(r) {
+    var ps = r && r.por_servicio;
+    if (!ps) return null;
+    var ab = 0, ba = 0, dom = null, md = 0;
+    CLASES.forEach(function (c) {
+      if (!SV.activos[c] || !ps[c]) return;
+      ab += ps[c].ab; ba += ps[c].ba;
+      var m = Math.max(ps[c].ab, ps[c].ba);
+      if (m > md) { md = m; dom = c; }
+    });
+    return { g: Math.max(ab, ba), dom: dom, total: r.carga_gbps || 0 };
+  }
   function estiloEnlace(e) {
     var r = resE(e.id), caido = r && r.caido, o = NOC.ocupacion(r);
     if (caido) return { color: C.unk, weight: Math.max(1.5, grosor(e.capacidad_gbps) - 1), dashArray: "5 4", opacity: 0.9 };
+    if (SV.modoMapa()) {
+      var x = cargaSV(r);
+      if (x) {
+        if (!x.dom || x.g < 1e-6) return { color: C.tx3, weight: 1, dashArray: "2 5", opacity: 0.35 };
+        var share = x.total > 0 ? Math.min(1, x.g / x.total) : 1;
+        return { color: colorSV(x.dom), weight: Math.max(1.2, Math.min(9, 1 + 1.6 * Math.log10(1 + x.g))), dashArray: e.tipo === "sat" ? "1 4" : null,
+          opacity: 0.4 + 0.55 * share };
+      }
+    }
     return { color: o == null ? C.tx3 : colSev(NOC.sevOcupacion(o)), weight: grosor(e.capacidad_gbps), dashArray: e.tipo === "sat" ? "1 4" : null, opacity: 0.95 };
   }
   function estiloZona(z) {
@@ -99,7 +153,17 @@
     var r = resE(e.id), o = NOC.ocupacion(r);
     return '<b>' + esc(e.id) + '</b><br>' + (typeof e.capacidad_gbps === "number" ? gbCorto(e.capacidad_gbps) + " G" : "C —") + ' · ' +
       (r && r.caido ? '<span class="sev-unk">DOWN</span>' : '<span class="sev-' + NOC.sevOcupacion(o) + '">' + (o == null ? "—" : fmt(o * 100, 1) + " %") + '</span>' +
-        ' · ↗ ' + gbCorto(r ? r.carga_ab : null) + ' ↙ ' + gbCorto(r ? r.carga_ba : null));
+        ' · ↗ ' + gbCorto(r ? r.carga_ab : null) + ' ↙ ' + gbCorto(r ? r.carga_ba : null)) + tipServicios(r);
+  }
+  function tipServicios(r) {
+    var ps = r && r.por_servicio;
+    if (!ps || !r.carga_gbps) return "";
+    var l = CLASES.map(function (c) { return [c, Math.max(ps[c].ab, ps[c].ba)]; }).filter(function (x) { return x[1] > 1e-6; })
+      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 4);
+    return l.length ? '<br>' + l.map(function (x) {
+      return '<i style="display:inline-block;width:8px;height:8px;margin-right:3px;background:' + colorSV(x[0]) + (SV.activos[x[0]] ? '' : ';opacity:.35') + '"></i>' +
+        esc(t(NOMBRE_SV[x[0]])) + ' ' + gbCorto(x[1]);
+    }).join('<br>') : "";
   }
   function tipZona(z) {
     var r = NOC.resultado && NOC.resultado.zonas ? NOC.resultado.zonas[z.id] : null;
@@ -185,6 +249,50 @@
       }
     });
     aplicarCapas();
+    construirRadio();
+  }
+  // ---------- capa de radio (radio_datos.js) ----------
+  function construirRadio() {
+    var RADIO = window.RADIO;
+    if (!RADIO || !RADIO.areas) return;
+    BANDAS.forEach(function (b) { radioL[b] = L.layerGroup(); });
+    // grandes primero para que las pequeñas queden encima y se puedan pulsar
+    var areas = RADIO.areas.slice().sort(function (a, b) { return (b.radio_m || 0) - (a.radio_m || 0); });
+    areas.forEach(function (a) {
+      if (!radioL[a.banda] || !a.centro) return;
+      var col = colorSV(a.banda), sup = a.origen === "supuesto", capas = [];
+      var base = { pane: "radio", color: col, weight: 1, opacity: 0.85, fillColor: col, bubblingMouseEvents: false,
+        dashArray: sup ? "4 3" : null, fillOpacity: a.tipo === "zona" ? 0.06 : a.tipo === "celda_ref" ? 0 : 0.1 };
+      if (a.forma === "rectangulo" && a.lado_m) {
+        var dLat = a.lado_m[1] / 2 / 111320, dLon = a.lado_m[0] / 2 / (111320 * Math.cos(a.centro[0] * Math.PI / 180));
+        capas.push(L.rectangle([[a.centro[0] - dLat, a.centro[1] - dLon], [a.centro[0] + dLat, a.centro[1] + dLon]], base));
+      } else if (a.radio_m) {
+        capas.push(L.circle(a.centro, Object.assign({ radius: a.radio_m }, base)));
+      }
+      // marca de tamaño fijo para lo que a escala de área metropolitana no se ve (estadio, hospital, nave)
+      if (a.forma === "punto" || a.forma === "rectangulo" || (a.radio_m && a.radio_m < 300)) {
+        capas.push(L.circleMarker(a.centro, { pane: "radio", radius: a.forma === "punto" ? 5 : 7, color: col, weight: 1.5, opacity: 0.95,
+          fillColor: col, fillOpacity: a.forma === "punto" ? 0.5 : 0.15, dashArray: sup ? "3 2" : null, bubblingMouseEvents: false }));
+      }
+      capas.forEach(function (c) {
+        c.bindTooltip(function () {
+          return '<b>' + esc(t(a.titulo)) + '</b><br>' + esc(a.banda) + (a.radio_ul_km != null ? ' · R_UL ≈' + fmt(a.radio_ul_km, 2) + ' km' : '') +
+            ' · <span class="tx2">' + esc(a.origen) + '</span>';
+        }, { sticky: true, direction: "top", className: "noc-tip", opacity: 1 });
+        c.on("click", function (ev) { L.DomEvent.stopPropagation(ev); if (NOC.fichaRadio) NOC.fichaRadio(a.id); });
+        radioL[a.banda].addLayer(c);
+      });
+    });
+    aplicarRadio();
+  }
+  function aplicarRadio() {
+    if (!mapa) return;
+    BANDAS.forEach(function (b) {
+      var g = radioL[b]; if (!g) return;
+      var vis = !!SV.bandas[b];
+      if (vis && !mapa.hasLayer(g)) g.addTo(mapa);
+      if (!vis && mapa.hasLayer(g)) mapa.removeLayer(g);
+    });
   }
   function aplicarCapas() {
     Object.keys(grupos).forEach(function (c) {
@@ -224,13 +332,25 @@
     var esc_ = [["ok", "< 60 %"], ["min", "60–85 %"], ["maj", "85–100 %"], ["crit", "> 100 %"]];
     var tipos = ["core", "edge", "metro", "agg", "site", "ix"];
     var plegada = lg.classList.contains("plegada");
+    var modoSV = SV.modoMapa();
+    var bandasOn = BANDAS.filter(function (b) { return SV.bandas[b]; });
     lg.innerHTML =
       '<button type="button" class="ley-cab" aria-expanded="' + !plegada + '">' + esc(t({ es: "Leyenda", en: "Legend" })) + ' ' + (plegada ? "▸" : "▾") + '</button>' +
       '<div class="ley-cuerpo">' +
+      (modoSV ?
+        '<div class="rot">' + esc(t(SV.dominante ? { es: "Enlace por tipo dominante", en: "Link by dominant type" } : { es: "Enlace por tipo (activos)", en: "Link by type (active)" })) + '</div>' +
+        CLASES.filter(function (c) { return SV.activos[c]; }).map(function (c) {
+          return '<div class="fila"><i style="background:' + colorSV(c) + '"></i><span>' + esc(t(NOMBRE_SV[c])) + '</span></div>';
+        }).join("") +
+        '<div class="tx3">' + esc(t({ es: "Grosor ∝ log(carga de los tipos activos); opacidad = su parte de la carga", en: "Width ∝ log(load of active types); opacity = their share of the load" })) + '</div>'
+      :
       '<div class="rot">' + esc(t({ es: "Ocupación de enlace", en: "Link occupancy" })) + '</div>' +
       esc_.map(function (x) { return '<div class="fila"><i style="background:' + colSev(x[0]) + '"></i><span class="sev sev-' + x[0] + '">' + x[0].toUpperCase().replace("CRIT", "CRIT") + '</span><span class="mono">' + x[1] + '</span></div>'; }).join("") +
+      '<div class="tx3">' + esc(t({ es: "Grosor ∝ log(capacidad)", en: "Width ∝ log(capacity)" })) + '</div>') +
       '<div class="fila"><i class="disc"></i><span class="sev sev-unk">DOWN</span><span>' + esc(t({ es: "caído", en: "down" })) + '</span></div>' +
-      '<div class="tx3">' + esc(t({ es: "Grosor ∝ log(capacidad)", en: "Width ∝ log(capacity)" })) + '</div>' +
+      (bandasOn.length ? '<div class="rot" style="margin-top:6px">' + esc(t({ es: "Radio (v7 §6.2)", en: "Radio (v7 §6.2)" })) + '</div>' +
+        bandasOn.map(function (b) { return '<div class="fila"><i style="background:' + colorSV(b) + ';opacity:.6"></i><span class="mono">' + b + '</span></div>'; }).join("") +
+        '<div class="tx3">' + esc(t({ es: "Trazo discontinuo = supuesto (forma o posición)", en: "Dashed outline = assumption (shape or position)" })) + '</div>' : '') +
       '<div class="rot" style="margin-top:6px">' + esc(t({ es: "Nodos", en: "Nodes" })) + '</div>' +
       '<div class="formas">' + tipos.map(function (tp) {
         return '<span>' + NOC.formaNodo(tp, 11, C.tx2, C.bg0) + esc(t(NOC.TIPO_NODO[tp])) + '</span>';
@@ -248,8 +368,10 @@
       el.innerHTML = '<div class="mapa-noc"></div><div class="mapa-leyenda"></div>' +
         '<div class="mapa-modo"></div>';
       mapa = L.map(el.querySelector(".mapa-noc"), { zoomControl: false, attributionControl: true, zoomSnap: 0.5, minZoom: 9, maxZoom: 16 });
+      NOC.mapa = mapa;
       L.control.zoom({ position: "bottomright" }).addTo(mapa);
       mapa.createPane("zonas").style.zIndex = 350;
+      mapa.createPane("radio").style.zIndex = 360;   // bandas de radio: encima de las zonas, debajo de los enlaces
       mapa.createPane("halo").style.zIndex = 395;
       mapa.createPane("enlaces").style.zIndex = 410;
       var pe = mapa.createPane("etiquetas"); pe.style.zIndex = 620; pe.style.pointerEvents = "none";
@@ -274,12 +396,16 @@
       mapa.on("click", function () { if (NOC.seleccion) NOC.cerrarFicha(); });
       if (window.ResizeObserver) new ResizeObserver(function () { if (mapa) mapa.invalidateSize(); }).observe(el);
       var lg = el.querySelector(".mapa-leyenda");
-      if (el.clientHeight < 520) lg.classList.add("plegada");
+      // plegado recordado en localStorage["noc.plegado"].leyenda (NOC.plegado/NOC.plegar de app.js)
+      var plegLey = function () { return NOC.plegado ? NOC.plegado("leyenda") : lg.classList.contains("plegada"); };
+      lg.classList.toggle("plegada", NOC.plegado ? plegLey() : el.clientHeight < 520);
       L.DomEvent.disableClickPropagation(lg); L.DomEvent.disableScrollPropagation(lg);
       lg.addEventListener("click", function (ev) {
         if (!ev.target.closest(".ley-cab")) return;
-        lg.classList.toggle("plegada"); pintarLeyenda();
+        if (NOC.plegar) NOC.plegar("leyenda", !plegLey());
+        lg.classList.toggle("plegada", NOC.plegar ? plegLey() : !lg.classList.contains("plegada")); pintarLeyenda();
       });
+      NOC.on("plegado", function (p) { if (!p || p.id === "leyenda") { lg.classList.toggle("plegada", plegLey()); pintarLeyenda(); } });
       pintarLeyenda(); pintarModo();
     },
     activar: function () { if (mapa) setTimeout(function () { mapa.invalidateSize(); }, 0); },
@@ -299,4 +425,6 @@
   NOC.on("capas", function () { if (montado) aplicarCapas(); });
   NOC.on("lang", function () { pintarLeyenda(); });
   NOC.on("modo", function () { pintarModo(); });
+  NOC.on("carril", function () { if (mapa) setTimeout(function () { mapa.invalidateSize(); }, 0); });
+  SV.on(function () { if (!montado) return; leerTokens(); refrescar(); aplicarRadio(); pintarLeyenda(); });
 })();

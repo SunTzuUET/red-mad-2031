@@ -362,6 +362,35 @@ var Motor = (function () {
     });
   }
 
+  // ---------- tipos de servicio (CONTRATO_UI Revisión 2 §4) ----------
+  // Ocho clases para ver la red por servicio. Se deducen de los campos de la demanda (tipo, perfil, slice,
+  // destino, id); un campo `clase_servicio` explícito en los datos manda. Reglas en orden; la primera que casa gana.
+  var CLASES_SERVICIO = ["movil", "ftth", "voz", "urllc", "iot", "empresa", "evento", "ntn"];
+  var REGLAS_SERVICIO = [
+    ["ntn", "satélite NTN (id S-NTN / nodo NTN)", function (x) {
+      return /^S-NTN/.test(x.id || "") || /NTN/.test(x.nodo || x.origen || "") || x.tipo === "sat"; }],
+    ["evento", "perfil evento (estadio, MEC)", function (x) { return x.perfil === "evento"; }],
+    ["urllc", "slice URLLC o perfil movilidad (V2X)", function (x) { return x.slice === "URLLC" || x.perfil === "movilidad"; }],
+    ["empresa", "slice privado PRIV-* o L2VPN sede a sede", function (x) {
+      return /^PRIV/.test(x.slice || "") || x.destino === "nodo" || /^S-L2VPN/.test(x.id || ""); }],
+    ["iot", "slice mMTC o perfil iot", function (x) { return x.slice === "mMTC" || x.perfil === "iot"; }],
+    ["voz", "tipo voz-* o destino IMS", function (x) { return /^voz/.test(x.tipo || "") || x.destino === "ims"; }],
+    ["movil", "tipo movil-* (eMBB por radio)", function (x) { return /^movil/.test(x.tipo || ""); }],
+    ["ftth", "Internet fijo por BNG (tipo residencial-fijo/empresa, slice fijo-bng)", function (x) {
+      return x.tipo === "residencial-fijo" || x.tipo === "empresa" || x.slice === "fijo-bng"; }]
+  ];
+  // Devuelve {clase, regla}. regla "reserva" = ninguna regla casó (test_servicios.js exige que no pase).
+  function claseServicio(x) {
+    if (x && CLASES_SERVICIO.indexOf(x.clase_servicio) >= 0) return { clase: x.clase_servicio, regla: "explícita en los datos" };
+    for (var i = 0; i < REGLAS_SERVICIO.length; i++) if (REGLAS_SERVICIO[i][2](x || {})) return { clase: REGLAS_SERVICIO[i][0], regla: REGLAS_SERVICIO[i][1] };
+    return { clase: x && x.perfil === "empresa" ? "empresa" : "movil", regla: "reserva" };
+  }
+  function nuevoPorServicio() {
+    var o = {};
+    for (var i = 0; i < CLASES_SERVICIO.length; i++) o[CLASES_SERVICIO[i]] = { ab: 0, ba: 0 };
+    return o;
+  }
+
   // ---------- demandas ----------
   function demandasBase(RED) {
     var slices = {};
@@ -382,7 +411,7 @@ var Motor = (function () {
         out.push({ id: n.id, clase: "necesidad", zona: z.id, origen: z.agg, tipo: n.tipo,
           prioridad: prio(n), slice: n.slice || null, dl_gbps: num(n.dl_gbps, 0), ul_gbps: num(n.ul_gbps, 0),
           perfil: n.perfil || null, destino: n.destino || "internet", edge: z.edge || null,
-          reparto_cores: n.reparto_cores || null, latencia_max_ms: latMax(n) });
+          reparto_cores: n.reparto_cores || null, latencia_max_ms: latMax(n), clase_servicio_dato: n.clase_servicio || null });
       });
     });
     (RED.servicios || []).forEach(function (s) {
@@ -394,7 +423,13 @@ var Motor = (function () {
         destino_fijo: s.destino_nodo || null, inactivo: !!s.inactivo_por_defecto,
         reparto_cores: s.reparto_cores || null,
         respaldo_mec: num(s.respaldo_mec, num(RESPALDO_MEC_V7[s.id], 1)),
-        latencia_max_ms: latMax(s) });
+        latencia_max_ms: latMax(s), clase_servicio_dato: s.clase_servicio || null });
+    });
+    out.forEach(function (d) {
+      var c = claseServicio({ id: d.id, tipo: d.tipo, perfil: d.perfil, slice: d.slice, destino: d.destino,
+        origen: d.origen, clase_servicio: d.clase_servicio_dato });
+      d.clase_servicio = c.clase; d.regla_servicio = c.regla;
+      delete d.clase_servicio_dato;
     });
     return out;
   }
@@ -572,7 +607,7 @@ var Motor = (function () {
       // Enlaces full duplex: carga por sentido (ab = a→b, ba = b→a); carga_gbps = sentido más cargado (v7 A11.4)
       enlacesOut[l.id] = { carga_gbps: 0, carga_ab: 0, carga_ba: 0, capacidad_gbps: cap, ocupacion: 0,
         caido: !!(caidosL[l.id] || caidosN[l.a] || caidosN[l.b]), demandas: [], demanda_gbps: 0,
-        virtual: !!l.virtual };
+        virtual: !!l.virtual, por_servicio: nuevoPorServicio() };
       residualL[l.id] = { ab: cap === null ? Infinity : cap, ba: cap === null ? Infinity : cap };
       ofertaL[l.id] = { ab: 0, ba: 0 };
     });
@@ -601,6 +636,7 @@ var Motor = (function () {
       caminos.forEach(function (c) { pesoRuta += c.peso; });
       return { id: b.id, padre: b.padre || null, zona: b.zona, origen: b.origen, destino_nodo: r ? r.destino : null,
         destino: b.destino, tipo: b.tipo, clase: b.clase, prioridad: b.prioridad, slice: b.slice,
+        clase_servicio: b.clase_servicio, regla_servicio: b.regla_servicio,
         dl_gbps: dl, ul_gbps: b.ul_gbps * f, h: cabeceraDe(RED, b), servida_gbps: 0, ruta: r ? r.ruta : [], enlaces: r ? r.enlaces : [],
         caminos: caminos, fraccion_con_ruta: pesoRuta,
         latencia_ms: r ? r.latencia : null, latencia_max_ms: b.latencia_max_ms,
@@ -646,9 +682,10 @@ var Motor = (function () {
         var su = Math.max(0, Math.min(d.ul_gbps * d.h * c.peso, minU));
         sTot += s; suTot += su;
         c.enlaces.forEach(function (id, k) {
-          var e = enlacesOut[id], sd = sds[k], su_ = sd === "ab" ? "ba" : "ab";
+          var e = enlacesOut[id], sd = sds[k], su_ = sd === "ab" ? "ba" : "ab", ps = e.por_servicio[d.clase_servicio];
           residualL[id][sd] -= s; residualL[id][su_] -= su;
           e["carga_" + sd] += s; e["carga_" + su_] += su;
+          ps[sd] += s; ps[su_] += su;
           if (!vL[id]) { vL[id] = 1; e.demandas.push(d.id); }
         });
         c.ruta.forEach(function (id) {
@@ -765,9 +802,13 @@ var Motor = (function () {
     (RED.zonas || []).forEach(function (z) {
       zonasOut[z.id] = { dl_gbps: 0, servida_gbps: 0, pct: 100, necesidades: {} };
     });
-    var dlTot = 0, servTot = 0, afectadas = 0;
+    var dlTot = 0, servTot = 0, afectadas = 0, porServ = {}, vistosServ = {};
+    CLASES_SERVICIO.forEach(function (c) { porServ[c] = { dl_gbps: 0, ul_gbps: 0, servida_gbps: 0, pct: 100, n: 0 }; });
     dem.forEach(function (d) {
       dlTot += d.dl_gbps; servTot += d.servida_gbps;
+      var ps = porServ[d.clase_servicio];
+      ps.dl_gbps += d.dl_gbps; ps.ul_gbps += d.ul_gbps; ps.servida_gbps += d.servida_gbps;
+      if (!vistosServ[d.padre || d.id]) { vistosServ[d.padre || d.id] = 1; ps.n++; }   // n = demandas (sin contar subdemandas por DC)
       if (d.estado !== "ok" || d.via === "respaldo") afectadas++;
       var z = zonasOut[d.zona];
       if (!z) return;
@@ -784,6 +825,10 @@ var Motor = (function () {
       z.pct = z.dl_gbps > EPS ? z.servida_gbps / z.dl_gbps * 100 : 100;
     });
     var pctServ = dlTot > EPS ? servTot / dlTot * 100 : 100;
+    CLASES_SERVICIO.forEach(function (c) {
+      var ps = porServ[c];
+      ps.pct = ps.dl_gbps > EPS ? ps.servida_gbps / ps.dl_gbps * 100 : 100;
+    });
 
     if (!alertas.length) alertas.push({ nivel: "info", texto: "Red sin incidencias: " + fmt(pctServ, 1) + " % de la demanda servida" });
     var pesoN = { grave: 0, aviso: 1, info: 2 };
@@ -799,6 +844,7 @@ var Motor = (function () {
         dl_total_gbps: dlTot, servida_gbps: servTot, pct_servida: pctServ,
         enlaces_saturados: saturados, demandas_afectadas: afectadas,
         max_ocupacion: maxOc, enlace_max: enlaceMax,
+        por_servicio: porServ,
         alertas: alertas
       }
     };
@@ -967,6 +1013,8 @@ var Motor = (function () {
     demandasBase: demandasBase,
     serieDiaria: serieDiaria,
     puntosUnicosFallo: puntosUnicosFallo,
+    CLASES_SERVICIO: CLASES_SERVICIO.slice(),
+    claseServicio: claseServicio,
     _construirGrafo: construirGrafo
   };
 })();

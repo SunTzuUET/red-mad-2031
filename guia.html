@@ -4,9 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RED-MAD 2031 · Guía</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <link rel="stylesheet" href="noc.css">
 <link rel="stylesheet" href="guia.css">
@@ -170,6 +167,8 @@
       <tr><td class="dato-sup"><span class="marca sup">SUP</span> assumption</td><td>Not in any document; pending validation by the team, with its justification.</td></tr>
       <tr><td class="dato-calc"><span class="marca calc">CALC</span> computed</td><td>Computed by the engine, with the formula shown.</td></tr>
     </tbody></table></div>
+    <p class="nota" lang="es">La interfaz es en blanco y negro: el color se reserva a los datos (ocupación, severidad, tipo de servicio y banda de radio). REFERENCIA lleva insignia blanca sólida con candado; LABORATORIO, insignia rayada. Todo panel se pliega con su cabecera (▾/▸) y el estado se recuerda.</p>
+    <p class="nota" lang="en">The interface is black and white: colour is kept for data (occupancy, severity, service type and radio band). REFERENCE has a solid white badge with a lock; LABORATORY a hatched badge. Every panel collapses from its header (▾/▸) and the state is remembered.</p>
     <p class="nota" lang="es">Iconos de nodo: DC = cuadrado, Edge = rombo, metro = hexágono, agregación = círculo, sitio = triángulo, IX = estrella.</p>
     <p class="nota" lang="en">Node icons: DC = square, Edge = diamond, metro = hexagon, aggregation = circle, site = triangle, IX = star.</p>
   </section>
@@ -244,14 +243,18 @@
     <h2><span class="mono">07</span><span lang="es">Atajos de teclado</span><span lang="en">Keyboard shortcuts</span></h2>
     <div class="g-tabla"><table class="tabla"><tbody lang="es">
       <tr><td><kbd>F</kbd></td><td>Simula o quita el fallo del nodo o enlace seleccionado (en LABORATORIO).</td></tr>
-      <tr><td><kbd>L</kbd></td><td>Abre o cierra el carril de capas con sus nombres.</td></tr>
+      <tr><td><kbd>L</kbd> <kbd>[</kbd></td><td>Ensancha o estrecha el carril izquierdo (capas, servicios, radio).</td></tr>
+      <tr><td><kbd>]</kbd></td><td>Pliega o despliega la ficha derecha.</td></tr>
+      <tr><td><kbd>\</kbd></td><td>Pliega o despliega el panel inferior (alarmas, enlaces, N-1).</td></tr>
       <tr><td><kbd>/</kbd></td><td>Va al buscador de elementos; <kbd>Enter</kbd> selecciona.</td></tr>
-      <tr><td><kbd>Esc</kbd></td><td>Cierra el carril de capas o la ficha.</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Estrecha el carril o cierra la ficha.</td></tr>
     </tbody><tbody lang="en">
       <tr><td><kbd>F</kbd></td><td>Fails or restores the selected node or link (in LABORATORY).</td></tr>
-      <tr><td><kbd>L</kbd></td><td>Opens or closes the layer rail with names.</td></tr>
+      <tr><td><kbd>L</kbd> <kbd>[</kbd></td><td>Widens or narrows the left rail (layers, services, radio).</td></tr>
+      <tr><td><kbd>]</kbd></td><td>Collapses or expands the right-hand sheet.</td></tr>
+      <tr><td><kbd>\</kbd></td><td>Collapses or expands the bottom panel (alarms, links, N-1).</td></tr>
       <tr><td><kbd>/</kbd></td><td>Jumps to element search; <kbd>Enter</kbd> selects.</td></tr>
-      <tr><td><kbd>Esc</kbd></td><td>Closes the layer rail or the sheet.</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Narrows the rail or closes the sheet.</td></tr>
     </tbody></table></div>
   </section>
 

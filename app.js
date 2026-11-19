@@ -25,6 +25,10 @@
   }
 
   // ---------- API pública (contrato) ----------
+  // Si algún script se cargó antes que app.js y dejó secciones de carril en cola (window.NOC._colaCarril o
+  // window.NOC_COLA_CARRIL), se recogen aquí y se montan al construir el carril.
+  var previo = window.NOC || {};
+  var colaCarril = [].concat(previo._colaCarril || [], window.NOC_COLA_CARRIL || []);
   var NOC = window.NOC = {
     lang: leer("noc.lang") === "en" ? "en" : "es",
     modo: leer("noc.modo") === "lab" ? "lab" : "ref",
@@ -48,6 +52,50 @@
     on: function (ev, fn) { (oyentes[ev] = oyentes[ev] || []).push(fn); }
   };
   var t = NOC.t, fmt = NOC.fmt;
+
+  // ---------- plegables (Revisión 2 punto 2): localStorage["noc.plegado"] = {id: true si plegado} ----------
+  // Ids del shell: "caso" (barra del caso), "carril" (true = carril estrecho de 40 px), "ficha", "dock",
+  // "sec:<id>" (sección del carril), "fs:<título>" (sección .ficha-sec, por título en minúsculas).
+  var PLEG_DEF = { carril: true };
+  var plegados = {};
+  try { plegados = JSON.parse(leer("noc.plegado") || "{}") || {}; } catch (e) { plegados = {}; }
+  if (plegados.dock == null && leer("noc.dockPleg") === "1") plegados.dock = true;
+  NOC.plegado = function (id) { return id in plegados ? !!plegados[id] : !!PLEG_DEF[id]; };
+  NOC.plegar = function (id, valor) {
+    if (!id) return false;
+    var v = typeof valor === "boolean" ? valor : !NOC.plegado(id);
+    plegados[id] = v;
+    guardar("noc.plegado", JSON.stringify(plegados));
+    aplicarPlegado(id);
+    emitir("plegado", { id: id, plegado: v });
+    return v;
+  };
+  // Elementos genéricos: [data-plegable="id"] recibe la clase .plegado; [data-plegar="id"] alterna (lo engancha el clic delegado)
+  function aplicarPlegadoGenerico(id, base) {
+    Array.prototype.forEach.call((base || document).querySelectorAll('[data-plegable="' + String(id).replace(/"/g, '\\"') + '"]'), function (el) {
+      el.classList.toggle("plegado", NOC.plegado(id));
+    });
+    Array.prototype.forEach.call((base || document).querySelectorAll('[data-plegar="' + String(id).replace(/"/g, '\\"') + '"]'), function (b) {
+      b.setAttribute("aria-expanded", String(!NOC.plegado(id)));
+      var ind = b.querySelector(".ind");
+      if (ind) ind.textContent = NOC.plegado(id) ? "▸" : "▾";
+    });
+  }
+  var aplicarPlegado = function (id) { aplicarPlegadoGenerico(id); };   // el shell la amplía al montarse
+
+  // ---------- carril por secciones (Revisión 2 punto 3) ----------
+  // NOC.registrarSeccionCarril({id, titulo:{es,en}, orden, montar(el), inicial?, icono?}). Puede llamarse antes o
+  // después de montar el shell: se guarda en cola y se monta en cuanto exista el carril. montar(el) se llama una vez.
+  var SECCIONES = [], montarSeccion = null;
+  NOC.registrarSeccionCarril = function (s) {
+    if (!s || !s.id) return;
+    if (SECCIONES.some(function (x) { return x.def.id === s.id; })) return;
+    var reg = { def: s, el: null, montada: false };
+    SECCIONES.push(reg);
+    SECCIONES.sort(function (a, b) { return (a.def.orden || 0) - (b.def.orden || 0); });
+    if (montarSeccion) montarSeccion(reg);
+  };
+  NOC.seccionesCarril = function () { return SECCIONES.map(function (x) { return x.def.id; }); };
 
   if (!raiz) return;
   if (!RED || !Motor) {
@@ -91,7 +139,12 @@
     motorOk: { es: "MOTOR OK", en: "ENGINE OK" }, motorMal: { es: "MOTOR ERROR", en: "ENGINE ERROR" },
     demandas: { es: "demandas", en: "demands" }, supuestos: { es: "supuestos", en: "assumptions" },
     casosMotor: { es: "casos: motor", en: "cases: engine" }, casosLocal: { es: "casos: local (modelos.js)", en: "cases: local (modelos.js)" },
-    atajos: { es: "F fallo · L capas · / buscar", en: "F fault · L layers · / find" },
+    atajos: { es: "fallo · carril · ficha · dock · buscar", en: "fault · rail · details · dock · find" },
+    caso: { es: "Caso", en: "Case" }, plegarCaso: { es: "Plegar / desplegar la barra del caso", en: "Collapse / expand the case bar" },
+    carril: { es: "Carril", en: "Rail" }, ficha: { es: "Ficha", en: "Details" },
+    plegarCarril: { es: "Ensanchar / estrechar el carril  ([ o L)", en: "Widen / narrow the rail  ([ or L)" },
+    plegarFicha: { es: "Plegar / desplegar la ficha  (])", en: "Collapse / expand the details panel  (])" },
+    plegarDock: { es: "Plegar / desplegar el panel inferior  (\\)", en: "Collapse / expand the bottom panel  (\\)" },
     paramsDem: { es: "parámetros de demanda editados", en: "edited demand parameters" }
   };
   var CAPAS = [
@@ -407,9 +460,9 @@
   };
   raiz.innerHTML =
     '<header class="tb" id="tb"></header>' +
-    '<nav class="rail" id="rail" aria-label="Capas"></nav>' +
+    '<nav class="rail" id="rail" aria-label="Carril"><button type="button" class="rail-cab" id="rail-cab" data-plegar="carril"></button><div class="rail-secs" id="rail-secs"></div></nav>' +
     '<main class="centro"><div class="tabs" id="tabs" role="tablist"></div><div class="vistas" id="vistas"></div></main>' +
-    '<aside class="ficha" id="ficha"><div class="ficha-cab" id="ficha-cab"></div><div class="ficha-cuerpo" id="ficha-cuerpo"></div></aside>' +
+    '<aside class="ficha" id="ficha"><button type="button" class="ficha-tira" id="ficha-tira" data-plegar="ficha"></button><div class="ficha-cab" id="ficha-cab"></div><div class="ficha-cuerpo" id="ficha-cuerpo"></div></aside>' +
     '<section class="dock" id="dock"><div class="dock-cab" id="dock-cab"></div><div class="dock-cuerpo" id="dock-cuerpo"></div></section>' +
     '<footer class="sb" id="sb"></footer>' +
     '<datalist id="noc-lista"></datalist>';
@@ -467,7 +520,8 @@
         '<div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="' + (NOC.lang === "es") + '">ES</button><button type="button" data-lang="en" aria-pressed="' + (NOC.lang === "en") + '">EN</button></div>' +
       '</div>' +
       '<div class="tb-f">' +
-        '<span class="rotulo-modo" title="' + esc(t(ref ? T.rotRef : T.rotLab)) + '">' + (ref ? ICO.candado : "") + '<b>' + (ref ? "REF" : "LAB") + '</b> ' + esc(t(ref ? T.rotRefCorto : T.rotLabCorto)) +
+        '<button type="button" class="plg" data-plegar="caso" aria-expanded="' + !NOC.plegado("caso") + '" title="' + esc(t(T.plegarCaso)) + '"><span class="ind">' + (NOC.plegado("caso") ? "▸" : "▾") + '</span>' + esc(t(T.caso)) + '</button>' +
+        '<span class="rotulo-modo" title="' + esc(t(ref ? T.rotRef : T.rotLab)) + '"><b>' + (ref ? ICO.candado : "") + (ref ? "REF" : "LAB") + '</b> ' + esc(t(ref ? T.rotRefCorto : T.rotLabCorto)) +
           (!ref && NOC.paramsEditados ? ' · <a href="demanda.html">' + NOC.paramsEditados + " " + esc(t(T.paramsDem)) + '</a>' : '') + '</span>' +
         '<span class="sep"></span>' +
         '<div class="caso">' +
@@ -485,11 +539,27 @@
             '<input type="range" min="0" max="23" step="1" id="rng-hora" value="' + (cargado ? 21 : caso.hora) + '"' + (cargado ? " disabled" : "") + '>' +
             '<output class="mono" id="out-hora">' + (cargado ? t(T.hc) + " " : "") + String(cargado ? 21 : caso.hora).padStart(2, "0") + ':00</output></span>' +
         '</div>' +
+        '<span class="caso-resumen">' + esc(resumenCaso()) + '</span>' +
         '<button type="button" class="cnt-alarmas" id="cnt-alarmas" data-accion="ver-alarmas" title="' + esc(t(T.alarmas)) + '"></button>' +
       '</div>';
+    $("#tb").classList.toggle("caso-plegado", NOC.plegado("caso"));
     document.body.classList.toggle("m-ref", ref);
     document.body.classList.toggle("m-lab", !ref);
     pintarKPI(); pintarContador();
+  }
+  // Una línea con el caso para cuando la barra del caso está plegada
+  function resumenCaso() {
+    var ref = NOC.modo === "ref";
+    var tr = itemPorId(EJES.trafico, ref ? "BH" : caso.trafico), ev = itemPorId(EJES.evento, ref ? EV_REF : caso.evento);
+    var cargado = ref || traficoCargado();
+    var p = [tr ? nomItem(tr) : caso.trafico];
+    if (!ref) p.push((((MT.tipos_dia || {})[caso.dia] || {})[NOC.lang === "en" ? "nombre_en" : "nombre_es"] || caso.dia) + " " + caso.anio);
+    else p.push("2031");
+    p.push(cargado ? t(T.hc) : String(caso.hora).padStart(2, "0") + ":00");
+    p.push(ev && ev.id && ev.id !== "ninguno" ? nomItem(ev) : t(T.evento) + ": " + t(T.ninguno));
+    var nf = ref ? 0 : caso.fallos.length;
+    p.push(nf ? nf + " " + t({ es: nf === 1 ? "fallo" : "fallos", en: nf === 1 ? "fault" : "faults" }) + " (" + caso.fallos.join(", ") + ")" : t({ es: "sin fallos", en: "no faults" }));
+    return p.join(" · ");
   }
   function pintarContador() {
     var el = $("#cnt-alarmas");
@@ -546,15 +616,97 @@
     if (c === "B") n += (RED.zonas || []).length;
     return n;
   }
-  var railAbierto = false;
-  function pintarRail() {
-    var el = $("#rail");
-    el.classList.toggle("abierto", railAbierto);
-    el.innerHTML = '<span class="rot">' + esc(t(T.capas)) + '</span>' + CAPAS.map(function (c) {
+  // Carril: 40 px (iniciales) o ≈220 px (secciones con título). Cada sección: cabecera .lbl plegable + cuerpo propio.
+  var elCapas = null;
+  function pintarCapas() {
+    if (!elCapas) return;
+    elCapas.innerHTML = CAPAS.map(function (c) {
       return '<button type="button" class="capa" data-capa="' + c.id + '" aria-pressed="' + (NOC.capas[c.id] !== false) + '" title="' + c.id + ' · ' + esc(t(c.n)) + '">' +
-        c.id + '<span class="nom">' + esc(t(c.n)) + '<small>' + cuentaCapa(c.id) + '</small></span></button>';
-    }).join("") + '<button type="button" class="exp" data-accion="rail" title="L">' + (railAbierto ? "«" : "»") + ' L</button>';
+        c.id + '<span class="nom"><span>' + esc(t(c.n)) + '</span><small>' + cuentaCapa(c.id) + '</small></span></button>';
+    }).join("");
   }
+  function inicialSeccion(s) { return s.inicial || String(t(s.titulo) || s.id).toUpperCase().replace(/[^A-ZÁÉÍÓÚÑ0-9]/g, "").slice(0, 3); }
+  function cabSeccion(reg) {
+    var s = reg.def, pl = NOC.plegado("sec:" + s.id);
+    return '<span class="ind">' + (pl ? "▸" : "▾") + '</span>' + (s.icono ? '<span class="ico-sec">' + s.icono + '</span>' : '') +
+      '<span class="ini">' + esc(inicialSeccion(s)) + '</span><span class="tit">' + esc(t(s.titulo)) + '</span>';
+  }
+  montarSeccion = function (reg) {
+    var cont = $("#rail-secs");
+    if (!cont || reg.el) return;
+    var s = reg.def, sec = document.createElement("section");
+    sec.className = "rsec" + (s.id === "capas" ? " compacta" : "");
+    sec.setAttribute("data-sec", s.id);
+    sec.innerHTML = '<button type="button" class="rsec-cab lbl" data-plegar="sec:' + esc(s.id) + '" title="' + esc(t(s.titulo)) + '"></button><div class="rsec-cuerpo"></div>';
+    reg.el = sec;
+    // posición según "orden"
+    var sig = null, i = SECCIONES.indexOf(reg);
+    for (var k = i + 1; k < SECCIONES.length && !sig; k++) if (SECCIONES[k].el && SECCIONES[k].el.parentNode === cont) sig = SECCIONES[k].el;
+    cont.insertBefore(sec, sig);
+    sec.querySelector(".rsec-cab").innerHTML = cabSeccion(reg);
+    sec.classList.toggle("plegada", NOC.plegado("sec:" + s.id));
+    if (!reg.montada) {
+      reg.montada = true;
+      try { s.montar && s.montar(sec.querySelector(".rsec-cuerpo")); } catch (e) { console.error("montar sección de carril " + s.id, e); }
+    }
+  };
+  function pintarRail() {
+    var abierto = !NOC.plegado("carril");
+    raiz.classList.toggle("rail-abierto", abierto);
+    var cab = $("#rail-cab");
+    cab.title = t(T.plegarCarril);
+    cab.setAttribute("aria-expanded", String(abierto));
+    cab.innerHTML = '<span class="tit">' + esc(t(T.carril)) + '</span><span>' + (abierto ? "«" : "»") + '</span>';
+    SECCIONES.forEach(function (reg) {
+      if (!reg.el) return;
+      reg.el.querySelector(".rsec-cab").innerHTML = cabSeccion(reg);
+      reg.el.querySelector(".rsec-cab").title = t(reg.def.titulo);
+      reg.el.classList.toggle("plegada", NOC.plegado("sec:" + reg.def.id));
+    });
+    pintarCapas();
+  }
+  var tCarril = null;
+  function avisarAncho() {
+    emitir("carril", { abierto: !NOC.plegado("carril"), ancho: NOC.plegado("carril") ? 40 : 220 });
+    clearTimeout(tCarril);
+    tCarril = setTimeout(function () {
+      if (NOC.mapa && NOC.mapa.invalidateSize) { try { NOC.mapa.invalidateSize(); } catch (e) { /* nada */ } }
+      window.dispatchEvent(new Event("resize"));
+    }, 200);
+  }
+  function pintarFichaPlegado() {
+    var pl = NOC.plegado("ficha");
+    raiz.classList.toggle("ficha-plegada", pl);
+    var tira = $("#ficha-tira");
+    var h2 = $("#ficha-cab h2");
+    tira.title = t(T.plegarFicha);
+    tira.innerHTML = '<span>◂</span><span class="vert">' + esc(t(T.ficha)) + (h2 ? " · " + esc(h2.textContent) : "") + '</span>';
+  }
+  function botonPlegarFicha() { return '<button type="button" class="ficha-pleg" data-plegar="ficha" title="' + esc(t(T.plegarFicha)) + '" aria-label="' + esc(t(T.plegarFicha)) + '">▸</button>'; }
+  // Secciones de ficha (.ficha-sec): estado por título, recordado
+  function claveFs(sec) {
+    var h = sec.querySelector(":scope > h3, :scope > .ficha-sec-cab");
+    return "fs:" + (sec.getAttribute("data-pl") || (h ? h.textContent : "")).trim().toLowerCase();
+  }
+  function aplicarFichaSecs(base) {
+    Array.prototype.forEach.call((base || document).querySelectorAll(".ficha-sec"), function (s) {
+      if (s.querySelector(":scope > h3, :scope > .ficha-sec-cab")) s.classList.toggle("plegada", NOC.plegado(claveFs(s)));
+    });
+  }
+  NOC.aplicarPlegados = function (base) { aplicarFichaSecs(base); Object.keys(plegados).forEach(function (id) { aplicarPlegadoGenerico(id, base); }); };
+  aplicarPlegado = function (id) {
+    if (id === "carril") { pintarRail(); avisarAncho(); }
+    else if (id === "ficha") { pintarFichaPlegado(); avisarAncho(); }
+    else if (id === "dock") { dock.plegado = NOC.plegado("dock"); pintarDock(); emitir("dock", dock); }
+    else if (id === "caso") pintarBarra();
+    else if (id.indexOf("sec:") === 0) pintarRail();
+    else if (id.indexOf("fs:") === 0) aplicarFichaSecs();
+    aplicarPlegadoGenerico(id);
+  };
+  NOC.registrarSeccionCarril({
+    id: "capas", titulo: { es: "Capas", en: "Layers" }, orden: 10, inicial: "A–H",
+    montar: function (el) { elCapas = el; pintarCapas(); }
+  });
 
   // ---------- pestañas y vistas ----------
   var VISTAS = [], ORDEN = ["mapa", "capas", "paquete", "interconexion", "casos"];
@@ -601,10 +753,12 @@
   NOC.abrirFicha = function (f, propia) {
     fichaPropia = propia || null;
     f = f || {};
-    $("#ficha-cab").innerHTML = '<div><h2>' + esc(f.titulo || "") + '</h2>' + (f.subtitulo ? '<div class="sub">' + esc(f.subtitulo) + '</div>' : '') + '</div>' +
+    $("#ficha-cab").innerHTML = botonPlegarFicha() + '<div><h2>' + esc(f.titulo || "") + '</h2>' + (f.subtitulo ? '<div class="sub">' + esc(f.subtitulo) + '</div>' : '') + '</div>' +
       '<button type="button" class="cerrar" data-accion="cerrar-ficha" aria-label="×" title="Esc">×</button>';
     $("#ficha-cuerpo").innerHTML = f.html || "";
     $("#ficha").classList.add("visible");
+    aplicarFichaSecs($("#ficha-cuerpo"));
+    pintarFichaPlegado();
     renderTex($("#ficha-cuerpo"));
   };
   NOC.cerrarFicha = function () {
@@ -635,7 +789,7 @@
       [t(T.fallo), ref || !caso.fallos.length ? t(T.ninguno) : caso.fallos.join(", ")],
       [t({ es: "Opciones motor", en: "Engine options" }), JSON.stringify(NOC.opciones || {})]
     ];
-    $("#ficha-cab").innerHTML = '<div><h2>' + esc(t(T.casoAct).toUpperCase()) + '</h2><div class="sub">' + esc(t(T.sinSel)) + '</div></div>';
+    $("#ficha-cab").innerHTML = botonPlegarFicha() + '<div><h2>' + esc(t(T.casoAct).toUpperCase()) + '</h2><div class="sub">' + esc(t(T.sinSel)) + '</div></div>';
     $("#ficha-cuerpo").innerHTML = '<div class="ficha-sec"><h3>' + esc(t(T.casoAct)) + '</h3><dl class="kv">' + kv.map(function (x, i) {
       return '<dt>' + esc(x[0]) + '</dt><dd class="' + (i === 6 ? "" : "txt") + '" style="' + (i === 6 ? "font-size:10px;color:var(--tx3)" : "") + '">' + esc(x[1]) + '</dd>';
     }).join("") + '</dl></div>' +
@@ -647,6 +801,8 @@
       '<div class="dato-doc nota">' + esc(t({ es: "documento (Entrega 2 o anterior)", en: "document (Deliverable 2 or earlier)" })) + '</div>' +
       '<div class="dato-sup nota" style="margin-top:3px">' + esc(t({ es: "supuesto del simulador", en: "simulator assumption" })) + '</div>' +
       '<div class="dato-calc nota" style="margin-top:3px">' + esc(t({ es: "calculado por el motor", en: "computed by the engine" })) + '</div></div>';
+    aplicarFichaSecs($("#ficha-cuerpo"));
+    pintarFichaPlegado();
   }
 
   function sec(tit, cuerpo) { return '<div class="ficha-sec"><h3>' + esc(tit) + '</h3>' + cuerpo + '</div>'; }
@@ -816,7 +972,7 @@
   NOC.fallosActivos = function () { return NOC.resultado ? (NOC.resultado.resumen.fallos || []) : []; };
 
   // ---------- dock ----------
-  var dock = { tab: leer("noc.dock") || "alarmas", plegado: leer("noc.dockPleg") === "1" };
+  var dock = { tab: leer("noc.dock") || "alarmas", plegado: NOC.plegado("dock") };
   var orden = { alarmas: { k: "sev", d: 1 }, enlaces: { k: "oc", d: -1 }, n1: { k: "rk", d: 1 } };
   var N1 = { estado: "nada", filas: [], err: "" };
   function cabTabla(tab, cols) {
@@ -843,7 +999,7 @@
     $("#dock-cab").innerHTML = [["alarmas", T.alarmas, ALARMAS.filter(function (a) { return a.sev !== "ok"; }).length], ["enlaces", T.enlaces, nEnl], ["n1", T.n1, N1.filas.length || ""]].map(function (x) {
       return '<button type="button" class="tab" data-dock="' + x[0] + '" aria-selected="' + (dock.tab === x[0]) + '">' + esc(t(x[1])) + ' <span class="cnt">' + x[2] + '</span></button>';
     }).join("") + '<div class="ctl">' + (c.crit ? NOC.insignia("crit", "CRIT " + c.crit) : "") +
-      '<button type="button" class="btn" data-accion="plegar">' + esc(t(dock.plegado ? T.desplegar : T.plegar)) + ' ' + (dock.plegado ? "▴" : "▾") + '</button></div>';
+      '<button type="button" class="plg" data-plegar="dock" aria-expanded="' + !dock.plegado + '" title="' + esc(t(T.plegarDock)) + '"><span class="ind">' + (dock.plegado ? "▸" : "▾") + '</span>' + esc(t(dock.plegado ? T.desplegar : T.plegar)) + '</button></div>';
     if (dock.plegado) { $("#dock-cuerpo").innerHTML = ""; return; }
     var h = "";
     if (dock.tab === "alarmas") h = tablaAlarmas();
@@ -984,7 +1140,7 @@
       '<span class="modo-sb ' + NOC.modo + '">' + (NOC.lang === "en" ? "MODE " : "MODO ") + (ref ? "REF" : "LAB") + '</span>' +
       '<span class="opc">' + esc(t(EJES.fuente === "motor" ? T.casosMotor : T.casosLocal)) + '</span>' +
       '<span class="msg" id="sb-msg"></span>' +
-      '<span class="atajos"><kbd>F</kbd> <kbd>L</kbd> <kbd>/</kbd> ' + esc(t(T.atajos)) + '</span>';
+      '<span class="atajos"><kbd>F</kbd> <kbd>[</kbd> <kbd>]</kbd> <kbd>\\</kbd> <kbd>/</kbd> ' + esc(t(T.atajos)) + '</span>';
   }
 
   // ---------- búsqueda ----------
@@ -1072,20 +1228,34 @@
   // ---------- eventos (delegación) ----------
   raiz.addEventListener("click", function (ev) {
     var b;
+    // Cabecera de una sección de ficha (vale para fichas que pintan otras vistas): pliega/despliega y se recuerda por título
+    if ((b = ev.target.closest(".ficha-sec > h3, .ficha-sec > .ficha-sec-cab")) && !ev.target.closest("a, button, input, select")) {
+      NOC.plegar(claveFs(b.parentNode));
+      return;
+    }
     if ((b = ev.target.closest("[data-modo]"))) { setModo(b.getAttribute("data-modo")); return; }
     if ((b = ev.target.closest("[data-lang]"))) { setLang(b.getAttribute("data-lang")); return; }
     if ((b = ev.target.closest("[data-capa]"))) {
       var c = b.getAttribute("data-capa");
       NOC.capas[c] = NOC.capas[c] === false;
       guardar("noc.capas", JSON.stringify(NOC.capas));
-      pintarRail(); pintarDock();
+      pintarCapas(); pintarDock();
       emitir("capas", NOC.capas);
       return;
     }
     if ((b = ev.target.closest("[data-vista]"))) { activarVista(b.getAttribute("data-vista")); return; }
     if ((b = ev.target.closest("[data-dock]"))) {
-      dock.tab = b.getAttribute("data-dock"); dock.plegado = false;
-      guardar("noc.dock", dock.tab); guardar("noc.dockPleg", "0"); pintarDock(); emitir("dock", dock); return;
+      dock.tab = b.getAttribute("data-dock");
+      guardar("noc.dock", dock.tab);
+      if (NOC.plegado("dock")) NOC.plegar("dock", false); else { pintarDock(); emitir("dock", dock); }
+      return;
+    }
+    if ((b = ev.target.closest("[data-plegar]"))) {
+      var pid = b.getAttribute("data-plegar");
+      // En el carril estrecho, la cabecera de una sección ensancha el carril y abre esa sección
+      if (pid.indexOf("sec:") === 0 && NOC.plegado("carril")) { NOC.plegar(pid, false); NOC.plegar("carril", false); return; }
+      NOC.plegar(pid);
+      return;
     }
     if ((b = ev.target.closest("th[data-orden]"))) {
       var tab = b.getAttribute("data-tab"), k = b.getAttribute("data-orden"), o = orden[tab];
@@ -1099,11 +1269,11 @@
       if (a === "quitar-fallo" || a === "fallo") NOC.alternarFallo(id);
       else if (a === "limpiar-fallos") { caso.fallos = []; guardarCaso(); pintarBarra(); aplicarCaso(); }
       else if (a === "cerrar-ficha") NOC.cerrarFicha();
-      else if (a === "plegar") { dock.plegado = !dock.plegado; guardar("noc.dockPleg", dock.plegado ? "1" : "0"); pintarDock(); emitir("dock", dock); }
-      else if (a === "ver-alarmas") { dock.tab = "alarmas"; dock.plegado = false; guardar("noc.dock", "alarmas"); pintarDock(); emitir("dock", dock); }
+      else if (a === "plegar") NOC.plegar("dock");
+      else if (a === "ver-alarmas") { dock.tab = "alarmas"; guardar("noc.dock", "alarmas"); if (NOC.plegado("dock")) NOC.plegar("dock", false); else { pintarDock(); emitir("dock", dock); } }
       else if (a === "n1") ejecutarN1();
       else if (a === "play") play();
-      else if (a === "rail") { railAbierto = !railAbierto; pintarRail(); }
+      else if (a === "rail") NOC.plegar("carril");
       else if (a === "rail-movil") $("#rail").classList.toggle("visible");
     }
   });
@@ -1143,8 +1313,13 @@
       var s = NOC.seleccion;
       if (s && (s.tipo === "nodo" || s.tipo === "enlace")) NOC.alternarFallo(s.id);
       else mensaje(t({ es: "Selecciona un nodo o enlace para simular su fallo.", en: "Select a node or link to simulate its failure." }));
-    } else if (ev.key === "l" || ev.key === "L") { railAbierto = !railAbierto; pintarRail(); $("#rail").classList.toggle("visible", railAbierto); }
-    else if (ev.key === "Escape") { if (railAbierto) { railAbierto = false; pintarRail(); } else NOC.cerrarFicha(); }
+    } else if (ev.key === "l" || ev.key === "L" || ev.key === "[") {
+      var ab = !NOC.plegar("carril");
+      $("#rail").classList.toggle("visible", ab);
+    }
+    else if (ev.key === "]") { NOC.plegar("ficha"); if (!NOC.plegado("ficha")) $("#ficha").classList.add("visible"); }
+    else if (ev.key === "\\") NOC.plegar("dock");
+    else if (ev.key === "Escape") { if (!NOC.plegado("carril")) { NOC.plegar("carril", true); $("#rail").classList.remove("visible"); } else NOC.cerrarFicha(); }
   });
 
   // ---------- arranque ----------
@@ -1152,6 +1327,7 @@
   try { NOC.referencia = Motor.calcular(RED, copia(OPC_REF)); } catch (e) { console.error("referencia", e); }
   aplicarParamsDemanda();
   pintarBarra(); pintarRail(); pintarTabs(); pintarLista(); pintarFichaVacia();
+  colaCarril.forEach(function (s) { NOC.registrarSeccionCarril(s); });
   aplicarCaso();
 
   function arrancarVistas() {

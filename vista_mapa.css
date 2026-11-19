@@ -2,40 +2,49 @@
 .vista-mapa { overflow: hidden; }
 .mapa-noc { position: absolute; inset: 0; background: var(--bg0); }
 .leaflet-container { background: var(--bg0); font: 11px var(--sans); }
-.leaflet-bar { border: 1px solid var(--line) !important; border-radius: 2px !important; box-shadow: none !important; }
-.leaflet-bar a { background: var(--bg1) !important; color: var(--tx1) !important; border-bottom: 1px solid var(--line) !important;
+/* teselas más negras y sin tinte (la Mesa es monocroma); los datos encima conservan su color */
+.leaflet-tile-pane { filter: grayscale(1) brightness(.62) contrast(1.15); }
+.leaflet-bar { border: 1px solid var(--line) !important; border-radius: 0 !important; box-shadow: none !important; }
+.leaflet-bar a { background: rgba(0,0,0,.85) !important; color: var(--tx1) !important; border-bottom: 1px solid var(--line) !important;
   width: 24px !important; height: 24px !important; line-height: 22px !important; border-radius: 0 !important; }
-.leaflet-bar a:hover { color: var(--acc) !important; }
-.leaflet-control-attribution { background: rgba(11,15,20,.8) !important; color: var(--tx3) !important; font: 9px var(--mono); }
-.leaflet-control-attribution a { color: var(--tx2) !important; }
+.leaflet-bar a:hover { color: var(--tx1) !important; background: var(--bg2) !important; }
+.leaflet-control-attribution { background: rgba(0,0,0,.8) !important; color: var(--tx4) !important; font: 9px var(--sans); }
+.leaflet-control-attribution a { color: var(--tx3) !important; }
 
 .noc-nodo { background: none; border: 0; }
 .noc-nodo svg { display: block; overflow: visible; }
 .noc-nodo:hover svg { filter: brightness(1.25); }
 .noc-etq { background: none; border: 0; }
 .noc-etq span { display: inline-block; white-space: nowrap; font: 600 9px/12px var(--mono); color: var(--tx2);
-  background: rgba(11,15,20,.75); padding: 0 3px; letter-spacing: .02em; }
+  background: rgba(0,0,0,.78); padding: 0 3px; letter-spacing: .02em; }
 .noc-golpe { cursor: pointer; }
 
-.leaflet-tooltip.noc-tip { background: var(--bg2); color: var(--tx1); border: 1px solid var(--line); border-radius: 2px; box-shadow: none;
+.leaflet-tooltip.noc-tip { background: var(--bg1); color: var(--tx1); border: 1px solid var(--line3); border-radius: 0; box-shadow: none;
   font: 11px/1.45 var(--mono); padding: 3px 6px; white-space: nowrap; }
 .leaflet-tooltip.noc-tip::before { display: none; }
 .leaflet-tooltip.noc-tip b { font-weight: 600; }
 
-.mapa-leyenda { position: absolute; left: 8px; bottom: 8px; z-index: 700; width: 200px; background: rgba(18,24,33,.94);
-  border: 1px solid var(--line); padding: 6px 8px; font-size: 10px; color: var(--tx2); pointer-events: auto; }
+.mapa-leyenda { position: absolute; left: 8px; bottom: 8px; z-index: 700; width: 200px; background: rgba(0,0,0,.86);
+  border: 1px solid var(--line2); padding: 6px 8px; font-size: 10px; color: var(--tx2); pointer-events: auto; }
 .mapa-leyenda .fila { display: flex; align-items: center; gap: 6px; height: 17px; }
 .mapa-leyenda .fila i { display: inline-block; width: 18px; height: 3px; }
 .mapa-leyenda .fila i.disc { background: repeating-linear-gradient(90deg, var(--unk) 0 4px, transparent 4px 7px); }
 .mapa-leyenda .sev { min-width: 34px; height: 14px; line-height: 12px; font-size: 9px; }
 .mapa-leyenda .formas { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 6px; }
 .mapa-leyenda .formas span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mapa-modo { position: absolute; right: 8px; top: 8px; z-index: 700; font: 600 10px/18px var(--mono); padding: 0 8px; letter-spacing: .06em;
-  border: 1px solid; background: rgba(11,15,20,.85); }
-.mapa-modo.ref { color: var(--ref); } .mapa-modo.lab { color: var(--lab); }
+/* insignia de modo: REF blanca sólida, LAB rayada (con texto) */
+.mapa-modo { position: absolute; right: 8px; top: 8px; z-index: 700; font: 600 10px/18px var(--sans); padding: 0 8px; letter-spacing: .08em;
+  border: 1px solid; text-transform: uppercase; }
+.mapa-modo.ref { background: var(--steel); color: #000; border-color: #fff; }
+.mapa-modo.lab { background: var(--hatch); background-color: rgba(0,0,0,.75); color: var(--tx1); border-color: var(--tx2); text-shadow: 0 0 3px #000, 0 0 1px #000; }
+.mapa-modo.ref .sev-unk { color: #000; }
 
 .mapa-leyenda .ley-cab { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 0 0 4px; cursor: pointer;
-  font: 600 10px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--tx2); }
+  font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--tx3); }
+.mapa-leyenda .ley-cab:hover { color: var(--tx1); }
+/* leyenda/paneles del mapa que use el agente SERVICIOS+RADIO: misma caja y cabecera plegable */
+.mapa-panel { position: absolute; z-index: 700; background: rgba(0,0,0,.86); border: 1px solid var(--line2); padding: 6px 8px; font-size: 10px; color: var(--tx2); }
+.mapa-panel.plegado > :not(.ley-cab) { display: none; }
 .mapa-leyenda.plegada { width: auto; }
 .mapa-leyenda.plegada .ley-cab { padding: 0; }
 .mapa-leyenda.plegada .ley-cuerpo { display: none; }

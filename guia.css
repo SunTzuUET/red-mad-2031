@@ -1,4 +1,4 @@
-/* guia.css — página GUÍA sobre noc.css (CONTRATO_UI.md). Solo tokens de noc.css. */
+/* guia.css — página GUÍA sobre noc.css (CONTRATO_UI.md, Revisión 2: paleta negra de la Mesa). Solo tokens de noc.css. */
 html, body { height: auto; }
 body { font-size: 13px; line-height: 1.5; overflow-x: hidden; }
 
@@ -6,34 +6,34 @@ body { font-size: 13px; line-height: 1.5; overflow-x: hidden; }
 body.l-es [lang=en], body.l-en [lang=es] { display: none !important; }
 
 /* barra superior (misma que la app) */
-header.barra { position: sticky; top: 0; z-index: 10; }
+header.barra { position: sticky; top: 0; z-index: 10; background: var(--bg0); }
 header.barra .tb-f { min-height: 38px; flex-wrap: wrap; row-gap: 4px; }
 .g-nav { display: flex; align-self: stretch; margin-left: 6px; }
-.g-nav .tab { display: inline-flex; align-items: center; height: 38px; font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .06em;
-  color: var(--tx2); padding: 0 14px; border: 0; border-left: 1px solid var(--line); text-decoration: none; background: none; }
+.g-nav .tab { display: inline-flex; align-items: center; height: 38px; font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--tx3); padding: 0 14px; border: 0; border-left: 1px solid var(--line); text-decoration: none; background: none; }
 .g-nav .tab:last-child { border-right: 1px solid var(--line); }
-.g-nav .tab[aria-current=page] { color: var(--tx1); background: var(--bg0); box-shadow: inset 0 -2px 0 var(--acc); }
+.g-nav .tab[aria-current=page] { color: var(--tx1); background: rgba(255,255,255,.04); box-shadow: inset 0 -2px 0 var(--steel); }
 .g-nav .tab:hover { color: var(--tx1); text-decoration: none; }
 
 /* cuerpo: índice lateral + contenido */
 .g-cuerpo { display: grid; grid-template-columns: 200px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
 .g-indice { position: sticky; top: 39px; align-self: start; padding: 14px 0; border-right: 1px solid var(--line); max-height: calc(100vh - 39px); overflow: auto; }
-.g-indice a { display: block; padding: 3px 14px; color: var(--tx2); font-size: 11px; }
-.g-indice a:hover { color: var(--tx1); background: var(--bg2); text-decoration: none; }
+.g-indice a { display: block; padding: 3px 14px; color: var(--tx2); font-size: 11px; text-decoration: none; }
+.g-indice a:hover { color: var(--tx1); background: rgba(255,255,255,.04); text-decoration: none; }
 .g-indice a .mono { color: var(--tx3); margin-right: 6px; }
 .g-indice .rot { display: block; padding: 0 14px 6px; }
 main.g-main { padding: 6px 22px 60px; min-width: 0; }
 
 section.g-sec { border-bottom: 1px solid var(--line); padding: 16px 0 18px; scroll-margin-top: 44px; }
-section.g-sec > h2 { margin: 0 0 10px; font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--tx2); }
-section.g-sec > h2 .mono { color: var(--acc); margin-right: 8px; }
-.g-sec h3 { margin: 14px 0 6px; font: 600 10px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--tx3); }
+section.g-sec > h2 { margin: 0 0 10px; font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--tx3); }
+section.g-sec > h2 .mono { color: var(--tx1); margin-right: 8px; }
+.g-sec h3 { margin: 14px 0 6px; font: 600 10.5px var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--tx3); }
 .g-sec p { margin: 0 0 8px; max-width: 860px; color: var(--tx1); }
 .g-sec ul { margin: 0 0 8px; padding-left: 18px; max-width: 860px; }
 .g-sec li { margin: 2px 0; }
 .g-sec .nota { max-width: 860px; }
 .cabecera-g { padding: 18px 0 14px; border-bottom: 1px solid var(--line); }
-.cabecera-g h1 { margin: 0; font: 600 14px var(--mono); letter-spacing: .06em; }
+.cabecera-g h1 { margin: 0; font: 600 28px/1.05 var(--cond); letter-spacing: -.02em; }
 .cabecera-g p { margin: 4px 0 0; color: var(--tx2); max-width: 860px; }
 
 /* dos columnas sí / no */
@@ -49,10 +49,11 @@ section.g-sec > h2 .mono { color: var(--acc); margin-right: 8px; }
 .g-tabla .tabla th { position: static; }
 
 /* modos */
+/* REF = insignia blanca sólida; LAB = rayada (como en la barra del simulador) */
 .insig { display: inline-flex; align-items: center; gap: 6px; height: 20px; padding: 0 8px; font: 600 10px var(--sans);
-  letter-spacing: .05em; text-transform: uppercase; border: 1px solid; border-radius: 2px; white-space: nowrap; }
-.insig.ref { color: var(--ref); background: rgba(48,164,108,.12); }
-.insig.lab { color: var(--lab); background: rgba(245,165,36,.12); }
+  letter-spacing: .08em; text-transform: uppercase; border: 1px solid; white-space: nowrap; }
+.insig.ref { background: var(--steel); color: #000; border-color: #fff; }
+.insig.lab { background: var(--hatch); background-color: rgba(0,0,0,.4); color: var(--tx1); border-color: var(--tx2); text-shadow: 0 0 3px #000, 0 0 1px #000; }
 
 /* esquema de la pantalla */
 .pantalla { display: grid; grid-template-columns: 34px minmax(0, 1fr) 30%; grid-template-rows: auto auto minmax(110px, auto) auto auto;
@@ -66,7 +67,7 @@ section.g-sec > h2 .mono { color: var(--acc); margin-right: 8px; }
 .pantalla .p-ficha { grid-row: 3; }
 .pantalla .p-dock { grid-column: 1 / -1; }
 .pantalla .p-sb { grid-column: 1 / -1; }
-.pantalla .n { color: var(--acc); margin-right: 4px; }
+.pantalla .n { color: var(--tx1); margin-right: 4px; }
 .pestanas { display: flex; flex-wrap: wrap; gap: 0; margin-top: 4px; }
 .pestanas span { border: 1px solid var(--line); margin: -1px 0 0 -1px; padding: 1px 6px; font: 600 9px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--tx2); }
 
@@ -81,7 +82,7 @@ section.g-sec > h2 .mono { color: var(--acc); margin-right: 8px; }
 /* fórmulas */
 .regla { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 0 10px; padding: 10px 0; border-top: 1px solid var(--line); }
 .regla:first-of-type { border-top: 0; }
-.regla > .mono { color: var(--acc); font-weight: 600; }
+.regla > .mono { color: var(--tx1); font-weight: 600; }
 .regla h4 { margin: 0 0 4px; font: 600 12px var(--sans); }
 .regla p { margin: 0 0 6px; color: var(--tx2); }
 .regla .formula { max-width: 760px; }
@@ -95,7 +96,7 @@ section.g-sec > h2 .mono { color: var(--acc); margin-right: 8px; }
 .verif .rot { display: block; }
 
 kbd { font-size: 11px; padding: 0 5px; color: var(--tx1); }
-.ia { border-left: 2px solid var(--acc); padding-left: 10px; }
+.ia { border-left: 2px solid var(--steel); padding-left: 10px; }
 .pie { padding: 14px 0; color: var(--tx3); font-size: 11px; }
 
 @media (max-width: 899px) {
