@@ -1,0 +1,129 @@
+/* editor_modelo.css — panel MODELO (CONTRATO_UI Revisión 8, dueño EDITOR). Tokens de noc.css; color solo para datos.
+   Procedencia «usuario»: ámbar #b8801a + borde discontinuo (validado frente a --sup en oscuro; el patrón la distingue sin color). */
+:root { --usr: #b8801a; }
+.dato-usr { border-left: 2px dashed var(--usr); padding-left: 6px; }
+tr.dato-usr { border-left: 0; }
+tr.dato-usr > td:first-child { border-left: 2px dashed var(--usr); padding-left: 5px; }
+.dato-usr-n { color: var(--tx1); }
+
+/* linaje.js — bloque «dato del usuario» de la ficha */
+.lj-usr { margin: 4px 0 8px; font-size: 11px; color: var(--tx2); }
+.lj-usr b { color: var(--tx1); font-weight: 600; }
+.lj-usr .mono { color: var(--tx1); }
+
+/* reloj.js — leyenda de bandas Montecarlo */
+.rl-ley-mc { display: inline-flex; align-items: center; gap: 6px; }
+.rl-ley-mc i.mc-banda, .rl-ley i.mc-banda { display: inline-block; width: 14px; height: 8px; background: rgba(236,236,236,.16); border-top: 1px solid var(--tx2); border-bottom: 1px solid var(--tx2); vertical-align: middle; }
+.rl-ley-mc i.mc-p50, .rl-ley i.mc-p50 { display: inline-block; width: 14px; height: 0; border-top: 1.5px dashed var(--tx1); vertical-align: middle; }
+
+/* botón en la barra del caso */
+.btn.em-btn.activo { border-color: var(--tx2); background: var(--hatch-suave); }
+.btn.em-btn.con-modelo { border-color: var(--usr); border-style: dashed; }
+.btn.em-btn.ref { color: var(--tx3); }
+.em-btn .em-n { color: var(--tx2); font-size: 10px; margin-left: 2px; }
+
+/* panel */
+.em { position: fixed; top: 72px; left: calc(var(--rail) + 8px); z-index: 1100; width: 540px; max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 120px - var(--dock)); overflow: auto; background: var(--bg1); border: 1px solid var(--line2);
+  box-shadow: 0 12px 32px rgba(0,0,0,.7); font: 12px/1.35 var(--sans); color: var(--tx1); }
+.em[hidden] { display: none; }
+.em-cab { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  background: var(--bg1); border-bottom: 1px solid var(--line2); }
+.em-modo { font: 600 10px/1 var(--sans); letter-spacing: .08em; color: var(--tx3); border: 1px solid var(--line2); padding: 2px 5px; }
+.em-esp { flex: 1; }
+.em-x { border: 1px solid transparent; background: none; color: var(--tx2); font: 16px/1 var(--sans); width: 22px; height: 22px; cursor: pointer; }
+.em-x:hover { color: var(--tx1); border-color: var(--line2); }
+.em-ref { padding: 12px 10px; color: var(--tx2); }
+.em-ref p { margin: 0 0 10px; }
+.em-estado { padding: 8px 10px; border-bottom: 1px solid var(--line); display: grid; gap: 6px; }
+.em-res { color: var(--tx2); line-height: 1.6; }
+.em-res b { color: var(--tx1); font-weight: 600; }
+.em-quitar { margin-left: 6px; }
+.em-msg { color: var(--tx2); font: 11px/1.35 var(--code); padding: 4px 0; word-break: break-word; }
+.em-msg.sev-crit { color: var(--crit); }
+.em-avisos-motor { margin: 0; padding: 0; list-style: none; font-size: 11px; color: var(--tx2); }
+.em-avisos-motor li { padding: 1px 0; }
+
+.em-sec { border-bottom: 1px solid var(--line); }
+.em-sec-cab { width: 100%; justify-content: flex-start; border: 0; background: none; font: 600 11px/1 var(--sans);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--tx2); padding: 8px 10px; height: auto; cursor: pointer; }
+.em-sec-cab:hover { color: var(--tx1); }
+.em-cnt { margin-left: 4px; color: var(--tx3); font-weight: 500; letter-spacing: 0; text-transform: none; }
+.em-cnt .sev { min-width: 0; padding: 0 5px; }
+.em-sec-cuerpo { padding: 2px 10px 10px; }
+.em-sec.plegado .em-sec-cuerpo { display: none; }
+
+.em-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 4px 0; }
+.em-fila .rot { white-space: nowrap; }
+.em-in { height: 22px; padding: 0 6px; border: 1px solid var(--line2); background: var(--bg0); color: var(--tx1); font: 12px var(--sans); min-width: 0; }
+.em-in:focus { outline: 1px solid var(--tx2); outline-offset: 0; }
+.em-in.mal { border-color: var(--crit); }
+.em-nombre { flex: 1; }
+.em-num { width: 64px; text-align: right; }
+.em input[type="range"] { accent-color: var(--steel); width: 140px; }
+.em-chk { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: var(--tx1); }
+.em-chk input { accent-color: var(--steel); margin: 0; }
+.em-sub { margin: 10px 0 3px; }
+.em-acc { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0; }
+.em-pl { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 8px 0 2px; }
+.em-chip { cursor: pointer; background: none; color: var(--tx2); font: 11px var(--sans); }
+.em-chip:hover { color: var(--tx1); border-color: var(--tx3); }
+.em-chip.dato-usr { padding-left: 6px; border-left: 2px dashed var(--usr); }
+.em-lnk { color: var(--tx1) !important; font: 11px var(--code) !important; padding: 0 !important; }
+
+/* zona de soltar */
+.em-drop { display: grid; gap: 8px; padding: 12px; border: 1px dashed var(--line3); background: var(--bg0); color: var(--tx2); text-align: center; cursor: default; }
+.em-drop.sobre { border-color: var(--tx1); background: var(--hatch-suave); color: var(--tx1); }
+.em-drop:focus { outline: 1px solid var(--tx2); }
+.em-drop-acc { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* tablas */
+.em-tab { width: 100%; font-size: 11px; }
+.em-tab td.txt { white-space: normal; color: var(--tx1); }
+.em-tab td, .em-tab th { padding: 2px 6px; }
+.em-tab tr[data-em-enl] { cursor: pointer; }
+.em-tab tr[data-em-enl]:hover td { background: var(--bg2); }
+.em-scroll { max-height: 190px; overflow: auto; border: 1px solid var(--line); }
+.em-scroll-c { max-height: 150px; }
+.em-av .sev { min-width: 0; padding: 0 4px; font-size: 10px; }
+.em-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.em-kv .em-num { width: 58px; height: 20px; }
+.em-sw { display: inline-block; width: 8px; height: 8px; margin-right: 6px; vertical-align: 0; }
+.em-cmp td.n { font-variant-numeric: tabular-nums; }
+.em-d { font-weight: 600; }
+.em-d.mejor { color: var(--tx2); font-weight: 500; }
+.em-d.peor { color: var(--tx1); text-decoration: underline dotted var(--tx3); text-underline-offset: 3px; }
+.em-mc-res { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--line); }
+.em-mc-res.viejo { opacity: .55; }
+
+/* curva horaria */
+.em-cur-sel .sel { max-width: 190px; }
+.em-seg button[aria-pressed="true"] { color: var(--tx1); background: var(--bg2); }
+.em-svg { position: relative; margin: 6px 0 2px; touch-action: none; user-select: none; }
+.em-curva { display: block; cursor: crosshair; }
+.em-rej { stroke: var(--line); stroke-width: 1; }
+.em-rej.uno { stroke: var(--line3); stroke-dasharray: 3 3; }
+.em-ty, .em-tx { fill: var(--tx3); font: 10px var(--sans); }
+.em-ty { text-anchor: end; }
+.em-ty.em-uno { text-anchor: end; fill: var(--tx3); }
+.em-orig { fill: none; stroke: var(--tx3); stroke-width: 2; stroke-dasharray: 4 3; }
+.em-ed { fill: none; stroke: var(--usr); stroke-width: 2; stroke-linejoin: round; }
+.em-ed-area { fill: var(--usr); opacity: .10; }
+.em-hover { stroke: var(--tx3); stroke-width: 1; }
+.em-pt { fill: var(--bg1); stroke: var(--usr); stroke-width: 2; cursor: ns-resize; }
+.em-pt.cambia { fill: var(--usr); }
+.em-pt:focus { outline: none; stroke: var(--tx1); stroke-width: 2.5; }
+.em-hit { pointer-events: none; }
+.em-tip { position: absolute; pointer-events: none; z-index: 3; padding: 3px 6px; background: var(--bg0); border: 1px solid var(--line3); font-size: 11px; white-space: nowrap; }
+.em-tip[hidden] { display: none; }
+.em-ley { display: inline-flex; gap: 10px; color: var(--tx2); font-size: 11px; }
+.em-ley-i { display: inline-flex; align-items: center; gap: 5px; }
+.em-ley-i i { display: inline-block; width: 16px; height: 0; }
+.em-ley-i i.ed { border-top: 2px solid var(--usr); }
+.em-ley-i i.or { border-top: 2px dashed var(--tx3); }
+.em-clave { font-size: 10.5px; }
+.em-valores { display: grid; gap: 2px; margin: 6px 0; }
+.em-valores .em-in { width: 100%; font: 11px var(--code); }
+
+@media (max-width: 600px) { .em { left: 8px; right: 8px; width: auto; } .em-dos { grid-template-columns: 1fr; } }
+@media print { .em, .em-btn { display: none !important; } }

@@ -347,6 +347,61 @@ var LINAJE = {
    "verificada": true,
    "nota": "Leído el 2026-11-19. La nota de prensa de Telefónica (21-12-2022) confirma '5 bloques de 200 MHz' = 1 GHz.",
    "url": "https://www.boe.es/boe/dias/2023/02/09/pdfs/BOE-A-2023-3490.pdf"
+  },
+  {
+   "id": "F-BG-DATANETS",
+   "tipo": "externa",
+   "titulo": "Data Networks, 2.ª ed., cap. 3 'Delay Models in Data Networks'",
+   "editor": "D. Bertsekas, R. Gallager · Prentice Hall",
+   "fecha": "1992",
+   "localizador": "§3.5.3 'Priority Queueing', p. 203-205, ec. (3.78)-(3.82) (W1 = R/(1−ρ1); W2 = (R+ρ1W1)/(1−ρ1−ρ2)); §3.3 M/M/1 (p_n = ρ^n(1−ρ)); §3.6 aproximación de independencia de Kleinrock",
+   "verificada": true,
+   "nota": "PDF del capítulo descargado de la web del autor (descarga libre no comercial) y leído el 2026-11-19. Con servicio exponencial E[X²] = 2/μ², luego R = Σλ_iE[X_i²]/2 = ρ/μ.",
+   "url": "https://web.mit.edu/dimitrib/www/datanets.html"
+  },
+  {
+   "id": "F-RFC894",
+   "tipo": "norma",
+   "titulo": "RFC 894: A Standard for the Transmission of IP Datagrams over Ethernet Networks",
+   "editor": "IETF (C. Hornig)",
+   "fecha": "1984-04",
+   "localizador": "'the maximum length of an IP datagram sent over an Ethernet is 1500 octets'",
+   "verificada": true,
+   "nota": "Leído el 2026-11-19.",
+   "url": "https://www.rfc-editor.org/rfc/rfc894.txt"
+  },
+  {
+   "id": "F-ARXIV-2607.14324",
+   "tipo": "externa",
+   "titulo": "Transition-Aware Routing in Hybrid Hollow-Core/Single-Mode Fiber Networks (arXiv:2607.14324)",
+   "editor": "Saber, Jiang",
+   "fecha": "2026",
+   "localizador": "sección de disponibilidad: 'MTTR_cab = 12 h' (Bellcore, To y Neusy [36]); '4.39 cable cuts per 1000 sheath-miles per year [36]'; a = 1/(1+λ·MTTR) 'follows the ITU-T G.911 methodology [37]'",
+   "verificada": true,
+   "nota": "Leído el 2026-11-19 (texto del PDF). Fuente secundaria: tabula los valores de campo de To y Neusy (F-TO-NEUSY-1994).",
+   "url": "https://arxiv.org/abs/2607.14324"
+  },
+  {
+   "id": "F-TO-NEUSY-1994",
+   "tipo": "externa",
+   "titulo": "Unavailability analysis of long-haul networks",
+   "editor": "M. To, P. Neusy · IEEE JSAC 12(1), 100-109",
+   "fecha": "1994",
+   "localizador": "tasa de cortes de cable y tiempo de reparación (Bellcore)",
+   "verificada": false,
+   "nota": "No leído directamente (IEEE, de pago): se cita a través de F-ARXIV-2607.14324.",
+   "url": "https://doi.org/10.1109/49.265709"
+  },
+  {
+   "id": "F-ITU-G911",
+   "tipo": "norma",
+   "titulo": "ITU-T G.911: Parameters and calculation methodologies for reliability and availability of fibre optic systems",
+   "editor": "UIT-T",
+   "fecha": "1997-04",
+   "localizador": "metodología de disponibilidad en régimen permanente A = MTBF/(MTBF+MTTR)",
+   "verificada": false,
+   "nota": "Citada por F-ARXIV-2607.14324; no leída el 2026-11-19.",
+   "url": "https://www.itu.int/rec/T-REC-G.911-199704-I/en"
   }
  ],
  "formulas": [
@@ -993,6 +1048,105 @@ var LINAJE = {
    "justificacion": "Bloques iguales de la banda subastada (anexo de la orden).",
    "refs": [
     "F-BOE-26GHZ"
+   ]
+  },
+  {
+   "id": "FX-035",
+   "nombre": "Latencia de un enlace con carga",
+   "expr": "T = km·5 µs/km + 20 µs (proceso) + L/C_miembro + W_cola(ρ); demanda: Σ tramos del camino peor",
+   "variables": {
+    "km": "longitud",
+    "L": "tamaño de paquete (1500 B)",
+    "C_miembro": "tasa del miembro del LAG",
+    "W_cola": "espera media (FX-036)"
+   },
+   "justificacion": "Clase: el retardo = propagación + proceso + transmisión + cola (F-ARCO-NC p17). La v7 da 5 µs/km y 20 µs por salto y omite la cola; aquí se suma la cola de FX-036 (aproximación de independencia de Kleinrock, B&G §3.6).",
+   "refs": [
+    "F-ARCO-NC",
+    "F-MEMORIA-V7",
+    "F-BG-DATANETS"
+   ]
+  },
+  {
+   "id": "FX-036",
+   "nombre": "Cola M/M/1 con prioridad estricta no expulsiva (2 clases)",
+   "expr": "R = ρ·S; W_alta = R/(1−ρ_alta); W_resto = R/((1−ρ_alta)(1−ρ))",
+   "variables": {
+    "S": "tiempo de servicio L/C",
+    "ρ": "ocupación total del sentido",
+    "ρ_alta": "ocupación de VoNR + URLLC (TC1 v7)"
+   },
+   "justificacion": "Bertsekas y Gallager §3.5.3 ec. (3.78)-(3.82) con servicio exponencial (E[X²] = 2S²). La v7 pone VoNR/URLLC en cola estricta (§6.4.2).",
+   "refs": [
+    "F-BG-DATANETS",
+    "F-MEMORIA-V7"
+   ]
+  },
+  {
+   "id": "FX-037",
+   "nombre": "P95 de la espera",
+   "expr": "P95 = (W/ρ)·ln(ρ/0,05) si ρ > 0,05; 0 si no",
+   "variables": {
+    "W": "espera media",
+    "ρ": "ocupación"
+   },
+   "justificacion": "M/M/1 FIFO: P(espera > t) = ρ·e^{−μ(1−ρ)t} (de p_n = ρ^n(1−ρ), B&G §3.3); despejando t para 0,05 y W = ρ/(μ(1−ρ)). En la clase de prioridad es una aproximación (supuesto ana.p95_cola); de extremo a extremo se suman los P95 (cota).",
+   "refs": [
+    "F-BG-DATANETS"
+   ]
+  },
+  {
+   "id": "FX-038",
+   "nombre": "Cumplimiento de SLA por slice",
+   "expr": "cumple_pct = #demandas con P95 ≤ presupuesto y servido ≥ 99 % / #demandas",
+   "variables": {
+    "presupuesto": "latencia_max_ms de transporte (v7 §6.7.3)"
+   },
+   "justificacion": "KPI D-04 de la v7 (10 ms ida P95) repartido en presupuesto por servicio; el 99 % de caudal es el umbral de 'degradado' del motor.",
+   "refs": [
+    "F-MEMORIA-V7"
+   ]
+  },
+  {
+   "id": "FX-039",
+   "nombre": "Indisponibilidad de un tramo de fibra",
+   "expr": "λ = c·km/8760 (1/h); U = λ·MTTR/(1 + λ·MTTR)",
+   "variables": {
+    "c": "cortes por km y año",
+    "MTTR": "tiempo de reparación del cable (h)"
+   },
+   "justificacion": "Régimen permanente de un elemento reparable A = 1/(1+λ·MTTR) (ITU-T G.911, como lo aplica arXiv:2607.14324) con los valores de campo de To y Neusy.",
+   "refs": [
+    "F-ARXIV-2607.14324",
+    "F-ITU-G911"
+   ]
+  },
+  {
+   "id": "FX-040",
+   "nombre": "Indisponibilidad por zona o servicio",
+   "expr": "I = Σ_sucesos U_s · (DL perdido con s / DL del grupo) · 525 960 min/año",
+   "variables": {
+    "U_s": "indisponibilidad del suceso (N-1, SRLG, par de vanos u_i·u_j, fallo común)"
+   },
+   "justificacion": "Suma de sucesos raros independientes ponderada por la fracción de demanda que se pierde; la v7 usa la misma suma para el núcleo (3u² + fallo común, §7.1.1 A5).",
+   "refs": [
+    "F-MEMORIA-V7",
+    "F-ITU-G911",
+    "F-ENUNCIADO-P2"
+   ]
+  },
+  {
+   "id": "FX-041",
+   "nombre": "Módulos de ampliación",
+   "expr": "n = techo((O/0,85 − C)/m), con ≤ 14 λ por vano",
+   "variables": {
+    "O": "oferta del año",
+    "C": "capacidad",
+    "m": "módulo (400G por λ; 100GE; 10GbE)"
+   },
+   "justificacion": "Deja la ocupación ≤ 85 % (umbral MAJ del motor); módulo y tope de 2 × 7 λ de la v7 §6.4.1 (supuesto evt.modulo_ampliacion).",
+   "refs": [
+    "F-MEMORIA-V7"
    ]
   }
  ],
@@ -18131,6 +18285,137 @@ var LINAJE = {
    ],
    "elemento": "L-IXONEWEB-CORE1",
    "campo": "capacidad_gbps"
+  },
+  {
+   "id": "V-ANA-PAQ",
+   "ambito": "analisis",
+   "valor": 1500,
+   "unidad": "B",
+   "tipo": "supuesto",
+   "entradas": [],
+   "estado": "trazado",
+   "fuente": {
+    "id": "F-RFC894",
+    "localizador": "MTU Ethernet 1500 octetos"
+   },
+   "supuesto": "S-111",
+   "nota": "Cota superior del tiempo de servicio; la v7 §6.7.4 da 800 B (móvil) y 100 B (VoNR) para la UPF."
+  },
+  {
+   "id": "V-ANA-SER400",
+   "ambito": "analisis",
+   "valor": 3e-05,
+   "unidad": "ms",
+   "tipo": "derivado",
+   "entradas": [
+    "V-ANA-PAQ",
+    "V-CH400"
+   ],
+   "estado": "trazado",
+   "formula": "FX-035",
+   "calc": "e[0]*8/(e[1]*1e6)",
+   "ref": {
+    "valor": 3e-05,
+    "donde": "simulador",
+    "localizador": "motor.js enlaces['L-ANILLO-CN'].lat_ser_ms"
+   },
+   "dif_rel": 0.0,
+   "tol_abs": 0.0
+  },
+  {
+   "id": "V-ANA-CORTES",
+   "ambito": "analisis",
+   "valor": 4.39,
+   "unidad": "cortes/1000 millas·año",
+   "tipo": "dato",
+   "entradas": [],
+   "estado": "trazado",
+   "fuente": {
+    "id": "F-ARXIV-2607.14324",
+    "localizador": "sección de disponibilidad, ref. [36] To y Neusy"
+   },
+   "nota": "Supuesto ana.disp_fibra: valor de larga distancia aplicado al metro de Madrid."
+  },
+  {
+   "id": "V-ANA-MTTR",
+   "ambito": "analisis",
+   "valor": 12,
+   "unidad": "h",
+   "tipo": "dato",
+   "entradas": [],
+   "estado": "trazado",
+   "fuente": {
+    "id": "F-ARXIV-2607.14324",
+    "localizador": "'MTTR_cab = 12 h' (Bellcore, ref. [36])"
+   }
+  },
+  {
+   "id": "V-ANA-UFIB-ANILLOCN",
+   "ambito": "analisis",
+   "valor": 7.472919688e-05,
+   "unidad": "—",
+   "tipo": "derivado",
+   "entradas": [
+    "V-ANA-CORTES",
+    "V-KM-ANILLO-CN",
+    "V-ANA-MTTR"
+   ],
+   "estado": "hueco",
+   "formula": "FX-039",
+   "calc": "(e[0]/1609.344*e[1]/8760*e[2])/(1+e[0]/1609.344*e[1]/8760*e[2])",
+   "ref": {
+    "valor": 7.472919688106544e-05,
+    "donde": "simulador",
+    "localizador": "motor.js disponibilidad().sucesos L-ANILLO-CN .u"
+   },
+   "dif_rel": 0.0,
+   "tol_abs": 0.0,
+   "huecos_raiz": [
+    "V-KM-ANILLO-CN"
+   ]
+  },
+  {
+   "id": "V-ANA-UNODO",
+   "ambito": "analisis",
+   "valor": 0.0002,
+   "unidad": "—",
+   "tipo": "supuesto",
+   "entradas": [],
+   "estado": "hueco",
+   "supuesto": "S-105",
+   "memoria": "v7 §7.1.1 A5 [HYP]",
+   "nota": "u de un DC en la v7, extendida a Metro, Edge e IX por el simulador.",
+   "huecos_raiz": [
+    "V-ANA-UNODO"
+   ]
+  },
+  {
+   "id": "V-ANA-COMUN",
+   "ambito": "analisis",
+   "valor": 20,
+   "unidad": "min/año",
+   "tipo": "supuesto",
+   "entradas": [],
+   "estado": "hueco",
+   "supuesto": "S-103",
+   "memoria": "v7 §7.1.1 A5 [HYP]",
+   "huecos_raiz": [
+    "V-ANA-COMUN"
+   ]
+  },
+  {
+   "id": "V-ANA-OBJ-NUCLEO",
+   "ambito": "analisis",
+   "valor": 99.99,
+   "unidad": "%",
+   "tipo": "dato",
+   "entradas": [],
+   "estado": "trazado",
+   "fuente": {
+    "id": "F-ENUNCIADO-P2",
+    "localizador": "p3 ARCO02 (disponibilidad ≥ 99,99 %)"
+   },
+   "memoria": "v7 §7.1.1"
   }
  ],
  "indice": {
@@ -18668,15 +18953,24 @@ var LINAJE = {
   "L-IXONEWEB-CORE1|capacidad_gbps": "V-SIM-IXONEWEB-CORE1"
  },
  "cobertura": {
-  "total": 290,
-  "trazado": 111,
-  "hueco": 176,
+  "total": 293,
+  "trazado": 112,
+  "hueco": 178,
   "discrepa": 3,
-  "pct_trazado": 38.3,
-  "pct_hueco": 60.7,
+  "pct_trazado": 38.2,
+  "pct_hueco": 60.8,
   "pct_discrepa": 1.0,
   "alcance": "valores que aparecen en la memoria v7 (campo memoria)",
   "por_ambito": {
+   "analisis": {
+    "total": 3,
+    "trazado": 1,
+    "hueco": 2,
+    "discrepa": 0,
+    "pct_trazado": 33.3,
+    "pct_hueco": 66.7,
+    "pct_discrepa": 0.0
+   },
    "core": {
     "total": 20,
     "trazado": 1,
@@ -18778,12 +19072,12 @@ var LINAJE = {
    }
   },
   "todos": {
-   "total": 653,
-   "trazado": 249,
-   "hueco": 396,
+   "total": 661,
+   "trazado": 254,
+   "hueco": 399,
    "discrepa": 8,
-   "pct_trazado": 38.1,
-   "pct_hueco": 60.6,
+   "pct_trazado": 38.4,
+   "pct_hueco": 60.4,
    "pct_discrepa": 1.2
   },
   "indice": {
@@ -18975,6 +19269,16 @@ var LINAJE = {
     "id": "V-EDGE-FLOTA",
     "bloquea": 1,
     "supuesto": "S-L00"
+   },
+   {
+    "id": "V-ANA-UNODO",
+    "bloquea": 1,
+    "supuesto": "S-105"
+   },
+   {
+    "id": "V-ANA-COMUN",
+    "bloquea": 1,
+    "supuesto": "S-103"
    }
   ]
  }

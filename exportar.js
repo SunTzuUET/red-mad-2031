@@ -16,6 +16,7 @@
     v7: { es: "v7", en: "v7" }, anterior: { es: "doc. anterior", en: "earlier doc." },
     supuesto: { es: "supuesto", en: "assumption" }, supuestos: { es: "supuestos", en: "assumptions" },
     calculado: { es: "calculado", en: "computed" }, calculados: { es: "calculados", en: "computed" },
+    usuario: { es: "dato del usuario", en: "user data" }, usuarios: { es: "datos del usuario", en: "user data" },   // Revisión 8
     sinEsp: { es: "no especificado en v7", en: "not specified in v7" },
     porElemento: { es: "por elemento (pendiente de detalle)", en: "per element (field detail pending)" },
     contieneSup: { es: "contiene supuestos", en: "contains assumptions" },
@@ -43,7 +44,12 @@
     { id: "eventos", n: { es: "Eventos del caso LAB", en: "LAB case events" } },
     { id: "linaje", n: { es: "Linaje (valores, fórmulas, fuentes)", en: "Lineage (values, formulas, sources)" } },
     { id: "supuestos", n: { es: "Registro de supuestos", en: "Assumption register" } },
-    { id: "valores_detallados", n: { es: "Valores detallados", en: "Detailed values" } }
+    { id: "valores_detallados", n: { es: "Valores detallados", en: "Detailed values" } },
+    // Revisión 9 (ESTUDIOS)
+    { id: "planificacion", n: { es: "Planificación 2026–2035", en: "Planning 2026–2035" } },
+    { id: "sla", n: { es: "SLA por slice", en: "SLA per slice" } },
+    { id: "disponibilidad", n: { es: "Disponibilidad (zonas, servicios, sucesos)", en: "Availability (zones, services, events)" } },
+    { id: "comparacion", n: { es: "Comparación A/B", en: "A/B comparison" } }
   ];
   X.CATALOGO = CATALOGO;
   X.SEL_DEFECTO = function () {
@@ -125,6 +131,7 @@
     if (/^(anterior|previo|doc_anterior)$/.test(x)) return "anterior";
     if (/^(supuesto|hyp|hipotesis|hipótesis|inferido)$/.test(x)) return "supuesto";
     if (/^(calculado|calc|motor|generador)$/.test(x)) return "calculado";
+    if (/^(usuario|user|importado)$/.test(x)) return "usuario";   // Revisión 8: modelo de demanda propio (LAB)
     return "";
   }
   X.tipoNorm = tipoNorm;
@@ -214,7 +221,7 @@
   // Añade una fila. obj = elemento con proc; v = valores; extra = {dep, ref (valores REF para Δ), clave}
   function anadir(tab, obj, v, extra) {
     extra = extra || {};
-    var celdas = {}, cuenta = { v7: 0, anterior: 0, supuesto: 0, calculado: 0 }, sup = [], det = false, hayDato = false, sinTipo = 0, elemP = null, aplic = {};
+    var celdas = {}, cuenta = { v7: 0, anterior: 0, supuesto: 0, calculado: 0, usuario: 0 }, sup = [], det = false, hayDato = false, sinTipo = 0, elemP = null, aplic = {};
     tab.cols.forEach(function (c) {
       if (c.rol === "dato") {
         hayDato = true;
@@ -257,6 +264,7 @@
     if (f.cuenta.anterior) p.push(tr(TX.anterior, lang) + ap("anterior"));
     if (f.cuenta.supuesto) p.push(f.cuenta.supuesto + " " + tr(f.cuenta.supuesto === 1 ? TX.supuesto : TX.supuestos, lang));
     if (f.cuenta.calculado) p.push(f.cuenta.calculado + " " + tr(f.cuenta.calculado === 1 ? TX.calculado : TX.calculados, lang) + ap("calculado"));
+    if (f.cuenta.usuario) p.push(f.cuenta.usuario + " " + tr(f.cuenta.usuario === 1 ? TX.usuario : TX.usuarios, lang));
     return p.join(" · ") || "—";
   }
   X.resumenProc = resumenProc;
@@ -389,6 +397,14 @@
           var dl = pz && pz.det && !pz.nada ? pz : calc;
           pr = { dl_gbps: dl, ul_gbps: dl, prioridad: calc, destino_nodo: calc };
           if (!calc.det) { pr = null; }
+        }
+        // Revisión 8: campos tocados por el modelo del usuario (resultado.demandas[i].proc_usuario) -> tipo "usuario"
+        if (d.proc_usuario && typeof d.proc_usuario === "object") {
+          pr = pr || {};
+          ["dl_gbps", "ul_gbps", "prioridad"].forEach(function (k) {
+            var pu = d.proc_usuario[k];
+            if (pu) pr[k] = { t: "usuario", f: pu.f || "", s: [], det: true };
+          });
         }
         var obj = d.proc ? d : (fuenteObj || ZIDX[d.zona] || d);
         var d0 = dRef[d.id];
@@ -652,6 +668,9 @@
         anadir(tev, null, { hora: hhmmX(e.t_min), t_min: e.t_min, tipo: e.tipo || "", elemento: e.id || "", parametros: e.params ? JSON.stringify(e.params) : "" }, { dep: arr(e.supuesto), clave: "e" + i });
       });
     }
+
+    // ---- Revisión 9 (ESTUDIOS, vista_planificacion.js / estudios.js): planificación, SLA, disponibilidad y comparación. Solo si hay filas.
+    estudiosTablas(ctx, quiere, lang).forEach(poner);
 
     // ---- filtros finales: solo filas con supuestos
     if (sel.solo) tablas.forEach(function (t) { t.filas = t.filas.filter(tieneSup); });
@@ -1021,6 +1040,7 @@
         "  anterior   dato de un documento anterior del equipo que la v7 no da.",
         "  supuesto   lo pone el simulador porque ningún documento lo da; tiene un id S-NNN en supuestos.csv.",
         "  calculado  lo calcula el motor o el generador de demanda para este caso.",
+        "  usuario    dato del usuario: lo cambia un modelo de demanda propio (CSV importado o editor MODELO, solo LAB); fuente = archivo.",
         "Columnas comunes de cada tabla:",
         "  procedencia  resumen de la fila, p. ej. 'v7 · 1 supuesto · 2 calculados'.",
         "  supuestos    ids S-NNN de los DATOS de la fila que son supuestos (separados por espacio).",
@@ -1045,6 +1065,7 @@
         "  anterior    data from an earlier team document not given in v7.",
         "  supuesto    assumption set by the simulator; has an S-NNN id in supuestos.csv.",
         "  calculado   computed by the engine or the demand generator for this case.",
+        "  usuario     user data: changed by an own demand model (imported CSV or MODEL editor, LAB only); source = file name.",
         "Common columns: provenance (row summary), assumptions (S-ids of the row's DATA), depends_on (S-ids the row's computed RESULTS depend on).",
         "valores_detallados.csv gives the same field by field; supuestos.csv is the register.");
       if (m.registro_provisional) L.push("", "NOTE: data has no per-field provenance (proc) nor RED.supuestos yet; provenance says 'per element (field detail pending)'.");
@@ -1189,6 +1210,130 @@
     sinProc: { es: "Procedencia por elemento: los datos aún no traen detalle por campo.", en: "Per-element provenance: data has no per-field detail yet." },
     cerrar: { es: "Cerrar (Esc)", en: "Close (Esc)" }
   };
+  // ======================================================================== Revisión 9 (ESTUDIOS): tablas de estudios
+  // planificacion.csv (+ planificacion_hoja_ruta.csv), sla.csv, disponibilidad.csv, comparacion.csv. Cada una solo si tiene filas.
+  function estudiosTablas(ctx, quiere, lang) {
+    var out = [], M = ctx.Motor, RED = ctx.RED, op = ctx.opciones || { caso: { trafico: "BH", evento: "E-EVENTO" } };
+    function n(x) { return esNum(x) ? x : null; }
+    if (quiere.planificacion && M && typeof M.planificacion === "function") {
+      var p = null;
+      try { p = ctx.planificacion || M.planificacion(RED, op); } catch (e) { p = null; }
+      if (p && p.anios && p.anios.length) {
+        var sp = arr(p.supuestos);
+        var ta = nuevaTabla("planificacion", { es: "Planificación por año", en: "Planning by year" },
+          { es: "Motor.planificacion: ocupación máxima por familia y año (" + p.desde + "–" + p.hasta + "); años > 2031 extrapolados.", en: "Motor.planificacion: maximum occupancy per family and year (" + p.desde + "–" + p.hasta + "); years > 2031 extrapolated." },
+          [C("anio", "anio", "year", { rol: "id" }), K("dl_total_gbps", "dl_total", "total_dl", { u: "Gbps", dec: 1 }), K("pct_servida_pct", "servida", "served", { u: "pct", dec: 2 }),
+            K("enlace_max_pct", "enlace_max", "link_max", { u: "pct", dec: 1 }), C("enlace_max_id", "enlace_max_id", "link_max_id"),
+            K("sitio_max_pct", "sitio_max", "site_max", { u: "pct", dec: 1 }), C("sitio_max_id", "sitio_max_id", "site_max_id"),
+            K("nucleo_max_pct", "nucleo_max", "core_max", { u: "pct", dec: 1 }), C("nucleo_max_id", "nucleo_max_id", "core_max_id"),
+            K("nodo_max_pct", "nodo_max", "node_max", { u: "pct", dec: 1 }), C("nodo_max_id", "nodo_max_id", "node_max_id"),
+            K("n_85", "n_85", "n_85", { dec: 0 }), K("n_100", "n_100", "n_100", { dec: 0 }), C("extrapolado", "extrapolado", "extrapolated")]);
+        p.anios.forEach(function (a) {
+          anadir(ta, null, { anio: a.anio, dl_total_gbps: n(a.dl_total_gbps), pct_servida_pct: n(a.pct_servida), enlace_max_pct: n(a.ocup_max_pct), enlace_max_id: a.ocup_max_id || "",
+            sitio_max_pct: n(a.sitio_max_pct), sitio_max_id: a.sitio_max_id || "", nucleo_max_pct: n(a.nucleo_max_pct), nucleo_max_id: a.nucleo_max_id || "",
+            nodo_max_pct: n(a.nodo_max_pct), nodo_max_id: a.nodo_max_id || "", n_85: a.n_85, n_100: a.n_100, extrapolado: a.anio > 2031 ? "sí" : "no" }, { dep: sp, clave: "a" + a.anio });
+        });
+        if (ta.filas.length) out.push(ta);
+        if ((p.elementos || []).length) {
+          var tel = nuevaTabla("planificacion_elementos", { es: "Qué satura primero", en: "What saturates first" },
+            { es: "Elementos que pasan del 85 % en el horizonte: año en que cruzan 85 % y 100 %.", en: "Elements exceeding 85 % within the horizon: year they cross 85 % and 100 %." },
+            [C("elemento", "elemento", "element", { rol: "id" }), C("familia", "familia", "family"), C("tipo", "tipo", "type"), K("anio_85", "anio_85", "year_85", { dec: 0 }), K("anio_100", "anio_100", "year_100", { dec: 0 }),
+              K("ocup_inicio_pct", "ocup_inicio", "occ_start", { u: "pct", dec: 1 }), K("ocup_fin_pct", "ocup_fin", "occ_end", { u: "pct", dec: 1 }),
+              K("capacidad_gbps", "capacidad", "capacity", { u: "Gbps", dec: 1 }), C("nace_saturado", "nace_85", "born_85")]);
+          p.elementos.forEach(function (e) {
+            anadir(tel, null, { elemento: e.id, familia: e.familia || "", tipo: e.tipo || "", anio_85: n(e.anio_85), anio_100: n(e.anio_100), ocup_inicio_pct: n(e.pct_inicio), ocup_fin_pct: n(e.pct_fin),
+              capacidad_gbps: n(e.capacidad_gbps), nace_saturado: e.desde_inicio_85 ? "sí" : "no" }, { dep: sp, clave: "e" + e.familia + e.id });
+          });
+          out.push(tel);
+        }
+        if ((p.hoja_ruta || []).length) {
+          var th = nuevaTabla("planificacion_hoja_ruta", { es: "Hoja de ruta", en: "Roadmap" },
+            { es: "Ampliaciones propuestas por Motor.planificacion (umbral " + (p.umbral_ampliacion || 85) + " %).", en: "Upgrades proposed by Motor.planificacion (threshold " + (p.umbral_ampliacion || 85) + " %)." },
+            [C("anio", "anio", "year", { rol: "id" }), C("accion", "accion", "action"), C("elemento", "elemento", "element"), C("familia", "familia", "family"), K("n", "n", "n", { dec: 0 }),
+              K("ampliacion_gbps", "ampliacion", "upgrade", { u: "Gbps", dec: 1 }), K("capacidad_antes_gbps", "capacidad_antes", "capacity_before", { u: "Gbps", dec: 1 }),
+              K("capacidad_gbps", "capacidad", "capacity", { u: "Gbps", dec: 1 }), K("ocup_antes_pct", "ocup_antes", "occ_before", { u: "pct", dec: 1 }),
+              K("ocup_despues_pct", "ocup_despues", "occ_after", { u: "pct", dec: 1 }), C("evento", "evento", "event"), C("aviso", "aviso", "warning", { ancho: "largo" })]);
+          p.hoja_ruta.forEach(function (r, i) {
+            anadir(th, null, { anio: r.anio, accion: r.accion, elemento: r.id || arr(r.sitios).join(" "), familia: r.familia || "", n: n(r.n) != null ? r.n : n(r.n_sitios),
+              ampliacion_gbps: n(r.gbps), capacidad_antes_gbps: n(r.capacidad_antes_gbps), capacidad_gbps: n(r.capacidad_gbps), ocup_antes_pct: n(r.ocup_antes_pct), ocup_despues_pct: n(r.ocup_despues_pct),
+              evento: r.evento ? JSON.stringify(r.evento) : "", aviso: r.aviso || r.nota || "" }, { dep: sp, clave: "h" + i });
+          });
+          out.push(th);
+        }
+      }
+    }
+    var R = ctx.resultado;
+    if (quiere.sla && R && R.sla && Object.keys(R.sla).length) {
+      var ts = nuevaTabla("sla", { es: "SLA por slice", en: "SLA per slice" },
+        { es: "resultado.sla: objetivo de latencia (KPI y transporte), P95 de la peor demanda, margen y cumplimiento.", en: "resultado.sla: latency target (KPI and transport), worst-demand P95, margin and compliance." },
+        [C("slice", "slice", "slice", { rol: "id" }), C("nombre", "nombre", "name"), C("estado", "estado", "status"), K("objetivo_ms", "objetivo", "target", { u: "ms", dec: 3 }),
+          K("objetivo_transporte_ms", "objetivo_transporte", "transport_target", { u: "ms", dec: 3 }), K("p95_peor_ms", "p95_peor", "worst_p95", { u: "ms", dec: 3 }),
+          K("margen_ms", "margen", "margin", { u: "ms", dec: 3 }), C("peor_demanda", "peor_demanda", "worst_demand"), K("n", "n", "n", { dec: 0 }), K("n_cumple", "n_cumple", "n_meet", { dec: 0 }),
+          K("cumple_pct", "cumple", "meets", { u: "pct", dec: 2 }), K("cumple_gbps_pct", "cumple_gbps", "meets_gbps", { u: "pct", dec: 2 }), K("dl_gbps", "dl", "dl", { u: "Gbps", dec: 2 })]);
+      Object.keys(R.sla).forEach(function (k) {
+        var s = R.sla[k], pe = s.peor || {};
+        anadir(ts, null, { slice: k, nombre: s.nombre || "", estado: s.cumple ? "OK" : "CRIT", objetivo_ms: n(s.objetivo_lat_ms), objetivo_transporte_ms: n(s.objetivo_transporte_ms),
+          p95_peor_ms: n(pe.lat_p95_ms), margen_ms: n(pe.margen_ms), peor_demanda: pe.id || "", n: s.n, n_cumple: s.n_cumple, cumple_pct: n(s.cumple_pct), cumple_gbps_pct: n(s.cumple_gbps_pct), dl_gbps: n(s.dl_gbps) },
+          { dep: [], clave: k });
+      });
+      if (ts.filas.length) out.push(ts);
+    }
+    if (quiere.disponibilidad && M && typeof M.disponibilidad === "function") {
+      var d = null;
+      try { d = ctx.disponibilidad || M.disponibilidad(RED, op); } catch (e) { d = null; }
+      if (d && d.red) {
+        var sd = arr(d.supuestos);
+        var td = nuevaTabla("disponibilidad", { es: "Disponibilidad", en: "Availability" },
+          { es: "Motor.disponibilidad: indisponibilidad (min/año) por ámbito y sucesos de fallo (N-1, SRLG, N-2, común).", en: "Motor.disponibilidad: unavailability (min/year) per scope and failure events (N-1, SRLG, N-2, common)." },
+          [C("ambito", "ambito", "scope", { rol: "id" }), C("id", "id", "id"), K("dl_gbps", "dl", "dl", { u: "Gbps", dec: 2 }), K("indisp_min_anio", "indisp_min_anio", "unavail_min_year", { dec: 2 }),
+            K("disponibilidad_pct", "disponibilidad", "availability", { u: "pct", dec: 5 }), C("peor_suceso", "peor_suceso", "worst_event"), C("tipo", "tipo", "type"),
+            K("peor_min_anio", "peor_min_anio", "worst_min_year", { dec: 2 }), K("dl_perdida_gbps", "dl_perdida", "dl_lost", { u: "Gbps", dec: 2 })]);
+        anadir(td, null, { ambito: "red", id: "red", indisp_min_anio: n(d.red.indisp_min_anio), disponibilidad_pct: n(d.red.disponibilidad_pct) }, { dep: sd, clave: "red" });
+        ["zonas", "servicios", "slices", "especiales"].forEach(function (g) {
+          var o = d[g] || {};
+          Object.keys(o).forEach(function (k) {
+            var x = o[k], pe = x.peor || {};
+            anadir(td, null, { ambito: g, id: k, dl_gbps: n(x.dl_gbps), indisp_min_anio: n(x.indisp_min_anio), disponibilidad_pct: n(x.disponibilidad_pct), peor_suceso: pe.id || "", tipo: pe.tipo || "", peor_min_anio: n(pe.min_anio) },
+              { dep: sd, clave: g + ":" + k });
+          });
+        });
+        (d.sucesos || []).forEach(function (s) {
+          anadir(td, null, { ambito: "suceso", id: s.id, tipo: s.tipo || "", peor_suceso: arr(s.elementos).join(" "), indisp_min_anio: n(s.contribucion_min_anio), peor_min_anio: n(s.min_anio), dl_perdida_gbps: n(s.dl_perdida_gbps) },
+            { dep: sd, clave: "s:" + s.id });
+        });
+        out.push(td);
+      }
+    }
+    if (quiere.comparacion && M && typeof M.comparar === "function") {
+      var cmpR = ctx.comparacion || null;
+      if (!cmpR && ctx.referencia && R && ctx.modo === "lab") { try { cmpR = { nombreA: "REF", nombreB: "LAB", c: M.comparar(ctx.referencia, R) }; } catch (e) { cmpR = null; } }
+      if (cmpR && cmpR.c) {
+        var c = cmpR.c;
+        var tc = nuevaTabla("comparacion", { es: "Comparación A/B", en: "A/B comparison" },
+          { es: "Motor.comparar: A = " + (cmpR.nombreA || "A") + ", B = " + (cmpR.nombreB || "B") + "; Δ = B − A. Solo elementos que cambian.", en: "Motor.comparar: A = " + (cmpR.nombreA || "A") + ", B = " + (cmpR.nombreB || "B") + "; Δ = B − A. Changed elements only." },
+          [C("familia", "familia", "family", { rol: "id" }), C("id", "id", "id"), C("campo", "campo", "field"), K("a", "a", "a", { dec: 4 }), K("b", "b", "b", { dec: 4 }), K("delta", "delta", "delta", { dec: 4 }), C("texto", "texto", "text")]);
+        Object.keys(c.kpi || {}).forEach(function (k) { var x = c.kpi[k]; anadir(tc, null, { familia: "kpi", id: k, campo: k, a: n(x.a), b: n(x.b), delta: n(x.d) }, { dep: [], clave: "k" + k }); });
+        ["enlaces", "nodos", "demandas", "sla"].forEach(function (g) {
+          var o = c[g] || {};
+          Object.keys(o).forEach(function (id) {
+            var x = o[id];
+            if (!x || !x.cambia) return;
+            Object.keys(x).forEach(function (campo) {
+              var v = x[campo];
+              if (!v || typeof v !== "object" || !("a" in v)) return;
+              if (esNum(v.d) && Math.abs(v.d) < 1e-9) return;
+              if (!esNum(v.d) && !v.cambia) return;
+              anadir(tc, null, { familia: g, id: id, campo: campo, a: n(v.a), b: n(v.b), delta: n(v.d), texto: esNum(v.a) ? "" : String(v.a) + " → " + String(v.b) }, { dep: [], clave: g + id + campo });
+            });
+          });
+        });
+        if (tc.filas.length >= 1) out.push(tc);
+      }
+    }
+    return out;
+  }
+  X.estudiosTablas = estudiosTablas;
+
   var panel = null, ultimoInforme = null;
 
   function ctxActual(sel) {
@@ -1196,12 +1341,16 @@
     return {
       RED: NOC.RED || window.RED, ARQ: window.ARQ || null, RADIO: window.RADIO || null, Motor: window.Motor, LINAJE: window.LINAJE || null,
       resultado: NOC.resultado, referencia: NOC.referencia, opciones: NOC.opciones, modo: NOC.modo, lang: NOC.lang,
-      caso: { texto: cap ? cap.textContent : "", trafico: NOC.caso && NOC.caso.trafico, evento: NOC.caso && NOC.caso.evento,
+      caso: { texto: (cap ? cap.textContent : "") + (NOC.modo === "lab" && NOC.caso && NOC.caso.modelo_usuario ?   // Revisión 8: modelo del usuario
+          " · " + NOC.t({ es: "modelo: ", en: "model: " }) + (NOC.caso.modelo_usuario.nombre || NOC.caso.modelo_usuario.id || "usuario") : ""), trafico: NOC.caso && NOC.caso.trafico, evento: NOC.caso && NOC.caso.evento,
         fallos: NOC.modo === "lab" && NOC.caso ? (NOC.caso.fallos || []).slice() : [], anio: NOC.caso && NOC.caso.anio, dia: NOC.caso && NOC.caso.dia, hora: NOC.caso && NOC.caso.hora },
       alarmas: NOC.alarmas ? NOC.alarmas() : null,
       serie: NOC.reloj && NOC.reloj.serie ? NOC.reloj.serie() : null,
       sucesos: NOC.operador && NOC.operador.sucesos ? NOC.operador.sucesos() : null,
       eventos: NOC.operador && NOC.operador.eventos ? NOC.operador.eventos() : null,
+      // Revisión 9 (ESTUDIOS): cálculos ya hechos en las pestañas (si no, estudiosTablas los calcula) y última comparación A/B
+      planificacion: NOC.planificacion && NOC.planificacion.plan ? (function () { try { return NOC.planificacion.plan(); } catch (e) { return null; } })() : null,
+      comparacion: NOC.estudios && NOC.estudios.comparacion ? NOC.estudios.comparacion : null,
       capas: NOC.capas, servicios: NOC.sv ? NOC.sv.activos : null,
       capaNodo: NOC.capaNodo, capaEnlace: NOC.capaEnlace, fecha: new Date()
     };

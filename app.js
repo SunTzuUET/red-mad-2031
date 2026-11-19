@@ -240,7 +240,7 @@
   var MT = RED.modelos_trafico || {};
   var CR = MT.crecimiento || {};
   var ANIO_MIN = CR.anio_min || 2025, ANIO_MAX = CR.anio_max || 2031;
-  var caso = { trafico: "BH", dia: "laborable", anio: ANIO_MAX, hora: 21, evento: typeof Motor.casos === "function" ? "E-EVENTO" : "", fallos: [], eventos: [] };   // eventos: Revisión 7 (operador.js)
+  var caso = { trafico: "BH", dia: "laborable", anio: ANIO_MAX, hora: 21, evento: typeof Motor.casos === "function" ? "E-EVENTO" : "", fallos: [], eventos: [], modelo_usuario: null };   // eventos: Revisión 7 (operador.js); modelo_usuario: Revisión 8 (editor_modelo.js)
   try { var g0 = JSON.parse(leer("noc.caso") || "null"); if (g0) Object.keys(caso).forEach(function (k) { if (g0[k] != null) caso[k] = g0[k]; }); } catch (e) { /* nada */ }
   try { var c0 = JSON.parse(leer("noc.capas") || "null"); if (c0) Object.keys(NOC.capas).forEach(function (k) { if (typeof c0[k] === "boolean") NOC.capas[k] = c0[k]; }); } catch (e) { /* nada */ }
   NOC.caso = caso;
@@ -339,7 +339,20 @@
   var HAY_CASOS = typeof Motor.casos === "function";
   var OPC_REF = HAY_CASOS ? { caso: { trafico: "BH", evento: "E-EVENTO" } } : { escenario: "E-TABLA8" };
   var EV_REF = HAY_CASOS ? "E-EVENTO" : "";
+  // Revisión 8 (editor_modelo.js): el modelo de demanda del usuario (solo LAB) va en las opciones de calcular y de la serie
   function opcionesCaso() {
+    var op = opcionesCasoBase();
+    if (NOC.modo === "lab" && caso.modelo_usuario && typeof caso.modelo_usuario === "object") op.modelo_usuario = copia(caso.modelo_usuario);
+    return op;
+  }
+  NOC.aplicarModelo = function (mu) {
+    caso.modelo_usuario = mu && typeof mu === "object" ? mu : null;
+    guardarCaso();
+    if (NOC.modo === "lab") { pintarBarra(); aplicarCaso(); }
+    return NOC.resultado;
+  };
+  NOC.opcionesCaso = function () { return opcionesCaso(); };
+  function opcionesCasoBase() {
     if (NOC.modo === "ref") return copia(OPC_REF);
     var ev = itemPorId(EJES.evento, caso.evento), cargado = traficoCargado();
     if (EJES.fuente === "motor") {
@@ -816,7 +829,8 @@
       '<div class="ficha-sec"><h3>' + esc(t({ es: "Tipos de dato", en: "Data types" })) + '</h3>' +
       '<div class="dato-doc nota">' + esc(t({ es: "documento (Entrega 2 o anterior)", en: "document (Deliverable 2 or earlier)" })) + '</div>' +
       '<div class="dato-sup nota" style="margin-top:3px">' + esc(t({ es: "supuesto del simulador", en: "simulator assumption" })) + '</div>' +
-      '<div class="dato-calc nota" style="margin-top:3px">' + esc(t({ es: "calculado por el motor", en: "computed by the engine" })) + '</div></div>';
+      '<div class="dato-calc nota" style="margin-top:3px">' + esc(t({ es: "calculado por el motor", en: "computed by the engine" })) + '</div>' +
+      '<div class="dato-usr nota" style="margin-top:3px">' + esc(t({ es: "dato del usuario (modelo propio, solo LAB)", en: "user data (own model, LAB only)" })) + '</div></div>';
     aplicarFichaSecs($("#ficha-cuerpo"));
     pintarFichaPlegado();
   }

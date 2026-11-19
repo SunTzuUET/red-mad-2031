@@ -12238,6 +12238,156 @@ var RED = {
    "fuente_parcial": "—",
    "alternativa": "Ruido correlado entre zonas o en el tiempo (AR(1)).",
    "estado": "pendiente"
+  },
+  {
+   "id": "S-102",
+   "clave": "ana.cola_mm1",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.calcular"
+   ],
+   "campo": "retardo de cola por enlace",
+   "valor": "cada miembro del LAG (400GE; backhaul/IX 100GE; resto, el enlace) es una cola M/M/1 con la ocupación del sentido; VoNR y URLLC (clases voz y urllc) van en cola de prioridad estricta no expulsiva (fórmula de Cobham): W_alta = R/(1−ρ_alta), W_resto = R/((1−ρ_alta)(1−ρ)), R = ρ·L/C",
+   "unidad": "ms",
+   "motivo": "La v7 suma propagación + 20 µs por salto y declara 'criterio sin cola' (§6.4.2, A1); la forma de la cola es un modelo del simulador (llegadas de Poisson y servicio exponencial, independencia entre enlaces de Kleinrock).",
+   "fuente_parcial": "v7 §6.4.2 (TC1 cola de prioridad estricta), A1 (0,1 ms de cola de referencia)",
+   "alternativa": "Kingman G/G/1 con coeficientes de variación medidos; simulación de paquetes.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-103",
+   "clave": "ana.disp_comun",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.disponibilidad"
+   ],
+   "campo": "fallo común del núcleo",
+   "valor": "20 min/año en que caen los tres DC a la vez (fallo de software común)",
+   "unidad": "min/año",
+   "motivo": "Es la hipótesis de la v7 (§7.1.1 [HYP]); se aplica como un suceso más que tumba los tres DC.",
+   "fuente_parcial": "v7 §7.1.1, A5",
+   "alternativa": "Histórico de incidencias de la plataforma 5GC/IMS elegida.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-104",
+   "clave": "ana.disp_fibra",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.disponibilidad"
+   ],
+   "campo": "cortes de fibra",
+   "valor": "4,39 cortes por 1000 millas de cubierta y año (= 2,73·10⁻³ /km·año) y MTTR 12 h, en todo enlace con km; U = λ·MTTR/(1 + λ·MTTR)",
+   "unidad": "cortes/km·año · h",
+   "motivo": "La v7 no da tasa de cortes ni tiempo de reparación de cable (su MTTR ≤ 15 min es de restauración del servicio); valores de campo de To y Neusy (1994, Bellcore) tal como los tabula arXiv:2607.14324.",
+   "fuente_parcial": "To & Neusy, IEEE JSAC 12(1), 1994; ITU-T G.911",
+   "alternativa": "Estadística de averías del operador en Madrid (suele ser mayor en metro: FCC 2002).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-105",
+   "clave": "ana.disp_nodo",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.disponibilidad"
+   ],
+   "campo": "indisponibilidad de nodo",
+   "valor": "u = 2·10⁻⁴ por nodo de transporte, DC, Edge e IX (la de un DC en la v7 A5), independientes; los nodos AGG y SITE (abstractos) no fallan",
+   "unidad": "—",
+   "motivo": "La v7 solo da u por DC [HYP]; extenderla a Metro, Edge e IX es del simulador. Con opciones {mtbf, mttr} (h): u = mttr/(mtbf + mttr).",
+   "fuente_parcial": "v7 §7.1.1, A5",
+   "alternativa": "MTBF de las hojas de datos (Nokia 7750 SR, servidores R760).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-106",
+   "clave": "ana.disp_ponderacion",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.disponibilidad"
+   ],
+   "campo": "indisponibilidad por zona y servicio",
+   "valor": "Σ sucesos u_s · fracción de la demanda (DL) que deja de servirse con el suceso respecto al caso sin fallos; sucesos = N-1 de cada elemento, N-2 por SRLG (fallan juntos) y pares de vanos del anillo (u_i·u_j); fallos independientes; restauración (FRR, migración) instantánea",
+   "unidad": "min/año",
+   "motivo": "Método del simulador (ponderar el barrido N-1 por la probabilidad de cada fallo); la v7 solo calcula el núcleo 2 de 3.",
+   "fuente_parcial": "v7 §7.1.1, A5; ITU-T G.911",
+   "alternativa": "Cadena de Markov con reparaciones y tiempos de conmutación.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-107",
+   "clave": "ana.p95_cola",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.calcular"
+   ],
+   "campo": "P95 de latencia",
+   "valor": "por enlace, espera condicionada exponencial: P95 = (W/ρ)·ln(ρ/0,05) si ρ > 0,05 (exacto en M/M/1 FIFO); de extremo a extremo, suma de los P95 de cada enlace + propagación y proceso (cota conservadora)",
+   "unidad": "ms",
+   "motivo": "La v7 fija el KPI en P95 ida (D-04) pero calcula sin cola; la composición de percentiles es del simulador.",
+   "fuente_parcial": "v7 §2.6 (D-04, P95 ida)",
+   "alternativa": "Convolución de las distribuciones de espera por enlace.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-108",
+   "clave": "ana.planificacion",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.planificacion"
+   ],
+   "campo": "planificación por año",
+   "valor": "cada año = el caso con modelo.anio = año (proyección 3.2: población lineal y volumen geométrico; servicios especiales constantes); después de 2031 se extrapola la misma ley; se amplía cuando la oferta pasa del 85 % (umbral MAJ) con el módulo de evt.modulo_ampliacion hasta dejarla ≤ 85 %; sin reencaminar",
+   "unidad": "año",
+   "motivo": "La v7 dimensiona solo 2031 (horizonte de 5 años del enunciado); la serie anual, la extrapolación y la regla de ampliación son del simulador.",
+   "fuente_parcial": "v7 §2.7, 3.2 (proyección 2025–2031)",
+   "alternativa": "Previsión de tráfico del operador más allá de 2031.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-109",
+   "clave": "ana.rho_tope",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.calcular"
+   ],
+   "campo": "ocupación máxima en la fórmula de cola",
+   "valor": "ρ se limita a 0,99; con ρ ≥ 0,99 la latencia se marca 'saturado' y es una cota inferior (la cola real depende del búfer)",
+   "unidad": "—",
+   "motivo": "M/M/1 diverge en ρ = 1 y la v7 no da tamaños de búfer.",
+   "fuente_parcial": "—",
+   "alternativa": "Búfer de la hoja de datos del router (ms de cola máx.).",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-110",
+   "clave": "ana.sla_objetivos",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.calcular"
+   ],
+   "campo": "objetivo de SLA por slice",
+   "valor": "latencia: P95 de transporte ≤ presupuesto de transporte de cada demanda (latencia_max_ms); caudal: servido ≥ 99 % de lo pedido (umbral de 'degradado' del motor); demanda sin presupuesto: solo caudal",
+   "unidad": "ms · %",
+   "motivo": "La v7 da el KPI 10 ms ida P95 de extremo a extremo y el presupuesto por servicio (radio + transporte + UPF + app); reducirlo a comprobaciones por demanda y el 99 % de caudal son del simulador.",
+   "fuente_parcial": "v7 §2.6 (D-04), §6.7.3 (presupuesto)",
+   "alternativa": "SLA contractuales por slice.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-111",
+   "clave": "ana.tamano_paquete",
+   "ambito": "analisis",
+   "elementos": [
+    "motor.calcular"
+   ],
+   "campo": "tamaño medio de paquete en transporte",
+   "valor": "1500 B (MTU Ethernet): cota superior del tiempo de servicio",
+   "unidad": "B",
+   "motivo": "La v7 da tamaños por servicio para la UPF (800 B internet móvil, 100 B VoNR, 1 200 B evento) pero no una mezcla para el transporte; 1500 B da el retardo de serialización y cola más alto (conservador).",
+   "fuente_parcial": "RFC 894 (MTU 1500 B); v7 §6.7.4",
+   "alternativa": "Mezcla IMIX medida en la red.",
+   "estado": "pendiente"
   }
  ]
 };

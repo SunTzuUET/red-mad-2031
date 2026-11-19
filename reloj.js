@@ -48,8 +48,28 @@
     vel: VELS.indexOf(Number(leer("noc.reloj.vel"))) >= 0 ? Number(leer("noc.reloj.vel")) : 600,
     t: null, i: -1, pelicula: false, play: false,
     serie: null, estado: "nada", error: "", clave: null, gen: 0, genPint: 0,
-    base: null, baseOp: null, cargada: true, cacheP: {}, motorCache: {}, fuente: "", ms: 0
+    base: null, baseOp: null, cargada: true, cacheP: {}, motorCache: {}, fuente: "", ms: 0,
+    mc: null, mcClave: null   // Revisión 8 (editor_modelo.js): Montecarlo del caso actual (bandas P5–P95 y P50 en TIEMPO)
   };
+  // Montecarlo válido solo para el caso (clave) con el que se calculó
+  function mcOk() { return !!(S.mc && S.mc.kpi && S.mc.t_min && S.mc.t_min.length && S.mcClave === S.clave); }
+  function bandaMC(k) {
+    if (!mcOk()) return null;
+    var q = S.mc.kpi[k];
+    if (!q || !q.p5 || !q.p95) return null;
+    return { tms: Array.prototype.slice.call(S.mc.t_min), p5: Array.prototype.slice.call(q.p5), p50: Array.prototype.slice.call(q.p50 || []), p95: Array.prototype.slice.call(q.p95) };
+  }
+  // Banda P5–P95 sombreada (monocroma, sobre cualquier capa) y P50 discontinua
+  function capaMC(b, X, Y) {
+    if (!b) return "";
+    var xs = b.tms.map(X), sup = b.p95.map(Y), inf = b.p5.map(Y);
+    var d = ruta(xs, sup) + "L" + xs.slice().reverse().map(function (x, k) { return x.toFixed(1) + " " + inf[inf.length - 1 - k].toFixed(1); }).join("L") + "Z";
+    var g = '<g class="rl-mc"><path d="' + d + '" fill="var(--tx1)" fill-opacity=".16" stroke="var(--tx2)" stroke-opacity=".5" stroke-width="1"/>';
+    if (b.p50.length === xs.length) g += '<path d="' + ruta(xs, b.p50.map(Y)) + '" fill="none" stroke="var(--tx1)" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round"/>';
+    return g + '</g>';
+  }
+  function maxMC(b) { return b ? Math.max.apply(null, b.p95) : -Infinity; }
+  function minMC(b) { return b ? Math.min.apply(null, b.p5) : Infinity; }
 
   function defModelo(id) {
     var ms = (RED.modelos_trafico && RED.modelos_trafico.modelos) || [];
@@ -426,7 +446,10 @@
     }).join("") + '</span>' +
       '<span class="rl-meta tx3">' + esc(S.serie.pasos.length + " " + t({ es: "pasos", en: "steps" }) + " · " + S.dt + " min · " +
         "Motor.serie" + (S.fuente ? " (" + (S.fuente === "worker" ? "worker" : t({ es: "síncrono", en: "sync" })) + ")" : "") + " · " + S.ms + " ms") +
-      (s.aviso ? ' <span class="rl-aviso" tabindex="0" title="' + esc(s.aviso) + '">i</span>' : '') + '</span></div>';
+      (s.aviso ? ' <span class="rl-aviso" tabindex="0" title="' + esc(s.aviso) + '">i</span>' : '') + '</span>' +
+      (mcOk() ? '<span class="rl-ley rl-ley-mc" title="' + esc(t({ es: "Montecarlo: réplicas con ruido lognormal (σ ", en: "Monte Carlo: replicas with lognormal noise (σ " }) + fmt(S.mc.sigma, 2) + ", " + t({ es: "semilla ", en: "seed " }) + S.mc.semilla + ")") + '">' +
+        '<span class="rl-ley-i"><i class="mc-banda"></i>P5–P95</span><span class="rl-ley-i"><i class="mc-p50"></i>P50</span>' +
+        '<span class="tx3">' + esc(S.mc.n + " " + t({ es: "réplicas", en: "replicas" }) + " · " + S.mc.paso_min + " min") + '</span></span>' : '') + '</div>';
     var h = Math.max(70, Halto - 48), gap = 10, wTot = Math.max(600, W - 16);
     var wDL = Math.floor((wTot - 3 * gap) * 0.34), wo = Math.floor((wTot - 3 * gap - wDL) / 3);
     var tms = s.pasos.map(function (p) { return p.t_min; });
@@ -437,16 +460,19 @@
       s.pasos.forEach(function (p, i) { acum[i] += svDe(p, c); });
       capas.push({ color: colSv(c), desde: desde, hasta: acum.slice() });
     });
-    var dlMax = Math.max.apply(null, acum.concat(s.pasos.map(function (p) { return p.resumen.dl_total_gbps || 0; })));
+    var bDL = bandaMC("dl_total_gbps"), bSV = bandaMC("servido_pct"), bOC = bandaMC("ocup_max_pct");
+    var dlMax = Math.max.apply(null, acum.concat(s.pasos.map(function (p) { return p.resumen.dl_total_gbps || 0; })).concat([maxMC(bDL)]));
     var tDL = ticksY(0, dlMax * 1.05, 3);
-    var g1 = grafica({ w: wDL, h: h, ymin: 0, ymax: Math.max(dlMax * 1.05, tDL[tDL.length - 1] || 1), tms: tms, apilado: capas, titulo: "DL", ml: 40 });
+    var g1 = grafica({ w: wDL, h: h, ymin: 0, ymax: Math.max(dlMax * 1.05, tDL[tDL.length - 1] || 1), tms: tms, apilado: capas, titulo: "DL", ml: 40,
+      extra: bDL ? function (X, Y) { return capaMC(bDL, X, Y); } : null });
     // 2. % servido
-    var sv = s.pasos.map(function (p) { return p.resumen.servido_pct; }), svMin = Math.min.apply(null, sv);
-    var g2 = grafica({ w: wo, h: h, ymin: Math.min(98, Math.floor(svMin - 1)), ymax: 100.5, tms: tms, lineas: [{ vals: sv, color: "var(--tx1)" }], titulo: "%" });
+    var sv = s.pasos.map(function (p) { return p.resumen.servido_pct; }), svMin = Math.min(Math.min.apply(null, sv), minMC(bSV));
+    var g2 = grafica({ w: wo, h: h, ymin: Math.min(98, Math.floor(svMin - 1)), ymax: 100.5, tms: tms, lineas: [{ vals: sv, color: "var(--tx1)" }], titulo: "%",
+      capas: bSV ? function (X, Y) { return capaMC(bSV, X, Y); } : null });
     // 3. ocupación máxima con bandas
-    var oc = s.pasos.map(function (p) { return p.resumen.ocup_max_pct || 0; }), ocMax = Math.max(110, Math.max.apply(null, oc) * 1.05);
+    var oc = s.pasos.map(function (p) { return p.resumen.ocup_max_pct || 0; }), ocMax = Math.max(110, Math.max(Math.max.apply(null, oc), maxMC(bOC)) * 1.05);
     var g3 = grafica({ w: wo, h: h, ymin: 0, ymax: ocMax, tms: tms, lineas: [{ vals: oc, color: "var(--tx1)" }], titulo: "%",
-      capas: function (X, Y, x0, x1) { return bandas(Y, x0, x1, ocMax); },
+      capas: function (X, Y, x0, x1) { return bandas(Y, x0, x1, ocMax) + capaMC(bOC, X, Y); },
       extra: function (X, Y) {
         if (!s.pico) return "";
         return '<circle cx="' + X(s.pico.t_min).toFixed(1) + '" cy="' + Y(s.pico.ocup_max_pct).toFixed(1) + '" r="4" fill="var(--tx1)" stroke="var(--bg0)" stroke-width="2"/>';
@@ -514,7 +540,19 @@
       '<tr><td>' + esc(t({ es: "Servido", en: "Served" })) + '</td><td class="n">' + fmt(r.servido_pct, 2) + ' %</td></tr>' +
       '<tr><td>' + esc(t(TX.ocMax)) + '</td><td class="n">' + NOC.insignia(NOC.sevOcupacion(r.ocup_max_pct / 100)) + ' ' + fmt(r.ocup_max_pct, 1) + ' %</td></tr>' +
       (r.ocup_max_id ? '<tr><td></td><td class="n mono tx2">' + esc(r.ocup_max_id) + '</td></tr>' : '') +
-      '<tr><td>' + esc(t({ es: "Alarmas", en: "Alarms" })) + '</td><td class="n">' + fmt(r.n_alarmas_noc, 0) + '</td></tr></table>';
+      '<tr><td>' + esc(t({ es: "Alarmas", en: "Alarms" })) + '</td><td class="n">' + fmt(r.n_alarmas_noc, 0) + '</td></tr>' + tipMC(p.t_min) + '</table>';
+  }
+  function tipMC(tm) {
+    if (!mcOk()) return "";
+    var ts = S.mc.t_min, j = 0, dmin = Infinity;
+    for (var k = 0; k < ts.length; k++) { var d = Math.abs(ts[k] - tm); if (d < dmin) { dmin = d; j = k; } }
+    function fila(nom, key, dec, u) {
+      var q = S.mc.kpi[key];
+      if (!q) return "";
+      return '<tr><td class="tx3">' + esc(nom) + '</td><td class="n mono">' + fmt(q.p5[j], dec) + ' · <b>' + fmt(q.p50[j], dec) + '</b> · ' + fmt(q.p95[j], dec) + u + '</td></tr>';
+    }
+    return '<tr class="tot"><td>' + esc("MC P5 · P50 · P95") + '</td><td class="n tx3">' + hhmm(ts[j]) + '</td></tr>' +
+      fila("DL", "dl_total_gbps", 0, " Gbit/s") + fila(t({ es: "Servido", en: "Served" }), "servido_pct", 2, " %") + fila(t(TX.ocMax), "ocup_max_pct", 1, " %");
   }
   var arrastre = null;
   document.addEventListener("pointerdown", function (ev) {
@@ -651,7 +689,11 @@
     ir: function (tm) { irA(tm, true); }, jugar: jugar, parar: function () { parar(); pintarReloj(); }, volverHC: volverHC,
     // Revisión 7 (operador.js): recalcular la serie si cambian los eventos; aviso cuando hay serie nueva
     refrescar: function () { var k = claveCaso(); if (k !== S.clave && S.baseOp) { S.clave = k; calcularSerie(); } },
-    alSerie: function (fn) { if (typeof fn === "function") oyentesSerie.push(fn); }
+    alSerie: function (fn) { if (typeof fn === "function") oyentesSerie.push(fn); },
+    // Revisión 8 (editor_modelo.js): Montecarlo (Motor.serieMontecarlo) del caso con clave `clave` (por defecto el actual) -> bandas en TIEMPO
+    clave: function () { return S.clave; },
+    montecarlo: function (mc, clave) { S.mc = mc || null; S.mcClave = mc ? (clave || S.clave) : null; pintarTodo(); },
+    mc: function () { return mcOk() ? S.mc : null; }
   };
 
   montarBarra();

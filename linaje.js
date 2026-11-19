@@ -45,6 +45,8 @@
     sinLinaje: { es: "sin linaje todavía", en: "no lineage yet" },
     sinDatos: { es: "No hay linaje cargado (falta linaje_datos.js).", en: "No lineage loaded (linaje_datos.js missing)." },
     dato: { es: "dato", en: "data" }, derivado: { es: "derivado", en: "derived" }, supuesto: { es: "supuesto", en: "assumption" },
+    usuario: { es: "dato del usuario", en: "user data" },   // Revisión 8: tipo de procedencia "usuario" (modelo propio, LAB)
+    usuarioNota: { es: "En LAB, el modelo de demanda propio cambia este elemento; el linaje de abajo es el del valor de diseño.", en: "In LAB, the own demand model changes this element; the lineage below is that of the design value." },
     formula: { es: "Fórmula", en: "Formula" }, calculo: { es: "cálculo", en: "calculation" }, variables: { es: "Variables", en: "Variables" },
     justif: { es: "Justificación", en: "Justification" }, refs: { es: "Referencias", en: "References" },
     entradas: { es: "Entradas", en: "Inputs" }, fuente: { es: "Fuente", en: "Source" },
@@ -244,6 +246,28 @@
     });
     return out;
   }
+  // Revisión 8: claves del modelo del usuario (NOC.caso.modelo_usuario, solo LAB) que tocan el elemento
+  function modeloUsuario() { return NOC.modo === "lab" && NOC.caso && NOC.caso.modelo_usuario && typeof NOC.caso.modelo_usuario === "object" ? NOC.caso.modelo_usuario : null; }
+  function usuarioDe(id) {
+    var mu = modeloUsuario(), out = [];
+    if (!mu || !id) return out;
+    function toca(k) { return k === id || k.indexOf(id + "/") === 0 || k.slice(-(id.length + 1)) === "|" + id; }
+    [["factores", "×"], ["prioridades", "prio"], ["perfiles", "24 h"]].forEach(function (g) {
+      Object.keys(mu[g[0]] || {}).forEach(function (k) {
+        if (!toca(k)) return;
+        var v = mu[g[0]][k], pr = (mu.proc || {})[g[0] + "." + k];
+        out.push({ clave: g[0] + "." + k, valor: g[0] === "perfiles" ? g[1] : (g[0] === "factores" ? "× " : "") + (esNum(v) ? num(v, 3) : String(v)), f: pr && pr.f ? pr.f : (mu.fuente || mu.nombre || "") });
+      });
+    });
+    return out;
+  }
+  function bloqueUsuario(id) {
+    var us = usuarioDe(id);
+    if (!us.length) return "";
+    return '<div class="lj-usr dato-usr"><span class="rot">' + esc(t(TX.usuario)) + '</span> ' + us.map(function (u) {
+      return '<span class="lj-sin-c" title="' + esc(u.f) + '"><span class="mono">' + esc(u.clave) + '</span> ' + esc(u.valor) + '</span>';
+    }).join(" ") + '<div class="nota tx3">' + esc(t(TX.usuarioNota)) + '</div></div>';
+  }
   function seccionFicha(sel) {
     var claves = clavesDe(sel.id), tipo = sel.tipo, o = objeto(tipo, sel.id);
     var visto = {};
@@ -254,7 +278,7 @@
       cand.forEach(function (k) { if (!visto[k] && esNum(o[k]) && sin.indexOf(k) < 0) sin.push(k); });
     }
     if (!claves.length && !sin.length && !L) return "";
-    var h = '<h3>' + esc(t(TX.sec)) + '</h3>';
+    var h = '<h3>' + esc(t(TX.sec)) + '</h3>' + bloqueUsuario(sel.id);
     if (!L) return h + '<p class="nota tx3">' + esc(t(TX.sinDatos)) + '</p>';
     if (claves.length) {
       var n = { trazado: 0, hueco: 0, discrepa: 0 };
@@ -278,7 +302,7 @@
     if (!cuerpo) return;
     var viejo = cuerpo.querySelector(":scope > .lj-ficha");
     if (!sel || !sel.id || sel.tipo === "linaje" || !document.getElementById("ficha").classList.contains("visible")) { if (viejo && sel && sel.tipo !== "linaje") viejo.remove(); return; }
-    var clave = sel.tipo + "|" + sel.id + "|" + NOC.lang;
+    var clave = sel.tipo + "|" + sel.id + "|" + NOC.lang + "|" + JSON.stringify(usuarioDe(sel.id));
     var el = CACHE.clave === clave && CACHE.el ? CACHE.el : null;
     if (!el) {
       var html = seccionFicha(sel);

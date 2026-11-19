@@ -1,0 +1,56 @@
+/* estudios.css — panel ESTUDIOS, COMPARAR A/B y modo defensa (CONTRATO_UI Rev. 9, dueño ESTUDIOS). Solo tokens de noc.css. */
+.es-panel { position: fixed; top: 72px; right: 8px; z-index: 1100; width: 420px; max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 90px); overflow: auto; background: var(--bg1); border: 1px solid var(--line2); font: 12px/1.35 var(--sans); color: var(--tx1); }
+.es-panel[hidden] { display: none; }
+.es-cab { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg1); border-bottom: 1px solid var(--line); }
+.es-caso { flex: 1; min-width: 0; color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font: 11px var(--mono); }
+.es-x { border: 1px solid transparent; background: none; color: var(--tx2); font: 16px/1 var(--sans); width: 22px; height: 22px; cursor: pointer; }
+.es-x:hover { color: var(--tx1); border-color: var(--line2); }
+.es-sec { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); }
+.es-tit { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--tx2); margin-bottom: 6px; }
+.es-campo { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; color: var(--tx3); font-size: 11px; }
+.es-campo input, .es-campo textarea, .es-pasos textarea, .es-url input { width: 100%; box-sizing: border-box; font: 12px var(--sans); resize: vertical; }
+.es-fila { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.es-file { cursor: pointer; }
+.es-url { margin-top: 6px; font-size: 11px; }
+.es-url input { margin-top: 3px; font: 10px var(--mono); }
+.es-pasos { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.es-pasos li { color: var(--tx3); }
+.es-paso-cab { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; font-size: 11px; }
+.es-paso-cab .mono { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-paso-b { display: inline-flex; gap: 2px; }
+.es-mini { border: 1px solid var(--line2); background: var(--bg2); color: var(--tx2); font: 11px/1 var(--sans); min-width: 22px; height: 20px; cursor: pointer; }
+.es-mini:hover:not([disabled]) { color: var(--tx1); border-color: var(--line3); }
+.es-mini[disabled] { opacity: .35; cursor: default; }
+.es-vacio { margin: 2px 0 4px; }
+.es-lista td { vertical-align: top; }
+.es-acc { white-space: nowrap; text-align: right; }
+.es-acc > * { margin-left: 3px; }
+.btn.es-btn.activo { border-color: var(--line3); color: var(--tx1); }
+
+/* comparador */
+.es-cmp .es-cambios { margin: 6px 0 0; font-size: 11px; }
+.es-cmp .es-sub { margin: 8px 0 3px; font-size: 11px; }
+.es-cmp tr.es-cambia td:first-child { box-shadow: inset 2px 0 0 var(--tx2); }
+.es-mas { color: var(--tx1); }
+.es-menos { color: var(--tx1); }
+.es-bar-c { width: 30%; min-width: 60px; }
+.es-bar { display: block; height: 6px; background: var(--steel); }
+.es-bar.menos { background: var(--hatch); border: 1px solid var(--tx3); box-sizing: border-box; }
+.es-cmp tr[data-es-dem] { cursor: pointer; }
+path.es-dif-mapa { cursor: pointer; }
+.es-dif-halo { fill: none; stroke: var(--tx1); stroke-opacity: .45; stroke-width: 10; stroke-dasharray: 2 5; pointer-events: stroke; }
+
+/* modo defensa: banda inferior de notas */
+.es-defensa { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+  padding: 10px 16px; background: var(--bg1); border-top: 1px solid var(--line3); color: var(--tx1); font: 15px/1.4 var(--sans); }
+.es-defensa[hidden] { display: none; }
+.es-d-izq { display: flex; flex-direction: column; gap: 2px; min-width: 120px; }
+.es-d-izq .lbl b { color: var(--tx1); }
+.es-d-meta { font-size: 10px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.es-d-txt { max-height: 22vh; overflow: auto; }
+.es-d-bot { display: flex; gap: 6px; }
+body.es-en-defensa #status, body.es-en-defensa .estado { padding-bottom: 0; }
+@media (max-width: 700px) { .es-defensa { grid-template-columns: 1fr; } }
+.es-panel input.sel, .es-panel textarea.sel { width: 100%; max-width: none; height: auto; min-height: 24px; box-sizing: border-box; padding: 3px 6px; }
+.es-panel textarea.sel { line-height: 1.35; }
