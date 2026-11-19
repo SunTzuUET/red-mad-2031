@@ -3,74 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RED-MAD 2031 · NOC</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<title>Red Madrid 2031</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="noc.css">
-<link rel="stylesheet" href="ui_comun.css">
-<link rel="stylesheet" href="tour.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_mapa.css">
-<link rel="stylesheet" href="vista_capas.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_paquete.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_interconexion.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_casos.css" onerror="this.remove()">
-<link rel="stylesheet" href="exportar.css" onerror="this.remove()">
-<link rel="stylesheet" href="reloj.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_demanda_mapa.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_unifilar.css" onerror="this.remove()">
-<link rel="stylesheet" href="operador.css" onerror="this.remove()">
-<link rel="stylesheet" href="linaje.css" onerror="this.remove()">
-<link rel="stylesheet" href="editor_modelo.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_planificacion.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_flujos.css" onerror="this.remove()">
-<link rel="stylesheet" href="estudios.css" onerror="this.remove()">
-<link rel="stylesheet" href="escenarios.css" onerror="this.remove()">
-<link rel="stylesheet" href="vista_viva.css" onerror="this.remove()">
-<link rel="stylesheet" href="anotar.css" onerror="this.remove()">
+<link rel="stylesheet" href="simple.css">
 </head>
-<body class="m-ref">
-<!-- El shell lo construye app.js (window.NOC). Las vistas se registran solas. -->
-<div id="noc" class="noc"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<body>
+<!-- App mínima (CONTRATO_UI Revisión 15). La app completa sigue en completo.html. -->
+<header class="barra">
+  <b class="marca">Red Madrid 2031</b>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-vista="red" data-t="red">Red</button>
+    <button role="tab" data-vista="simular" data-t="simular">Simular</button>
+    <button role="tab" data-vista="cambiar" data-t="cambiar">Cambiar</button>
+  </nav>
+  <span class="hueco"></span>
+  <a class="completo" href="completo.html" data-t="completo">Modo completo ↗</a>
+  <span class="idioma"><button data-lang="es">ES</button><button data-lang="en">EN</button></span>
+</header>
+<main class="lienzo">
+  <div id="mapa" class="mapa"></div>
+  <div class="arriba">
+    <div class="chips" role="group"></div>
+    <button class="info" aria-label="info">i</button>
+    <div class="info-txt" hidden></div>
+  </div>
+  <div class="estado"><span class="estado-txt"></span><span class="leyenda"></span></div>
+  <div class="tarjeta" hidden></div>
+  <div class="reloj" hidden>
+    <button class="play" aria-label="play">▶</button>
+    <input class="hora" type="range" min="0" max="23" step="1" value="21">
+    <span class="hora-txt mono">21:00</span>
+    <button class="cortar" data-t="cortar">Cortar enlace</button>
+    <button class="restaurar" data-t="restaurar">Restaurar</button>
+  </div>
+  <div class="curva" hidden></div>
+  <aside class="panel" hidden></aside>
+</main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="red.js"></script>
-<script src="arquitectura_datos.js" onerror="void 0"></script>
-<script src="radio_datos.js" onerror="void 0"></script>
-<script src="demanda_datos.js"></script>
 <script src="modelo_demanda.js"></script>
 <script src="modelos.js"></script>
-<script src="emplazamientos_datos.js" onerror="void 0"></script>
+<script src="emplazamientos_datos.js"></script>
 <script src="motor.js"></script>
-<script src="iconos.js"></script>
-<script src="ui_comun.js"></script>
-<script src="app.js"></script>
-<script src="vista_mapa.js"></script>
-<script src="carril_servicios.js" onerror="void 0"></script>
-<script src="vista_capas.js" onerror="void 0"></script>
-<script src="vista_paquete.js" onerror="void 0"></script>
-<script src="vista_interconexion.js" onerror="void 0"></script>
-<script src="casos_datos.js" onerror="void 0"></script>
-<script src="vista_casos.js" onerror="void 0"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" onerror="void 0"></script>
-<script src="exportar.js" onerror="void 0"></script>
-<script src="reloj.js" onerror="void 0"></script>
-<script src="vista_demanda_mapa.js" onerror="void 0"></script>
-<script src="vista_unifilar.js" onerror="void 0"></script>
-<script src="operador.js" onerror="void 0"></script>
-<script src="linaje_datos.js" onerror="void 0"></script>
-<script src="linaje_llano.js" onerror="void 0"></script>
-<script src="linaje_mapa.js" onerror="void 0"></script>
-<script src="linaje.js" onerror="void 0"></script>
-<script src="importar.js" onerror="void 0"></script>
-<script src="editor_modelo.js" onerror="void 0"></script>
-<script src="vista_planificacion.js" onerror="void 0"></script>
-<script src="vista_flujos.js" onerror="void 0"></script>
-<script src="estudios.js" onerror="void 0"></script>
-<script src="escenarios.js" onerror="void 0"></script>
-<script src="vista_viva.js" onerror="void 0"></script>
-<script src="tour.js" onerror="void 0"></script>
-<script src="anotar.js" onerror="void 0"></script>
-<script>window.NOC && NOC._listo && NOC._listo();</script>
+<script src="simple.js"></script>
 </body>
 </html>

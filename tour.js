@@ -1,6 +1,6 @@
 // tour.js — Recorrido guiado de 5 pasos (Revisión 11, dueño VISUAL).
 // Sale solo la primera vez (localStorage "noc.tour"), se puede saltar y se relanza con NOC.tour(true),
-// con el botón «Recorrido guiado» de INICIO o con index.html#tour=1 (enlace en guia.html).
+// con el botón «Recorrido guiado» de INICIO o con completo.html#tour=1 (enlace en guia.html).
 (function () {
   "use strict";
   var W = window, D = document;
