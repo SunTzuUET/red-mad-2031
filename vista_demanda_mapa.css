@@ -1,0 +1,39 @@
+/* vista_demanda_mapa.css — PLANO DEMANDA (Revisión 5). Solo tokens de noc.css; el color es de los datos. */
+.vista-demanda_mapa { overflow: hidden; }
+.pd-mapa { position: absolute; inset: 0; background: var(--bg0); }
+
+.pd-barra { position: absolute; left: 8px; top: 8px; right: 8px; z-index: 700; display: flex; flex-direction: column; gap: 4px;
+  pointer-events: none; }
+.pd-barra > * { pointer-events: auto; }
+.pd-chips { display: flex; flex-wrap: wrap; gap: 3px; align-self: flex-start; max-width: 100%; }
+.pd-chip { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border: 1px solid var(--line2);
+  background: rgba(0,0,0,.86); color: var(--tx3); font: 11px var(--sans); cursor: pointer; border-radius: 0; white-space: nowrap; }
+.pd-chip i { display: inline-block; width: 9px; height: 9px; opacity: .35; }
+.pd-chip:hover { color: var(--tx1); border-color: var(--line3); }
+.pd-chip.on { color: var(--tx1); border-color: var(--tx2); }
+.pd-chip.on i { opacity: 1; }
+.pd-ctl { display: flex; align-items: center; gap: 4px; align-self: flex-start; background: rgba(0,0,0,.86); border: 1px solid var(--line2);
+  padding: 2px 6px; font: 11px var(--sans); color: var(--tx2); flex-wrap: wrap; }
+.pd-rot { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--tx3); margin-left: 4px; }
+.pd-rot:first-child { margin-left: 0; }
+.pd-seg { height: 18px; padding: 0 6px; border: 1px solid var(--line2); background: none; color: var(--tx2); font: 11px var(--sans); cursor: pointer; border-radius: 0; }
+.pd-seg[aria-pressed=true] { background: var(--steel); color: #000; border-color: var(--steel); }
+.pd-seg:disabled { color: var(--tx4); cursor: not-allowed; }
+.pd-zona { height: 18px; background: var(--bg1); color: var(--tx1); border: 1px solid var(--line2); font: 11px var(--sans); border-radius: 0; }
+.pd-hora { margin-left: 8px; padding: 0 6px; border-left: 1px solid var(--line2); color: var(--tx1); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pd-aviso { align-self: flex-start; background: var(--hatch-suave); background-color: rgba(0,0,0,.86); border: 1px solid var(--line2);
+  color: var(--tx2); font: 10px var(--sans); padding: 1px 6px; }
+
+.pd-resumen { position: absolute; right: 44px; bottom: 8px; z-index: 700; background: rgba(0,0,0,.86); border: 1px solid var(--line2); }
+.pd-resumen:empty { display: none; }
+.pd-tab { border-collapse: collapse; font: 11px var(--sans); color: var(--tx1); font-variant-numeric: tabular-nums; }
+.pd-tab th { font-weight: 400; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--tx3); text-align: left; padding: 3px 8px;
+  border-bottom: 1px solid var(--line2); }
+.pd-tab td { padding: 2px 8px; height: 20px; white-space: nowrap; }
+.pd-tab .num { text-align: right; }
+.pd-sw { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+
+.pd-leyenda .fila i.pt { width: 10px; height: 10px; border-radius: 50%; opacity: .8; }
+.pd-leyenda .fila i.pt.disc { background: none; border: 1px dashed var(--tx2); }
+.pd-sup { color: var(--sup); }
+

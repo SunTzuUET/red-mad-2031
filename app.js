@@ -725,7 +725,7 @@
   });
 
   // ---------- pestañas y vistas ----------
-  var VISTAS = [], ORDEN = ["mapa", "capas", "paquete", "interconexion", "casos"];
+  var VISTAS = [], ORDEN = ["mapa", "demanda_mapa", "unifilar", "capas", "paquete", "interconexion", "casos"];
   var activa = null, listo = false;
   NOC.registrarVista = function (v) {
     if (!v || !v.id) return;

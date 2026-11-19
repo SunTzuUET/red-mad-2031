@@ -4,7 +4,7 @@
 //   (red: la RED del hilo principal, para respetar cambios de LAB; si no viene, la de red.js).
 // Respuesta: {tipo: "serie", id, ok: true, serie} con los Float32Array transferidos, o {ok: false, error}.
 self.window = self;   // los scripts se registran en window.* (RED, ModeloDemanda, Modelos, Motor)
-importScripts("red.js", "modelo_demanda.js", "modelos.js", "motor.js");
+importScripts("red.js", "modelo_demanda.js", "modelos.js", "emplazamientos_datos.js", "motor.js");
 
 self.onmessage = function (ev) {
   var m = ev.data || {};

@@ -1,0 +1,51 @@
+/* vista_unifilar.css — PLANO SISTEMA (Revisión 5). Solo tokens de noc.css: cromo monocromo, color solo en los datos. */
+.vista-unifilar { overflow: hidden; background: var(--bg0); }
+.uf-barra { position: absolute; left: 0; right: 0; top: 0; height: 30px; display: flex; align-items: center; gap: 4px; padding: 0 8px;
+  border-bottom: 1px solid var(--line); background: var(--bg0); font: 11px var(--sans); color: var(--tx2); z-index: 2; white-space: nowrap; overflow: hidden; }
+.uf-rot { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--tx3); margin-left: 8px; }
+.uf-rot:first-child { margin-left: 0; }
+.uf-seg { height: 18px; padding: 0 6px; border: 1px solid var(--line2); background: none; color: var(--tx2); font: 11px var(--sans); cursor: pointer; border-radius: 0; }
+.uf-seg:hover { color: var(--tx1); border-color: var(--line3); }
+.uf-seg[aria-pressed=true] { background: var(--steel); color: #000; border-color: var(--steel); }
+.uf-hora { margin-left: 10px; padding-left: 8px; border-left: 1px solid var(--line2); color: var(--tx1); font-weight: 600; font-variant-numeric: tabular-nums; }
+.uf-nota { margin-left: auto; font-size: 10px; overflow: hidden; text-overflow: ellipsis; }
+.uf-barra .sev { margin-left: 6px; }
+
+.uf-lienzo { position: absolute; left: 0; right: 0; top: 30px; bottom: 0; overflow: auto; }
+.uf-svg { display: block; margin: 0 auto; font-family: var(--sans); font-variant-numeric: tabular-nums; }
+
+.uf-colt { font-size: 10px; letter-spacing: .08em; fill: var(--tx3); }
+.uf-colr { stroke: var(--line2); stroke-width: 1; }
+.uf-sep { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+
+.uf-l { fill: none; stroke-linecap: butt; }
+.uf-l.virt { opacity: .7; }
+.uf-golpe { fill: none; stroke: transparent; stroke-width: 10; cursor: pointer; pointer-events: stroke; }
+.uf-f { fill: none; stroke: #fff; stroke-opacity: .55; stroke-dasharray: 2 10; stroke-linecap: butt; pointer-events: none;
+  animation: uf-flujo 3s linear infinite; }
+.uf-flujos.off .uf-f { display: none; }
+@keyframes uf-flujo { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 24; } }
+@media (prefers-reduced-motion: reduce) { .uf-f { animation: none; } }
+.uf-halo { fill: none; stroke: var(--tx1); stroke-opacity: .35; pointer-events: none; }
+.uf-lt { font-size: 10px; fill: var(--tx1); paint-order: stroke; stroke: #000; stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+
+.uf-caja { cursor: pointer; }
+.uf-r { fill: var(--bg1); stroke: var(--line2); stroke-width: 1; }
+.uf-caja:hover .uf-r { stroke: var(--tx3); }
+.uf-caja.sel .uf-r { stroke: var(--tx1); stroke-width: 2; }
+.uf-caja.caido .uf-r { fill: url(#uf-rayado); stroke: var(--tx3); }
+.uf-caja.t-zona .uf-r, .uf-caja.t-site .uf-r { fill: var(--bg0); }
+.uf-caja.t-metro .uf-r, .uf-caja.t-core .uf-r { stroke: var(--line3); }
+.uf-caja.t-nucleo .uf-r { fill: var(--bg0); stroke-dasharray: 3 2; }
+.uf-id { font-size: 11px; font-weight: 600; fill: var(--tx1); letter-spacing: .02em; }
+.uf-v { font-size: 10px; fill: var(--tx2); }
+.uf-id-s { font-size: 10px; }
+.uf-dim { fill: var(--tx3); }
+.uf-mf { fill: var(--bg2); }
+.uf-bd text { font-size: 9px; font-weight: 600; letter-spacing: .04em; }
+
+.uf-leyenda { bottom: 8px; left: auto; right: 22px; }
+.uf-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--bg1); color: var(--tx1); border: 1px solid var(--line3);
+  font: 11px/1.45 var(--sans); padding: 3px 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.uf-tip[hidden] { display: none; }
+.uf-sw { display: inline-block; width: 8px; height: 8px; margin-right: 4px; }

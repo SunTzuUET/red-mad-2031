@@ -10009,6 +10009,13 @@ var RED = {
    "clave": "top.coord_sitios",
    "ambito": "topologia",
    "elementos": [
+    "EMP-L2VPN-SITE-L2VPN-CENTRO",
+    "EMP-L2VPN-SITE-L2VPN-ESTE",
+    "EMP-L2VPN-SITE-L2VPN-NORTE",
+    "EMP-L2VPN-SITE-L2VPN-SUR",
+    "EMP-N78-HOSPITAL",
+    "EMP-N78-PRIVADA",
+    "EMP-NTN-ARGANDA",
     "S-ESTADIO-LIGERO",
     "S-ESTADIO-PRENSA",
     "S-ESTADIO-VIDEO",
@@ -11443,6 +11450,7 @@ var RED = {
    "clave": "rad.a2_posiciones",
    "ambito": "radio",
    "elementos": [
+    "EMP-V2X-A2",
     "R-A2-n28-01",
     "R-A2-n28-02",
     "R-A2-n28-03",
@@ -11596,6 +11604,8 @@ var RED = {
    "clave": "rad.rural_tipo_batres",
    "ambito": "radio",
    "elementos": [
+    "EMP-Z-LOSSANTOS",
+    "EMP-Z-TALAMANCA",
     "R-Z-LOSSANTOS-n28",
     "R-Z-LOSSANTOS-n78",
     "R-Z-TALAMANCA-n28",
@@ -11709,6 +11719,253 @@ var RED = {
    "motivo": "Lado B de la llamada VoNR en la misma zona y el mismo DC que el lado A, para poder recorrerlo.",
    "fuente_parcial": "v7 §4.4",
    "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-075",
+   "clave": "acc.desborde_capas",
+   "ambito": "acceso",
+   "elementos": [
+    "EMP-DESBORDE",
+    "motor.acceso"
+   ],
+   "campo": "desborde",
+   "valor": "lo que excede el 100 % de un sitio pasa a los sitios de la capa siguiente más cercanos de la misma zona (n258 → 6 n78; n78 → 3 n28) a partes iguales",
+   "unidad": "",
+   "motivo": "La v7 dimensiona cada capa por separado; el reparto dinámico entre capas es del simulador.",
+   "fuente_parcial": "v7 §6.2.1",
+   "alternativa": "Balanceo de carga real del RAN.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-076",
+   "clave": "acc.especiales",
+   "ambito": "acceso",
+   "elementos": [
+    "EMP-ESPECIALES",
+    "EMP-FTTH-GETAFE-01",
+    "EMP-N28-GETAFE-003"
+   ],
+   "campo": "emplazamientos de escenario",
+   "valor": "estadio = 1 emplazamiento de 265 sectores n258; Valdebebas = 40 sitios n78 en hexágonos alrededor del servicio + 1 sitio NB-IoT de 3 sectores n28; A-2 tri-sector; AGV por el n28 más cercano; cámaras del hospital por la central FTTH más cercana",
+   "unidad": "",
+   "motivo": "La v7 da sectores/sitios de cada escenario pero no su geometría.",
+   "fuente_parcial": "v7 §6.3",
+   "alternativa": "Planos de cada emplazamiento.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-077",
+   "clave": "acc.ftth_extrapolado",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "PON/LT/MF-14/centrales",
+   "valor": "PON = ⌈acc/64 × 1,25/0,70⌉, LT = ⌈PON/16⌉, 10 LT por MF-14, 2 MF-14 por central lógica",
+   "unidad": "",
+   "motivo": "La v7 dimensiona FTTH solo en Alcorcón; se aplica el mismo método al resto.",
+   "fuente_parcial": "v7 §6.1.1",
+   "alternativa": "Diseño FTTH de cada municipio.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-078",
+   "clave": "acc.ims_escala",
+   "ambito": "acceso",
+   "elementos": [
+    "IMS",
+    "motor.acceso"
+   ],
+   "campo": "CAPS IMS",
+   "valor": "CAPS y tramos de hora cargada × (demanda de voz del paso / demanda de voz en hora cargada); se reparten entre los DC vivos",
+   "unidad": "CAPS",
+   "motivo": "La v7 da CAPS solo en hora cargada.",
+   "fuente_parcial": "v7 §6.6.2",
+   "alternativa": "Perfil horario de llamadas.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-079",
+   "clave": "acc.n28_territorial",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "sitios n28",
+   "valor": "n28 tri-sector co-ubicado en ≈6 de cada 39 sitios n78 (1 en los rurales)",
+   "unidad": "sitios",
+   "motivo": "La v7 no da el número de sitios n28 por zona.",
+   "fuente_parcial": "documento anterior 3.1 (Alcorcón: n28 en 6 de 39 sitios)",
+   "alternativa": "Plan de cobertura n28 real.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-080",
+   "clave": "acc.pon_capacidad",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "capacidad central FTTH",
+   "valor": "min(PON × 10 Gbit/s, MF-14 × 200 Gbit/s) por sentido; UL igual que DL",
+   "unidad": "Gbit/s",
+   "motivo": "La v7 da ≈10 Gbit/s por PON (DL); el UL XGS-PON (10 Gbit/s simétrico) y el uplink del MF-14 vienen de otros documentos.",
+   "fuente_parcial": "v7 §6.1.1; Diseño FTTH Alcorcón 2.1 §6",
+   "alternativa": "Capacidad por PON medida.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-081",
+   "clave": "acc.reparto_demanda",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "demanda por sitio",
+   "valor": "demanda radio de la zona ∝ sectores n78 del sitio; demanda fija ∝ PON de la central; mismo reparto a todas las horas",
+   "unidad": "",
+   "motivo": "La v7 da la demanda por zona, no por emplazamiento.",
+   "fuente_parcial": "v7 A4–A6",
+   "alternativa": "Demanda por sector medida.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-082",
+   "clave": "acc.reparto_municipal",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "sectores/sitios n78",
+   "valor": "total v7 de la zona Metro (Centro 2 353, Norte 125, Este 234, Sur 498 sectores; sitios = ⌈sectores/3⌉) repartido por población 2031 (resto mayor), fijando Alcorcón 39/116 y Batres 1 sitio (3 sectores)",
+   "unidad": "sectores",
+   "motivo": "La v7 solo calcula por separado Alcorcón y Batres.",
+   "fuente_parcial": "v7 §6.2.7",
+   "alternativa": "Dimensionado propio de cada municipio.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-083",
+   "clave": "acc.sesiones_constantes",
+   "ambito": "acceso",
+   "elementos": [
+    "BNG",
+    "motor.acceso"
+   ],
+   "campo": "sesiones BNG",
+   "valor": "accesos fijos × 1,25 (774 515 en total), constantes en el día; límite 256 000 por chasis activo",
+   "unidad": "sesiones",
+   "motivo": "Las sesiones PPPoE/IPoE no siguen el perfil horario de tráfico.",
+   "fuente_parcial": "v7 §6.10.1; 2.2 (equipos)",
+   "alternativa": "Perfil horario de sesiones.",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-084",
+   "clave": "acc.upf_nic",
+   "ambito": "acceso",
+   "elementos": [
+    "UPF",
+    "motor.acceso"
+   ],
+   "campo": "ocupación UPF",
+   "valor": "(DL + UL) del DC × cabecera / (2 servidores útiles × 400 Gbit/s)",
+   "unidad": "%",
+   "motivo": "La v7 da la carga NIC por DC (283,56 Gbit/s normal) y la capacidad, no una ocupación por paso.",
+   "fuente_parcial": "v7 §6.7.4–6.7.5",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-085",
+   "clave": "acc.usuarios_activos",
+   "ambito": "acceso",
+   "elementos": [
+    "motor.acceso"
+   ],
+   "campo": "usuarios",
+   "valor": "abonados del sitio × demanda del paso / demanda en hora cargada",
+   "unidad": "usuarios",
+   "motivo": "La v7 da abonados por zona, no usuarios activos por sitio y hora.",
+   "fuente_parcial": "v7 A4–A5",
+   "alternativa": "—",
+   "estado": "pendiente"
+  },
+  {
+   "id": "S-086",
+   "clave": "top.emplazamientos_malla",
+   "ambito": "acceso",
+   "elementos": [
+    "Z-ALCALA",
+    "Z-ALCOBENDAS",
+    "Z-ALCORCON",
+    "Z-BATRES",
+    "Z-FUENLABRADA",
+    "Z-GETAFE",
+    "Z-LEGANES",
+    "Z-LOSSANTOS",
+    "Z-MADRID",
+    "Z-TALAMANCA",
+    "Z-TORREJON",
+    "Z-TRESCANTOS"
+   ],
+   "campo": "coord",
+   "valor": "malla hexagonal por municipio (0,300 km² urbano, un hexágono por sitio n78; 39,3 km² rural; Alcorcón ≈12 km²) con densidad gaussiana desde el centro y semilla fija; sitios repartidos por hexágono en proporción a la población",
+   "unidad": "lat/lon",
+   "motivo": "La v7 da cuántos emplazamientos hay, no dónde; la población dentro del municipio tampoco está.",
+   "fuente_parcial": "v7 §6.2.7 (tamaño de hexágono)",
+   "alternativa": "Posiciones reales de los emplazamientos y padrón por sección censal.",
    "estado": "pendiente"
   }
  ]

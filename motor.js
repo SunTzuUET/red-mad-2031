@@ -3,6 +3,8 @@
 // Contrato y reglas del modelo: ver PLAN.md.
 // API: calcular(RED, opciones) · barridoN1(RED, opciones) · casos(RED) · serieDiaria · puntosUnicosFallo · demandasBase
 //   · serie(RED, caso, {paso_min, desde, hasta, fallos, eventos}) · serieAsync (Web Worker serie_worker.js) — CONTRATO_UI Revisión 4.
+//   · resultado.acceso (sitios, por_tec, nucleo BNG/UPF/IMS) · tecnologias(RED) · claseDeTec(tec) — Revisión 5; necesita
+//     window.EMPL (emplazamientos_datos.js, cargarlo antes que motor.js) o opciones.empl; opciones.acceso === false lo omite.
 // opciones: escenario, hora, fallos[], factores, modelo{id,anio,dia}, reparto_core, hora_cargada,
 //   rutas ("v7" por defecto si RED.meta.referencia; si no "dijkstra"), caso {trafico, evento, fallo[]}.
 // Cada demanda trae caminos[{peso, destino, ruta, enlaces, latencia_ms}] (reparto en empates/respaldos) y
@@ -960,7 +962,7 @@ var Motor = (function () {
     var pesoN = { grave: 0, aviso: 1, info: 2 };
     alertas.sort(function (a, b) { return pesoN[a.nivel] - pesoN[b.nivel]; });
 
-    return {
+    var res = {
       demandas: dem,
       enlaces: enlacesOut,
       nodos: nodosOut,
@@ -975,6 +977,235 @@ var Motor = (function () {
         alertas: alertas
       }
     };
+    // Acceso por emplazamiento (Revisión 5): solo lee demandas y nodos; opciones.acceso === false lo omite
+    if (!opciones || opciones.acceso !== false) res.acceso = acceso(RED, res, opciones);
+    return res;
+  }
+
+  // ---------- acceso: emplazamientos por tecnología y núcleo (CONTRATO_UI Revisión 5) ----------
+  // Lee window.EMPL (emplazamientos_datos.js, generado por fusionar.py). No toca enlaces ni nodos: solo lee
+  // r.demandas (demanda pedida en la hora del paso) y r.nodos (caídas). Reglas: supuestos del ámbito "acceso".
+  var ORDEN_CAPAS = ["n258", "n78", "n28"];
+  // k_UPF = carga NIC por DC en normal de la v7 (283,56 Gbit/s, N6-DL + N3-UL con cabecera conservadora) /
+  // ((398,20 + 111,89) / 3): convierte la demanda IP central del DC en carga de NIC (calculado de v7 §6.7.4).
+  var UPF_NIC_K = 283.56 * 3 / (398.20 + 111.89);
+  var CLASES_TEC_DEF = { ftth: ["ftth", "voz"], n28: ["movil", "voz", "empresa"], n78: ["movil", "voz", "iot", "urllc", "empresa"],
+    n258: ["evento"], voz: ["voz"], v2x: ["urllc"], iot: ["iot"], l2vpn: ["empresa"], ntn: ["ntn"],
+    edge: ["evento", "urllc", "iot", "empresa"], dc: ["movil", "ftth", "voz", "iot"], ix: ["movil", "ftth", "voz", "ntn"] };
+  var EMPL_NODE = null;
+  function emplDe(RED, opciones) {
+    if (opciones && opciones.empl) return opciones.empl;
+    if (RED && RED.empl) return RED.empl;
+    if (typeof EMPL !== "undefined" && EMPL && EMPL.sitios) return EMPL;
+    if (typeof window !== "undefined" && window.EMPL) return window.EMPL;
+    if (EMPL_NODE === null) {
+      EMPL_NODE = false;
+      try { if (typeof require === "function") EMPL_NODE = require("./emplazamientos_datos.js"); } catch (e) { EMPL_NODE = false; }
+    }
+    return EMPL_NODE || null;
+  }
+  function claveDem(E, d) {
+    var p = d.padre || d.id, gt = E.meta.grupos_tipo || {};
+    if (p.indexOf("S-") === 0) return p;
+    var g = gt[d.tipo];
+    return g && d.zona ? d.zona + "|" + g : null;
+  }
+  // Índice estático (no depende de la hora): sitios, pesos, desbordes y demanda de referencia (hora cargada) por clave
+  function indiceAcceso(E, RED) {
+    var ix = E._idx;
+    if (ix && ix.red === RED) return ix;
+    var gt = E.meta.grupos_tipo || {}, bh = {}, voz = 0;
+    (RED.zonas || []).forEach(function (z) {
+      (z.necesidades || []).forEach(function (n) {
+        var g = gt[n.tipo];
+        if (n.tipo === "voz-ims" || n.tipo === "voz-fija") voz += num(n.dl_gbps, 0);
+        if (!g) return;
+        var k = z.id + "|" + g, b = bh[k] || (bh[k] = { dl: 0, ul: 0 });
+        b.dl += num(n.dl_gbps, 0); b.ul += num(n.ul_gbps, 0);
+      });
+    });
+    (RED.servicios || []).forEach(function (s) { bh[s.id] = { dl: num(s.dl_gbps, 0), ul: num(s.ul_gbps, 0) }; });
+    var pos = {}, porTec = {};
+    E.sitios.forEach(function (s, i) {
+      pos[s.id] = i;
+      (porTec[s.tec] || (porTec[s.tec] = [])).push(i);
+    });
+    var sit = E.sitios.map(function (s) {
+      var cap = s.capacidad_mbps || {};
+      return { id: s.id, tec: s.tec, agg: s.agg || null, nodo: s.nodo || null, ab: num(s.abonados, 0),
+        cdl: esCap(cap.dl) ? cap.dl : null, cul: esCap(cap.ul) ? cap.ul : null,
+        dem: s.dem || [], des: (s.desborde || []).map(function (id) { return pos[id]; }).filter(function (x) { return x !== undefined; }),
+        pon: s.pon || 0, upl: s.uplink_gbps || 0 };
+    });
+    ix = { red: RED, bh: bh, vozBH: voz, sit: sit, porTec: porTec };
+    try { Object.defineProperty(E, "_idx", { value: ix, enumerable: false, configurable: true, writable: true }); } catch (e) { /* objeto congelado */ }
+    return ix;
+  }
+  function pct(x, c) { return c ? x / c * 100 : 0; }
+
+  function acceso(RED, r, opciones) {
+    var E = emplDe(RED, opciones);
+    if (!E || !E.sitios || !E.meta) return null;
+    var X = indiceAcceso(E, RED), nuc = E.meta.nucleo || {};
+    // 1. demanda pedida por clave (zona|radio, zona|fijo, id de servicio) y destinos de núcleo
+    var K = {}, dcUPF = {}, voz = 0;
+    r.demandas.forEach(function (d) {
+      var k = claveDem(E, d);
+      if (d.tipo === "voz-ims" || d.tipo === "voz-fija") voz += d.dl_gbps;
+      var upf = d.tipo === "movil-ebb" || d.tipo === "voz-ims" || (d.padre || d.id) === "S-VALDEBEBAS-SENSORES";
+      if (upf || /^EDGE/.test(d.destino_nodo || "")) {
+        d.caminos.forEach(function (c) {
+          var u = dcUPF[c.destino] || (dcUPF[c.destino] = { dl: 0, ul: 0 });
+          u.dl += d.dl_gbps * c.peso; u.ul += d.ul_gbps * c.peso;
+        });
+      }
+      if (!k) return;
+      var x = K[k] || (K[k] = { dl: 0, ul: 0, n: 0, caidas: 0 });
+      x.dl += d.dl_gbps; x.ul += d.ul_gbps; x.n++;
+      if (d.estado === "caido") x.caidas++;
+    });
+    // 2. carga propia de cada sitio (Mbit/s)
+    var n = X.sit.length, dl = new Float64Array(n), ul = new Float64Array(n), rdl = new Float64Array(n), rul = new Float64Array(n);
+    var sitios = {}, nodos = r.nodos || {};
+    var i, j, s, out;
+    for (i = 0; i < n; i++) {
+      s = X.sit[i];
+      var a = 0, b = 0, ref = 0, ahora = 0, caidoK = s.dem.length > 0;
+      for (j = 0; j < s.dem.length; j++) {
+        var kk = s.dem[j][0], w = s.dem[j][1], x = K[kk], h = X.bh[kk];
+        if (x) { a += x.dl * w; b += x.ul * w; if (x.caidas < x.n) caidoK = false; } else caidoK = false;
+        if (h) { ref += (h.dl + h.ul) * w; ahora += x ? (x.dl + x.ul) * w : 0; }
+      }
+      dl[i] = a * 1000; ul[i] = b * 1000;
+      var nAgg = s.agg && nodos[s.agg], nN = s.nodo && nodos[s.nodo];
+      sitios[s.id] = { dl_mbps: 0, ul_mbps: 0, util_pct: 0, usuarios: Math.round(s.ab * (ref > EPS ? ahora / ref : 0)),
+        caido: !!((nAgg && nAgg.caido) || (nN && nN.caido) || caidoK) };
+    }
+    // 3. desborde entre capas n258 → n78 → n28 (lo que pasa del 100 % va a los sitios de la capa siguiente)
+    var desb = 0;
+    ORDEN_CAPAS.forEach(function (tec) {
+      (X.porTec[tec] || []).forEach(function (i) {
+        var s = X.sit[i], td = dl[i] + rdl[i], tu = ul[i] + rul[i];
+        var ed = s.cdl !== null ? Math.max(0, td - s.cdl) : 0, eu = s.cul !== null ? Math.max(0, tu - s.cul) : 0;
+        if ((ed > EPS || eu > EPS) && s.des.length) {
+          var m = s.des.length;
+          for (var q = 0; q < m; q++) { rdl[s.des[q]] += ed / m; rul[s.des[q]] += eu / m; }
+          sitios[s.id].desborde_mbps = { dl: ed, ul: eu };
+          desb += ed + eu;
+          td -= ed; tu -= eu;
+        }
+        dl[i] = td; ul[i] = tu; rdl[i] = 0; rul[i] = 0;
+      });
+    });
+    // 4. núcleo
+    var cores = {};
+    (RED.nodos || []).forEach(function (nd) { if (nd.tipo === "core") cores[nd.id] = !(nodos[nd.id] && nodos[nd.id].caido); });
+    // BNG: unidades activo/respaldo por zona (v7 §6.10.1), Gbit/s fijos (residencial + empresa) y sesiones
+    var B = nuc.BNG || {}, bngOut = { gbps: 0, sesiones: 0, util_pct: 0, util_sesiones_pct: 0, unidades: {} };
+    var areaZ = {};
+    (RED.zonas || []).forEach(function (z) { areaZ[z.id] = z; });
+    var tiposB = {};
+    (B.tipos || []).forEach(function (t) { tiposB[t] = 1; });
+    var fijoArea = {};
+    r.demandas.forEach(function (d) {
+      if (!tiposB[d.tipo] || !areaZ[d.zona]) return;
+      var ar = areaZ[d.zona].area;
+      fijoArea[ar] = (fijoArea[ar] || 0) + d.dl_gbps;
+    });
+    var sesArea = {};
+    (RED.zonas || []).forEach(function (z) { sesArea[z.area] = (sesArea[z.area] || 0) + num(z.abonados_fijos, 0) * num(B.factor_sesiones, 1.25); });
+    var bngDC = {};
+    (B.unidades || []).forEach(function (u) {
+      var g = 0, se = 0;
+      Object.keys(u.areas).forEach(function (ar) { g += (fijoArea[ar] || 0) * u.areas[ar]; se += (sesArea[ar] || 0) * u.areas[ar]; });
+      var dc = cores[u.activo] ? u.activo : (cores[u.respaldo] ? u.respaldo : null);
+      var capG = u.chasis * u.gbps_chasis, capS = u.chasis * num(B.sesiones_chasis, 256000);
+      var o = { gbps: g, sesiones: Math.round(se), dc: dc, en_respaldo: dc !== null && dc !== u.activo, caido: dc === null,
+        capacidad_gbps: capG, util_pct: dc ? pct(g, capG) : 0, util_sesiones_pct: dc ? pct(se, capS) : 0 };
+      bngOut.unidades[u.id] = o;
+      bngOut.gbps += g; bngOut.sesiones += o.sesiones;
+      bngOut.util_pct = Math.max(bngOut.util_pct, o.util_pct);
+      bngOut.util_sesiones_pct = Math.max(bngOut.util_sesiones_pct, o.util_sesiones_pct);
+      if (dc) bngDC[dc] = Math.max(bngDC[dc] || 0, o.util_pct);
+      if (dc === null) bngOut.caido = true;
+    });
+    // UPF: demanda IP central por DC (caminos de las demandas) → carga NIC (k_UPF) / (2 servidores útiles × 400 Gbit/s)
+    var U = nuc.UPF || {}, capU = num(U.capacidad_dc_gbps, 800), upfOut = { gbps: 0, dl_gbps: 0, ul_gbps: 0, util_pct: 0, dcs: {}, edges: {} };
+    Object.keys(dcUPF).sort().forEach(function (id) {
+      var u = dcUPF[id];
+      if (id in cores) {
+        var nic = (u.dl + u.ul) * UPF_NIC_K;
+        var o = { dl_gbps: u.dl, ul_gbps: u.ul, nic_gbps: nic, capacidad_gbps: capU, util_pct: cores[id] ? pct(nic, capU) : 0, caido: !cores[id] };
+        upfOut.dcs[id] = o;
+        upfOut.dl_gbps += u.dl; upfOut.ul_gbps += u.ul;
+        upfOut.util_pct = Math.max(upfOut.util_pct, o.util_pct);
+      } else if (/^EDGE/.test(id)) upfOut.edges[id] = { dl_gbps: u.dl, ul_gbps: u.ul };
+    });
+    upfOut.gbps = upfOut.dl_gbps + upfOut.ul_gbps;
+    // IMS: CAPS de hora cargada × (voz del paso / voz de hora cargada), repartidos entre los DC vivos
+    var I = nuc.IMS || {}, vivos = (I.dcs || []).filter(function (id) { return cores[id]; });
+    var esc = X.vozBH > EPS ? voz / X.vozBH : 0, caps = num(I.caps_bh, 0) * esc;
+    var imsOut = { caps: caps, tramos: num(I.tramos_bh, 0) * esc, dcs_vivos: vivos.length,
+      capacidad_caps: vivos.length * num(I.caps_dc, 0), util_pct: vivos.length ? pct(caps, vivos.length * num(I.caps_dc, 0)) : 0,
+      caido: !vivos.length };
+    // 5. utilización por sitio y por tecnología
+    var porTec = {};
+    (E.tecnologias || []).forEach(function (t) { porTec[t.id] = { dl_gbps: 0, ul_gbps: 0, util_max_pct: 0, sitio_max: null, sitios_sat: 0, sitios_caidos: 0, n: 0 }; });
+    for (i = 0; i < n; i++) {
+      s = X.sit[i]; out = sitios[s.id];
+      var u = 0;
+      if (s.tec === "ftth") {
+        var pu = s.pon ? pct(Math.max(dl[i], ul[i]), s.pon * 10000) : 0, uu = s.upl ? pct(Math.max(dl[i], ul[i]), s.upl * 1000) : 0;
+        out.pon_util_pct = pu; out.uplink_util_pct = uu; u = Math.max(pu, uu);
+      } else if (s.tec === "voz") {
+        u = cores[s.nodo] ? imsOut.util_pct : 0;
+        out.caps = cores[s.nodo] && vivos.length ? caps / vivos.length : 0;
+      } else if (s.tec === "dc") {
+        var ud = upfOut.dcs[s.nodo];
+        u = Math.max(ud ? ud.util_pct : 0, bngDC[s.nodo] || 0);
+        if (ud) { dl[i] = ud.dl_gbps * 1000; ul[i] = ud.ul_gbps * 1000; }
+      } else if (s.tec === "edge" || s.tec === "ix") {
+        var nn = nodos[s.nodo];
+        if (nn) { dl[i] = nn.carga_gbps * 1000; u = nn.capacidad_gbps ? nn.ocupacion * 100 : 0; }
+      } else {
+        u = Math.max(s.cdl ? pct(dl[i], s.cdl) : 0, s.cul ? pct(ul[i], s.cul) : 0);
+      }
+      if (out.caido) u = 0;
+      out.dl_mbps = dl[i]; out.ul_mbps = ul[i]; out.util_pct = u;
+      var pt = porTec[s.tec] || (porTec[s.tec] = { dl_gbps: 0, ul_gbps: 0, util_max_pct: 0, sitio_max: null, sitios_sat: 0, sitios_caidos: 0, n: 0 });
+      pt.n++;
+      if (s.tec !== "dc" && s.tec !== "edge" && s.tec !== "ix") { pt.dl_gbps += dl[i] / 1000; pt.ul_gbps += ul[i] / 1000; }
+      if (u > pt.util_max_pct) { pt.util_max_pct = u; pt.sitio_max = s.id; }
+      if (u >= 100 - 1e-6) pt.sitios_sat++;
+      if (out.caido) pt.sitios_caidos++;
+    }
+    if (porTec.dc) { porTec.dc.dl_gbps = upfOut.dl_gbps; porTec.dc.ul_gbps = upfOut.ul_gbps; }
+    return { sitios: sitios, por_tec: porTec, nucleo: { BNG: bngOut, UPF: upfOut, IMS: imsOut }, desborde_gbps: desb / 1000,
+      supuestos: (E.meta.proc ? Object.keys(E.meta.proc).map(function (k) { return E.meta.proc[k].s; }) : []) };
+  }
+
+  // Motor.tecnologias(RED) -> [{id, es, en, color_token, unidad, capa, banda, clases, n_sitios, sectores}]
+  function tecnologias(RED, opciones) {
+    var E = emplDe(RED, opciones);
+    if (!E) return [];
+    var c = {};
+    E.sitios.forEach(function (s) {
+      var x = c[s.tec] || (c[s.tec] = { n: 0, sec: 0 });
+      x.n++; x.sec += s.sectores || 0;
+    });
+    return (E.tecnologias || []).map(function (t) {
+      var o = {}, k;
+      for (k in t) o[k] = t[k];
+      o.clases = (t.clases || CLASES_TEC_DEF[t.id] || []).slice();
+      o.n_sitios = c[t.id] ? c[t.id].n : 0;
+      o.sectores = c[t.id] ? c[t.id].sec : 0;
+      return o;
+    });
+  }
+  // Motor.claseDeTec(tec) -> clases de servicio (CLASES_SERVICIO) que viajan por esa tecnología
+  function claseDeTec(tec) {
+    var E = emplDe(null, null), t = E && (E.tecnologias || []).filter(function (x) { return x.id === tec; })[0];
+    return ((t && t.clases) || CLASES_TEC_DEF[tec] || []).slice();
   }
 
   // ---------- serie de 24 h ----------
@@ -1081,7 +1312,13 @@ var Motor = (function () {
     var enl = {}, nod = {};
     G.enlaces.forEach(function (l) { enl[l.id] = { ocup: new Float32Array(n), carga: new Float32Array(n) }; });
     G.ordenNodos.forEach(function (id) { nod[id] = { carga: new Float32Array(n), ocup: new Float32Array(n) }; });
-    var cache = {}, pasos = [], usados = [], pico = null;
+    var cache = {}, pasos = [], usados = [], pico = null, acc = null, accN = null;
+    var E = emplDe(RED, base);
+    if (E && opciones.acceso !== false) {
+      acc = {}; accN = {};
+      (E.tecnologias || []).forEach(function (t) { acc[t.id] = { util_max: new Float32Array(n), dl: new Float32Array(n), ul: new Float32Array(n) }; });
+      ["BNG", "UPF", "IMS"].forEach(function (k) { accN[k] = { util: new Float32Array(n) }; });
+    } else base.acceso = false;
     ts.forEach(function (tm, i) {
       var o = {}, k;
       for (k in base) o[k] = base[k];
@@ -1109,11 +1346,19 @@ var Motor = (function () {
         if (!s) return;
         s.carga[i] = x.carga_gbps; s.ocup[i] = x.ocupacion * 100;
       });
+      if (acc && r.acceso) {
+        var pt = r.acceso.por_tec;
+        Object.keys(acc).forEach(function (t) {
+          var x = pt[t];
+          if (x) { acc[t].util_max[i] = x.util_max_pct; acc[t].dl[i] = x.dl_gbps; acc[t].ul[i] = x.ul_gbps; }
+        });
+        accN.BNG.util[i] = r.acceso.nucleo.BNG.util_pct; accN.UPF.util[i] = r.acceso.nucleo.UPF.util_pct; accN.IMS.util[i] = r.acceso.nucleo.IMS.util_pct;
+      }
       anadir(usados, R.supuestos_usados);
       if (!pico || ocMax > pico.ocup_max_pct + 1e-9) pico = { t_min: tm, ocup_max_pct: ocMax, id: R.enlace_max };
     });
     usados.sort();
-    return { pasos: pasos, enlaces: enl, nodos: nod, pico: pico, supuestos_usados: usados,
+    return { pasos: pasos, enlaces: enl, nodos: nod, acceso_tec: acc, acceso_nucleo: accN, pico: pico, supuestos_usados: usados,
       ms: ahoraMs() - t0, n: n, paso_min: paso, desde: desde, hasta: hasta,
       hora_cargada: cargada, aviso: aviso, eventos: eventos, fallos_base: baseF };
   }
@@ -1121,7 +1366,7 @@ var Motor = (function () {
   // Buffers de los Float32Array de una serie (para postMessage con transferencia)
   function transferiblesSerie(s) {
     var out = [];
-    ["enlaces", "nodos"].forEach(function (g) {
+    ["enlaces", "nodos", "acceso_tec", "acceso_nucleo"].forEach(function (g) {
       Object.keys(s[g] || {}).forEach(function (id) {
         var x = s[g][id];
         Object.keys(x).forEach(function (k) { if (x[k] && x[k].buffer) out.push(x[k].buffer); });
@@ -1326,6 +1571,8 @@ var Motor = (function () {
     puntosUnicosFallo: puntosUnicosFallo,
     CLASES_SERVICIO: CLASES_SERVICIO.slice(),
     claseServicio: claseServicio,
+    tecnologias: tecnologias,
+    claseDeTec: claseDeTec,
     _construirGrafo: construirGrafo
   };
 })();
