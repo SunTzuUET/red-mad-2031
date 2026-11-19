@@ -4435,7 +4435,14 @@ var DEMANDA = {
    "nombre": "Madrid",
    "zona": "C",
    "poblacion_2025": 3477497,
-   "poblacion_2031": 3663020,
+   "poblacion_2031": 3663025,
+   "hogar_medio": 2.5,
+   "empresas_2025": 297693,
+   "cuota_area": 1.0,
+   "agg": "AGG-MADRID",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-MADRID/residencial-fijo",
@@ -4473,367 +4480,579 @@ var DEMANDA = {
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (CENTRO), no por municipio: el municipio recibe 100.0 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 73.323 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área CENTRO suma 164.688/93.752 Gbit/s DL/UL: evento Metropolitano 164,688/88,750 + IoT/cámaras Valdebebas 0/5,002). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (CENTRO), no por municipio: el municipio recibe 100.0 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 73.323 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (3663025) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área CENTRO suma 164.688/93.752 Gbit/s DL/UL: evento Metropolitano 164,688/88,750 + IoT/cámaras Valdebebas 0/5,002). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
   },
   {
    "id": "Z-ALCOBENDAS",
    "nombre": "Alcobendas",
    "zona": "N",
    "poblacion_2025": 123222,
-   "poblacion_2031": 134960,
+   "poblacion_2031": 131549,
+   "hogar_medio": 3.0,
+   "empresas_2025": 10393,
+   "cuota_area": 0.675481,
+   "agg": "AGG-ALCOBENDAS",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-ALCOBENDAS/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 48.398,
-     "ul_gbps": 5.378,
+     "dl_gbps": 47.176,
+     "ul_gbps": 5.242,
      "nota": "Parte residencial del Internet fijo del municipio (0.621 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCOBENDAS/empresa",
      "tipo": "empresa",
-     "dl_gbps": 29.533,
-     "ul_gbps": 3.281,
+     "dl_gbps": 28.787,
+     "ul_gbps": 3.199,
      "nota": "Parte empresa del Internet fijo (0.379 del fijo; 10393 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCOBENDAS/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 9.392,
-     "ul_gbps": 1.657,
+     "dl_gbps": 9.155,
+     "ul_gbps": 1.616,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-ALCOBENDAS/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 1.3652,
-     "ul_gbps": 1.3652,
+     "dl_gbps": 1.3307,
+     "ul_gbps": 1.3307,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-ALCOBENDAS/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 0.9722,
-     "ul_gbps": 0.9722,
+     "dl_gbps": 0.9476,
+     "ul_gbps": 0.9476,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 69.3 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 3.898 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 67.55 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
   },
   {
    "id": "Z-TRESCANTOS",
    "nombre": "Tres Cantos",
    "zona": "N",
    "poblacion_2025": 54592,
-   "poblacion_2031": 59792,
+   "poblacion_2031": 58281,
+   "hogar_medio": 2.9,
+   "empresas_2025": 3586,
+   "cuota_area": 0.299264,
+   "agg": "AGG-TRESCANTOS",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-TRESCANTOS/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 23.658,
-     "ul_gbps": 2.629,
+     "dl_gbps": 23.061,
+     "ul_gbps": 2.562,
      "nota": "Parte residencial del Internet fijo del municipio (0.685 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-TRESCANTOS/empresa",
      "tipo": "empresa",
-     "dl_gbps": 10.868,
-     "ul_gbps": 1.208,
+     "dl_gbps": 10.594,
+     "ul_gbps": 1.177,
      "nota": "Parte empresa del Internet fijo (0.315 del fijo; 3586 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-TRESCANTOS/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 4.161,
-     "ul_gbps": 0.734,
+     "dl_gbps": 4.056,
+     "ul_gbps": 0.716,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-TRESCANTOS/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 0.6048,
-     "ul_gbps": 0.6048,
+     "dl_gbps": 0.5895,
+     "ul_gbps": 0.5895,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-TRESCANTOS/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 0.4307,
-     "ul_gbps": 0.4307,
+     "dl_gbps": 0.4198,
+     "ul_gbps": 0.4198,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 30.7 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 3.898 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 29.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
+  },
+  {
+   "id": "Z-TALAMANCA",
+   "nombre": "Talamanca de Jarama",
+   "zona": "N",
+   "poblacion_2025": 4607,
+   "poblacion_2031": 4918,
+   "hogar_medio": 2.7,
+   "empresas_2025": 230,
+   "cuota_area": 0.025255,
+   "agg": "AGG-TALAMANCA",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": true,
+   "necesidades": [
+    {
+     "id": "Z-TALAMANCA/residencial-fijo",
+     "tipo": "residencial-fijo",
+     "dl_gbps": 2.143,
+     "ul_gbps": 0.238,
+     "nota": "Parte residencial del Internet fijo del municipio (0.755 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+    },
+    {
+     "id": "Z-TALAMANCA/empresa",
+     "tipo": "empresa",
+     "dl_gbps": 0.697,
+     "ul_gbps": 0.077,
+     "nota": "Parte empresa del Internet fijo (0.245 del fijo; 230 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+    },
+    {
+     "id": "Z-TALAMANCA/movil-ebb",
+     "tipo": "movil-ebb",
+     "dl_gbps": 0.342,
+     "ul_gbps": 0.06,
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+    },
+    {
+     "id": "Z-TALAMANCA/voz-ims",
+     "tipo": "voz-ims",
+     "dl_gbps": 0.0498,
+     "ul_gbps": 0.0498,
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+    },
+    {
+     "id": "Z-TALAMANCA/voz-fija",
+     "tipo": "voz-fija",
+     "dl_gbps": 0.0354,
+     "ul_gbps": 0.0354,
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+    }
+   ],
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (NORTE), no por municipio: el municipio recibe 2.53 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 3.898 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (194748) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área NORTE suma 0.0/0.0 Gbit/s DL/UL: ninguno). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa). Edge: Norte no tiene Edge (S7 apartado 5); edge = null: sus demandas con destino edge irían al CPD más cercano (DC-Norte)."
   },
   {
    "id": "Z-TORREJON",
    "nombre": "Torrejón de Ardoz",
    "zona": "E",
    "poblacion_2025": 144211,
-   "poblacion_2031": 150997,
+   "poblacion_2031": 149759,
+   "hogar_medio": 2.8,
+   "empresas_2025": 6457,
+   "cuota_area": 0.412471,
+   "agg": "AGG-TORREJON",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-TORREJON/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 66.949,
-     "ul_gbps": 7.439,
+     "dl_gbps": 66.4,
+     "ul_gbps": 7.378,
      "nota": "Parte residencial del Internet fijo del municipio (0.768 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-TORREJON/empresa",
      "tipo": "empresa",
-     "dl_gbps": 20.241,
-     "ul_gbps": 2.249,
+     "dl_gbps": 20.075,
+     "ul_gbps": 2.231,
      "nota": "Parte empresa del Internet fijo (0.232 del fijo; 6457 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-TORREJON/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 10.508,
-     "ul_gbps": 1.854,
+     "dl_gbps": 10.422,
+     "ul_gbps": 1.839,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-TORREJON/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 1.5263,
-     "ul_gbps": 1.5263,
+     "dl_gbps": 1.5138,
+     "ul_gbps": 1.5138,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-TORREJON/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.0877,
-     "ul_gbps": 1.0877,
+     "dl_gbps": 1.0788,
+     "ul_gbps": 1.0788,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 41.59 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 7.268 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 41.25 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
   },
   {
    "id": "Z-ALCALA",
    "nombre": "Alcalá de Henares",
    "zona": "E",
    "poblacion_2025": 202549,
-   "poblacion_2031": 212080,
+   "poblacion_2031": 210341,
+   "hogar_medio": 2.7,
+   "empresas_2025": 9786,
+   "cuota_area": 0.579329,
+   "agg": "AGG-ALCALA",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-ALCALA/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 93.156,
-     "ul_gbps": 10.351,
+     "dl_gbps": 92.392,
+     "ul_gbps": 10.266,
      "nota": "Parte residencial del Internet fijo del municipio (0.761 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCALA/empresa",
      "tipo": "empresa",
-     "dl_gbps": 29.306,
-     "ul_gbps": 3.256,
+     "dl_gbps": 29.065,
+     "ul_gbps": 3.229,
      "nota": "Parte empresa del Internet fijo (0.239 del fijo; 9786 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCALA/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 14.759,
-     "ul_gbps": 2.605,
+     "dl_gbps": 14.638,
+     "ul_gbps": 2.583,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-ALCALA/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 2.1437,
-     "ul_gbps": 2.1437,
+     "dl_gbps": 2.1261,
+     "ul_gbps": 2.1261,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-ALCALA/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.5277,
-     "ul_gbps": 1.5277,
+     "dl_gbps": 1.5152,
+     "ul_gbps": 1.5152,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 58.41 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 7.268 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 57.93 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+  },
+  {
+   "id": "Z-LOSSANTOS",
+   "nombre": "Los Santos de la Humosa",
+   "zona": "E",
+   "poblacion_2025": 2867,
+   "poblacion_2031": 2977,
+   "hogar_medio": 2.8,
+   "empresas_2025": 126,
+   "cuota_area": 0.0082,
+   "agg": "AGG-LOSSANTOS",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": true,
+   "necesidades": [
+    {
+     "id": "Z-LOSSANTOS/residencial-fijo",
+     "tipo": "residencial-fijo",
+     "dl_gbps": 1.326,
+     "ul_gbps": 0.147,
+     "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+    },
+    {
+     "id": "Z-LOSSANTOS/empresa",
+     "tipo": "empresa",
+     "dl_gbps": 0.393,
+     "ul_gbps": 0.044,
+     "nota": "Parte empresa del Internet fijo (0.229 del fijo; 126 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+    },
+    {
+     "id": "Z-LOSSANTOS/movil-ebb",
+     "tipo": "movil-ebb",
+     "dl_gbps": 0.207,
+     "ul_gbps": 0.037,
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+    },
+    {
+     "id": "Z-LOSSANTOS/voz-ims",
+     "tipo": "voz-ims",
+     "dl_gbps": 0.0301,
+     "ul_gbps": 0.0301,
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+    },
+    {
+     "id": "Z-LOSSANTOS/voz-fija",
+     "tipo": "voz-fija",
+     "dl_gbps": 0.0214,
+     "ul_gbps": 0.0214,
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+    }
+   ],
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (ESTE), no por municipio: el municipio recibe 0.82 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 7.268 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (363077) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área ESTE suma 0.045/0.045 Gbit/s DL/UL: V2X A-2 0,045/0,045). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa)."
   },
   {
    "id": "Z-GETAFE",
    "nombre": "Getafe",
    "zona": "S",
    "poblacion_2025": 195628,
-   "poblacion_2031": 199933,
+   "poblacion_2031": 199414,
+   "hogar_medio": 2.6,
+   "empresas_2025": 9655,
+   "cuota_area": 0.257348,
+   "agg": "AGG-GETAFE",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-GETAFE/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 88.165,
-     "ul_gbps": 9.796,
+     "dl_gbps": 87.936,
+     "ul_gbps": 9.771,
      "nota": "Parte residencial del Internet fijo del municipio (0.764 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-GETAFE/empresa",
      "tipo": "empresa",
-     "dl_gbps": 27.283,
-     "ul_gbps": 3.031,
+     "dl_gbps": 27.212,
+     "ul_gbps": 3.024,
      "nota": "Parte empresa del Internet fijo (0.236 del fijo; 9655 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-GETAFE/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 13.914,
-     "ul_gbps": 2.455,
+     "dl_gbps": 13.878,
+     "ul_gbps": 2.449,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-GETAFE/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 2.0229,
-     "ul_gbps": 2.0229,
+     "dl_gbps": 2.0176,
+     "ul_gbps": 2.0176,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-GETAFE/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.4402,
-     "ul_gbps": 1.4402,
+     "dl_gbps": 1.4364,
+     "ul_gbps": 1.4364,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.8 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 15.511 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.73 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
   },
   {
    "id": "Z-LEGANES",
    "nombre": "Leganés",
    "zona": "S",
    "poblacion_2025": 195946,
-   "poblacion_2031": 200258,
+   "poblacion_2031": 199738,
+   "hogar_medio": 2.6,
+   "empresas_2025": 9301,
+   "cuota_area": 0.257766,
+   "agg": "AGG-LEGANES",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-LEGANES/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 89.114,
-     "ul_gbps": 9.902,
+     "dl_gbps": 88.882,
+     "ul_gbps": 9.876,
      "nota": "Parte residencial del Internet fijo del municipio (0.771 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-LEGANES/empresa",
      "tipo": "empresa",
-     "dl_gbps": 26.522,
-     "ul_gbps": 2.947,
+     "dl_gbps": 26.453,
+     "ul_gbps": 2.939,
      "nota": "Parte empresa del Internet fijo (0.229 del fijo; 9301 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-LEGANES/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 13.936,
-     "ul_gbps": 2.459,
+     "dl_gbps": 13.9,
+     "ul_gbps": 2.453,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-LEGANES/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 2.0262,
-     "ul_gbps": 2.0262,
+     "dl_gbps": 2.0209,
+     "ul_gbps": 2.0209,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-LEGANES/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.4425,
-     "ul_gbps": 1.4425,
+     "dl_gbps": 1.4388,
+     "ul_gbps": 1.4388,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.84 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 15.511 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.78 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
   },
   {
    "id": "Z-FUENLABRADA",
    "nombre": "Fuenlabrada",
    "zona": "S",
    "poblacion_2025": 189814,
-   "poblacion_2031": 193992,
+   "poblacion_2031": 193488,
+   "hogar_medio": 2.8,
+   "empresas_2025": 10090,
+   "cuota_area": 0.249699,
+   "agg": "AGG-FUENLABRADA",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-FUENLABRADA/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 82.43,
-     "ul_gbps": 9.159,
+     "dl_gbps": 82.216,
+     "ul_gbps": 9.135,
      "nota": "Parte residencial del Internet fijo del municipio (0.736 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-FUENLABRADA/empresa",
      "tipo": "empresa",
-     "dl_gbps": 29.587,
-     "ul_gbps": 3.287,
+     "dl_gbps": 29.51,
+     "ul_gbps": 3.279,
      "nota": "Parte empresa del Internet fijo (0.264 del fijo; 10090 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-FUENLABRADA/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 13.5,
-     "ul_gbps": 2.382,
+     "dl_gbps": 13.465,
+     "ul_gbps": 2.376,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-FUENLABRADA/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 1.9627,
-     "ul_gbps": 1.9627,
+     "dl_gbps": 1.9576,
+     "ul_gbps": 1.9576,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-FUENLABRADA/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.3974,
-     "ul_gbps": 1.3974,
+     "dl_gbps": 1.3938,
+     "ul_gbps": 1.3938,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 25.04 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 15.511 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 24.97 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
   },
   {
    "id": "Z-ALCORCON",
    "nombre": "Alcorcón",
    "zona": "S",
    "poblacion_2025": 176806,
-   "poblacion_2031": 180697,
+   "poblacion_2031": 180228,
+   "hogar_medio": 2.6,
+   "empresas_2025": 8883,
+   "cuota_area": 0.232587,
+   "agg": "AGG-ALCORCON",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": false,
    "necesidades": [
     {
      "id": "Z-ALCORCON/residencial-fijo",
      "tipo": "residencial-fijo",
-     "dl_gbps": 79.345,
-     "ul_gbps": 8.816,
+     "dl_gbps": 79.139,
+     "ul_gbps": 8.793,
      "nota": "Parte residencial del Internet fijo del municipio (0.76 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
     },
     {
      "id": "Z-ALCORCON/empresa",
      "tipo": "empresa",
-     "dl_gbps": 24.995,
-     "ul_gbps": 2.777,
+     "dl_gbps": 24.93,
+     "ul_gbps": 2.77,
      "nota": "Parte empresa del Internet fijo (0.24 del fijo; 8883 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
     },
     {
      "id": "Z-ALCORCON/movil-ebb",
      "tipo": "movil-ebb",
-     "dl_gbps": 12.575,
-     "ul_gbps": 2.219,
+     "dl_gbps": 12.542,
+     "ul_gbps": 2.213,
      "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
     },
     {
      "id": "Z-ALCORCON/voz-ims",
      "tipo": "voz-ims",
-     "dl_gbps": 1.8282,
-     "ul_gbps": 1.8282,
+     "dl_gbps": 1.8235,
+     "ul_gbps": 1.8235,
      "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
     },
     {
      "id": "Z-ALCORCON/voz-fija",
      "tipo": "voz-fija",
-     "dl_gbps": 1.3016,
-     "ul_gbps": 1.3016,
+     "dl_gbps": 1.2982,
+     "ul_gbps": 1.2982,
      "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
     }
    ],
-   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 23.32 % de su área según ECP 2025 (supuesto: mismo crecimiento 2025-2031 dentro del área). Peso del área en la red 15.511 % (Tabla 8/A11.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = 4 995 732,76 × peso. Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 23.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil)."
+  },
+  {
+   "id": "Z-BATRES",
+   "nombre": "Batres",
+   "zona": "S",
+   "poblacion_2025": 1976,
+   "poblacion_2031": 2014,
+   "hogar_medio": 2.8,
+   "empresas_2025": 170,
+   "cuota_area": 0.002599,
+   "agg": "AGG-BATRES",
+   "origen": "entrega2",
+   "fuente_e2": "v7 §3.1.1 (tabla de los 12 municipios: población 2025, hogar medio, empresas; tabla de población por zona 2025/2030/2031) y §3.4.1 (demanda por zona Metro). §2.5: un municipio pequeño de referencia por zona (Talamanca de Jarama, Los Santos de la Humosa, Batres), escenario rural n28; 'cada municipio no se dimensiona por separado'.",
+   "nuevo_v7": true,
+   "necesidades": [
+    {
+     "id": "Z-BATRES/residencial-fijo",
+     "tipo": "residencial-fijo",
+     "dl_gbps": 0.736,
+     "ul_gbps": 0.082,
+     "nota": "Parte residencial del Internet fijo del municipio (0.633 del fijo). Los documentos no separan empresa en datos: el reparto residencial/empresa usa el peso de líneas fijas de A1 (0,622·hogares vs 1,5·empresas DIRCE) — supuesto. Slice 'fijo-bng': no pasa por 5GC (Tabla 9). Prioridad supuesta."
+    },
+    {
+     "id": "Z-BATRES/empresa",
+     "tipo": "empresa",
+     "dl_gbps": 0.427,
+     "ul_gbps": 0.047,
+     "nota": "Parte empresa del Internet fijo (0.367 del fijo; 170 empresas DIRCE). Reparto supuesto con el peso de líneas de A1; perfil y prioridad supuestos. Los documentos suman todo en una misma hora cargada: con perfil empresa la suma simulada a las 21 h queda por debajo de la Tabla 8."
+    },
+    {
+     "id": "Z-BATRES/movil-ebb",
+     "tipo": "movil-ebb",
+     "dl_gbps": 0.14,
+     "ul_gbps": 0.025,
+     "nota": "Termina en la UPF central de los DC (no en Edge). Prioridad supuesta."
+    },
+    {
+     "id": "Z-BATRES/voz-ims",
+     "tipo": "voz-ims",
+     "dl_gbps": 0.0204,
+     "ul_gbps": 0.0204,
+     "nota": "VoNR por sentido. Prioridad y latencia_max_ms (20 ms de presupuesto en red de transporte/core) supuestas; los documentos no fijan latencia de voz. Perfil residencial supuesto (los documentos usan una única hora cargada)."
+    },
+    {
+     "id": "Z-BATRES/voz-fija",
+     "tipo": "voz-fija",
+     "dl_gbps": 0.0145,
+     "ul_gbps": 0.0145,
+     "nota": "Voz fija RTP G.711 0,128 Mbit/s (0,3 Erl × 749 707 líneas × 1,25). Solo está en el cálculo de transporte, no en la Tabla 8; códec supuesto por 3.2 y pendiente de Dirección. Prioridad y latencia supuestas."
+    }
+   ],
+   "nota": "Año horizonte 2031, hora cargada, +25 % aplicado una vez. Los documentos dan la demanda por zona Metro (SUR), no por municipio: el municipio recibe 0.26 % de su área según su población 2025 (v7 §3.1.1; supuesto del simulador: mismo crecimiento 2025-2031 dentro del área, como la v7 hace con hogares, empresas y líneas). Peso del área en la red 15.511 % (Tabla 8 = v7 §3.4.1; Sur exacto de A6: 397,7262/2564,18). Población 2031 = población 2031 de la zona en v7 §3.1.1 (774882) × cuota (Alcorcón da 180 228, la cifra FTTH de la v7). Hogares 2025 = población / hogar medio (v7 §3.1.1). Abonados fijos = accesos de Internet fijo Op1 (0,404·0,307 por hab.); abonados móviles = líneas IMS móviles Op1 (1,307·0,258 por hab., A1 → 1 684 591 en total). La base zonal sin redondear está pendiente en los documentos (S7 apartado 7), así que los pesos salen de cifras redondeadas a 0,01 Gbit/s. Servicios especiales EXCLUIDOS (los modela otro agente; en Tabla 8 el área SUR suma 0.588/0.802 Gbit/s DL/UL: Hospital de Getafe 0,500/0,6025 + piloto industrial 0,0875/0,200). Sin necesidad IoT: el único IoT de los documentos es el de Valdebebas (servicio especial). TV/streaming no se separa en los documentos (va dentro del Internet fijo/móvil). Municipio pequeño de referencia de su zona (v7 §2.5, actas 28/09 y 04/10), escenario rural n28. Estaba en los totales de zona de la v7 pero el simulador lo repartía entre los municipios grandes (rurales absorbidos); desde F2.0c tiene zona y nodo AGG propios. Coordenada del centro aproximada (casco urbano, tomada a mano del mapa)."
   }
  ],
  "memoria_v7": {

@@ -430,6 +430,11 @@
       if (grupo !== null) h += '</optgroup>';
     } else {
       lista.forEach(function (x) { h += opt(x.id || "", nomItem(x) + (x.origen === "supuesto" ? " (" + t({ es: "supuesto", en: "assumption" }) + ")" : ""), (x.id || "") === (valor || "")); });
+      // Evento puesto desde la vista de casos que no está en la lista (p. ej. un escenario como E-INCIDENTE-NTN)
+      if (valor && !itemPorId(lista, valor)) {
+        var esc0 = (RED.escenarios || []).filter(function (s) { return s.id === valor; })[0];
+        h += opt(valor, esc0 && esc0.nombre ? esc0.nombre : valor, true);
+      }
     }
     return '<select class="sel" data-eje="' + eje + '" aria-label="' + esc(t(T[eje] || { es: eje })) + '">' + h + '</select>';
   }
@@ -552,7 +557,7 @@
   }
 
   // ---------- pestañas y vistas ----------
-  var VISTAS = [], ORDEN = ["mapa", "capas", "paquete", "interconexion"];
+  var VISTAS = [], ORDEN = ["mapa", "capas", "paquete", "interconexion", "casos"];
   var activa = null, listo = false;
   NOC.registrarVista = function (v) {
     if (!v || !v.id) return;
@@ -571,7 +576,7 @@
   function pintarTabs() {
     $("#tabs").innerHTML = VISTAS.map(function (x) {
       return '<button type="button" class="tab" role="tab" data-vista="' + esc(x.def.id) + '" aria-selected="' + (activa === x.def.id) + '">' + esc(t(x.def.titulo)) + '</button>';
-    }).join("") + '<a class="tab ext" href="demanda.html">' + esc(t(T.demanda)) + '</a>';
+    }).join("") + '<a class="tab ext" href="demanda.html">' + esc(t(T.demanda)) + '</a><a class="tab ext" href="guia.html">' + esc(t({es:"GUÍA ↗", en:"GUIDE ↗"})) + '</a>';
   }
   function activarVista(id) {
     var v = VISTAS.filter(function (x) { return x.def.id === id; })[0];
@@ -1029,6 +1034,29 @@
     emitir("modo", m);
   }
   NOC.setModo = setModo;
+  // Vista de casos: pone un caso completo en LAB y recalcula con el motor. c = {trafico, dia, anio, hora, evento, fallos}
+  NOC.aplicarCaso = function (c) {
+    c = c || {};
+    pararHora();
+    caso.trafico = c.trafico || "BH";
+    caso.dia = c.dia || "laborable";
+    caso.anio = c.anio || ANIO_MAX;
+    if (typeof c.hora === "number") caso.hora = c.hora;
+    caso.evento = c.evento || "ninguno";
+    caso.fallos = (c.fallos || []).slice();
+    guardarCaso();
+    if (NOC.modo !== "lab") {
+      NOC.modo = "lab"; guardar("noc.modo", "lab");
+      aplicarParamsDemanda();
+      pintarBarra(); pintarEstado();
+      aplicarCaso();
+      emitir("modo", "lab");
+    } else {
+      pintarBarra();
+      aplicarCaso();
+    }
+    return NOC.resultado;
+  };
   function setLang(l) {
     if (l !== "es" && l !== "en" || l === NOC.lang) return;
     NOC.lang = l; guardar("noc.lang", l);

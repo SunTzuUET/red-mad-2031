@@ -447,6 +447,9 @@ var Motor = (function () {
   function cabeceraDe(RED, b) {
     var c = RED.meta && RED.meta.cabecera_transporte;
     if (!c) return 1;
+    // Excepciones por prefijo de id (p. ej. L2VPN: fuera de la matriz A11, la cota de 10 GbE ya es velocidad de línea).
+    var pp = c.por_prefijo || {};
+    for (var k in pp) if (b.id && String(b.id).indexOf(k) === 0) return num(pp[k], 1);
     return num(c.por_tipo && c.por_tipo[b.tipo], num(c.general, 1));
   }
 

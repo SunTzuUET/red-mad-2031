@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RED-MAD 2031 · Guía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="noc.css">
+<link rel="stylesheet" href="guia.css">
+</head>
+<body class="l-es">
+<header class="tb barra">
+  <div class="tb-f">
+    <span class="marca-red">RED-MAD 2031<small>NOC · 5G + FTTH</small></span><span class="sep"></span>
+    <nav class="g-nav" aria-label="Páginas">
+      <a class="tab" href="index.html"><span lang="es">Simulador</span><span lang="en">Simulator</span></a>
+      <a class="tab" href="demanda.html"><span lang="es">Demanda</span><span lang="en">Demand</span></a>
+      <span class="tab" aria-current="page"><span lang="es">Guía</span><span lang="en">Guide</span></span>
+    </nav>
+    <div class="esp"></div>
+    <div class="seg" role="group" aria-label="Idioma / Language"><button type="button" data-lang="es" aria-pressed="true">ES</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+  </div>
+</header>
+
+<div class="g-cuerpo">
+<nav class="g-indice" aria-label="Índice">
+  <span class="rot"><span lang="es">Contenido</span><span lang="en">Contents</span></span>
+  <a href="#que"><span class="mono">01</span><span lang="es">Qué es y qué no es</span><span lang="en">What it is and is not</span></a>
+  <a href="#modos"><span class="mono">02</span><span lang="es">Referencia y laboratorio</span><span lang="en">Reference and laboratory</span></a>
+  <a href="#leer"><span class="mono">03</span><span lang="es">Cómo leer la pantalla</span><span lang="en">Reading the screen</span></a>
+  <a href="#codigos"><span class="mono">04</span><span lang="es">Colores y marcas</span><span lang="en">Colours and marks</span></a>
+  <a href="#reglas"><span class="mono">05</span><span lang="es">Reglas de cálculo (v7)</span><span lang="en">Calculation rules (v7)</span></a>
+  <a href="#verif"><span class="mono">06</span><span lang="es">Cómo se comprueba</span><span lang="en">How it is checked</span></a>
+  <a href="#atajos"><span class="mono">07</span><span lang="es">Atajos de teclado</span><span lang="en">Keyboard shortcuts</span></a>
+  <a href="#limites"><span class="mono">08</span><span lang="es">Límites conocidos</span><span lang="en">Known limits</span></a>
+  <a href="#ia"><span class="mono">09</span><span lang="es">Uso de IA</span><span lang="en">Use of AI</span></a>
+</nav>
+
+<main class="g-main">
+  <div class="cabecera-g">
+    <h1><span lang="es">GUÍA DEL SIMULADOR</span><span lang="en">SIMULATOR GUIDE</span></h1>
+    <p lang="es">Red 5G + FTTH de un operador en la Comunidad de Madrid, horizonte 2031. Proyecto conjunto SCOM + ARCO, grupo 3.2. Página para profesores y compañeros: qué hace la herramienta, cómo se lee y con qué reglas calcula.</p>
+    <p lang="en">5G + FTTH network of an operator in the Madrid region, 2031 horizon. Joint SCOM + ARCO project, group 3.2. For lecturers and classmates: what the tool does, how to read it and which rules it computes with.</p>
+  </div>
+
+  <!-- 01 -->
+  <section class="g-sec" id="que">
+    <h2><span class="mono">01</span><span lang="es">Qué es y qué no es</span><span lang="en">What it is and is not</span></h2>
+    <div lang="es">
+      <p>Un <b>modelo de grafo de capacidades</b> de la red diseñada en la Entrega 2 (memoria conjunta v7): 35 nodos (3 DC, 3 Edge, 4 nodos metro, 12 nodos de agregación, puntos de interconexión y sitios de servicio) y 45 enlaces. La demanda de los 12 municipios de la v7 y de los servicios especiales se reparte entre destinos, se encamina y se suma por enlace y sentido en Gbit/s.</p>
+      <div class="g-dos">
+        <div><span class="rot">Sí hace</span><ul>
+          <li>Cargas y ocupación de cada enlace en hora cargada, por sentido.</li>
+          <li>Efecto de fallos (tramo, nodo, acometida, DC, Edge) y de eventos.</li>
+          <li>Barrido N-1 ordenado de peor a mejor.</li>
+          <li>Desglose de la demanda desde la fuente primaria hasta Gbit/s.</li>
+          <li>Recorrido de un flujo equipo a equipo, con protocolo por salto.</li>
+        </ul></div>
+        <div><span class="rot">No hace</span><ul>
+          <li>No simula radio (propagación, cobertura, interferencia).</li>
+          <li>No simula colas, pérdidas ni jitter: no es un simulador de paquetes.</li>
+          <li>No ejecuta protocolos (IS-IS, BGP, RSVP-TE, señalización 5GC/IMS).</li>
+          <li>La latencia es una estimación por km y por nodo, no una medida.</li>
+          <li>No propone arreglos: describe la causa y plantea preguntas.</li>
+        </ul></div>
+      </div>
+    </div>
+    <div lang="en">
+      <p>A <b>capacity graph model</b> of the network designed in Deliverable 2 (joint report v7): 35 nodes (3 DCs, 3 Edges, 4 metro nodes, 12 aggregation nodes, interconnection points and service sites) and 45 links. Demand from the 12 municipalities of v7 and the special services is split among destinations, routed and added up per link and direction in Gbit/s.</p>
+      <div class="g-dos">
+        <div><span class="rot">It does</span><ul>
+          <li>Load and occupancy of each link at busy hour, per direction.</li>
+          <li>Effect of faults (span, node, DC feed, DC, Edge) and events.</li>
+          <li>N-1 sweep sorted worst to best.</li>
+          <li>Demand breakdown from the primary source to Gbit/s.</li>
+          <li>Path of a flow element by element, with the protocol at each hop.</li>
+        </ul></div>
+        <div><span class="rot">It does not</span><ul>
+          <li>Simulate radio (propagation, coverage, interference).</li>
+          <li>Simulate queues, loss or jitter: it is not a packet simulator.</li>
+          <li>Run protocols (IS-IS, BGP, RSVP-TE, 5GC/IMS signalling).</li>
+          <li>Measure latency: it is an estimate per km and per node.</li>
+          <li>Propose fixes: it states the cause and asks questions.</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="g-sec" id="modos">
+    <h2><span class="mono">02</span><span lang="es">Referencia y laboratorio</span><span lang="en">Reference and laboratory</span></h2>
+    <div class="g-tabla"><table class="tabla">
+      <thead><tr><th><span lang="es">Modo</span><span lang="en">Mode</span></th><th><span lang="es">Qué muestra</span><span lang="en">What it shows</span></th><th><span lang="es">Qué se puede cambiar</span><span lang="en">What can change</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="insig ref"><span lang="es">Referencia · Entrega 2 (v7)</span><span lang="en">Reference · Deliverable 2 (v7)</span></span></td>
+          <td><span lang="es">La red y los parámetros exactamente como en la memoria v7: año 2031, hora cargada con todas las zonas en su pico, partido en el Metropolitano, sin fallos.</span><span lang="en">Network and parameters exactly as in the v7 report: year 2031, busy hour with every zone at peak, match at the Metropolitano, no faults.</span></td>
+          <td><span lang="es">Nada (bloqueado, con candado). Se puede navegar, abrir fichas y mirar tablas.</span><span lang="en">Nothing (locked). You can browse, open element sheets and read tables.</span></td></tr>
+        <tr><td><span class="insig lab"><span lang="es">Laboratorio</span><span lang="en">Laboratory</span></span></td>
+          <td><span lang="es">El mismo motor sobre un caso elegido. Cada indicador muestra su Δ frente a la referencia.</span><span lang="en">The same engine on a chosen case. Each indicator shows its Δ against the reference.</span></td>
+          <td><span lang="es">Modelo de tráfico (hora cargada, pico P2, pico PM, no coincidente, pendular), tipo de día, año 2025–2031, hora, evento y uno o varios fallos. Los parámetros de demanda se editan en la página Demanda.</span><span lang="en">Traffic model (busy hour, P2 peak, PM peak, non-coincident, commuting), day type, year 2025–2031, hour, event and one or more faults. Demand parameters are edited on the Demand page.</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota" lang="es">Lo que se ve en REFERENCIA es lo que el equipo entregó. LABORATORIO sirve para preguntar «¿y si…?» sin tocar la referencia.</p>
+    <p class="nota" lang="en">REFERENCE is what the team delivered. LABORATORY is for asking "what if…?" without touching the reference.</p>
+  </section>
+
+  <!-- 03 -->
+  <section class="g-sec" id="leer">
+    <h2><span class="mono">03</span><span lang="es">Cómo leer la pantalla</span><span lang="en">Reading the screen</span></h2>
+    <div class="pantalla" aria-hidden="true">
+      <div class="p-tb1"><b><span class="n">1</span>RED-MAD 2031 · [REF | LAB] · KPI · ⌕ · ES|EN</b></div>
+      <div class="p-tb2"><b><span class="n">2</span><span lang="es">Caso: tráfico · día · año · evento · fallo · hora ▶ · alarmas</span><span lang="en">Case: traffic · day · year · event · fault · hour ▶ · alarms</span></b></div>
+      <div class="p-rail"><b>A–H</b></div>
+      <div class="p-centro"><b><span class="n">4</span><span lang="es">Vista central</span><span lang="en">Main view</span></b>
+        <div class="pestanas"><span lang="es">Mapa</span><span lang="en">Map</span><span lang="es">Capas</span><span lang="en">Layers</span><span lang="es">Sigue el paquete</span><span lang="en">Follow the packet</span><span lang="es">Interconexión</span><span lang="en">Interconnection</span><span lang="es">Casos</span><span lang="en">Cases</span><span lang="es">Demanda ↗</span><span lang="en">Demand ↗</span></div></div>
+      <div class="p-ficha"><b><span class="n">5</span><span lang="es">Ficha</span><span lang="en">Sheet</span></b></div>
+      <div class="p-dock"><b><span class="n">6</span><span lang="es">Alarmas · Enlaces · N-1</span><span lang="en">Alarms · Links · N-1</span></b></div>
+      <div class="p-sb"><span class="n">7</span><span lang="es">datos v7 · motor OK · demandas · % supuestos · modo · atajos</span><span lang="en">v7 data · engine OK · demands · % assumptions · mode · shortcuts</span></div>
+    </div>
+    <div class="g-tabla"><table class="tabla">
+      <thead><tr><th>#</th><th><span lang="es">Zona</span><span lang="en">Area</span></th><th><span lang="es">Para qué</span><span lang="en">What for</span></th></tr></thead>
+      <tbody lang="es">
+        <tr><td class="id">1</td><td>Barra superior</td><td>Modo REF/LAB, indicadores (DL total, % servido, ocupación máxima con el enlace que la da, demandas afectadas), buscador de elementos e idioma.</td></tr>
+        <tr><td class="id">2</td><td>Barra de caso</td><td>Constructor de casos en tres ejes: tráfico (modelo, día, año, hora), evento y fallos. Contador de alarmas por severidad.</td></tr>
+        <tr><td class="id">3</td><td>Carril de capas A–H</td><td>Enciende o apaga capas: A acceso radio, B acceso fijo, C agregación, D metro/DWDM, E core (DC), F Edge/MEC, G interconexión (IX, IMS, L2VPN, NTN), H transversal (sincronización, OSS; sin elementos en el mapa).</td></tr>
+        <tr><td class="id">4</td><td>Pestañas</td><td><b>Mapa</b>: dónde está cada cosa y cómo de cargada. <b>Capas</b>: diagrama lógico A–H, una caja por equipo. <b>Sigue el paquete</b>: un flujo salto a salto con protocolo, latencia acumulada y ocupación. <b>Interconexión</b>: Internet, voz IMS, empresa, satélite. <b>Casos</b>: casos guiados y del día a día. <b>Demanda</b> (página aparte): cadena de cálculo con factores editables.</td></tr>
+        <tr><td class="id">5</td><td>Ficha</td><td>Se abre al pulsar un elemento. En los equipos tiene 7 apartados: rol y capa, modelo, capacidad y dimensionado, interfaces, protección, fuente y preguntas para pensar. Muestra también la carga actual.</td></tr>
+        <tr><td class="id">6</td><td>Dock inferior</td><td><b>Alarmas</b> (severidad, elemento, causa), <b>Enlaces</b> (carga y ocupación, ordenable) y <b>N-1</b> (tumba cada elemento con el tráfico del caso y ordena de peor a mejor).</td></tr>
+        <tr><td class="id">7</td><td>Barra de estado</td><td>Versión de datos, estado del motor, número de demandas, porcentaje de supuestos y modo.</td></tr>
+      </tbody>
+      <tbody lang="en">
+        <tr><td class="id">1</td><td>Top bar</td><td>REF/LAB mode, indicators (total DL, % served, maximum occupancy with the link that sets it, affected demands), element search and language.</td></tr>
+        <tr><td class="id">2</td><td>Case bar</td><td>Case builder on three axes: traffic (model, day, year, hour), event and faults. Alarm counter by severity.</td></tr>
+        <tr><td class="id">3</td><td>Layer rail A–H</td><td>Turns layers on and off: A radio access, B fixed access, C aggregation, D metro/DWDM, E core (DC), F Edge/MEC, G interconnection (IX, IMS, L2VPN, NTN), H cross-cutting (sync, OSS; nothing on the map).</td></tr>
+        <tr><td class="id">4</td><td>Tabs</td><td><b>Map</b>: where everything is and how loaded. <b>Layers</b>: logical A–H diagram, one box per element. <b>Follow the packet</b>: one flow hop by hop with protocol, cumulative latency and occupancy. <b>Interconnection</b>: Internet, IMS voice, enterprise, satellite. <b>Cases</b>: guided and day-to-day cases. <b>Demand</b> (separate page): calculation chain with editable factors.</td></tr>
+        <tr><td class="id">5</td><td>Sheet</td><td>Opens when an element is clicked. Equipment sheets have 7 parts: role and layer, model, capacity and sizing, interfaces, protection, source and questions to think about. It also shows the current load.</td></tr>
+        <tr><td class="id">6</td><td>Bottom dock</td><td><b>Alarms</b> (severity, element, cause), <b>Links</b> (load and occupancy, sortable) and <b>N-1</b> (fails each element with the case traffic and sorts worst to best).</td></tr>
+        <tr><td class="id">7</td><td>Status bar</td><td>Data version, engine status, number of demands, share of assumptions and mode.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- 04 -->
+  <section class="g-sec" id="codigos">
+    <h2><span class="mono">04</span><span lang="es">Colores y marcas</span><span lang="en">Colours and marks</span></h2>
+    <h3><span lang="es">Ocupación de enlace (por sentido)</span><span lang="en">Link occupancy (per direction)</span></h3>
+    <div class="escala">
+      <div class="e-ok">&lt; 60 %</div><div class="e-min">60–85 %</div><div class="e-maj">85–100 %</div><div class="e-crit">&gt; 100 %</div>
+    </div>
+    <div class="leyenda">
+      <span><span class="sev sev-ok">OK</span></span>
+      <span><span class="sev sev-min">MIN</span></span>
+      <span><span class="sev sev-maj">MAJ</span></span>
+      <span><span class="sev sev-crit">CRIT</span></span>
+      <span><span class="sev sev-wrn">WRN</span> <span lang="es">aviso informativo del motor</span><span lang="en">informative engine notice</span></span>
+      <span><span class="sev sev-unk">DOWN</span> <span lang="es">elemento caído</span><span lang="en">element down</span></span>
+    </div>
+    <p class="nota" lang="es">Severidades según ITU-T X.733, como en un NOC. Siempre van con texto, nunca solo con color. El grosor del enlace en el mapa indica su capacidad. Por encima del 85 % se genera además una alarma de umbral de operación.</p>
+    <p class="nota" lang="en">Severities follow ITU-T X.733, as in a NOC. They always carry text, never colour alone. Link thickness on the map shows capacity. Above 85 % an operating-threshold alarm is also raised.</p>
+    <h3><span lang="es">Tipo de dato (borde izquierdo)</span><span lang="en">Data type (left border)</span></h3>
+    <div class="g-tabla"><table class="tabla"><tbody lang="es">
+      <tr><td class="dato-doc"><span class="marca doc">DOC</span> documento</td><td>Sale de un entregable del equipo, con documento y sección. Manda la memoria conjunta v7; lo tomado de un documento anterior se marca como tal.</td></tr>
+      <tr><td class="dato-sup"><span class="marca sup">SUP</span> supuesto</td><td>No sale de ningún documento; está pendiente de validar por el equipo y lleva su justificación.</td></tr>
+      <tr><td class="dato-calc"><span class="marca calc">CALC</span> calculado</td><td>Lo calcula el motor, con la fórmula a la vista.</td></tr>
+    </tbody><tbody lang="en">
+      <tr><td class="dato-doc"><span class="marca doc">DOC</span> document</td><td>Comes from a team deliverable, with document and section. The joint v7 report prevails; values from an earlier document are marked as such.</td></tr>
+      <tr><td class="dato-sup"><span class="marca sup">SUP</span> assumption</td><td>Not in any document; pending validation by the team, with its justification.</td></tr>
+      <tr><td class="dato-calc"><span class="marca calc">CALC</span> computed</td><td>Computed by the engine, with the formula shown.</td></tr>
+    </tbody></table></div>
+    <p class="nota" lang="es">Iconos de nodo: DC = cuadrado, Edge = rombo, metro = hexágono, agregación = círculo, sitio = triángulo, IX = estrella.</p>
+    <p class="nota" lang="en">Node icons: DC = square, Edge = diamond, metro = hexagon, aggregation = circle, site = triangle, IX = star.</p>
+  </section>
+
+  <!-- 05 -->
+  <section class="g-sec" id="reglas">
+    <h2><span class="mono">05</span><span lang="es">Reglas de cálculo de la v7 que aplica el motor</span><span lang="en">v7 calculation rules applied by the engine</span></h2>
+    <p lang="es">Las reglas son las que escribe la memoria conjunta v7 (§2.7.2, §6.4.3, §6.7.3 y anexo A11). El motor no añade criterio propio salvo donde se indica como supuesto.</p>
+    <p lang="en">The rules are those written in the joint v7 report (§2.7.2, §6.4.3, §6.7.3 and annex A11). The engine adds no criterion of its own except where marked as an assumption.</p>
+
+    <div class="regla"><span class="mono">R1</span><div>
+      <h4><span lang="es">Reparto entre los tres DC</span><span lang="en">Split among the three DCs</span></h4>
+      <p lang="es">La demanda de cada zona va un tercio a cada DC. Si cae un DC, su tercio se reparte a partes iguales entre los dos que quedan: cada uno recibe la mitad.</p>
+      <p lang="en">Each zone's demand goes one third to each DC. If a DC fails, its third is split equally between the two survivors: each receives half.</p>
+      <div class="formula" data-tex="D_{z\to k}=\tfrac{1}{3}\,D_z\qquad\text{N-1}:\;D_{z\to k}=\tfrac{1}{3}D_z+\tfrac{1}{6}D_z=\tfrac{1}{2}\,D_z"></div>
+    </div></div>
+
+    <div class="regla"><span class="mono">R2</span><div>
+      <h4><span lang="es">Cabecera de transporte</span><span lang="en">Transport overhead</span></h4>
+      <p lang="es">Se aplica una sola vez. La voz VoNR lleva más cabecera por su paquete pequeño (144 B sobre 100 B de carga útil). La demanda y lo servido se muestran en Gbit/s IP; las cargas de enlace, en Gbit/s físicos (con cabecera).</p>
+      <p lang="en">Applied once. VoNR voice carries more overhead because of its small packet (144 B over 100 B of payload). Demand and served traffic are shown in IP Gbit/s; link loads in physical Gbit/s (with overhead).</p>
+      <div class="formula" data-tex="F = 1{,}10\cdot R_{\text{resto}} + 1{,}44\cdot Q_{\text{VoNR}}"></div>
+    </div></div>
+
+    <div class="regla"><span class="mono">R3</span><div>
+      <h4><span lang="es">Criterio de dimensionado</span><span lang="en">Sizing criterion</span></h4>
+      <p lang="es">Ocupación máxima del 70 % en hora cargada normal y del 90 % en pico (P2: Internet fijo y móvil ×2) o en fallo. Es el criterio con el que están dimensionadas las capacidades de la red; el motor no lo impone, mide la ocupación resultante de cada caso con la escala del apartado 04.</p>
+      <p lang="en">Maximum occupancy of 70 % at normal busy hour and 90 % at peak (P2: fixed and mobile Internet ×2) or under failure. It is the criterion the network capacities were sized with; the engine does not enforce it, it measures the resulting occupancy of each case on the scale of section 04.</p>
+      <div class="formula" data-tex="C \ge \max\!\left(\frac{F_{BH}}{u_n},\;\frac{F_{P2}}{u_p}\right),\qquad u_n=0{,}70,\;\; u_p=0{,}90,\qquad \rho_\ell=\frac{L_\ell}{C_\ell}"></div>
+    </div></div>
+
+    <div class="regla"><span class="mono">R4</span><div>
+      <h4><span lang="es">Rutas de mínimo número de saltos</span><span lang="en">Minimum-hop routes</span></h4>
+      <p lang="es">Cada demanda sigue los caminos de menos saltos hasta su destino. Si hay empate, se reparte a partes iguales entre todos los caminos mínimos (el «+» de las tablas A11.1–A11.3). No se transita por DC, Edge, sitios ni IX.</p>
+      <p lang="en">Each demand follows the fewest-hop paths to its destination. On a tie it is split equally among all minimum paths (the "+" in tables A11.1–A11.3). No transit through DCs, Edges, sites or IXs.</p>
+      <div class="formula" data-tex="L_\ell=\sum_{d}\;\sum_{p\in\mathcal{P}_d}\frac{F_d}{|\mathcal{P}_d|}\,\mathbf{1}[\ell\in p],\qquad \mathcal{P}_d=\text{caminos de m\'inimos saltos}"></div>
+    </div></div>
+
+    <div class="regla"><span class="mono">R5</span><div>
+      <h4><span lang="es">Corte de un tramo del anillo: FRR facility, sin reoptimizar</span><span lang="en">Ring span cut: facility FRR, no re-optimisation</span></h4>
+      <p lang="es">Se calculan las rutas como si el tramo siguiera vivo y cada paso por él se sustituye por el arco opuesto del anillo (RSVP-TE facility backup). No se cancelan idas y vueltas, como en A11.7. Una caída de acometida se resuelve con la otra acometida del DC por R4; una caída de nodo metro deja sin servicio solo lo que se vuelve inalcanzable.</p>
+      <p lang="en">Routes are computed as if the span were still up and every use of it is replaced by the opposite arc of the ring (RSVP-TE facility backup). Back-and-forth segments are not cancelled, as in A11.7. A DC feed failure is solved with the DC's other feed via R4; a metro node failure only drops what becomes unreachable.</p>
+      <div class="formula" data-tex="\text{C}\!\to\!\text{N}\;\;\Longrightarrow\;\;\text{C}\!\to\!\text{S}\!\to\!\text{E}\!\to\!\text{N}"></div>
+    </div></div>
+
+    <div class="regla"><span class="mono">R6</span><div>
+      <h4><span lang="es">Respaldo MEC entre Edges</span><span lang="en">MEC backup between Edges</span></h4>
+      <p lang="es">Si cae un Edge, sus servicios pasan al Edge de respaldo (Centro → Este; Este → Centro; Sur → Centro) por rutas de mínimos saltos (Centro → Este va al 50 % por C–N–E y C–S–E). El estadio se transporta al 60 %; el resto de servicios (cámaras, V2X, hospital, red privada industrial) al 100 %. Lo que no se transporta queda como demanda no servida.</p>
+      <p lang="en">If an Edge fails, its services move to the backup Edge (Centre → East; East → Centre; South → Centre) over minimum-hop routes (Centre → East goes 50 % via C–N–E and 50 % via C–S–E). The stadium is carried at 60 %; the other services (cameras, V2X, hospital, industrial private network) at 100 %. What is not carried counts as unserved demand.</p>
+      <div class="formula" data-tex="F^{\text{resp}}_s=f_s\cdot F_s,\qquad f_s=0{,}6\;(\text{estadio}),\quad f_s=1\;(\text{resto})"></div>
+      <p class="nota" lang="es"><span class="marca sup">SUP</span> Dos fallos a la vez (N-2) quedan fuera de la v7: si el arco opuesto tampoco existe se reoptimiza, y si cae también el Edge de respaldo el servicio va al DC más cercano.</p>
+      <p class="nota" lang="en"><span class="marca sup">SUP</span> Two simultaneous faults (N-2) are outside v7: if the opposite arc is also down the route is re-optimised, and if the backup Edge is also down the service goes to the nearest DC.</p>
+    </div></div>
+  </section>
+
+  <!-- 06 -->
+  <section class="g-sec" id="verif">
+    <h2><span class="mono">06</span><span lang="es">Cómo se comprueba</span><span lang="en">How it is checked</span></h2>
+    <p lang="es">El motor se contrasta con la matriz de transporte de la v7 (anexo A11.4–A11.6): 10 enlaces (4 tramos del anillo y 6 acometidas a los DC), en los dos sentidos, en 22 escenarios (normal, pico P2 y 20 fallos N-1: 4 cortes de tramo, 4 nodos metro, 6 acometidas, 3 DC y 3 Edge). Tolerancia: 1 Gbit/s, por el redondeo de las tablas.</p>
+    <p lang="en">The engine is checked against the v7 transport matrix (annex A11.4–A11.6): 10 links (4 ring spans and 6 DC feeds), both directions, in 22 scenarios (normal, P2 peak and 20 N-1 faults: 4 span cuts, 4 metro nodes, 6 feeds, 3 DCs and 3 Edges). Tolerance: 1 Gbit/s, due to rounding in the tables.</p>
+    <div class="verif">
+      <div><span class="rot"><span lang="es">Cargas A11</span><span lang="en">A11 loads</span></span><span class="v">220 / 220</span></div>
+      <div><span class="rot"><span lang="es">Escenarios</span><span lang="en">Scenarios</span></span><span class="v">22</span></div>
+      <div><span class="rot"><span lang="es">Demanda total v7</span><span lang="en">Total v7 demand</span></span><span class="v"><span lang="es">3448,23</span><span lang="en">3448.23</span></span> <span class="tx2 mono">Gbit/s DL</span></div>
+    </div>
+    <p class="nota" lang="es">Los tests son scripts de JavaScript sin dependencias, en el repositorio del simulador: <span class="mono">comparar_v7.js</span> y <span class="mono">test_v7.js</span> (matriz A11 y reglas R1–R6), <span class="mono">test_motor.js</span> (motor en general) y <span class="mono">test_demanda.js</span> (la cadena de demanda reproduce la Tabla A11.1 y la Tabla 3.4.1 de la v7).</p>
+    <p class="nota" lang="en">The tests are dependency-free JavaScript scripts in the simulator repository: <span class="mono">comparar_v7.js</span> and <span class="mono">test_v7.js</span> (A11 matrix and rules R1–R6), <span class="mono">test_motor.js</span> (engine in general) and <span class="mono">test_demanda.js</span> (the demand chain reproduces Table A11.1 and Table 3.4.1 of v7).</p>
+  </section>
+
+  <!-- 07 -->
+  <section class="g-sec" id="atajos">
+    <h2><span class="mono">07</span><span lang="es">Atajos de teclado</span><span lang="en">Keyboard shortcuts</span></h2>
+    <div class="g-tabla"><table class="tabla"><tbody lang="es">
+      <tr><td><kbd>F</kbd></td><td>Simula o quita el fallo del nodo o enlace seleccionado (en LABORATORIO).</td></tr>
+      <tr><td><kbd>L</kbd></td><td>Abre o cierra el carril de capas con sus nombres.</td></tr>
+      <tr><td><kbd>/</kbd></td><td>Va al buscador de elementos; <kbd>Enter</kbd> selecciona.</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Cierra el carril de capas o la ficha.</td></tr>
+    </tbody><tbody lang="en">
+      <tr><td><kbd>F</kbd></td><td>Fails or restores the selected node or link (in LABORATORY).</td></tr>
+      <tr><td><kbd>L</kbd></td><td>Opens or closes the layer rail with names.</td></tr>
+      <tr><td><kbd>/</kbd></td><td>Jumps to element search; <kbd>Enter</kbd> selects.</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Closes the layer rail or the sheet.</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <!-- 08 -->
+  <section class="g-sec" id="limites">
+    <h2><span class="mono">08</span><span lang="es">Límites conocidos</span><span lang="en">Known limits</span></h2>
+    <ul lang="es">
+      <li>Una sola hora cargada coincidente en la referencia. Los demás modelos de tráfico (no coincidente, pendular, tipos de día) son una aportación del simulador y van marcados como supuesto.</li>
+      <li>El acceso radio y fijo no se modela emplazamiento a emplazamiento: cada municipio se agrega en un nodo.</li>
+      <li>La demanda de cada área se reparte entre sus municipios según población (ECP 2025): supuesto.</li>
+      <li>Ningún documento dimensiona los enlaces de agregación, la salida a Internet ni la interconexión IMS; sus capacidades son supuestos.</li>
+      <li>Sin ubicación física concreta de DC, Edge, nodos metro ni punto de peering en los documentos: las coordenadas del mapa son aproximadas.</li>
+      <li>Huecos del diseño que el simulador no rellena: sincronización (PTP/SyncE), división RAN y fronthaul, varios equipos sin modelo.</li>
+      <li>Algunos casos del día a día solo se explican (tormenta de señalización, pérdida de sincronización, fallo de HSS/UDM): un grafo de capacidades no los captura.</li>
+      <li>Los resultados de fallo son un ensayo <b>simulado</b>; ningún equipo de la red se ha probado.</li>
+    </ul>
+    <ul lang="en">
+      <li>A single coincident busy hour in the reference. The other traffic models (non-coincident, commuting, day types) are a contribution of the simulator and are marked as assumptions.</li>
+      <li>Radio and fixed access are not modelled site by site: each municipality is aggregated into one node.</li>
+      <li>Each area's demand is split among its municipalities by population (ECP 2025): assumption.</li>
+      <li>No document sizes the aggregation links, the Internet exit or the IMS interconnection; their capacities are assumptions.</li>
+      <li>No concrete physical location of DCs, Edges, metro nodes or the peering point in the documents: map coordinates are approximate.</li>
+      <li>Design gaps the simulator does not fill: synchronisation (PTP/SyncE), RAN split and fronthaul, several elements without a model.</li>
+      <li>Some day-to-day cases are only explained (signalling storm, loss of sync, HSS/UDM failure): a capacity graph cannot capture them.</li>
+      <li>Failure results are a <b>simulated</b> test; no network equipment has been tested.</li>
+    </ul>
+  </section>
+
+  <!-- 09 -->
+  <section class="g-sec" id="ia">
+    <h2><span class="mono">09</span><span lang="es">Uso de IA</span><span lang="en">Use of AI</span></h2>
+    <div class="ia" lang="es">
+      <p>El simulador se ha programado con <b>Claude Code</b> (asistente de programación de Anthropic). Resumen de la declaración de uso de IA:</p>
+      <ul>
+        <li><b>Hizo la IA:</b> extraer datos de las memorias del equipo a JSON (inventario, cadena de cálculo, contradicciones y huecos), escribir el código del motor y de la interfaz, y los tests que lo comparan con la memoria.</li>
+        <li><b>Hizo y decidió el equipo:</b> el diseño de la red, las memorias y sus cálculos, los criterios del simulador (manda la v7; lo que no está en un documento se marca como supuesto; la herramienta no propone arreglos) y la revisión de cada fase antes de pasar a la siguiente.</li>
+        <li><b>Cómo se verifica:</b> 220 de 220 cargas de la matriz A11 de la v7 reproducidas, más pruebas de reglas y de la cadena de demanda.</li>
+        <li><b>Límites:</b> lo que no cubre un test (textos de las fichas, lectura de fuentes primarias) puede tener errores; las contradicciones entre grupos se muestran, no se resuelven.</li>
+      </ul>
+      <p class="nota">Esta declaración cubre solo el simulador.</p>
+    </div>
+    <div class="ia" lang="en">
+      <p>The simulator was programmed with <b>Claude Code</b> (Anthropic's coding assistant). Summary of the AI-use statement:</p>
+      <ul>
+        <li><b>Done by the AI:</b> extracting data from the team's reports into JSON (inventory, calculation chain, contradictions and gaps), writing the engine and interface code, and the tests that compare it with the report.</li>
+        <li><b>Done and decided by the team:</b> the network design, the reports and their calculations, the simulator criteria (v7 prevails; anything not in a document is marked as an assumption; the tool does not propose fixes) and the review of each phase before moving to the next.</li>
+        <li><b>How it is verified:</b> 220 of 220 loads of the v7 A11 matrix reproduced, plus tests of the rules and of the demand chain.</li>
+        <li><b>Limits:</b> what no test covers (sheet texts, reading of primary sources) may contain errors; contradictions between groups are shown, not resolved.</li>
+      </ul>
+      <p class="nota">This statement covers the simulator only.</p>
+    </div>
+  </section>
+
+  <p class="pie mono"><span lang="es">RED-MAD 2031 · SCOM + ARCO · grupo 3.2 · uso académico</span><span lang="en">RED-MAD 2031 · SCOM + ARCO · group 3.2 · academic use</span></p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  var lang = leer("noc.lang") === "en" ? "en" : "es";
+  var TIT = { es: "RED-MAD 2031 · Guía", en: "RED-MAD 2031 · Guide" };
+
+  function pintarTex() {
+    if (!window.katex) return;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-tex]"), function (el) {
+      var tex = el.getAttribute("data-tex");
+      if (lang === "en") tex = tex.replace(/\{,\}/g, ".").replace("caminos de m\\'inimos saltos", "minimum-hop paths")
+        .replace("\\text{estadio}", "\\text{stadium}").replace("\\text{resto}", "\\text{other}");
+      try { katex.render(tex, el, { displayMode: true, throwOnError: false }); } catch (e) { el.textContent = tex; }
+    });
+  }
+  function aplicar() {
+    document.documentElement.lang = lang;
+    document.body.classList.toggle("l-es", lang === "es");
+    document.body.classList.toggle("l-en", lang === "en");
+    document.title = TIT[lang];
+    Array.prototype.forEach.call(document.querySelectorAll(".seg [data-lang]"), function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang));
+    });
+    pintarTex();
+  }
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest("[data-lang]");
+    if (!b || b.tagName !== "BUTTON") return;
+    lang = b.getAttribute("data-lang") === "en" ? "en" : "es";
+    guardar("noc.lang", lang);
+    aplicar();
+  });
+  aplicar();
+})();
+</script>
+</body>
+</html>
