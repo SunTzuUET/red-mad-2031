@@ -1,8 +1,8 @@
 // Generado por fusionar.py — no editar a mano. Editar datos/*.json y volver a fusionar.
 var RED = {
  "meta": {
-  "version": "2026-11-19",
-  "fecha": "2026-11-19",
+  "version": "2026-11-23",
+  "fecha": "2026-11-23",
   "fuentes": [
    "datos/zonas.json",
    "datos/red_fisica.json",
@@ -8881,6 +8881,7 @@ var RED = {
    "id": "E-PICO-P2",
    "nombre": "Pico de congestión P2 (2 × Internet fijo y móvil)",
    "hora": 21,
+   "hora_cargada": true,
    "descripcion": "Pico de 3.2 (H-E5) y fallo 'pico de tráfico' de SCOM10 (F10): se duplica Internet fijo y móvil en las cuatro zonas; voz y sensores no se duplican. Sin fallos.",
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 (P2) y Tabla R2; Semana 7/Teams (descargado 2026-11-08)/3.1-S5_Diego_semana5_QoS_latencia_resiliencia.pdf §5.6 F10",
    "supuesto": true,
@@ -8907,6 +8908,7 @@ var RED = {
    "id": "E-PICO-PM",
    "nombre": "Pico de congestión PM (2 × Internet móvil)",
    "hora": 21,
+   "hora_cargada": true,
    "descripcion": "Variante de pico de 3.2 que duplica solo el móvil.",
    "fuente": "Semana 7/Entrega 3.2 (2026-11-13)/G32_Semana7_3.2_Completo_v08-11.docx §5.4 (PM)",
    "supuesto": true,

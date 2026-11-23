@@ -1,7 +1,7 @@
 // Generado por fusionar.py (escribir_arquitectura) — no editar a mano.
 // Fuente: memoria conjunta v7 (datos/f0/conjunta.json) + inventarios F0 de grupo.
 var ARQ = {
- "generado": "2026-11-19",
+ "generado": "2026-11-23",
  "referencia": {
   "doc": "Memoria conjunta v7",
   "titulo": "High-Capacity Converged Network for the Madrid Metropolitan Region (SCOM + ARCO, M11G3)",

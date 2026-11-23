@@ -1,5 +1,6 @@
 // simple.js — app mínima "Red Madrid 2031" (CONTRATO_UI Revisión 15). Portada del simulador; la app completa sigue en completo.html.
-// Tres vistas: Red (mapa por partes), Simular (24 h + cortar enlace), Cambiar (año, demanda, evento, capacidad).
+// Cinco vistas: Red (mapa por partes), Simular (24 h + cortar enlace), Cambiar (año, demanda, evento, capacidad),
+// SCOM y ARCO (requisitos de cada asignatura con su comprobación en el motor: requisitos.js; el proyecto es conjunto).
 // Solo usa red.js, emplazamientos_datos.js, modelos.js, modelo_demanda.js y motor.js (sin tocarlos). En node exporta el núcleo (test_simple.js).
 (function (raiz) {
   "use strict";
@@ -72,7 +73,7 @@
   raiz.Simple = nucleo;
 
   // ---------- interfaz ----------
-  var RED = raiz.RED, Motor = raiz.Motor, EMPL = raiz.EMPL || { sitios: [] };
+  var RED = raiz.RED, Motor = raiz.Motor, EMPL = raiz.EMPL || { sitios: [] }, REQ = raiz.Requisitos;
   var $ = function (s) { return document.querySelector(s); };
   var lang = "es";
   try { lang = localStorage.getItem("simple.lang") === "en" ? "en" : "es"; } catch (x) { /* sin almacenamiento */ }
@@ -90,7 +91,15 @@
     i_simular: ["Un día de 24 h con los perfiles horarios. Pulsa «Cortar enlace» y elige un enlace para ver el reencaminado.",
       "A 24-hour day with the hourly profiles. Press “Cut link” and pick a link to see the rerouting."],
     i_cambiar: ["Cambia la demanda o la capacidad de un enlace: el mapa se recalcula al instante.",
-      "Change demand or a link's capacity: the map recalculates instantly."]
+      "Change demand or a link's capacity: the map recalculates instantly."],
+    i_scom: ["Requisitos SCOM (acceso, radio, transporte óptico) comprobados en el simulador. Clic en uno para verlo en el mapa. Gris = solo en la memoria.",
+      "SCOM requirements (access, radio, optical transport) checked in the simulator. Click one to see it on the map. Grey = report only."],
+    i_arco: ["Requisitos ARCO (arquitectura, núcleo, servicios) comprobados en el simulador. Clic en uno para verlo en el mapa. Gris = solo en la memoria.",
+      "ARCO requirements (architecture, core, services) checked in the simulator. Click one to see it on the map. Grey = report only."],
+    scom: ["SCOM", "SCOM"], arco: ["ARCO", "ARCO"], calculando: ["Calculando…", "Computing…"],
+    conjunto: ["Proyecto conjunto: la otra pestaña completa esta.", "Joint project: the other tab completes this one."],
+    mejoras: ["Mejoras propuestas (no v7)", "Proposed improvements (not v7)"], con_mejoras: ["con mejoras", "with improvements"],
+    cumple: ["cumple", "met"], justo: ["justo", "tight"], falla: ["falla", "fails"], memoria: ["en memoria", "in report"]
   };
   var TIPO = { wdm: ["Anillo WDM", "WDM ring"], backhaul: ["Backhaul", "Backhaul"], mpls: ["Acometida MPLS", "MPLS uplink"], ix: ["Interconexión", "Interconnect"],
     sat: ["Satélite", "Satellite"], acceso: ["Acceso", "Access"], core: ["Centro de datos", "Data centre"], metro: ["Nodo metro", "Metro node"],
@@ -121,6 +130,8 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var NODO = {}; RED.nodos.forEach(function (n) { NODO[n.id] = n; });
   var ENL = {}; RED.enlaces.forEach(function (l) { ENL[l.id] = l; });
+  var TODAS = {}; (REQ ? REQ.PROPUESTAS : []).forEach(function (p) { TODAS[p.id] = 1; });
+  if (REQ) REQ.redCon(RED, TODAS).enlaces.forEach(function (l) { if (!ENL[l.id]) ENL[l.id] = l; });   // enlaces propuestos (no v7)
   var SITIO = {}; (EMPL.sitios || []).forEach(function (s) { SITIO[s.id] = s; });
   function corto(id) {
     if (CORTO[id]) return CORTO[id];
@@ -158,17 +169,22 @@
 
   // ---------- estado ----------
   var EVENTOS = null;
-  var S = { vista: "red", parte: "todo", sel: null, cortando: false, play: null };
+  var S = { vista: "red", parte: "todo", sel: null, cortando: false, play: null, mejoras: {}, req: null, evals: {} };
+  function esReq() { return S.vista === "scom" || S.vista === "arco"; }
+  function hayMejoras() { return Object.keys(S.mejoras).some(function (k) { return S.mejoras[k]; }); }
+  // RED que se calcula: capacidades cambiadas + mejoras propuestas activas (copias; red.js no se toca)
+  function redVista() { var r = redCon(RED, E.cap); return REQ && hayMejoras() ? REQ.redCon(r, S.mejoras) : r; }
   var E = estadoRef(); E.horaSim = 21;
   var R = null, cacheR = {};
   function estadoCalc() {
     return { anio: E.anio, crec: E.crec, evento: E.evento, cap: E.cap,
       fallos: S.vista === "simular" ? E.fallos : [], hora: S.vista === "simular" ? E.horaSim : null };
   }
+  function opcVista() { return esReq() ? (S.req && S.req.ver && S.req.ver.opc) || OPC_REF : opciones(Motor, estadoCalc()); }
   function recalcular() {
-    var e = estadoCalc(), k = JSON.stringify(e);
+    var o = opcVista(), k = JSON.stringify([o, esReq() ? {} : E.cap, S.mejoras]);
     if (!cacheR[k]) {
-      try { cacheR[k] = calcular(Motor, RED, e); } catch (x) { console.error("Motor.calcular", x); return; }
+      try { cacheR[k] = Motor.calcular(esReq() ? (REQ && hayMejoras() ? REQ.redCon(RED, S.mejoras) : RED) : redVista(), o); } catch (x) { console.error("Motor.calcular", x); return; }
       var ks = Object.keys(cacheR); if (ks.length > 80) delete cacheR[ks[0]];
     }
     R = cacheR[k];
@@ -206,7 +222,7 @@
   var capa = L.layerGroup().addTo(mapa);
   var dib = { enl: {}, nod: {}, sit: {} }, halo = null;
 
-  function parteVisible() { return S.vista === "red" ? S.parte : "todo"; }
+  function parteVisible() { return S.vista === "red" ? S.parte : (esReq() && S.req ? S.req.parte : "todo"); }
   function construir() {
     capa.clearLayers(); dib = { enl: {}, nod: {}, sit: {} }; halo = null;
     var parte = parteVisible(), todo = parte === "todo", nodosVis = {};
@@ -223,7 +239,7 @@
       m.addTo(capa); dib.sit[s.id] = m;
     });
     // enlaces
-    RED.enlaces.forEach(function (l) {
+    redVista().enlaces.forEach(function (l) {
       if (!todo && !parteEnlace(RED, l)[parte]) return;
       var ll = [POS[l.a], POS[l.b]];
       var linea = L.polyline(ll, { pane: "enlaces", weight: 2, color: COL.nulo, opacity: 0.95, lineCap: "round", interactive: false });
@@ -259,12 +275,12 @@
   function colorOcup(pct, conCap) { return conCap ? COL[nivel(pct)] : COL.nulo; }
   function pintar() {
     if (!R) return;
-    var cortados = {}; (estadoCalc().fallos || []).forEach(function (id) { cortados[id] = 1; });
+    var cortados = {}; ((opcVista().caso || {}).fallo || []).forEach(function (id) { cortados[id] = 1; });
     Object.keys(dib.enl).forEach(function (id) {
       var r = R.enlaces[id] || {}, pct = (r.ocupacion || 0) * 100, cap = r.capacidad_gbps;
       var w = 1.5 + 6.5 * Math.sqrt(Math.min(1, (r.carga_gbps || 0) / CARGA_REF));
       if (r.caido || cortados[id]) dib.enl[id].setStyle({ color: COL.rojo, weight: 2, dashArray: "3 6", opacity: 0.9 });
-      else dib.enl[id].setStyle({ color: colorOcup(pct, cap), weight: w, dashArray: null, opacity: 0.95 });
+      else dib.enl[id].setStyle({ color: colorOcup(pct, cap), weight: w, dashArray: ENL[id] && ENL[id].propuesta ? "7 5" : null, opacity: 0.95 });
     });
     var todo = parteVisible() === "todo", acc = (R.acceso && R.acceso.sitios) || {};
     Object.keys(dib.sit).forEach(function (id) {
@@ -272,16 +288,18 @@
       var a = acc[id];
       dib.sit[id].setStyle({ fillColor: a ? (a.caido ? COL.rojo : COL[nivel(a.util_pct || 0)]) : COL.nulo });
     });
-    pintarEstado();
+    pintarEstado(); pintarFoco();
     if (S.sel) pintarTarjeta();
     if (S.vista === "cambiar") actualizarPanel();
     if (S.vista === "simular") pintarCurva();
   }
   function pintarEstado() {
-    var rs = R.resumen || {}, maxId = rs.enlace_max, pct = (rs.max_ocupacion || 0) * 100;
+    // enlace más cargado sin las UNI L2VPN: sus 10 GbE son cota superior de la v7 §6.9, no demanda medida
+    var rs = R.resumen || {}, mx = REQ ? REQ.maxEnl(redVista(), R) : { id: rs.enlace_max, pct: (rs.max_ocupacion || 0) * 100 }, maxId = mx.id, pct = mx.pct;
     var h = "<span><b>" + fmt(rs.pct_servida, rs.pct_servida < 100 ? 1 : 0) + " %</b> " + t("servido") + "</span>";
     if (rs.demandas_afectadas) h += "<span><b>" + rs.demandas_afectadas + "</b> " + t("afect") + "</span>";
     if (maxId) h += '<span>' + t("max") + ' <a data-max="' + esc(maxId) + '" title="' + esc(nombreEnlace(maxId)) + '"><b>' + fmt(pct, 1) + " %</b></a></span>";
+    if (hayMejoras()) h += '<span class="marca-cambio lab">' + esc(t("con_mejoras")) + "</span>";
     $(".estado-txt").innerHTML = h;
     var m = $(".estado-txt a[data-max]");
     if (m) m.onclick = function () { var c = mapa.latLngToContainerPoint(L.latLngBounds([POS[ENL[maxId].a], POS[ENL[maxId].b]]).getCenter()); abrirTarjeta("enlace", maxId, c); };
@@ -289,6 +307,18 @@
   function pintarLeyenda() {
     $(".leyenda").innerHTML = '<span><i style="background:' + COL.ok + '"></i>&lt; 70</span><span><i style="background:' + COL.amb +
       '"></i>70–90</span><span><i style="background:' + COL.rojo + '"></i>&gt; 90 %</span>';
+  }
+
+  // Halo sobre lo que mira el requisito elegido (pestañas SCOM/ARCO)
+  var focoCapa = L.layerGroup().addTo(mapa);
+  function pintarFoco() {
+    focoCapa.clearLayers();
+    if (!esReq() || !S.req) return;
+    (S.req.ver.foco || []).forEach(function (id) {
+      if (!id) return;
+      if (ENL[id] && POS[ENL[id].a]) L.polyline([POS[ENL[id].a], POS[ENL[id].b]], { pane: "enlaces", color: "#fff", weight: 14, opacity: 0.22, interactive: false }).addTo(focoCapa);
+      else if (POS[id]) L.circleMarker(POS[id], { pane: "nodos", radius: 15, color: "#fff", weight: 2, opacity: 0.7, fill: false, interactive: false }).addTo(focoCapa);
+    });
   }
 
   // ---------- selección y tarjeta ----------
@@ -354,10 +384,10 @@
     var e = estadoCalc(), o = opciones(Motor, { anio: e.anio, crec: e.crec, evento: e.evento, cap: e.cap, fallos: [], hora: 0 });
     var caso = { caso: o.caso }, op = { paso_min: 60, fallos: E.fallos.slice() };
     if (o.modelo_usuario) op.modelo_usuario = o.modelo_usuario;
-    var k = JSON.stringify([caso, op, E.cap]);
+    var k = JSON.stringify([caso, op, E.cap, S.mejoras]);
     if (k === curvaKey) { pintarCurva(); return; }
     curvaKey = k;
-    Motor.serieAsync(redCon(RED, E.cap), caso, op).then(function (s) {
+    Motor.serieAsync(redVista(), caso, op).then(function (s) {
       if (k !== curvaKey) return;
       curva = s.pasos.map(function (p) { return p.resumen.ocup_max_pct; });
       pintarCurva();
@@ -444,6 +474,52 @@
     el.querySelector("#c-ref").disabled = ref;
   }
 
+  // ---------- SCOM / ARCO: requisitos con su semáforo ----------
+  var SEM = { ok: "cumple", amb: "justo", rojo: "falla", gris: "memoria" };
+  function txt(o) { return o ? o[lang === "en" ? "en" : "es"] : ""; }
+  function pintarReq() {
+    var el = $(".panel"), asig = S.vista, k = asig + JSON.stringify(S.mejoras);
+    if (!REQ) { el.innerHTML = ""; return; }
+    var lista = S.evals[k];
+    if (!lista) {
+      el.innerHTML = '<div class="nada">' + esc(t("calculando")) + "</div>";
+      setTimeout(function () {
+        if (S.vista !== asig) return;
+        try { S.evals[k] = REQ.evaluar(Motor, hayMejoras() ? REQ.redCon(RED, S.mejoras) : RED, asig); } catch (x) { console.error("Requisitos", x); return; }
+        if (S.req) S.req = S.evals[k].filter(function (q) { return q.id === S.req.id; })[0] || null;
+        pintarReq(); if (S.req) { construir(); recalcular(); }
+      }, 30);
+      return;
+    }
+    var n = { ok: 0, amb: 0, rojo: 0, gris: 0 }; lista.forEach(function (q) { n[q.estado]++; });
+    var h = '<div class="req-cab">' + ["ok", "amb", "rojo", "gris"].map(function (s) {
+      return '<span><i class="sem ' + s + '"></i>' + n[s] + " " + esc(t(SEM[s])) + "</span>"; }).join("") + "</div>";
+    h += lista.map(function (q) {
+      var sel = S.req && S.req.id === q.id;
+      return '<button class="req' + (q.estado === "gris" ? " gris" : "") + '" data-id="' + q.id + '" aria-pressed="' + sel + '">' +
+        '<i class="sem ' + q.estado + '"></i><span class="req-tx"><b>' + q.id + "</b> " + esc(txt(q.nombre)) +
+        '<span class="req-c mono">' + esc(lang === "en" ? txt(q.cifra) : txt(q.cifra).replace(/(\d)\.(\d)/g, "$1,$2")) + "</span>" +
+        (sel && q.nota ? '<span class="req-n">' + esc(txt(q.nota)) + "</span>" : "") +
+        (sel && q.v7 ? '<span class="req-n">v7 §7.3: ' + q.v7 + "</span>" : "") + "</span></button>";
+    }).join("");
+    h += '<div class="nada req-pie">' + esc(t("conjunto")) + "</div>";
+    h += "<h4>" + esc(t("mejoras")) + "</h4>" + REQ.PROPUESTAS.map(function (p) {
+      return '<label class="mej" title="' + esc(txt(p.porque)) + '"><span>' + esc(lang === "en" ? p.en : p.es) +
+        ' <small class="mono">' + p.req.join(" ") + '</small></span><input type="checkbox" data-mej="' + p.id + '"' + (S.mejoras[p.id] ? " checked" : "") + "></label>";
+    }).join("");
+    el.innerHTML = h;
+    el.querySelectorAll("button.req").forEach(function (b) {
+      b.onclick = function () {
+        var id = b.getAttribute("data-id");
+        S.req = S.req && S.req.id === id ? null : lista.filter(function (q) { return q.id === id; })[0];
+        cerrarTarjeta(); pintarReq(); construir(); encuadrar(); recalcular();
+      };
+    });
+    el.querySelectorAll("input[data-mej]").forEach(function (c) {
+      c.onchange = function () { S.mejoras[c.getAttribute("data-mej")] = c.checked; pintarReq(); construir(); recalcular(); };
+    });
+  }
+
   // ---------- vistas, partes, idioma ----------
   function pintarChips() {
     var c = $(".chips");
@@ -458,8 +534,12 @@
     S.vista = v;
     try { history.replaceState(null, "", "#" + v); } catch (x) { /* nada */ }
     document.querySelectorAll(".tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-vista") === v ? "true" : "false"); });
-    document.body.classList.toggle("con-panel", v === "cambiar");
-    $(".panel").hidden = v !== "cambiar";
+    if (v !== S.vista0) S.req = null;
+    S.vista0 = v;
+    var conPanel = v === "cambiar" || esReq();
+    document.body.classList.toggle("con-panel", conPanel);
+    $(".panel").hidden = !conPanel;
+    if (esReq()) pintarReq(); else if (v === "cambiar") pintarPanel();
     $(".reloj").hidden = v !== "simular";
     $(".curva").hidden = v !== "simular";
     if (v !== "simular") { if (S.play) $(".play").click(); S.cortando = false; $(".cortar").setAttribute("aria-pressed", "false"); document.body.classList.remove("cortando"); }
@@ -476,6 +556,7 @@
     document.querySelectorAll(".idioma button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-lang") === l ? "true" : "false"); });
     pintarChips(); pintarLeyenda();
     if (S.vista === "cambiar") pintarPanel();
+    if (esReq()) pintarReq();
     if ($(".info-txt").hidden === false) $(".info-txt").textContent = t("i_" + S.vista);
     if (R) pintar();
   }
@@ -492,10 +573,12 @@
     cortar: function (id) { E.fallos.push(id); recalcular(); pedirCurva(); },
     enlace: function (id) { var c = mapa.latLngToContainerPoint(L.latLngBounds([POS[ENL[id].a], POS[ENL[id].b]]).getCenter()); abrirTarjeta("enlace", id, c); },
     anio: function (a) { E.anio = a; recalcular(); },
-    resultado: function () { return R; }, estado: function () { return E; }
+    resultado: function () { return R; }, estado: function () { return E; },
+    mejora: function (id, on) { S.mejoras[id] = on !== false; if (esReq()) pintarReq(); construir(); recalcular(); },
+    requisito: function (id) { var b = $('.panel button.req[data-id="' + id + '"]'); if (b) b.click(); return !!b; }
   };
 
   ponerIdioma(lang);
   var v0 = (location.hash || "").replace("#", "");
-  ponerVista(v0 === "simular" || v0 === "cambiar" ? v0 : "red");
+  ponerVista(["simular", "cambiar", "scom", "arco"].indexOf(v0) >= 0 ? v0 : "red");
 })(typeof window !== "undefined" ? window : this);

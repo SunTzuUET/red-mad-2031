@@ -1216,7 +1216,7 @@ var Motor = (function () {
           var sd = c.sds[k];
           ofertaL[id][sd] += d.dl_gbps * d.h * c.peso; ofertaL[id][sd === "ab" ? "ba" : "ab"] += d.ul_gbps * d.h * c.peso;
         });
-        c.ruta.forEach(function (id) { ofertaN[id] += d.dl_gbps * d.h * c.peso; });
+        c.ruta.forEach(function (id) { ofertaN[id] += (G.nodos[id].tipo === "edge" ? d.dl_gbps + d.ul_gbps : d.dl_gbps) * d.h * c.peso; });
       });
     });
 
@@ -1233,7 +1233,11 @@ var Motor = (function () {
       d.caminos.forEach(function (c) {
         var minR = Infinity, cue = null, sds = c.sds;
         c.enlaces.forEach(function (id, k) { var x = residualL[id][sds[k]]; if (x < minR) { minR = x; cue = "L:" + id; } });
-        c.ruta.forEach(function (id) { if (residualN[id] < minR) { minR = residualN[id]; cue = "N:" + id; } });
+        // Edge: la NIC (N3 + N6) reparte su hueco entre DL y UL en proporción a la demanda
+        var fDL = d.dl_gbps + d.ul_gbps > 0 ? d.dl_gbps / (d.dl_gbps + d.ul_gbps) : 1;
+        c.ruta.forEach(function (id) {
+          var x = G.nodos[id].tipo === "edge" ? residualN[id] * fDL : residualN[id];
+          if (x < minR) { minR = x; cue = "N:" + id; } });
         // Carga física en la red = IP × cabecera (v7 §2.7.2); lo servido se cuenta en Gbit/s IP
         var pedido = d.dl_gbps * d.h * c.peso;
         var s = Math.max(0, Math.min(pedido, minR));
@@ -1245,6 +1249,7 @@ var Motor = (function () {
         // UL por el sentido contrario, limitado por lo que quede en ese sentido (no recorta el DL)
         var minU = Infinity;
         c.enlaces.forEach(function (id, k) { minU = Math.min(minU, residualL[id][sds[k] === "ab" ? "ba" : "ab"]); });
+        c.ruta.forEach(function (id) { if (G.nodos[id].tipo === "edge") minU = Math.min(minU, residualN[id] - s); });
         var su = Math.max(0, Math.min(d.ul_gbps * d.h * c.peso, minU));
         sTot += s; suTot += su;
         c.enlaces.forEach(function (id, k) {
@@ -1255,7 +1260,9 @@ var Motor = (function () {
           if (!vL[id]) { vL[id] = 1; e.demandas.push(d.id); }
         });
         c.ruta.forEach(function (id) {
-          residualN[id] -= s; var n = nodosOut[id]; n.carga_gbps += s;
+          // Edge: la NIC de la UPF ve N3 (UL) y N6 (DL) a la vez → carga = DL + UL con cabecera (v7 §6.7.5: 71,07 % de 400G en normal)
+          var sn = G.nodos[id].tipo === "edge" ? s + su : s;
+          residualN[id] -= sn; var n = nodosOut[id]; n.carga_gbps += sn;
           if (!vN[id]) { vN[id] = 1; n.demandas.push(d.id); }
         });
       });

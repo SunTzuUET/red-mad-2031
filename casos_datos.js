@@ -488,7 +488,7 @@ var CASOS = (function () {
       operacion: [
         { es: "Vigilar la ocupación del Edge frente a los umbrales del 70 % y 90 % (§7.2) y preparar la ampliación.", en: "Watch Edge occupancy against the 70 % and 90 % thresholds (§7.2) and prepare expansion." }
       ],
-      nota: { es: "El escenario de estrés ×2,07 sale de un documento anterior (3.2, §4.3 Tabla 7), no de la v7. El motor no desborda el Edge hacia el DC: muestra la ocupación.", en: "The ×2.07 stress scenario comes from an earlier document (3.2, §4.3 Table 7), not v7. The engine does not overflow the Edge to the DC: it shows occupancy." },
+      nota: { es: "El escenario de estrés ×2,07 sale de un documento anterior (3.2, §4.3 Tabla 7), no de la v7. La NIC del Edge cuenta N3 + N6 (DL + UL, como la v7 §6.7.5): con ×2,07 llega al 100 % y se recorta vídeo del estadio (~97 % servido). El motor no desborda el Edge hacia el DC.", en: "The ×2.07 stress scenario comes from an earlier document (3.2, §4.3 Table 7), not v7. The Edge NIC counts N3 + N6 (DL + UL, as in v7 §6.7.5): at ×2.07 it reaches 100 % and stadium video is trimmed (~97 % served). The engine does not overflow the Edge to the DC." },
       origen: "anterior",
       preguntas: [
         { es: "Si el Edge pasa del 90 %, ¿preferís recortar vídeo o sacar tráfico por el DC con más latencia?", en: "If the Edge exceeds 90 %, would you rather trim video or route traffic via the DC with more latency?" }
@@ -496,7 +496,7 @@ var CASOS = (function () {
       caso: { trafico: "BH", evento: "E-EVENTO-ESTRES", fallos: [] },
       opciones_enlace: null,
       foco: [{ tipo: "nodo", id: "EDGE-CENTRO" }],
-      esperado: { pct: [99.99, 100.01], nodos: { "EDGE-CENTRO": [0.85, 1.0] } }
+      esperado: { pct: [96, 99], nodos: { "EDGE-CENTRO": [1.3, 1.6] } }
     },
     {
       id: "D13", n: 13, simulable: "no_modelado",
